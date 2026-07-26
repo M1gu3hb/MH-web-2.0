@@ -686,7 +686,7 @@ function Contact() {
                 Escribir por WhatsApp
                 <ArrowUpRight size={17} />
               </a>
-              <a className="contact__phone" href={`tel:+52${CONTACT.whatsapp}`}>
+              <a className="contact__phone" href={`tel:+${CONTACT.whatsapp}`}>
                 {CONTACT.phone}
               </a>
             </div>
