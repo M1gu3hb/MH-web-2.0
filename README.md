@@ -1,26 +1,27 @@
 # MH Web 2.0
 
-Nuevo sitio insignia de **MH Astral Systems**, diseñado y construido desde cero
-para comunicar con claridad tres capacidades: diseño web, software y sistemas
-completos para negocios.
+Sitio insignia de **MH Astral Systems**: una experiencia editorial y táctil para
+presentar diseño web, software y sistemas completos para negocios.
 
-## Dirección creativa
+## Experiencia
 
-- Estética dark premium alineada con la marca MH Astral Systems.
-- Hero interactivo con monograma 3D y señales del ecosistema de producto.
-- Laboratorio de servicios para Web, POS, CRM y automatizaciones.
-- Casos reales presentados con liquid glass, clay, skeuomorphism y glassmorphism.
+- Dirección visual propia con papel cálido, tinta mineral y acentos eléctricos.
+- Escena 3D interactiva construida con React Three Fiber y fallback estático.
+- Consola de capacidades para Web, POS, CRM, datos y automatización.
+- Casos reales en escenas de producto, sin testimonios ni métricas inventadas.
 - Loader funcional que espera tipografías, logo y carga del documento.
-- Animaciones de scroll con alternativa para `prefers-reduced-motion`.
+- Movimiento de interfaz con Motion y scroll suave con Lenis.
+- Navegación accesible y alternativa completa para `prefers-reduced-motion`.
 - CTA directo a WhatsApp de Miguel Huerta Bautista.
 
 ## Stack
 
-- React 18
-- Vite 6
+- React 18 + Vite 6
+- Three.js, React Three Fiber y Drei
+- Motion + Lenis
 - Lucide React
-- CSS nativo con responsive design
-- Fontsource local (sin dependencia de Google Fonts en producción)
+- CSS nativo responsive
+- Manrope y Syne servidas localmente con Fontsource
 
 ## Desarrollo
 
