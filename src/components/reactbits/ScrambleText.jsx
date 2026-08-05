@@ -1,137 +1,206 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useLayoutEffect, useRef } from 'react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 
 /**
  * ScrambleText — desfragmentación de letras.
  *
- *   trigger="hover"  el texto se desordena mientras el cursor está encima y
- *                    se recompone al salir.
- *   trigger="view"   llega desfragmentado y se recompone al entrar en pantalla.
+ *   trigger="hover"  se desordena mientras el cursor está encima
+ *   trigger="view"   llega desfragmentado y se recompone al entrar en pantalla
  *
- * El texto real vive en un nodo oculto para lectores de pantalla; la capa
- * animada es puramente visual.
+ * Dos decisiones que importan:
+ *
+ * 1. Cada palabra se mide y se le fija el ancho mientras dura la animación.
+ *    Los glifos aleatorios no miden lo mismo que las letras, así que sin esto
+ *    el texto se reacomoda entero en cada fotograma y parece que salta por
+ *    todos lados. Se vuelve a medir cuando terminan de cargar las tipografías
+ *    (si no, el ancho se congela con la fuente de reserva y luego la real,
+ *    más ancha, se corta) y el ancho se suelta al acabar, para que el texto
+ *    definitivo nunca quede recortado.
+ *
+ * 2. La animación escribe directamente en el DOM, no en el estado de React.
+ *    Repintar un párrafo entero 30 veces por segundo con setState traba la
+ *    página; mutar `textContent` no.
  */
 
-/* Glifos ASCII de ancho parecido, para que el salto de maquetación sea mínimo. */
 const GLYPHS = '#$%&*+-<>=?@[]{}/\\|~^01';
-
-function randomGlyph() {
-  return GLYPHS[(Math.random() * GLYPHS.length) | 0];
-}
+const randomGlyph = () => GLYPHS[(Math.random() * GLYPHS.length) | 0];
 
 export function ScrambleText({
   text,
   as: Tag = 'span',
   trigger = 'hover',
   speed = 34,
-  revealPerFrame = 0.42,
+  duration = 1700,
   className = '',
   children,
 }) {
   const reduced = useReducedMotion();
   const source = text ?? (typeof children === 'string' ? children : '');
-  const [output, setOutput] = useState(trigger === 'view' ? '' : source);
-  const node = useRef(null);
+  const host = useRef(null);
+  const words = useRef([]);
   const timer = useRef(0);
-  const settled = useRef(trigger !== 'view');
-
-  /* Desordena todo salvo los espacios: conserva la forma de las palabras. */
-  const scrambleAll = useCallback(
-    () => source.replace(/\S/g, () => randomGlyph()),
-    [source],
-  );
+  const phase = useRef('idle');
 
   const stop = useCallback(() => {
-    window.clearInterval(timer.current);
+    cancelAnimationFrame(timer.current);
     timer.current = 0;
   }, []);
 
-  /** Recompone de izquierda a derecha. */
+  /** Restaura el texto real, mide y congela el ancho de cada palabra. */
+  const freeze = useCallback(() => {
+    words.current.forEach(({ node, word }) => {
+      node.style.width = '';
+      node.textContent = word;
+    });
+    /* Se leen todos los anchos y luego se escriben: intercalarlos obligaría
+       al navegador a recalcular el layout una vez por palabra. */
+    const widths = words.current.map(({ node }) => node.getBoundingClientRect().width);
+    words.current.forEach(({ node }, i) => {
+      node.style.width = `${widths[i]}px`;
+    });
+  }, []);
+
+  /** Suelta el ancho: el texto definitivo se muestra entero, pase lo que pase. */
+  const release = useCallback(() => {
+    words.current.forEach(({ node, word }) => {
+      node.style.width = '';
+      node.textContent = word;
+    });
+  }, []);
+
+  /** Escribe el estado actual: `revealed` letras reales, el resto en glifos. */
+  const paint = useCallback((revealed) => {
+    let index = 0;
+    words.current.forEach(({ node, word }) => {
+      let out = '';
+      for (let i = 0; i < word.length; i += 1, index += 1) {
+        out += index < revealed ? word[i] : randomGlyph();
+      }
+      node.textContent = out;
+      index += 1; // el espacio entre palabras también cuenta
+    });
+  }, []);
+
+  const total = source.length;
+
+  /* El avance se mide con el reloj, no contando fotogramas: con la escena 3D
+     en marcha los temporizadores se retrasan y un párrafo largo tardaba
+     medio minuto en recomponerse. Así siempre acaba en `duration`. */
   const resolve = useCallback(() => {
     stop();
-    let revealed = 0;
-    timer.current = window.setInterval(() => {
-      revealed += revealPerFrame;
-      const cut = Math.floor(revealed);
-      if (cut >= source.length) {
-        stop();
-        settled.current = true;
-        setOutput(source);
+    phase.current = 'running';
+    const startedAt = performance.now();
+    const step = (now) => {
+      const t = (now - startedAt) / duration;
+      if (t >= 1) {
+        timer.current = 0;
+        phase.current = 'done';
+        release();
         return;
       }
-      setOutput(
-        source
-          .split('')
-          .map((ch, i) => (i < cut || ch === ' ' ? ch : randomGlyph()))
-          .join(''),
-      );
-    }, speed);
-  }, [revealPerFrame, source, speed, stop]);
+      paint(Math.floor(t * total));
+      timer.current = requestAnimationFrame(step);
+    };
+    timer.current = requestAnimationFrame(step);
+  }, [duration, paint, release, stop, total]);
 
-  /** Mantiene el texto desordenado mientras el cursor sigue encima. */
   const churn = useCallback(() => {
     stop();
-    settled.current = false;
-    setOutput(scrambleAll());
-    timer.current = window.setInterval(() => setOutput(scrambleAll()), speed + 12);
-  }, [scrambleAll, speed, stop]);
+    phase.current = 'running';
+    freeze();
+    paint(0);
+    let last = 0;
+    const step = (now) => {
+      if (now - last >= speed + 14) {
+        last = now;
+        paint(0);
+      }
+      timer.current = requestAnimationFrame(step);
+    };
+    timer.current = requestAnimationFrame(step);
+  }, [freeze, paint, speed, stop]);
 
-  useEffect(() => stop, [stop]);
-
-  /* Modo scroll: llega desfragmentado y se recompone al aparecer. */
-  useEffect(() => {
-    if (trigger !== 'view' || reduced) return undefined;
-    const element = node.current;
+  /* Medición y bloqueo de anchos, antes del primer pintado. */
+  useLayoutEffect(() => {
+    if (reduced) return undefined;
+    const element = host.current;
     if (!element) return undefined;
 
-    setOutput(scrambleAll());
+    phase.current = 'idle';
+    words.current = Array.from(element.querySelectorAll('[data-word]')).map((node) => ({
+      node,
+      word: node.dataset.word,
+    }));
+    freeze();
+
+    /* Con la fuente definitiva ya cargada, el ancho cambia: hay que rehacer
+       la medida o las últimas letras se quedan fuera del recorte. */
+    let cancelled = false;
+    document.fonts?.ready.then(() => {
+      if (cancelled) return;
+      if (phase.current === 'done') release();
+      else {
+        freeze();
+        if (phase.current === 'idle' && trigger === 'view') paint(0);
+      }
+    });
+
+    if (trigger !== 'view') {
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    paint(0);
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
         observer.disconnect();
         resolve();
       },
-      { threshold: 0.35 },
+      { threshold: 0.3 },
     );
     observer.observe(element);
-    return () => observer.disconnect();
-  }, [reduced, resolve, scrambleAll, trigger]);
+    return () => {
+      cancelled = true;
+      observer.disconnect();
+    };
+  }, [freeze, paint, reduced, release, resolve, source, trigger]);
+
+  useLayoutEffect(() => stop, [stop]);
 
   if (reduced) return <Tag className={className}>{source}</Tag>;
 
+  const pieces = source.split(' ');
   const hoverProps =
     trigger === 'hover'
-      ? {
-          onMouseEnter: churn,
-          onMouseLeave: resolve,
-          onFocus: churn,
-          onBlur: resolve,
-        }
+      ? { onMouseEnter: churn, onMouseLeave: resolve, onFocus: churn, onBlur: resolve }
       : {};
 
   return (
-    <Tag ref={node} className={`rb-scramble ${className}`} {...hoverProps}>
-      <span aria-hidden="true">{output || source.replace(/\S/g, ' ')}</span>
+    <Tag ref={host} className={`rb-scramble ${className}`} {...hoverProps}>
+      <span aria-hidden="true">
+        {pieces.map((word, index) => (
+          <span key={`${word}-${index}`}>
+            <span className="rb-scramble__word" data-word={word}>
+              {word}
+            </span>
+            {index < pieces.length - 1 ? ' ' : ''}
+          </span>
+        ))}
+      </span>
       <span className="rb-visually-hidden">{source}</span>
     </Tag>
   );
 }
 
-/**
- * ScrambleLines — aplica el efecto a un titular de varias líneas conservando
- * el salto de línea del diseño.
- */
+/** Titular de varias líneas conservando el salto del diseño. */
 export function ScrambleLines({ lines, trigger = 'hover', className = '', lineClassName = '' }) {
   return (
     <>
       {lines.map((line, index) => (
         <span className={`${className} scramble-line`} key={line}>
-          <ScrambleText
-            text={line}
-            trigger={trigger}
-            className={index ? lineClassName : ''}
-            speed={30 + index * 4}
-          />
+          <ScrambleText text={line} trigger={trigger} className={index ? lineClassName : ''} speed={30 + index * 4} />
         </span>
       ))}
     </>

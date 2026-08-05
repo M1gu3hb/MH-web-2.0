@@ -63,7 +63,9 @@
   border-radius: var(--r-lg);
 }
 
-.about__stamp span {
+/* Hijo directo: el <small> de al lado contiene un ScrambleText, que también
+   son <span>, y heredaba el tamaño del monograma. */
+.about__stamp > span {
   font-family: var(--font-display);
   font-size: 1.7rem;
   font-weight: var(--w-label);
@@ -152,5 +154,24 @@
 
   .about__plate {
     aspect-ratio: 16 / 10;
+  }
+}
+
+/* En pantallas estrechas «MH ASTRAL SYSTEMS» con este interletraje no cabe en
+   una línea y estiraba toda la sección: el sello se apila y respira menos. */
+@media (max-width: 520px) {
+  .about__stamp {
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    padding: 16px 18px;
+  }
+
+  .about__stamp > span {
+    font-size: 1.45rem;
+  }
+
+  .about__stamp small {
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
   }
 }

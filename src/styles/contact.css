@@ -9,6 +9,10 @@
   --line-soft: rgba(246, 243, 234, 0.09);
   --line: var(--line-invert);
 
+  position: relative;
+  /* Por debajo del velo: mientras la laptop se aleja esto sigue oculto, y al
+     terminar el velo se abre y la sección queda a la vista. */
+  z-index: 1;
   padding-block: var(--sp-section) clamp(56px, 7vw, 96px);
   background: var(--surface-night);
   color: var(--ink-invert);

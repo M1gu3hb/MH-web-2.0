@@ -255,15 +255,21 @@
 /* ---- ScrambleText ----------------------------------------- */
 .rb-scramble {
   display: inline;
-  /* Números y símbolos de ancho fijo: el salto de maquetación al
-     desfragmentar se vuelve casi imperceptible. */
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: 'tnum' 1;
   cursor: default;
 }
 
 .rb-scramble > span[aria-hidden] {
   white-space: pre-wrap;
+}
+
+/* Cada palabra tiene su ancho congelado con el texto real, así que al
+   desfragmentar los glifos cambian pero la maquetación no se mueve. */
+.rb-scramble__word {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: left;
+  vertical-align: baseline;
 }
 
 h1 .rb-scramble,

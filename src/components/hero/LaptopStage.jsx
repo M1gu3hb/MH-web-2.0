@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { useLaptopChoreography } from './useLaptopChoreography';
@@ -6,11 +6,11 @@ import { useLaptopChoreography } from './useLaptopChoreography';
 const LaptopScene = lazy(() => import('./LaptopScene').then((m) => ({ default: m.LaptopScene })));
 
 /**
- * Capa fija donde vive la laptop durante todo el recorrido.
+ * Capa fija donde vive la laptop, más el velo negro y el destello de
+ * encendido que hacen la transición «entramos a la pantalla».
  *
- * Está por encima del contenido pero sin capturar el puntero: la coreografía
- * decide cuándo se ve. Cuando queda oculta, el canvas se desmonta para no
- * gastar GPU en el resto de la página.
+ * El velo y el destello se actualizan por rAF escribiendo el estilo a mano:
+ * pasarlos por el estado de React provocaría un render por fotograma.
  */
 export function LaptopStage({ enabled = true }) {
   const reducedMotion = useReducedMotion();
@@ -21,6 +21,11 @@ export function LaptopStage({ enabled = true }) {
   const [capable, setCapable] = useState(false);
   const [awake, setAwake] = useState(true);
 
+  const veil = useRef(null);
+  const power = useRef(null);
+  const inside = useRef(null);
+
+  /* ¿Tiene sentido montar la escena en este dispositivo? */
   useEffect(() => {
     if (!enabled) return undefined;
     let cancelled = false;
@@ -51,36 +56,75 @@ export function LaptopStage({ enabled = true }) {
     };
   }, [enabled]);
 
-  /* Se apaga cuando la coreografía la deja invisible durante un momento. */
+  /* Sin escena no hay transición: los tramos negros se colapsan. */
   useEffect(() => {
-    if (!capable) return undefined;
+    const off = !enabled || !capable;
+    document.body.classList.toggle('no-stage', off);
+    return () => document.body.classList.remove('no-stage');
+  }, [capable, enabled]);
+
+  /* Velo, destello y viñeta interior. */
+  useEffect(() => {
+    if (!enabled || !capable) return undefined;
+    let frame;
     let quiet = 0;
-    const id = window.setInterval(() => {
-      const visible = choreography.current.visible;
-      if (visible) {
+    let transit = false;
+
+    const tick = () => {
+      const s = choreography.current;
+      if (veil.current) veil.current.style.opacity = String(s.veil);
+      if (power.current) power.current.style.opacity = String(s.power);
+      if (inside.current) inside.current.style.opacity = String(s.inside * 0.9);
+
+      /* Mientras dura el viaje, la navegación y el botón flotante estorban:
+         flotarían sobre la laptop y romperían la ilusión de entrar en ella. */
+      const travelling = s.veil > 0.02;
+      if (travelling !== transit) {
+        transit = travelling;
+        document.body.classList.toggle('in-transit', travelling);
+      }
+
+      /* Se apaga el canvas cuando lleva un rato invisible. */
+      if (s.visible) {
         quiet = 0;
-        setAwake(true);
+        setAwake((a) => (a ? a : true));
       } else {
         quiet += 1;
-        if (quiet > 3) setAwake(false);
+        if (quiet === 40) setAwake(false);
       }
-    }, 260);
-    return () => window.clearInterval(id);
-  }, [capable, choreography]);
+
+      frame = requestAnimationFrame(tick);
+    };
+
+    frame = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(frame);
+      document.body.classList.remove('in-transit');
+    };
+  }, [capable, choreography, enabled]);
 
   if (!enabled || !capable) return null;
 
   return (
-    <div className="laptop-stage" aria-hidden="true">
-      {awake && (
-        <Suspense fallback={null}>
-          <LaptopScene
-            choreography={choreography}
-            reducedMotion={reducedMotion}
-            quality={isPhone || coarse ? 'low' : 'high'}
-          />
-        </Suspense>
-      )}
-    </div>
+    <>
+      <div className="stage-veil" ref={veil} aria-hidden="true" />
+      <div className="stage-inside" ref={inside} aria-hidden="true" />
+
+      <div className="laptop-stage" aria-hidden="true">
+        {awake && (
+          <Suspense fallback={null}>
+            <LaptopScene
+              choreography={choreography}
+              reducedMotion={reducedMotion}
+              quality={isPhone || coarse ? 'low' : 'high'}
+            />
+          </Suspense>
+        )}
+      </div>
+
+      <div className="stage-power" ref={power} aria-hidden="true">
+        <span />
+      </div>
+    </>
   );
 }

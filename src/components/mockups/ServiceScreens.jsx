@@ -99,26 +99,26 @@ export function AutomationScreen() {
 
 
 export function SoftwareScreen() {
-  const files = ['main.py', 'inventario.py', 'cortes.py', 'ui/panel.tsx'];
+  const files = ['main.py', 'camara.py', 'gestos.py', 'ui/overlay.tsx'];
   return (
     <div className="demo demo--software">
       <div className="software-bar">
         <span><i /><i /><i /></span>
-        <em>gestech · build</em>
+        <em>app de escritorio · build</em>
         <b>v2.4.0</b>
       </div>
       <div className="software-body">
         <div className="software-files">
           {files.map((f, i) => (
-            <span key={f} className={i === 1 ? 'active' : ''}>{f}</span>
+            <span key={f} className={i === 2 ? 'active' : ''}>{f}</span>
           ))}
         </div>
         <div className="software-code">
-          <p><i>01</i><b>class</b> Corte<b>:</b></p>
-          <p><i>02</i>  <b>def</b> cerrar(self, caja)<b>:</b></p>
-          <p><i>03</i>    total = caja.sumar()</p>
-          <p><i>04</i>    self.guardar(total)</p>
-          <p><i>05</i>    <b>return</b> total</p>
+          <p><i>01</i><b>class</b> Gesto<b>:</b></p>
+          <p><i>02</i>  <b>def</b> leer(self, mano)<b>:</b></p>
+          <p><i>03</i>    puntos = mano.landmarks()</p>
+          <p><i>04</i>    <b>return</b> self.clasificar(puntos)</p>
+          <p><i>05</i></p>
           <span className="software-run">▶ compilado en 1.2 s</span>
         </div>
       </div>

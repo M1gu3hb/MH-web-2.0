@@ -89,26 +89,55 @@ export function BerlinVisual() {
 }
 
 
+/* Los 21 puntos que devuelve el detector de manos, en palma abierta. */
+const HAND_POINTS = [
+  [50, 92], // muñeca
+  [34, 84], [25, 74], [19, 65], [14, 57], // pulgar
+  [41, 60], [37, 44], [35, 34], [33, 25], // índice
+  [50, 57], [50, 40], [50, 29], [50, 20], // medio
+  [59, 59], [62, 43], [64, 33], [66, 24], // anular
+  [68, 64], [73, 52], [76, 44], [79, 37], // meñique
+];
+
+const HAND_BONES = [
+  [0, 1, 2, 3, 4],
+  [0, 5, 6, 7, 8],
+  [9, 10, 11, 12],
+  [13, 14, 15, 16],
+  [0, 17, 18, 19, 20],
+  [5, 9, 13, 17],
+];
+
 export function GestechVisual() {
   return (
     <div className="project-ui project-ui--gestech">
-      <div className="gestech-top">
-        <span>GESTECH</span>
-        <small>SISTEMA DE GESTIÓN</small>
+      <div className="gestech-cam">
+        <svg viewBox="0 0 100 100" role="presentation" focusable="false">
+          {HAND_BONES.map((bone) => (
+            <polyline key={bone.join('-')} points={bone.map((i) => HAND_POINTS[i].join(',')).join(' ')} />
+          ))}
+          {HAND_POINTS.map(([x, y], i) => (
+            <circle key={`${x}-${y}`} cx={x} cy={y} r={i === 8 ? 3.4 : 2} style={{ animationDelay: `${i * 45}ms` }} />
+          ))}
+        </svg>
+        <span className="gestech-cam__rec"><i /> CÁMARA WEB</span>
+        <span className="gestech-cam__box">mano detectada · 0.97</span>
+        <span className="gestech-cursor" />
       </div>
-      <div className="gestech-grid">
-        {['Inventario', 'Clientes', 'Cortes', 'Reportes'].map((m, i) => (
-          <span key={m} className={i === 0 ? 'active' : ''}>
-            <i />
-            {m}
-          </span>
-        ))}
-      </div>
-      <div className="gestech-term">
-        <p>$ python gestech.py</p>
-        <p><b>›</b> módulos cargados: 4</p>
-        <p><b>›</b> base de datos lista</p>
-        <p className="ok">● operando</p>
+
+      <div className="gestech-side">
+        <span className="gestech-state">
+          <b>IDLE</b>
+          <em>→</em>
+          <b className="on">ACTIVO</b>
+        </span>
+        <ul className="gestech-map">
+          <li><i>✋</i> Palma abierta 1 s<span>activar</span></li>
+          <li><i>☝️</i> Índice<span>mover cursor</span></li>
+          <li><i>🤏</i> Pinza<span>clic</span></li>
+          <li><i>✌️</i> Dos dedos<span>scroll</span></li>
+          <li><i>✊</i> Puño 2 s<span>salir</span></li>
+        </ul>
       </div>
     </div>
   );

@@ -73,6 +73,11 @@ export default function App() {
 
       <main id="contenido">
         <Hero />
+
+        {/* Tramo negro donde la laptop crece hasta cubrir la pantalla: a
+            partir de aquí la página ocurre «dentro» de ella. */}
+        <div className="stage-gap stage-gap--in" id="zoom-in" aria-hidden="true" />
+
         <ProjectCarousel />
         <CapabilitiesSection />
         <WorkSection />
@@ -80,6 +85,10 @@ export default function App() {
         <PricingSection />
         <AboutSection />
         <FaqSection />
+
+        {/* Todo se apaga y la laptop se aleja: salimos de la pantalla. */}
+        <div className="stage-gap stage-gap--out" id="zoom-out" aria-hidden="true" />
+
         <ContactSection />
       </main>
 

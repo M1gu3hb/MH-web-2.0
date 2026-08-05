@@ -2,97 +2,110 @@ import { useEffect, useRef } from 'react';
 
 const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
 const easeInOut = (t) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
-const easeIn = (t) => t * t * t;
+
+/** Mapea un valor dentro de un tramo a 0..1. */
+const span = (v, a, b) => clamp01((v - a) / Math.max(1e-6, b - a));
+
+/* Reposo en el hero. */
+const REST = { x: 1.85, y: -0.05, z: 0, scale: 1.78, rotY: -0.42, rotX: 0.06 };
+/* Posición desde la que se aleja al salir. */
+const AWAY = { x: -0.9, y: 0.1, z: -1.6, scale: 1.1, rotY: -0.5, rotX: 0.1 };
 
 /**
- * Coreografía de la laptop a lo largo del scroll.
+ * Coreografía de la laptop.
  *
- *   1. Hero          flota a la derecha y sigue al cursor
- *   2. Antes de      se acerca de golpe a la cámara, como si entráramos
- *      Servicios     por la pantalla; al llegar, desaparece
- *   3. Cuerpo        oculta (el canvas deja de pintarse)
- *   4. Contacto      vuelve muy cerca y se aleja hasta desvanecerse antes
- *                    de que la sección la tape
+ *   1. Hero        flota a la derecha y sigue al cursor
+ *   2. Tramo de    todo se oscurece y la laptop se acerca hasta CUBRIR la
+ *      entrada     pantalla; entonces se apaga en negro y se enciende: a
+ *                  partir de ahí la página ocurre dentro de la laptop
+ *   3. Dentro      oculta; el canvas se duerme
+ *   4. Tramo de    todo se apaga, la laptop reaparece a pantalla completa y
+ *      salida      se aleja: salimos de la laptop y aparece el contacto
  *
- * Devuelve un ref mutable que la escena lee en cada frame: no provoca
- * renders de React durante el scroll.
+ * `focus` es cuánto se acerca a cubrir la pantalla (0 = pose suelta,
+ * 1 = tapando el viewport). La pose de «tapando» no se fija aquí: la calcula
+ * la escena a partir del tamaño real de la pantalla del modelo y del
+ * viewport, que es lo único que garantiza que cubra en cualquier formato.
+ *
+ * Los dos tramos son elementos reales del documento (#zoom-in y #zoom-out),
+ * así que el recorrido es explícito y no depende de adivinar alturas.
  */
 export function useLaptopChoreography() {
   const state = useRef({
     visible: true,
     opacity: 1,
-    x: 2.15,
-    y: -0.1,
-    z: 0,
-    scale: 1,
-    spin: 0,
-    tilt: 0,
+    veil: 0,
+    power: 0,
+    inside: 0,
+    pointer: 1,
+    focus: 0,
     phase: 'hero',
+    ...REST,
   });
 
   useEffect(() => {
     let frame = 0;
 
     const measure = () => {
-      const doc = document.documentElement;
-      const vh = window.innerHeight;
-      const y = window.scrollY || doc.scrollTop;
-
-      const hero = document.getElementById('inicio');
-      const servicios = document.getElementById('servicios');
-      const contacto = document.getElementById('contacto');
-      if (!hero || !servicios || !contacto) return;
-
-      const heroBottom = hero.offsetTop + hero.offsetHeight;
-      const serviciosTop = servicios.offsetTop;
-      const contactoTop = contacto.offsetTop;
-
       const s = state.current;
+      const y = window.scrollY || document.documentElement.scrollTop;
+      const vh = window.innerHeight;
 
-      /* ---- Zambullida hacia la pantalla ------------------------------ */
-      const diveStart = heroBottom - vh * 0.95;
-      const diveEnd = serviciosTop - vh * 0.25;
-      const dive = clamp01((y - diveStart) / Math.max(1, diveEnd - diveStart));
+      const gapIn = document.getElementById('zoom-in');
+      const gapOut = document.getElementById('zoom-out');
+      if (!gapIn || !gapOut) return;
 
-      /* ---- Regreso en contacto --------------------------------------- */
-      const backStart = contactoTop - vh * 0.9;
-      const backEnd = contactoTop + vh * 0.5;
-      const back = clamp01((y - backStart) / Math.max(1, backEnd - backStart));
+      const inTop = gapIn.getBoundingClientRect().top + y;
+      const inLen = gapIn.offsetHeight;
+      const outTop = gapOut.getBoundingClientRect().top + y;
+      const outLen = gapOut.offsetHeight;
 
-      if (back > 0 && back < 1) {
-        /* Aparece pegada a la cámara y se aleja hasta irse. */
-        const e = easeInOut(back);
-        s.phase = 'return';
-        s.z = 6.4 - e * 9.2;
-        s.x = 0.35 - e * 3.4;
-        s.y = -0.25 + e * 0.9;
-        s.scale = 1.5 - e * 0.55;
-        s.spin = e * 1.5;
-        s.tilt = -0.12 + e * 0.2;
-        /* Entra rápido, se mantiene y se desvanece al final. */
-        s.opacity = Math.min(clamp01(back / 0.16), clamp01((1 - back) / 0.28));
-      } else if (dive > 0) {
-        /* Se acerca a la cámara acelerando y se apaga al atravesarla. */
-        const e = easeIn(dive);
-        s.phase = 'dive';
-        s.z = e * 8.6;
-        s.x = 2.15 - e * 2.15;
-        s.y = -0.1 + e * 0.18;
-        s.scale = 1 + e * 1.9;
-        s.spin = e * 0.55;
-        s.tilt = e * 0.16;
-        s.opacity = clamp01(1 - Math.max(0, dive - 0.62) / 0.3);
+      /* La entrada empieza cuando el tramo asoma por abajo. */
+      const enter = span(y, inTop - vh * 0.75, inTop + inLen - vh * 0.1);
+      const exit = span(y, outTop - vh * 0.85, outTop + outLen - vh * 0.15);
+
+      if (exit > 0) {
+        /* ---- Salida: se apaga, reaparece llena y se aleja -------------- */
+        s.phase = 'exit';
+        s.pointer = 0;
+
+        /* Apagón inmediato; el velo se abre al final para dejar ver el cierre. */
+        s.veil = exit < 0.9 ? Math.min(1, exit / 0.12) : 1 - span(exit, 0.9, 1);
+        /* Destello del apagado, justo antes de que aparezca la laptop. */
+        s.power = Math.max(0, 1 - Math.abs(exit - 0.1) / 0.09);
+
+        s.focus = 1 - easeInOut(span(exit, 0.16, 0.9));
+        s.opacity = Math.min(span(exit, 0.1, 0.2), 1 - span(exit, 0.94, 1));
+        Object.assign(s, AWAY);
+        s.inside = 0;
+      } else if (enter > 0) {
+        /* ---- Entrada: se acerca hasta cubrir y la pantalla se enciende -- */
+        s.phase = 'enter';
+        s.pointer = 1 - span(enter, 0, 0.25);
+
+        /* El fondo se va a negro antes de que la laptop llene. */
+        s.veil = enter < 0.88 ? span(enter, 0, 0.4) : 1 - span(enter, 0.88, 1);
+        s.power = Math.max(0, 1 - Math.abs(enter - 0.9) / 0.1);
+
+        Object.assign(s, REST);
+        s.focus = easeInOut(span(enter, 0, 0.86));
+        /* Ya tapando del todo: se apaga en negro para encenderse enseguida. */
+        s.opacity = 1 - span(enter, 0.87, 0.94);
+        s.inside = span(enter, 0.9, 1);
       } else {
-        /* Reposo en el hero, con una flotación mínima. */
+        /* ---- Hero ------------------------------------------------------ */
         s.phase = 'hero';
-        s.z = 0;
-        s.x = 2.15;
-        s.y = -0.1;
-        s.scale = 1;
-        s.spin = 0;
-        s.tilt = 0;
+        s.pointer = 1;
+        s.veil = 0;
+        s.power = 0;
         s.opacity = 1;
+        s.inside = 0;
+        s.focus = 0;
+        Object.assign(s, REST);
       }
+
+      /* Entre los dos tramos seguimos "dentro" de la pantalla. */
+      if (s.phase !== 'hero' && enter >= 1 && exit <= 0) s.inside = 1;
 
       s.visible = s.opacity > 0.012;
     };

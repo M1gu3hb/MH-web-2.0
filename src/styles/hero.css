@@ -36,6 +36,12 @@
   bottom: 0;
   left: 0;
   height: 26vh;
+  /* El hero entrega al tramo negro por el que entra la laptop. */
+  background: linear-gradient(180deg, transparent, rgba(8, 6, 21, 0.6) 45%, #000);
+}
+
+/* Sin transición 3D el hero entrega directamente al carrusel. */
+body.no-stage .hero__fade {
   background: linear-gradient(180deg, transparent, rgba(8, 6, 21, 0.55) 45%, var(--surface-base));
 }
 
@@ -166,52 +172,20 @@
 .hero__viewport {
   position: relative;
   display: grid;
-  align-content: space-between;
-  min-height: min(64vh, 560px);
-  padding: 16px;
+  min-height: min(72vh, 620px);
 }
 
-.hero__viewport-frame {
-  position: absolute;
-  inset: 0;
-  border: 1px dashed rgba(243, 242, 249, 0.13);
-  border-radius: var(--r-xl);
-  background: radial-gradient(circle at 50% 45%, rgba(82, 39, 255, 0.16), transparent 62%);
-  pointer-events: none;
-}
-
-.hero__viewport-corner {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(206, 255, 61, 0.6);
-}
-
-.hero__viewport-corner--tl { top: -1px; left: -1px; border-right: 0; border-bottom: 0; border-radius: 6px 0 0 0; }
-.hero__viewport-corner--tr { top: -1px; right: -1px; border-bottom: 0; border-left: 0; border-radius: 0 6px 0 0; }
-.hero__viewport-corner--bl { bottom: -1px; left: -1px; border-top: 0; border-right: 0; border-radius: 0 0 0 6px; }
-.hero__viewport-corner--br { right: -1px; bottom: -1px; border-top: 0; border-left: 0; border-radius: 0 0 6px 0; }
-
-.hero__readout {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  color: var(--ink-muted);
-  font-size: 0.6rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-}
-
-.hero__readout span {
+.hero__viewport-hint {
+  align-self: end;
+  justify-self: center;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-}
-
-.hero__readout--bottom {
-  align-self: end;
+  gap: 8px;
+  color: var(--ink-muted);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 /* ---- Pista de scroll --------------------------------------- */
@@ -244,11 +218,19 @@
 }
 
 /* ---- Capa fija de la laptop -------------------------------- */
+/* La capa cubre toda la pantalla y vive por encima del contenido, así que no
+   puede recibir un solo clic. react-three-fiber escribe pointer-events: auto
+   en línea sobre sus contenedores, de ahí el !important en los descendientes:
+   sin él la escena se traga todos los clics de la página. */
 .laptop-stage {
   position: fixed;
   z-index: 500;
   inset: 0;
   pointer-events: none;
+}
+
+.laptop-stage * {
+  pointer-events: none !important;
 }
 
 .laptop-stage canvas {
@@ -292,5 +274,88 @@
 
   .hero__scroll-hint {
     display: none;
+  }
+}
+
+
+/* ============================================================
+   Tramos negros y transición «entramos a la pantalla»
+   ============================================================ */
+
+.stage-gap {
+  position: relative;
+  z-index: 1;
+  background: #000;
+}
+
+.stage-gap--in { height: 130vh; }
+.stage-gap--out { height: 150vh; }
+
+/* Sin escena 3D no hay transición que mostrar. */
+body.no-stage .stage-gap { height: 0; }
+
+/* Durante el viaje solo se ve la laptop. El !important es necesario: estos
+   elementos están animados con motion, que escribe la opacidad en línea. */
+body.in-transit .nav-shell,
+body.in-transit .floating-contact,
+body.in-transit .scroll-meter {
+  opacity: 0 !important;
+  pointer-events: none;
+  transition: opacity 0.32s ease;
+}
+
+.stage-veil {
+  position: fixed;
+  z-index: 470;
+  inset: 0;
+  opacity: 0;
+  background: #000;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+/* Destello del encendido y apagado de la pantalla. */
+.stage-power {
+  position: fixed;
+  z-index: 510;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, rgba(210, 220, 255, 0.5), transparent 62%);
+  will-change: opacity;
+}
+
+.stage-power span {
+  width: 78vw;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, #eaf2ff, transparent);
+  box-shadow: 0 0 40px 8px rgba(190, 210, 255, 0.6);
+}
+
+/* Mientras estamos «dentro» de la laptop, una viñeta muy suave insinúa el
+   marco de la pantalla sin estorbar la lectura. */
+.stage-inside {
+  position: fixed;
+  z-index: 460;
+  inset: 0;
+  opacity: 0;
+  box-shadow:
+    inset 0 0 120px 24px rgba(0, 0, 0, 0.28),
+    inset 0 0 30px 2px rgba(0, 0, 0, 0.22);
+  pointer-events: none;
+  will-change: opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage-gap { height: 0; }
+  .stage-veil,
+  .stage-power,
+  .stage-inside { display: none; }
+
+  .hero__fade {
+    background: linear-gradient(180deg, transparent, rgba(8, 6, 21, 0.55) 45%, var(--surface-base));
   }
 }

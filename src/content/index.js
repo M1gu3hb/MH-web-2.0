@@ -134,11 +134,11 @@ export const PROJECTS = [
   {
     index: '05',
     client: 'GESTECH',
-    category: 'Software a la medida',
+    category: 'Software de escritorio',
     description:
-      'Sistema de gestión hecho desde cero en Python para una operación que ningún programa comercial resolvía. Módulos propios, base de datos propia, reglas del negocio real.',
-    outcome: 'Una herramienta que no existía en el mercado',
-    tags: ['Python', 'Escritorio', 'A la medida'],
+      'Controla el cursor, los clics, el scroll y las ventanas de Windows con pura cámara web. Reconoce la mano en tiempo real y solo obedece cuando tú lo activas: palma abierta un segundo para entrar, puño cerrado dos para salir, así no reacciona mientras gesticulas.',
+    outcome: 'Manejar la computadora sin tocarla',
+    tags: ['Python', 'OpenCV', 'MediaPipe', 'Windows'],
     accent: '#f5a524',
     surface: '#f3ddb4',
     visual: 'gestech',
@@ -161,8 +161,8 @@ export const PROJECTS = [
   },
   {
     index: '07',
-    client: 'Lo que sigue',
-    category: 'Tu proyecto',
+    client: 'Lo que traes en la cabeza',
+    category: 'Tu próxima herramienta',
     description:
       'Punto de venta, CRM, una app para tu equipo, un portal para tus clientes, una herramienta que solo existe en tu cabeza. Si lo puedes explicar, lo puedo construir.',
     outcome: 'El único límite es tu imaginación',
@@ -238,7 +238,7 @@ export const CAPABILITIES = [
     eyebrow: 'Aplicaciones propias',
     title: 'Si no existe la herramienta que necesitas, la construyo.',
     description:
-      'Aplicaciones de escritorio, web y móviles hechas desde cero para un problema concreto. Qyro, GESTECH y MH Photo Booth nacieron así: nadie vendía lo que hacía falta.',
+      'Aplicaciones de escritorio, web y móviles hechas desde cero para un problema concreto. GESTECH controla Windows con gestos de la mano; MH Photo Booth opera sin internet en un salón. Ninguna existía antes de necesitarse.',
     accent: '#f5a524',
     ink: '#171817',
     foreground: '#171817',

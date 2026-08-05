@@ -1,7 +1,8 @@
 import { ArrowDown, ArrowUpRight, MessageCircle, MousePointer2 } from 'lucide-react';
 import { motion as Motion } from 'motion/react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
-import { Magnet, Scanner, ScrambleText } from '../reactbits';
+import { Magnet, ScrambleText } from '../reactbits';
+import Scanner from '../reactbits/Scanner';
 import { HERO } from '../../content';
 import { trackWhatsApp, whatsappUrl } from '../../lib/whatsapp';
 
@@ -14,8 +15,8 @@ export function Hero() {
       <div className="hero__backdrop" aria-hidden="true">
         <Scanner
           color1="#5227FF"
-          color2="#1e10cc"
-          color3="#f3f2f9"
+          color2="#1a14d3"
+          color3="#FFFFFF"
           speed={0.5}
           sweepSpeed={0.25}
           sweepWidth={1.6}
@@ -109,23 +110,12 @@ export function Hero() {
           </dl>
         </Motion.div>
 
-        {/* La laptop 3D vive en una capa fija (LaptopStage); este hueco le
-            reserva el espacio del layout y muestra la lectura del sistema. */}
+        {/* La laptop 3D vive en una capa fija (LaptopStage); este hueco solo
+            le reserva el espacio del layout. */}
         <div className="hero__viewport">
-          <div className="hero__viewport-frame" aria-hidden="true">
-            <span className="hero__viewport-corner hero__viewport-corner--tl" />
-            <span className="hero__viewport-corner hero__viewport-corner--tr" />
-            <span className="hero__viewport-corner hero__viewport-corner--bl" />
-            <span className="hero__viewport-corner hero__viewport-corner--br" />
-          </div>
-          <div className="hero__readout">
-            <span><ScrambleText text="MH ASTRAL OS" /></span>
-            <span className="live-signal"><i aria-hidden="true" /> EN LÍNEA</span>
-          </div>
-          <div className="hero__readout hero__readout--bottom">
-            <span><MousePointer2 size={14} aria-hidden="true" /> Muévela con el cursor</span>
-            <span><ScrambleText text="WEBGL / REALTIME" /></span>
-          </div>
+          <p className="hero__viewport-hint">
+            <MousePointer2 size={14} aria-hidden="true" /> Muévela con el cursor
+          </p>
         </div>
       </div>
 

@@ -1,23 +1,34 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+const clamp = (v, min, max) => (v < min ? min : v > max ? max : v);
+
 /**
  * useScrollSequence — convierte el scroll sobre un contenedor alto en un
  * índice de 0 a count-1, para que una sección pegada avance sola.
  *
- * El usuario puede además seleccionar a mano: cuando lo hace, el scroll deja
- * de mandar hasta que vuelve a moverse de verdad, así el clic no se siente
- * "corregido" por la página.
+ * La selección manual no se pisa ni se "corrige": se guarda como un
+ * desplazamiento respecto al índice que tocaría por scroll, así que si
+ * alguien elige el paso 3 y empieza a scrollear, sigue desde el 3 y no
+ * vuelve al 1. Al llegar a un extremo el desplazamiento se recalcula para
+ * que cambiar de dirección responda al instante, y se olvida por completo
+ * cuando el tramo sale de pantalla.
  */
 export function useScrollSequence(count, { enabled = true } = {}) {
   const containerRef = useRef(null);
   const [index, setIndex] = useState(0);
-  const manual = useRef(false);
-  const lastScroll = useRef(0);
+  /* Índice que correspondería solo por scroll. */
+  const natural = useRef(0);
+  /* Cuánto se separó el usuario de ese índice al elegir a mano. */
+  const offset = useRef(0);
 
-  const select = useCallback((next) => {
-    manual.current = true;
-    setIndex(next);
-  }, []);
+  const select = useCallback(
+    (next) => {
+      const value = clamp(next, 0, count - 1);
+      offset.current = value - natural.current;
+      setIndex((current) => (current === value ? current : value));
+    },
+    [count],
+  );
 
   useEffect(() => {
     if (!enabled) return undefined;
@@ -32,17 +43,23 @@ export function useScrollSequence(count, { enabled = true } = {}) {
       /* Progreso mientras el contenedor cruza la pantalla pegado. */
       const total = rect.height - vh;
       if (total <= 0) return;
-      const progress = Math.min(1, Math.max(0, -rect.top / total));
+      const raw = -rect.top / total;
 
-      const y = window.scrollY;
-      if (Math.abs(y - lastScroll.current) > 24) manual.current = false;
-      lastScroll.current = y;
+      /* Bien fuera del tramo: la elección manual caduca. */
+      if (raw < -0.15 || raw > 1.15) offset.current = 0;
 
-      if (manual.current) return;
       /* Se reparte el recorrido en `count` tramos con un poco de margen
          para que el primero y el último respiren. */
-      const eased = Math.min(0.9999, Math.max(0, (progress - 0.04) / 0.9));
-      const next = Math.min(count - 1, Math.floor(eased * count));
+      const progress = clamp(raw, 0, 1);
+      const eased = clamp((progress - 0.04) / 0.9, 0, 0.9999);
+      const n = Math.min(count - 1, Math.floor(eased * count));
+      natural.current = n;
+
+      const next = clamp(n + offset.current, 0, count - 1);
+      /* En los extremos el desplazamiento se reajusta: si no, seguir
+         scrolleando acumularía deuda y al invertir no pasaría nada. */
+      offset.current = next - n;
+
       setIndex((current) => (current === next ? current : next));
     };
 
