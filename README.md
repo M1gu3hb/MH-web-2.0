@@ -49,6 +49,7 @@ El mapeo completo del repositorio, la auditoría y el plan de rediseño están e
 | [AUDIT](./docs/AUDIT.md) | 50 hallazgos con severidad, evidencia y arreglo |
 | [REDESIGN](./docs/REDESIGN.md) | Propuesta de rediseño y sistema nuevo |
 | [ROADMAP](./docs/ROADMAP.md) | Ejecución por fases con criterios de aceptación |
+| [CHANGELOG-REDESIGN](./docs/CHANGELOG-REDESIGN.md) | Qué cambió en el rediseño v3 y cómo volver atrás |
 
 ## Contacto
 

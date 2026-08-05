@@ -9,7 +9,7 @@ export class WebGLBoundary extends Component {
 
   componentDidCatch(error) {
     if (import.meta.env.DEV) {
-      console.warn('WebGL scene unavailable; using the static brand fallback.', error);
+      console.warn('Escena WebGL no disponible; se usa el respaldo estático.', error);
     }
   }
 

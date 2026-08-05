@@ -1,0 +1,300 @@
+/* ============================================================
+   Reset, base y utilidades compartidas
+   ============================================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--surface-base);
+  scroll-behavior: smooth;
+  scroll-padding-top: 104px;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  overflow-x: clip;
+  background: var(--surface-base);
+  color: var(--ink-strong);
+}
+
+body.menu-open {
+  overflow: hidden;
+}
+
+button,
+a,
+input,
+textarea {
+  color: inherit;
+  font: inherit;
+}
+
+button {
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+}
+
+img,
+svg,
+canvas {
+  display: block;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+dl,
+dd,
+figure {
+  margin: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+::selection {
+  background: var(--accent-brand);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent-web);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* ---- Grano de papel sobre toda la página ------------------ */
+.paper-grain {
+  position: fixed;
+  z-index: 400;
+  inset: 0;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.085'/%3E%3C/svg%3E");
+}
+
+/* ---- Enlace de salto -------------------------------------- */
+.skip-link {
+  position: fixed;
+  z-index: 1000;
+  top: 14px;
+  left: 14px;
+  padding: 12px 18px;
+  border-radius: var(--r-md);
+  background: var(--ink-strong);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: var(--w-label);
+  transform: translateY(calc(-100% - 28px));
+  transition: transform var(--d-fast) var(--ease);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* ---- Medidor de scroll ------------------------------------ */
+.scroll-meter {
+  position: fixed;
+  z-index: 500;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--accent-web), var(--accent-brand), var(--accent-pos));
+}
+
+/* ---- Utilidades ------------------------------------------- */
+.section-pad {
+  padding-inline: var(--sp-gutter);
+}
+
+.section-index {
+  display: inline-block;
+  color: var(--ink-muted);
+  font-size: var(--t-label);
+  font-weight: var(--w-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+}
+
+/* ---- Encabezado de sección -------------------------------- */
+.section-heading {
+  display: grid;
+  grid-template-columns: 0.3fr 1.7fr;
+  gap: clamp(20px, 3.6vw, 58px);
+  align-items: start;
+  width: min(100%, var(--wrap));
+  margin-inline: auto;
+}
+
+.section-heading__index {
+  padding-top: 0.75em;
+}
+
+.section-heading__title {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  color: var(--ink-strong);
+  font-family: var(--font-display);
+  font-size: var(--t-h2);
+  font-weight: var(--w-bold);
+  letter-spacing: var(--tr-display);
+  line-height: var(--lh-display);
+}
+
+.section-heading__line {
+  display: block;
+}
+
+.section-heading__soft {
+  color: var(--ink-muted);
+}
+
+.section-heading__lead {
+  grid-column: 2;
+  max-width: 620px;
+  margin-top: var(--sp-5);
+  color: var(--ink-body);
+  font-size: var(--t-lead);
+  line-height: var(--lh-body);
+}
+
+/* ---- Botón táctil ----------------------------------------- */
+.tactile-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 50px;
+  padding: 0 20px;
+  border: 1px solid rgba(21, 22, 20, 0.12);
+  border-radius: var(--r-md);
+  font-size: 0.85rem;
+  font-weight: 760;
+  white-space: nowrap;
+  transition:
+    transform var(--d-fast) var(--ease),
+    box-shadow var(--d-fast) var(--ease),
+    background var(--d-fast) var(--ease);
+}
+
+.tactile-button:hover:not(:disabled) {
+  transform: translateY(-3px);
+}
+
+.tactile-button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.tactile-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
+.tactile-button--large {
+  min-height: 60px;
+  padding-inline: 26px;
+  font-size: 0.92rem;
+}
+
+.tactile-button--ink {
+  border-color: #090a09;
+  background: var(--ink-strong);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.16),
+    0 5px 0 #050605,
+    var(--e-2);
+  color: #fff;
+}
+
+.tactile-button--ink:hover:not(:disabled) {
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.16),
+    0 7px 0 #050605,
+    var(--e-3);
+}
+
+.tactile-button--paper {
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.9),
+    0 4px 0 #d3d0c7,
+    var(--e-1);
+}
+
+.tactile-button--paper:hover:not(:disabled) {
+  background: #fff;
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.9),
+    0 6px 0 #d3d0c7,
+    var(--e-2);
+}
+
+/* ---- Señal viva ------------------------------------------- */
+.live-signal {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.live-signal i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-pos);
+  box-shadow: 0 0 10px currentColor;
+  color: var(--accent-pos);
+  animation: pulse-dot 1.9s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+@media (max-width: 900px) {
+  .section-heading {
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+  }
+
+  .section-heading__index {
+    padding-top: 0;
+  }
+
+  .section-heading__lead {
+    grid-column: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

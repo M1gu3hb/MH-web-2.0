@@ -5,5 +5,17 @@ export default defineConfig({
   plugins: [react()],
   build: {
     target: 'es2020',
+    // El chunk de three.js ya se separa por el import dinámico del hero.
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return undefined;
+          if (id.includes('react-dom') || id.includes('/react/') || id.includes('scheduler')) return 'react-vendor';
+          if (id.includes('motion') || id.includes('framer')) return 'motion';
+          return undefined;
+        },
+      },
+    },
   },
 });

@@ -15,6 +15,12 @@ inventariado aquí.
 | [AUDIT.md](./AUDIT.md) | Auditoría con severidad: rendimiento, accesibilidad, SEO, UX/conversión, código | Para saber qué está roto y qué duele |
 | [REDESIGN.md](./REDESIGN.md) | Propuesta de rediseño: dirección visual, nueva arquitectura de página, sistema nuevo | El plan creativo |
 | [ROADMAP.md](./ROADMAP.md) | Ejecución por fases, con criterios de aceptación y orden de trabajo | Para trabajar día a día |
+| [CHANGELOG-REDESIGN.md](./CHANGELOG-REDESIGN.md) | **Qué cambió en el rediseño v3 y cómo volver atrás** | Estado actual del código |
+
+> **Nota:** `FILEMAP`, `MODULES`, `DESIGN-SYSTEM` y `CONTENT` describen la
+> versión **anterior** (guardada en `backup/v2.0-original`), que es la que se
+> auditó. Para el estado posterior al rediseño, ver
+> [CHANGELOG-REDESIGN.md](./CHANGELOG-REDESIGN.md).
 
 ## Estado del repositorio en el momento de este mapeo
 

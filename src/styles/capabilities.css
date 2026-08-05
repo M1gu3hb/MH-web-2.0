@@ -1,0 +1,277 @@
+/* ============================================================
+   Capacidades
+   ============================================================ */
+
+.capabilities {
+  padding-block: var(--sp-section);
+  background: var(--surface-base);
+}
+
+.capability-deck {
+  display: grid;
+  grid-template-columns: 0.86fr 2.14fr;
+  gap: clamp(20px, 3vw, 42px);
+  width: min(100%, var(--wrap));
+  margin: clamp(52px, 7vw, 104px) auto 0;
+}
+
+.capability-deck__selector {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.capability-deck__selector button {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+  padding: 20px 18px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: rgba(255, 255, 255, 0.5);
+  text-align: left;
+  transition:
+    transform var(--d-fast) var(--ease),
+    border-color var(--d-fast) var(--ease),
+    background var(--d-fast) var(--ease);
+}
+
+.capability-deck__selector button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: 50% 0;
+  transition: transform var(--d-base) var(--ease);
+}
+
+.capability-deck__selector button:hover {
+  transform: translateX(3px);
+  border-color: var(--line-strong);
+  background: #fff;
+}
+
+.capability-deck__selector button.active {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+  background: #fff;
+  box-shadow: var(--e-1);
+}
+
+.capability-deck__selector button.active::before {
+  transform: scaleY(1);
+}
+
+.capability-deck__selector button > span {
+  color: var(--ink-muted);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: var(--w-label);
+}
+
+.capability-deck__selector button strong {
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-weight: var(--w-bold);
+  letter-spacing: -0.03em;
+}
+
+.capability-deck__selector button i {
+  color: var(--ink-muted);
+  font-size: 0.63rem;
+  font-style: normal;
+  font-weight: 780;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.capability-deck__selector button svg {
+  color: var(--ink-muted);
+  transition: transform var(--d-fast) var(--ease);
+}
+
+.capability-deck__selector button.active svg {
+  transform: translate(2px, -2px);
+  color: var(--ink-strong);
+}
+
+/* ---- Panel ------------------------------------------------ */
+.capability-deck__panel {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;
+  border: 1px solid rgba(19, 20, 18, 0.3);
+  border-radius: var(--r-xl);
+  background: var(--accent);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.42),
+    0 8px 0 color-mix(in srgb, var(--accent) 58%, #000),
+    0 26px 60px color-mix(in srgb, var(--accent) 22%, transparent);
+  color: var(--panel-ink);
+  transition:
+    background var(--d-slow) var(--ease),
+    box-shadow var(--d-slow) var(--ease),
+    color var(--d-slow) var(--ease);
+}
+
+.panel-chrome,
+.panel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  color: color-mix(in srgb, var(--panel-ink) 62%, transparent);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.panel-chrome {
+  border-bottom: 1px solid color-mix(in srgb, var(--panel-ink) 14%, transparent);
+}
+
+.panel-chrome span:last-child,
+.panel-controls span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.panel-chrome span:last-child i,
+.panel-controls span:first-child i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 4px color-mix(in srgb, currentColor 14%, transparent);
+}
+
+.panel-content {
+  display: grid;
+  grid-template-columns: 0.78fr 1.22fr;
+  gap: clamp(20px, 3.2vw, 48px);
+  align-items: center;
+  padding: clamp(26px, 4vw, 60px);
+}
+
+.panel-copy__eyebrow {
+  opacity: 0.72;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.panel-copy h3 {
+  margin: var(--sp-4) 0 var(--sp-4);
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 3.2vw, 3.5rem);
+  font-weight: var(--w-bold);
+  letter-spacing: -0.05em;
+  line-height: 0.99;
+}
+
+.panel-copy__desc {
+  max-width: 42ch;
+  opacity: 0.78;
+  font-size: 0.96rem;
+  line-height: 1.66;
+}
+
+.panel-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: var(--sp-5);
+}
+
+.panel-tags small {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 13px;
+  border: 1px solid color-mix(in srgb, var(--panel-ink) 20%, transparent);
+  border-radius: var(--r-full);
+  font-size: 0.7rem;
+  font-weight: 720;
+}
+
+.panel-tags svg {
+  opacity: 0.7;
+}
+
+.panel-screen-wrap {
+  position: relative;
+  padding: 18px;
+  border: 1px solid color-mix(in srgb, var(--panel-ink) 16%, transparent);
+  border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--panel-ink) 6%, transparent);
+}
+
+.panel-screen-wrap__screw {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--panel-ink) 26%, transparent);
+}
+
+.panel-screen-wrap__screw--tl { top: 7px; left: 7px; }
+.panel-screen-wrap__screw--tr { top: 7px; right: 7px; }
+.panel-screen-wrap__screw--bl { bottom: 7px; left: 7px; }
+.panel-screen-wrap__screw--br { right: 7px; bottom: 7px; }
+
+.panel-controls {
+  gap: 16px;
+  border-top: 1px solid color-mix(in srgb, var(--panel-ink) 14%, transparent);
+}
+
+.panel-controls__track {
+  position: relative;
+  flex: 1;
+  height: 3px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--panel-ink) 16%, transparent);
+}
+
+.panel-controls__track i {
+  position: absolute;
+  top: -3px;
+  width: 26px;
+  height: 9px;
+  border-radius: var(--r-full);
+  background: currentColor;
+  transition: left var(--d-slow) var(--ease);
+}
+
+@media (max-width: 1100px) {
+  .capability-deck,
+  .panel-content {
+    grid-template-columns: 1fr;
+  }
+
+  .capability-deck__selector {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .capability-deck__selector {
+    grid-template-columns: 1fr;
+  }
+
+  .capability-deck__selector button {
+    padding: 15px 14px;
+  }
+
+  .capability-deck__panel {
+    border-radius: var(--r-lg);
+  }
+}

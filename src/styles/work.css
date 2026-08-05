@@ -1,0 +1,233 @@
+/* ============================================================
+   Trabajo — sección en tinta (contraste con el papel)
+   ============================================================ */
+
+.work {
+  --ink-strong: var(--ink-invert);
+  --ink-body: #d7d5cb;
+  --ink-muted: var(--ink-invert-muted);
+  --line-soft: rgba(246, 243, 234, 0.09);
+  --line: var(--line-invert);
+
+  position: relative;
+  padding-block: var(--sp-section);
+  background: var(--surface-night);
+  color: var(--ink-invert);
+}
+
+.work::before,
+.work::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 42px;
+  background: var(--surface-night);
+  pointer-events: none;
+}
+
+.work::before {
+  top: -1px;
+  clip-path: polygon(0 100%, 100% 0, 100% 100%, 0 100%);
+}
+
+.work::after {
+  bottom: -1px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 0);
+}
+
+.project-stack {
+  display: grid;
+  gap: clamp(20px, 3vw, 34px);
+  width: min(100%, var(--wrap));
+  margin: clamp(52px, 7vw, 96px) auto 0;
+}
+
+.project-scene {
+  --rb-accent: var(--scene-accent);
+
+  display: block;
+  padding: clamp(20px, 2.4vw, 30px);
+  border: 1px solid var(--line-invert);
+  border-radius: var(--r-xl);
+  background: var(--surface-night-raised);
+  transition: border-color var(--d-base) var(--ease);
+}
+
+.project-scene:hover {
+  border-color: color-mix(in srgb, var(--scene-accent) 46%, transparent);
+}
+
+.project-scene__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--sp-4);
+  border-bottom: 1px solid var(--line-invert);
+  color: var(--ink-invert-muted);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+}
+
+.project-scene__layout {
+  display: grid;
+  grid-template-columns: 0.86fr 1.14fr;
+  gap: clamp(24px, 4vw, 62px);
+  align-items: center;
+  padding-top: clamp(24px, 3vw, 42px);
+}
+
+.project-scene__category {
+  color: var(--scene-accent);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.project-scene h3 {
+  margin: var(--sp-3) 0 var(--sp-4);
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 3.6vw, 4rem);
+  font-weight: var(--w-bold);
+  letter-spacing: -0.05em;
+  line-height: 0.98;
+}
+
+.project-scene__desc {
+  max-width: 46ch;
+  color: #cfcdc3;
+  font-size: 0.98rem;
+  line-height: 1.66;
+}
+
+.project-scene__outcome {
+  display: flex;
+  gap: 10px;
+  margin-top: var(--sp-5);
+  padding: 14px 18px;
+  border-left: 2px solid var(--scene-accent);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  background: color-mix(in srgb, var(--scene-accent) 9%, transparent);
+  color: var(--ink-invert);
+  font-size: 0.92rem;
+  font-weight: 620;
+}
+
+.project-scene__outcome span {
+  color: var(--scene-accent);
+}
+
+.project-scene__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: var(--sp-5);
+}
+
+.project-scene__tags small {
+  padding: 7px 13px;
+  border: 1px solid var(--line-invert);
+  border-radius: var(--r-full);
+  color: var(--ink-invert-muted);
+  font-size: 0.68rem;
+  font-weight: 720;
+  letter-spacing: 0.06em;
+}
+
+.project-scene__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: var(--sp-6);
+  padding: 13px 20px;
+  border-radius: var(--r-md);
+  background: var(--scene-accent);
+  color: #10110f;
+  font-size: 0.86rem;
+  font-weight: 780;
+  transition: transform var(--d-fast) var(--ease);
+}
+
+.project-scene__link:hover {
+  transform: translateY(-3px);
+}
+
+.project-scene__visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 340px;
+  padding: clamp(18px, 2.6vw, 34px);
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  background: var(--scene-surface);
+}
+
+.project-scene__visual::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background: radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.6), transparent 58%);
+}
+
+.project-scene__visual-index {
+  position: absolute;
+  right: 12px;
+  bottom: -14px;
+  color: rgba(16, 17, 15, 0.14);
+  font-family: var(--font-display);
+  font-size: clamp(6rem, 12vw, 13rem);
+  font-weight: var(--w-label);
+  letter-spacing: -0.07em;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.work__truth {
+  width: min(100%, 900px);
+  margin: clamp(52px, 6vw, 84px) auto 0;
+  color: var(--ink-invert-muted);
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1.8vw, 1.6rem);
+  font-weight: var(--w-display);
+  letter-spacing: -0.03em;
+  line-height: 1.4;
+  text-align: center;
+  text-wrap: balance;
+}
+
+@media (max-width: 1000px) {
+  .project-scene__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .project-scene__visual {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 640px) {
+  .project-scene {
+    border-radius: var(--r-lg);
+  }
+
+  .project-scene__visual {
+    min-height: 250px;
+  }
+
+  .project-scene__link {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Los elementos de rejilla no deben crecer por su contenido intrínseco. */
+.project-stack > *,
+.project-scene,
+.project-scene__layout > *,
+.rb-tilt {
+  min-width: 0;
+}

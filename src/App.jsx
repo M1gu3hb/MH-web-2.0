@@ -1,21 +1,27 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Lenis from 'lenis';
-import { motion as Motion, useScroll } from 'motion/react';
-import { MessageCircle } from 'lucide-react';
-import { CapabilityDeck } from './components/CapabilityDeck';
-import { ContactSection } from './components/ContactSection';
-import { Hero } from './components/Hero';
-import { Navigation } from './components/Navigation';
-import { PageLoader } from './components/PageLoader';
-import { ProcessSection } from './components/ProcessSection';
-import { WorkSection } from './components/WorkSection';
-import { CONTACT, WHATSAPP_MESSAGE } from './data';
+import { motion as Motion, useScroll, useSpring } from 'motion/react';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
-const whatsappUrl = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
+import { Navigation } from './components/layout/Navigation';
+import { Footer } from './components/layout/Footer';
+import { FloatingCTA } from './components/layout/FloatingCTA';
+import { ClientStrip } from './components/layout/ClientStrip';
+import { Hero } from './components/hero/Hero';
+import { WorkSection } from './components/sections/WorkSection';
+import { CapabilitiesSection } from './components/sections/CapabilitiesSection';
+import { ProcessSection } from './components/sections/ProcessSection';
+import { PricingSection } from './components/sections/PricingSection';
+import { AboutSection } from './components/sections/AboutSection';
+import { FaqSection } from './components/sections/FaqSection';
+import { ContactSection } from './components/sections/ContactSection';
+import { ClickSpark } from './components/reactbits';
+import { useReducedMotion } from './hooks/useReducedMotion';
 
 function useSmoothScroll(enabled) {
   useEffect(() => {
-    if (!enabled || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    if (!enabled) return undefined;
 
     const lenis = new Lenis({
       duration: 1.05,
@@ -23,6 +29,7 @@ function useSmoothScroll(enabled) {
       syncTouch: false,
       wheelMultiplier: 0.9,
     });
+
     let frame;
     const raf = (time) => {
       lenis.raf(time);
@@ -38,34 +45,37 @@ function useSmoothScroll(enabled) {
 }
 
 export default function App() {
-  const [loading, setLoading] = useState(true);
+  const reducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll();
-  const finishLoading = useCallback(() => setLoading(false), []);
+  const meter = useSpring(scrollYProgress, { stiffness: 140, damping: 26, mass: 0.3 });
 
-  useSmoothScroll(!loading);
-
-  useEffect(() => {
-    document.body.classList.toggle('is-loading', loading);
-    return () => document.body.classList.remove('is-loading');
-  }, [loading]);
+  useSmoothScroll(!reducedMotion);
 
   return (
     <>
-      {loading && <PageLoader onComplete={finishLoading} />}
-      <Motion.div className="scroll-meter" style={{ scaleX: scrollYProgress }} aria-hidden="true" />
-      <Navigation whatsappUrl={whatsappUrl} />
-      <main>
-        <Hero whatsappUrl={whatsappUrl} />
-        <CapabilityDeck />
+      <Motion.div className="scroll-meter" style={{ scaleX: meter }} aria-hidden="true" />
+      <div className="paper-grain" aria-hidden="true" />
+
+      <Navigation />
+
+      <main id="contenido">
+        <Hero />
+        <ClientStrip />
         <WorkSection />
+        <CapabilitiesSection />
         <ProcessSection />
-        <ContactSection whatsappUrl={whatsappUrl} />
+        <PricingSection />
+        <AboutSection />
+        <FaqSection />
+        <ContactSection />
       </main>
-      <a className="floating-contact" href={whatsappUrl} target="_blank" rel="noreferrer" aria-label="Escribir por WhatsApp">
-        <span>Hablemos</span>
-        <MessageCircle size={21} />
-        <i />
-      </a>
+
+      <Footer />
+      <FloatingCTA />
+      <ClickSpark color="#345dff" />
+
+      <Analytics />
+      <SpeedInsights />
     </>
   );
 }
