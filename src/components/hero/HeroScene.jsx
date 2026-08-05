@@ -131,7 +131,7 @@ function ParticleRing({ count, reducedMotion }) {
 /* ---- Placa holográfica del monograma ----------------------------------- */
 
 function LogoPlate() {
-  const texture = useTexture('/mh-logo-v2-1080.png');
+  const texture = useTexture('/mh-logo.png');
   const plate = useRef(null);
 
   useLayoutEffect(() => {

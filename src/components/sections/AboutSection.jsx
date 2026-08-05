@@ -7,7 +7,7 @@ export function AboutSection() {
       <div className="about__grid">
         <Reveal className="about__mark">
           <div className="about__plate">
-            <img src="/mh-logo-v2-720.png" alt="" width="320" height="286" />
+            <img src="/mh-logo-sm.png" alt="" width="320" height="286" />
           </div>
           <div className="about__stamp">
             <span>MH97</span>

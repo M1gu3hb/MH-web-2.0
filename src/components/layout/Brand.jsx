@@ -6,7 +6,7 @@ export function Brand({ compact = false, inverted = false }) {
       aria-label="MH Astral Systems — Inicio"
     >
       <span className="brand__plate">
-        <img src="/mh-logo-v2-720.png" alt="" width="44" height="40" />
+        <img src="/mh-logo-sm.png" alt="" width="44" height="40" />
       </span>
       {!compact && (
         <span className="brand__name">
