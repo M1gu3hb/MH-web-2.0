@@ -32,6 +32,24 @@ npm run lint
 npm run build
 ```
 
+## Documentación
+
+El mapeo completo del repositorio, la auditoría y el plan de rediseño están en
+[`docs/`](./docs/INDEX.md):
+
+| Documento | Contenido |
+| --- | --- |
+| [INDEX](./docs/INDEX.md) | Índice de toda la documentación |
+| [PROJECT](./docs/PROJECT.md) | Producto, audiencia, objetivos, stack, decisiones |
+| [FILEMAP](./docs/FILEMAP.md) | Inventario archivo por archivo y grafo de importaciones |
+| [MODULES](./docs/MODULES.md) | Componentes: props, estado, efectos, accesibilidad, coste |
+| [DESIGN-SYSTEM](./docs/DESIGN-SYSTEM.md) | Tokens, tipografía, color, movimiento, deuda visual |
+| [CONTENT](./docs/CONTENT.md) | Inventario de copy, voz y tono, huecos de conversión |
+| [VERCEL](./docs/VERCEL.md) | Proyectos, dominios, caché, cabeceras, hallazgos de infraestructura |
+| [AUDIT](./docs/AUDIT.md) | 50 hallazgos con severidad, evidencia y arreglo |
+| [REDESIGN](./docs/REDESIGN.md) | Propuesta de rediseño y sistema nuevo |
+| [ROADMAP](./docs/ROADMAP.md) | Ejecución por fases con criterios de aceptación |
+
 ## Contacto
 
 Miguel Huerta Bautista  
