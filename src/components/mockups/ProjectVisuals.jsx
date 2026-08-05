@@ -88,3 +88,60 @@ export function BerlinVisual() {
   );
 }
 
+
+export function GestechVisual() {
+  return (
+    <div className="project-ui project-ui--gestech">
+      <div className="gestech-top">
+        <span>GESTECH</span>
+        <small>SISTEMA DE GESTIÓN</small>
+      </div>
+      <div className="gestech-grid">
+        {['Inventario', 'Clientes', 'Cortes', 'Reportes'].map((m, i) => (
+          <span key={m} className={i === 0 ? 'active' : ''}>
+            <i />
+            {m}
+          </span>
+        ))}
+      </div>
+      <div className="gestech-term">
+        <p>$ python gestech.py</p>
+        <p><b>›</b> módulos cargados: 4</p>
+        <p><b>›</b> base de datos lista</p>
+        <p className="ok">● operando</p>
+      </div>
+    </div>
+  );
+}
+
+export function PhotoBoothVisual() {
+  return (
+    <div className="project-ui project-ui--photobooth">
+      <div className="booth-frame">
+        <span className="booth-shot" />
+        <span className="booth-shot" />
+        <span className="booth-shot" />
+        <em>FOLIO · MH-2481</em>
+      </div>
+      <div className="booth-status">
+        <span><i /> Sin internet — guardado local</span>
+        <span><i /> 128 fotos en cola</span>
+      </div>
+      <div className="booth-flash" />
+    </div>
+  );
+}
+
+export function ImaginationVisual() {
+  return (
+    <div className="project-ui project-ui--imagination">
+      <div className="imagination-grid">
+        {Array.from({ length: 24 }, (_, i) => <i key={i} style={{ animationDelay: `${(i % 6) * 140}ms` }} />)}
+      </div>
+      <div className="imagination-core">
+        <span>?</span>
+      </div>
+      <p className="imagination-copy">Tú lo describes.<br />Yo lo construyo.</p>
+    </div>
+  );
+}

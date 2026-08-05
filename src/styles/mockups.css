@@ -1036,3 +1036,260 @@
     min-height: 300px;
   }
 }
+
+/* ============================================================
+   Maquetas nuevas: software, gestech, photo booth, imaginación
+   ============================================================ */
+
+.demo--software {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;
+  background: #0d1018;
+  color: #e7ecff;
+}
+
+.software-bar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 11px 14px;
+  border-bottom: 1px solid rgba(160, 180, 255, 0.16);
+  background: #0a0d14;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.software-bar > span { display: inline-flex; gap: 5px; }
+.software-bar > span i { width: 9px; height: 9px; border-radius: 50%; background: #ff684f; }
+.software-bar > span i:nth-child(2) { background: #f5a524; }
+.software-bar > span i:nth-child(3) { background: #ceff3d; }
+.software-bar em { color: rgba(231, 236, 255, 0.6); font-style: normal; }
+.software-bar b { color: #ceff3d; }
+
+.software-body {
+  display: grid;
+  grid-template-columns: 0.34fr 1fr;
+  min-height: 0;
+}
+
+.software-files {
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  padding: 12px 8px;
+  border-right: 1px solid rgba(160, 180, 255, 0.12);
+}
+
+.software-files span {
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: rgba(231, 236, 255, 0.55);
+  font-family: ui-monospace, monospace;
+  font-size: 0.68rem;
+}
+
+.software-files span.active { background: rgba(245, 165, 36, 0.16); color: #f5a524; }
+
+.software-code {
+  position: relative;
+  padding: 16px 18px;
+  font-family: ui-monospace, monospace;
+  font-size: 0.72rem;
+  line-height: 1.9;
+}
+
+.software-code p { color: rgba(231, 236, 255, 0.86); }
+.software-code p i { display: inline-block; width: 26px; color: rgba(231, 236, 255, 0.28); font-style: normal; }
+.software-code p b { color: #7aa2ff; font-weight: 700; }
+
+.software-run {
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(206, 255, 61, 0.16);
+  color: #ceff3d;
+  font-size: 0.62rem;
+  font-weight: 800;
+}
+
+.software-foot {
+  display: flex;
+  gap: 16px;
+  padding: 11px 14px;
+  border-top: 1px solid rgba(160, 180, 255, 0.16);
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+}
+
+.software-foot span { display: inline-flex; align-items: center; gap: 6px; color: rgba(231, 236, 255, 0.6); }
+.software-foot i { width: 6px; height: 6px; border-radius: 50%; background: #ceff3d; }
+
+/* ---- GESTECH ---------------------------------------------- */
+.project-ui--gestech {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 14px;
+  padding: 20px;
+  background: #12151d;
+  color: #e9edf7;
+}
+
+.gestech-top { display: grid; gap: 4px; }
+.gestech-top span { font-family: var(--display); font-size: 1.6rem; font-weight: 820; letter-spacing: -0.05em; }
+.gestech-top small { color: rgba(233, 237, 247, 0.5); font-size: 0.58rem; font-weight: 800; letter-spacing: 0.16em; }
+
+.gestech-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.gestech-grid span {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 12px; border: 1px solid rgba(233, 237, 247, 0.12); border-radius: 8px;
+  font-size: 0.72rem; font-weight: 700;
+}
+.gestech-grid span.active { border-color: #f5a524; background: rgba(245, 165, 36, 0.14); }
+.gestech-grid i { width: 7px; height: 7px; border-radius: 2px; background: #f5a524; }
+
+.gestech-term {
+  padding: 14px; border-radius: 8px; background: #080b11;
+  font-family: ui-monospace, monospace; font-size: 0.68rem; line-height: 1.9;
+}
+.gestech-term p { color: rgba(233, 237, 247, 0.7); }
+.gestech-term b { color: #f5a524; }
+.gestech-term .ok { color: #ceff3d; }
+
+/* ---- Photo Booth ------------------------------------------ */
+.project-ui--photobooth {
+  position: relative;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 14px;
+  padding: 20px;
+  overflow: hidden;
+  background: #16182c;
+  color: #eceaff;
+}
+
+.booth-frame {
+  display: grid;
+  gap: 8px;
+  align-content: center;
+  padding: 14px;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.booth-shot {
+  height: 52px;
+  border-radius: 4px;
+  background: linear-gradient(120deg, #5e63ff, #b9b6ff 60%, #ffd9d0);
+}
+.booth-shot:nth-child(2) { background: linear-gradient(120deg, #ff684f, #ffc0ad); }
+.booth-shot:nth-child(3) { background: linear-gradient(120deg, #36d7d1, #cdf3f1); }
+
+.booth-frame em {
+  color: #16182c;
+  font-family: ui-monospace, monospace;
+  font-size: 0.6rem;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+
+.booth-status { display: grid; gap: 6px; }
+.booth-status span { display: inline-flex; align-items: center; gap: 8px; font-size: 0.68rem; font-weight: 700; }
+.booth-status i { width: 7px; height: 7px; border-radius: 50%; background: #ff684f; }
+.booth-status span:last-child i { background: #ceff3d; }
+
+.booth-flash {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+  animation: booth-flash 5.5s ease-out infinite;
+}
+
+@keyframes booth-flash {
+  0%, 88%, 100% { opacity: 0; }
+  90% { opacity: 0.55; }
+  94% { opacity: 0; }
+}
+
+/* ---- Imaginación ------------------------------------------ */
+.project-ui--imagination {
+  position: relative;
+  display: grid;
+  place-items: center;
+  gap: 16px;
+  padding: 24px;
+  overflow: hidden;
+  background: #101408;
+  color: #eef7d6;
+}
+
+.imagination-grid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  padding: 18px;
+  opacity: 0.5;
+}
+
+.imagination-grid i {
+  border: 1px solid rgba(206, 255, 61, 0.28);
+  border-radius: 4px;
+  animation: imagination-pulse 3.4s ease-in-out infinite;
+}
+
+.imagination-core {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+  border: 2px dashed #ceff3d;
+  border-radius: 50%;
+  background: rgba(206, 255, 61, 0.1);
+  animation: imagination-spin 14s linear infinite;
+}
+
+.imagination-core span {
+  font-family: var(--display);
+  font-size: 2.6rem;
+  font-weight: 820;
+  color: #ceff3d;
+  animation: imagination-spin 14s linear infinite reverse;
+}
+
+.imagination-copy {
+  position: relative;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.25;
+  text-align: center;
+}
+
+@keyframes imagination-pulse {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes imagination-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .booth-flash,
+  .imagination-grid i,
+  .imagination-core,
+  .imagination-core span { animation: none; }
+}

@@ -380,3 +380,228 @@
     padding: 15px;
   }
 }
+
+/* ============================================================
+   Carrusel de proyectos
+   ============================================================ */
+.carousel {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  gap: 16px;
+  padding: 30px 0 34px;
+  border-bottom: 1px solid var(--line-soft);
+  background: var(--surface-sunken);
+}
+
+.carousel__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-inline: var(--sp-gutter);
+}
+
+.carousel__hint {
+  color: var(--ink-muted);
+  font-size: 0.78rem;
+}
+
+.carousel__viewport {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+
+.carousel__track {
+  display: flex;
+  width: max-content;
+  animation: carousel-run 52s linear infinite;
+}
+
+.carousel__viewport:hover .carousel__track,
+.carousel__viewport:focus-within .carousel__track {
+  animation-play-state: paused;
+}
+
+.carousel__group {
+  display: flex;
+  flex-shrink: 0;
+  gap: 10px;
+  padding-right: 10px;
+}
+
+.carousel__group a {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 18px 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-full);
+  background: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+  transition:
+    transform var(--d-fast) var(--ease),
+    border-color var(--d-fast) var(--ease),
+    background var(--d-fast) var(--ease);
+}
+
+.carousel__group a:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent-brand);
+  background: #fff;
+  box-shadow: var(--e-2);
+}
+
+.carousel__icon {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--ink-strong);
+  color: var(--surface-base);
+}
+
+.carousel__name {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: var(--w-bold);
+  letter-spacing: -0.03em;
+}
+
+.carousel__kind {
+  color: var(--ink-muted);
+  font-size: 0.66rem;
+  font-weight: 780;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@keyframes carousel-run {
+  to { transform: translateX(-50%); }
+}
+
+/* ============================================================
+   Arranque
+   ============================================================ */
+.boot {
+  position: fixed;
+  z-index: 1200;
+  inset: 0;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  padding: clamp(24px, 5vw, 56px);
+  overflow: hidden;
+  background: #070512;
+  color: #f3f2f9;
+}
+
+.boot__grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(rgba(122, 96, 255, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(122, 96, 255, 0.09) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(circle at 50% 45%, #000, transparent 72%);
+}
+
+.boot__core {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 26px;
+}
+
+.boot__mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(180px, 26vw, 260px);
+  aspect-ratio: 1;
+}
+
+.boot__mark img {
+  width: 56%;
+  height: auto;
+  filter: drop-shadow(0 12px 40px rgba(82, 39, 255, 0.55));
+}
+
+.boot__ring {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(122, 96, 255, 0.45);
+  border-top-color: var(--accent-pos);
+  border-radius: 50%;
+  animation: boot-spin 2.4s linear infinite;
+}
+
+.boot__ring--inner {
+  inset: 18%;
+  border-color: rgba(255, 104, 79, 0.35);
+  border-bottom-color: #ff684f;
+  animation-duration: 1.6s;
+  animation-direction: reverse;
+}
+
+.boot__name {
+  color: rgba(243, 242, 249, 0.86);
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: var(--w-label);
+  letter-spacing: 0.34em;
+}
+
+.boot__foot {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  width: min(100%, 620px);
+  margin-inline: auto;
+}
+
+.boot__track {
+  height: 3px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: rgba(243, 242, 249, 0.14);
+}
+
+.boot__track span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--scanner-1), var(--accent-pos));
+  transform-origin: 0 50%;
+  transition: transform 420ms var(--ease);
+}
+
+.boot__meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  color: rgba(243, 242, 249, 0.6);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.boot__meta strong {
+  color: var(--accent-pos);
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+}
+
+@keyframes boot-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel__track,
+  .boot__ring,
+  .hero__scroll-hint span {
+    animation: none;
+  }
+}

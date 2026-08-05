@@ -125,3 +125,24 @@
   --line-strong: rgba(246, 243, 234, 0.3);
   --surface-raised: var(--surface-night-raised);
 }
+
+/* El acento del panel de servicios se interpola en vez de saltar: sin esto,
+   cambiar de servicio produce un corte de color muy visible. */
+@property --accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ff684f;
+}
+
+@property --panel-ink {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #171817;
+}
+
+:root {
+  --accent-software: #f5a524;
+  --scanner-1: #5227ff;
+  --scanner-2: #1e10cc;
+  --scanner-3: #f3f2f9;
+}

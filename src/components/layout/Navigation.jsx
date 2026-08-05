@@ -10,7 +10,7 @@ import { trackWhatsApp, whatsappUrl } from '../../lib/whatsapp';
 /* Se observan todas las secciones, no solo las del menú, para que la barra
    sepa cuándo está sobre un bloque en tinta. */
 const SECTION_IDS = ['inicio', 'trabajo', 'servicios', 'proceso', 'inversion', 'sobre-mi', 'preguntas', 'contacto'];
-const NIGHT_SECTIONS = new Set(['trabajo', 'sobre-mi', 'contacto']);
+const NIGHT_SECTIONS = new Set(['inicio', 'trabajo', 'sobre-mi', 'contacto']);
 const FOCUSABLE = 'a[href], button:not([disabled])';
 
 export function Navigation() {

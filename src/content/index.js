@@ -34,8 +34,8 @@ export const WHATSAPP_MESSAGES = {
 };
 
 export const NAV_LINKS = [
-  ['Trabajo', '#trabajo'],
   ['Servicios', '#servicios'],
+  ['Trabajo', '#trabajo'],
   ['Proceso', '#proceso'],
   ['Inversión', '#inversion'],
   ['Contacto', '#contacto'],
@@ -55,13 +55,27 @@ export const HERO = {
   chrome: { id: 'MH / SYSTEM CORE', status: 'EN LÍNEA', hint: 'Mueve el cursor', tech: 'WEBGL / REALTIME' },
 };
 
-export const CLIENT_MARQUEE = [
-  'PASTELERÍA CONFETTI',
-  'JARDINES CLUB HÍPICO',
-  "FIESTA TOTAL DJ'S",
-  'ELECTROTÉCNICA BERLÍN',
-  'PIQUE JUEGOS',
-  'VERO SEGUROS',
+/**
+ * Carrusel de proyectos. Deduplicado contra los 14 repos públicos de GitHub:
+ *   · jardines-club-hipico + JCH1        → un solo proyecto
+ *   · mh-photo-booth-studio + ...-web    → un solo producto (app + descargas)
+ *   · mh-astral-systems + MH-web-2.0     → este sitio, v1 y v2 (fuera del carrusel)
+ * Los que no tienen repo público enlazan al sitio en vivo.
+ */
+export const CAROUSEL = [
+  { name: 'Pastelería Confetti', kind: 'Web + POS', href: 'https://github.com/M1gu3hb/Pasteleria-Confetti' },
+  { name: 'Jardines Club Hípico', kind: 'Web + CRM', href: 'https://github.com/M1gu3hb/jardines-club-hipico' },
+  { name: 'MH Photo Booth', kind: 'Software de eventos', href: 'https://github.com/M1gu3hb/mh-photo-booth-studio' },
+  { name: 'Qyro', kind: 'Software', href: 'https://github.com/M1gu3hb/-Qyro' },
+  { name: 'GESTECH', kind: 'Software', href: 'https://github.com/M1gu3hb/GESTCH' },
+  { name: 'Vero Seguros', kind: 'Web', href: 'https://github.com/M1gu3hb/Vero-seguros-' },
+  { name: 'Pablomics', kind: 'Web', href: 'https://github.com/M1gu3hb/pablomics-' },
+  { name: 'Morphiq UI', kind: 'Sistema de diseño', href: 'https://github.com/M1gu3hb/Morphiq-UI' },
+  { name: 'Liquid Glass', kind: 'Laboratorio', href: 'https://github.com/M1gu3hb/Liquid-Glass' },
+  { name: 'UI Lab', kind: 'Laboratorio', href: 'https://github.com/M1gu3hb/UI-lab' },
+  { name: "Fiesta Total DJ's", kind: 'Web', href: 'https://fiesta-total-dj.vercel.app' },
+  { name: 'Electrotécnica Berlín', kind: 'Web + POS', href: 'https://electrotecnica-berlin-web.vercel.app' },
+  { name: 'Pique Juegos', kind: 'Web', href: 'https://pique-juegos.vercel.app' },
 ];
 
 export const PROJECTS = [
@@ -116,6 +130,47 @@ export const PROJECTS = [
     surface: '#b9e6e2',
     visual: 'berlin',
     url: 'https://electrotecnica-berlin-web.vercel.app',
+  },
+  {
+    index: '05',
+    client: 'GESTECH',
+    category: 'Software a la medida',
+    description:
+      'Sistema de gestión hecho desde cero en Python para una operación que ningún programa comercial resolvía. Módulos propios, base de datos propia, reglas del negocio real.',
+    outcome: 'Una herramienta que no existía en el mercado',
+    tags: ['Python', 'Escritorio', 'A la medida'],
+    accent: '#f5a524',
+    surface: '#f3ddb4',
+    visual: 'gestech',
+    url: 'https://github.com/M1gu3hb/GESTCH',
+    linkLabel: 'Ver repositorio',
+  },
+  {
+    index: '06',
+    client: 'MH Photo Booth',
+    category: 'Aplicación de eventos',
+    description:
+      'Cabina fotográfica que funciona sin internet en el salón y sube todo cuando vuelve la señal, más un portal donde el invitado descarga sus fotos con un folio.',
+    outcome: 'Dos aplicaciones, un solo producto',
+    tags: ['Electron', 'Offline-first', 'Next.js', 'SQLite'],
+    accent: '#5e63ff',
+    surface: '#cdcbff',
+    visual: 'photobooth',
+    url: 'https://github.com/M1gu3hb/mh-photo-booth-studio',
+    linkLabel: 'Ver repositorio',
+  },
+  {
+    index: '07',
+    client: 'Lo que sigue',
+    category: 'Tu proyecto',
+    description:
+      'Punto de venta, CRM, una app para tu equipo, un portal para tus clientes, una herramienta que solo existe en tu cabeza. Si lo puedes explicar, lo puedo construir.',
+    outcome: 'El único límite es tu imaginación',
+    tags: ['Web', 'Escritorio', 'Móvil', 'Automatización'],
+    accent: '#ceff3d',
+    surface: '#e2f2ac',
+    visual: 'imagination',
+    invitation: true,
   },
 ];
 
@@ -175,6 +230,20 @@ export const CAPABILITIES = [
     foreground: '#10110f',
     tags: ['Flujos', 'Documentos', 'Integraciones'],
     screen: 'automation',
+  },
+  {
+    id: 'software',
+    index: '05',
+    label: 'Software a la medida',
+    eyebrow: 'Aplicaciones propias',
+    title: 'Si no existe la herramienta que necesitas, la construyo.',
+    description:
+      'Aplicaciones de escritorio, web y móviles hechas desde cero para un problema concreto. Qyro, GESTECH y MH Photo Booth nacieron así: nadie vendía lo que hacía falta.',
+    accent: '#f5a524',
+    ink: '#171817',
+    foreground: '#171817',
+    tags: ['Apps de escritorio', 'Apps web', 'Funciona sin internet'],
+    screen: 'software',
   },
 ];
 
@@ -329,14 +398,14 @@ export const FOOTER = {
 
 export const SECTIONS = {
   work: {
-    eyebrow: '01 / TRABAJO REAL',
+    eyebrow: '02 / TRABAJO REAL',
     title: ['Diseño con pulso.', 'Sistemas con oficio.'],
-    lead: 'Proyectos concretos para negocios reales. Cada uno está en línea y lo puedes abrir ahora mismo.',
+    lead: 'Negocios reales, software real. Cada caso está en línea o en GitHub y lo puedes abrir ahora mismo.',
     truth: 'Sin testimonios inventados. Sin métricas de humo. Alcance claro, producto real y contacto directo.',
   },
   capabilities: {
-    eyebrow: '02 / CAPACIDADES',
-    title: ['Un estudio.', 'Cuatro frentes.'],
+    eyebrow: '01 / CAPACIDADES',
+    title: ['Un estudio.', 'Cinco frentes.'],
     lead: 'No vendo una colección de herramientas sueltas. Diseño cómo se conectan para que tu negocio se vea mejor y funcione mejor.',
   },
   process: {

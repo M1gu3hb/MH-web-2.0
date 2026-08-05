@@ -251,3 +251,27 @@
     transform: none;
   }
 }
+
+/* ---- ScrambleText ----------------------------------------- */
+.rb-scramble {
+  display: inline;
+  /* Números y símbolos de ancho fijo: el salto de maquetación al
+     desfragmentar se vuelve casi imperceptible. */
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  cursor: default;
+}
+
+.rb-scramble > span[aria-hidden] {
+  white-space: pre-wrap;
+}
+
+h1 .rb-scramble,
+h2 .rb-scramble,
+h3 .rb-scramble {
+  cursor: crosshair;
+}
+
+.scramble-line {
+  display: block;
+}

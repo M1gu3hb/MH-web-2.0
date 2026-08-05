@@ -167,3 +167,131 @@ Comprobado el día de la publicación contra `www.mh-astral-systems.com`:
 - **S2** — `og:image` sigue siendo el logo; falta una tarjeta social 1200×630
 - **P2** — el chunk 3D pesa 236 KB gzip; se puede aligerar más
 - **S5 · C3 · C4** — páginas por servicio, TypeScript y CI
+
+---
+
+# CHANGELOG — rediseño v4
+
+Versión anterior guardada en la rama `backup/v3.0-published`.
+
+```bash
+git checkout backup/v3.0-published    # volver a la v3
+```
+
+## Orden de la página
+
+Servicios pasa delante de Trabajo. Numeración: 01 Servicios · 02 Trabajo ·
+03 Proceso · 04 Inversión · 05 Sobre mí · 06 Preguntas · 07 Contacto.
+
+## Hero rehecho
+
+- **Fondo `Scanner`** (patrón ReactBits) reescrito sobre WebGL2 nativo, con los
+  parámetros exactos indicados. Sin OGL ni una segunda copia de three
+- Fuera la escena 3D anterior (núcleo con shader)
+- **Laptop en 3D**: el modelo `.blend` entregado, convertido a glTF
+- El monograma de MH flota detrás, con halo
+- El hero pasa a fondo oscuro; la tinta se invierte solo en esa sección
+
+### El modelo
+
+`ASUS Laptop.blend` (Blender 2.90, 4.4 MB + texturas 2K) → `public/laptop.glb`:
+
+| Paso | Resultado |
+| --- | --- |
+| Fuera escritorio, cámara, luces y logos de Acer/ASUS/ROG/RTX/Ryzen | — |
+| Fuera modificadores de subdivisión | 86 290 → 16 455 triángulos |
+| Decimado de `Power port`, `Keyboard`, `Body`, `Webcam` | 47 k → 16 k |
+| Texturas a 512 px, sin las de madera | 8 MB → 28 KB |
+| `gltfpack -cc -kn` (meshopt) | 2.9 MB → **128 KB** |
+
+La retroiluminación del teclado pasa al verde de la marca.
+
+### La pantalla
+
+`brandOS.js` dibuja un sistema operativo inventado —barra «MH ASTRAL OS»,
+terminal escribiendo, caja del día, módulos con su indicador, dock— sobre un
+canvas que se mapea como textura y se refresca ~14 veces por segundo.
+
+Dos detalles que costaron: `gltfpack` mueve los nombres al nodo padre (la
+pantalla se detecta por su material `Display`), y las UV originales no cubren
+la textura, así que se monta un panel propio orientado con la **normal real de
+la malla** y con la base completa construida por `lookAt`, porque orientar solo
+con la normal dejaba el sistema al revés y en espejo.
+
+### Coreografía
+
+| Momento | Qué hace |
+| --- | --- |
+| Al entrar | Gira dos vueltas y media y se asienta flotando |
+| Hero | Flota y sigue al cursor |
+| Antes de Servicios | Se acerca de golpe a la cámara y se apaga al atravesarla |
+| Cuerpo de la página | Oculta; **el canvas se desmonta** |
+| Contacto | Vuelve pegada a la cámara, se aleja, deriva y se desvanece |
+
+Vive en una capa fija que no captura el puntero.
+
+## Servicios
+
+- Quinto frente: **Software a la medida** (Qyro, GESTECH, MH Photo Booth)
+- Sección pegada: el scroll avanza entre los cinco, y se pueden seguir
+  navegando a mano o con el teclado
+- Las cinco capas viven montadas y solo cambia su opacidad: **el cambio ya no
+  tiene ni un fotograma en blanco**
+- El acento del panel se interpola con `@property --accent`, así que el color
+  se funde en lugar de saltar
+
+## Trabajo
+
+- Las tarjetas se **apilan** con el scroll: cada una se detiene 16 px más abajo
+  y deja ver el canto de las anteriores
+- Tres casos nuevos: **GESTECH** (software), **MH Photo Booth** (cualquier app)
+  y **Lo que sigue** («el único límite es tu imaginación»), que en vez de
+  enlace lleva a WhatsApp
+- En móvil la pila se desactiva: apilar tapa contenido en pantallas chicas
+
+## Proceso
+
+- También pegado y avanzando con el scroll
+- **Perilla de volumen**: se arrastra, se gira con la rueda del ratón y responde
+  a las flechas. Es un `role="slider"` con su `aria-valuetext`
+- Rieles de progreso y capas que se funden como en Servicios
+
+## Desfragmentación de letras
+
+`ScrambleText`, en dos modos:
+
+- **hover** — el titular se desordena mientras el cursor está encima y se
+  recompone al salir. En el hero, los encabezados de sección, el carrusel y las
+  lecturas de consola
+- **view** — la presentación (Sobre mí) llega desfragmentada y se recompone al
+  entrar en pantalla, letra por letra
+
+Glifos ASCII de ancho parecido y `tabular-nums` para que la maquetación no
+salte. El texto real vive en un nodo oculto para lectores de pantalla.
+
+## Carrusel de proyectos
+
+Sustituye a la cinta de clientes. **Cada pieza enlaza a su repositorio**, y se
+detiene al pasar el cursor para poder hacer clic.
+
+Deduplicado contra los 14 repos públicos de GitHub:
+
+| Se unieron | Motivo |
+| --- | --- |
+| `jardines-club-hipico` + `JCH1` | El mismo proyecto |
+| `mh-photo-booth-studio` + `mh-photo-booth-web` | Un producto, dos repos |
+| `mh-astral-systems` + `MH-web-2.0` | Este sitio, v1 y v2 — fuera del carrusel |
+
+13 entradas. **Pique Juegos, Fiesta Total y Electrotécnica Berlín no tienen
+repo público**, así que enlazan a su sitio en vivo.
+
+## Pantalla de carga
+
+`BootLoader` precarga tipografías, monograma y el modelo 3D antes de entrar,
+con tope de 7 segundos para que nunca se quede colgada.
+
+## Verificación
+
+Con Chromium real contra el build de producción: sin errores de consola, sin
+desbordamiento horizontal a 390 px, el OS se lee correcto en la pantalla, la
+pila y la perilla responden, y las cinco capacidades avanzan con el scroll.

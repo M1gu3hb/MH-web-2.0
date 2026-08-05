@@ -1,69 +1,101 @@
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Github, MessageCircle } from 'lucide-react';
 import { SectionHeading } from '../primitives/SectionHeading';
-import { BerlinVisual, ConfettiVisual, FiestaVisual, HipicoVisual } from '../mockups/ProjectVisuals';
-import { BlurText, GlareHover, Reveal, SpotlightCard, TiltedCard } from '../reactbits';
+import {
+  BerlinVisual,
+  ConfettiVisual,
+  FiestaVisual,
+  GestechVisual,
+  HipicoVisual,
+  ImaginationVisual,
+  PhotoBoothVisual,
+} from '../mockups/ProjectVisuals';
+import { BlurText, GlareHover, SpotlightCard } from '../reactbits';
 import { PROJECTS, SECTIONS } from '../../content';
+import { trackWhatsApp, whatsappUrl } from '../../lib/whatsapp';
 
 const PROJECT_VISUALS = {
   confetti: ConfettiVisual,
   hipico: HipicoVisual,
   fiesta: FiestaVisual,
   berlin: BerlinVisual,
+  gestech: GestechVisual,
+  photobooth: PhotoBoothVisual,
+  imagination: ImaginationVisual,
 };
 
-function ProjectScene({ project, index }) {
+/**
+ * Cada caso es una tarjeta pegada al viewport. Al hacer scroll, la siguiente
+ * sube y se apila encima de la anterior dejando ver su borde superior, como
+ * un mazo de cartas que se va cerrando.
+ */
+function ProjectCard({ project, index, total }) {
   const Visual = PROJECT_VISUALS[project.visual];
+  const isRepo = project.url?.includes('github.com');
 
   return (
-    <Reveal as="article" delay={index * 0.04} amount={0.15}>
-      <TiltedCard max={4}>
-        <SpotlightCard
-          className="project-scene"
-          accent={project.accent}
-          style={{ '--scene-accent': project.accent, '--scene-surface': project.surface }}
-        >
-          <div className="project-scene__meta">
-            <span>CASO / {project.index}</span>
-            <span>NEGOCIO REAL · CDMX</span>
-          </div>
+    <article
+      className="project-card"
+      style={{
+        '--scene-accent': project.accent,
+        '--scene-surface': project.surface,
+        '--stack-index': index,
+        /* Cada tarjeta se pega un poco más abajo que la anterior: así se ve
+           el canto de las que quedaron debajo. */
+        top: `calc(var(--stack-top) + ${index * 16}px)`,
+        zIndex: index + 1,
+      }}
+    >
+      <SpotlightCard className="project-card__inner" accent={project.accent}>
+        <div className="project-card__meta">
+          <span>CASO / {project.index}</span>
+          <span>{String(index + 1).padStart(2, '0')} — {String(total).padStart(2, '0')}</span>
+        </div>
 
-          <div className="project-scene__layout">
-            <div className="project-scene__copy">
-              <p className="project-scene__category">{project.category}</p>
-              <h3>{project.client}</h3>
-              <p className="project-scene__desc">{project.description}</p>
+        <div className="project-card__layout">
+          <div className="project-card__copy">
+            <p className="project-card__category">{project.category}</p>
+            <h3>{project.client}</h3>
+            <p className="project-card__desc">{project.description}</p>
 
-              <p className="project-scene__outcome">
-                <span aria-hidden="true">→</span>
-                {project.outcome}
-              </p>
+            <p className="project-card__outcome">
+              <span aria-hidden="true">→</span>
+              {project.outcome}
+            </p>
 
-              <div className="project-scene__tags">
-                {project.tags.map((tag) => (
-                  <small key={tag}>{tag}</small>
-                ))}
-              </div>
+            <div className="project-card__tags">
+              {project.tags.map((tag) => (
+                <small key={tag}>{tag}</small>
+              ))}
+            </div>
 
-              <GlareHover
-                as="a"
-                className="project-scene__link"
-                href={project.url}
+            {project.invitation ? (
+              <a
+                className="project-card__link"
+                href={whatsappUrl('work')}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => trackWhatsApp('work')}
               >
-                Ver sitio en vivo
+                <MessageCircle size={16} aria-hidden="true" />
+                Cuéntame qué imaginas
+                <ArrowUpRight size={17} aria-hidden="true" />
+              </a>
+            ) : (
+              <GlareHover as="a" className="project-card__link" href={project.url} target="_blank" rel="noreferrer">
+                {isRepo ? <Github size={16} aria-hidden="true" /> : null}
+                {project.linkLabel ?? 'Ver sitio en vivo'}
                 <ArrowUpRight size={17} aria-hidden="true" />
               </GlareHover>
-            </div>
-
-            <div className="project-scene__visual" aria-hidden="true">
-              <Visual />
-              <span className="project-scene__visual-index">{project.index}</span>
-            </div>
+            )}
           </div>
-        </SpotlightCard>
-      </TiltedCard>
-    </Reveal>
+
+          <div className="project-card__visual" aria-hidden="true">
+            <Visual />
+            <span className="project-card__index">{project.index}</span>
+          </div>
+        </div>
+      </SpotlightCard>
+    </article>
   );
 }
 
@@ -77,9 +109,9 @@ export function WorkSection() {
         tone="night"
       />
 
-      <div className="project-stack">
+      <div className="project-stack" style={{ '--stack-top': 'clamp(84px, 12vh, 132px)' }}>
         {PROJECTS.map((project, index) => (
-          <ProjectScene key={project.client} project={project} index={index} />
+          <ProjectCard key={project.client} project={project} index={index} total={PROJECTS.length} />
         ))}
       </div>
 

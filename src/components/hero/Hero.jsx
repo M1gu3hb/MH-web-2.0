@@ -1,110 +1,85 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
-import { ArrowDown, ArrowUpRight, MessageCircle, Move3D } from 'lucide-react';
-import { motion as Motion, useScroll, useTransform } from 'motion/react';
-import { useMediaQuery } from '../../hooks/useMediaQuery';
+import { ArrowDown, ArrowUpRight, MessageCircle, MousePointer2 } from 'lucide-react';
+import { motion as Motion } from 'motion/react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
-import { DecryptedText, DotGrid, Magnet, ShinyText, SplitText } from '../reactbits';
+import { Magnet, Scanner, ScrambleText } from '../reactbits';
 import { HERO } from '../../content';
 import { trackWhatsApp, whatsappUrl } from '../../lib/whatsapp';
-import { StaticHeroMark } from './StaticHeroMark';
-import { WebGLBoundary } from './WebGLBoundary';
-
-const HeroScene = lazy(() => import('./HeroScene').then((module) => ({ default: module.HeroScene })));
-
-/**
- * Decide si vale la pena montar la escena 3D y con qué nivel de calidad.
- * La escena se difiere hasta después del primer pintado para que el titular
- * sea siempre el LCP.
- */
-function useSceneTier() {
-  const reducedMotion = useReducedMotion();
-  const isPhone = useMediaQuery('(max-width: 540px)');
-  const coarse = useMediaQuery('(pointer: coarse)');
-  const [state, setState] = useState({ ready: false, webgl: false });
-
-  useEffect(() => {
-    if (reducedMotion) {
-      setState({ ready: true, webgl: false });
-      return undefined;
-    }
-
-    let cancelled = false;
-    const probe = () => {
-      if (cancelled) return;
-      const canvas = document.createElement('canvas');
-      let context = null;
-      try {
-        context = canvas.getContext('webgl2') || canvas.getContext('webgl');
-      } catch {
-        context = null;
-      }
-      const memory = navigator.deviceMemory ?? 8;
-      const cores = navigator.hardwareConcurrency ?? 8;
-      const capable = Boolean(context) && memory >= 4 && cores >= 4;
-      context?.getExtension('WEBGL_lose_context')?.loseContext();
-      setState({ ready: true, webgl: capable });
-    };
-
-    const idle = window.requestIdleCallback
-      ? window.requestIdleCallback(probe, { timeout: 1200 })
-      : window.setTimeout(probe, 420);
-
-    return () => {
-      cancelled = true;
-      if (window.cancelIdleCallback && window.requestIdleCallback) window.cancelIdleCallback(idle);
-      else window.clearTimeout(idle);
-    };
-  }, [reducedMotion]);
-
-  return {
-    reducedMotion,
-    showScene: state.ready && state.webgl,
-    quality: isPhone || coarse ? 'low' : 'high',
-  };
-}
 
 export function Hero() {
-  const { reducedMotion, showScene, quality } = useSceneTier();
-  const { scrollYProgress } = useScroll();
-  const stageY = useTransform(scrollYProgress, [0, 0.2], [0, reducedMotion ? 0 : -46]);
-  const [eyebrow, headlineA, headlineB, headlineC] = [HERO.eyebrow, ...HERO.title];
+  const reducedMotion = useReducedMotion();
+  const [lineA, accentA, lineB, accentB] = HERO.title;
 
   return (
     <section className="hero" id="inicio">
-      <DotGrid gap={34} proximity={150} />
-      <div className="hero__wash" aria-hidden="true" />
+      <div className="hero__backdrop" aria-hidden="true">
+        <Scanner
+          color1="#5227FF"
+          color2="#1e10cc"
+          color3="#f3f2f9"
+          speed={0.5}
+          sweepSpeed={0.25}
+          sweepWidth={1.6}
+          sweepFalloff={6}
+          scale={1.5}
+          frequency={2}
+          ripple={0.22}
+          bandDensity={11}
+          lineSharpness={5.5}
+          glow={0.22}
+          scanDirection="vertical"
+          colorSpread={0.7}
+          brightness={1.0}
+          contrast={1.15}
+          softness={1.4}
+          vignette={0.45}
+          scanline
+          grain
+          grainIntensity={0.05}
+          opacity={1.0}
+          mouseInteraction
+          mouseRadius={0.5}
+          mouseStrength={0.5}
+        />
+        <span className="hero__fade" />
+      </div>
 
       <div className="hero__layout">
         <Motion.div
           className="hero__copy"
-          initial={reducedMotion ? false : { opacity: 0, y: 22 }}
+          initial={reducedMotion ? false : { opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
         >
           <p className="signal-label">
-            <span className="signal-label__pulse" aria-hidden="true" />
-            <ShinyText>{eyebrow}</ShinyText>
+            <span className="signal-label__pulse" />
+            <ScrambleText text={HERO.eyebrow} />
           </p>
 
           <h1 className="hero__title">
-            <SplitText text={headlineA} as="span" className="hero__title-line" stagger={0.02} />
             <span className="hero__title-line">
-              <SplitText text={headlineB} as="span" className="hero__accent hero__accent--coral" delay={0.18} />
-              <span className="hero__title-dot" aria-hidden="true">.</span>
+              <ScrambleText text={lineA} />
             </span>
-            <SplitText text={headlineC} as="span" className="hero__title-line" delay={0.28} stagger={0.018} />
             <span className="hero__title-line">
-              <SplitText text={HERO.title[3]} as="span" className="hero__accent hero__accent--blue" delay={0.46} />
-              <span className="hero__title-dot" aria-hidden="true">.</span>
+              <ScrambleText text={accentA} className="hero__accent hero__accent--coral" />
+              <span className="hero__title-dot">.</span>
+            </span>
+            <span className="hero__title-line">
+              <ScrambleText text={lineB} />
+            </span>
+            <span className="hero__title-line">
+              <ScrambleText text={accentB} className="hero__accent hero__accent--lime" />
+              <span className="hero__title-dot">.</span>
             </span>
           </h1>
 
-          <p className="hero__lead">{HERO.lead}</p>
+          <p className="hero__lead">
+            <ScrambleText text={HERO.lead} speed={22} revealPerFrame={1.6} />
+          </p>
 
           <div className="hero__actions">
             <Magnet>
               <a
-                className="tactile-button tactile-button--ink tactile-button--large"
+                className="tactile-button tactile-button--glow tactile-button--large"
                 href={whatsappUrl('hero')}
                 target="_blank"
                 rel="noreferrer"
@@ -115,7 +90,7 @@ export function Hero() {
                 <ArrowUpRight size={17} aria-hidden="true" />
               </a>
             </Magnet>
-            <a className="tactile-button tactile-button--paper tactile-button--large" href="#trabajo">
+            <a className="tactile-button tactile-button--ghost tactile-button--large" href="#servicios">
               {HERO.secondaryCta}
               <ArrowDown size={17} aria-hidden="true" />
             </a>
@@ -126,7 +101,7 @@ export function Hero() {
               <div key={item.label}>
                 <dt>
                   <i aria-hidden="true">{String(index + 1).padStart(2, '0')}</i>
-                  {item.label}
+                  <ScrambleText text={item.label} />
                 </dt>
                 <dd>{item.note}</dd>
               </div>
@@ -134,40 +109,28 @@ export function Hero() {
           </dl>
         </Motion.div>
 
-        <Motion.div
-          className="hero__stage"
-          style={{ y: stageY }}
-          initial={reducedMotion ? false : { opacity: 0, scale: 0.94 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <div className="hero__stage-top">
-            <DecryptedText text={HERO.chrome.id} />
-            <span className="live-signal">
-              <i aria-hidden="true" /> {HERO.chrome.status}
-            </span>
+        {/* La laptop 3D vive en una capa fija (LaptopStage); este hueco le
+            reserva el espacio del layout y muestra la lectura del sistema. */}
+        <div className="hero__viewport">
+          <div className="hero__viewport-frame" aria-hidden="true">
+            <span className="hero__viewport-corner hero__viewport-corner--tl" />
+            <span className="hero__viewport-corner hero__viewport-corner--tr" />
+            <span className="hero__viewport-corner hero__viewport-corner--bl" />
+            <span className="hero__viewport-corner hero__viewport-corner--br" />
           </div>
+          <div className="hero__readout">
+            <span><ScrambleText text="MH ASTRAL OS" /></span>
+            <span className="live-signal"><i aria-hidden="true" /> EN LÍNEA</span>
+          </div>
+          <div className="hero__readout hero__readout--bottom">
+            <span><MousePointer2 size={14} aria-hidden="true" /> Muévela con el cursor</span>
+            <span><ScrambleText text="WEBGL / REALTIME" /></span>
+          </div>
+        </div>
+      </div>
 
-          <div className="hero__canvas">
-            {showScene ? (
-              <WebGLBoundary fallback={<StaticHeroMark />}>
-                <Suspense fallback={<StaticHeroMark />}>
-                  <HeroScene reducedMotion={reducedMotion} quality={quality} />
-                </Suspense>
-              </WebGLBoundary>
-            ) : (
-              <StaticHeroMark />
-            )}
-          </div>
-
-          <div className="hero__stage-bottom">
-            <span>
-              <Move3D size={15} aria-hidden="true" /> {HERO.chrome.hint}
-            </span>
-            <span>{HERO.chrome.tech}</span>
-          </div>
-          <span className="hero__stage-shadow" aria-hidden="true" />
-        </Motion.div>
+      <div className="hero__scroll-hint" aria-hidden="true">
+        <span />
       </div>
     </section>
   );

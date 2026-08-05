@@ -13,6 +13,8 @@ export { GlareHover } from './GlareHover';
 export { Magnet } from './Magnet';
 export { Marquee } from './Marquee';
 export { Reveal } from './Reveal';
+export { Scanner } from './Scanner';
+export { ScrambleLines, ScrambleText } from './ScrambleText';
 export { ScrollReveal } from './ScrollReveal';
 export { ShinyText } from './ShinyText';
 export { SplitText } from './SplitText';

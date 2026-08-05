@@ -1,123 +1,146 @@
 /* ============================================================
-   Capacidades
+   Servicios — sección pegada que avanza con el scroll
    ============================================================ */
 
 .capabilities {
-  padding-block: var(--sp-section);
+  position: relative;
+  z-index: 4;
   background: var(--surface-base);
+}
+
+.capabilities__intro {
+  padding-block: var(--sp-section) 0;
+}
+
+/* Altura del recorrido: un tramo por servicio más la pantalla pegada. */
+.capabilities__scroller {
+  height: calc(100vh + 5 * 58vh);
+}
+
+.capabilities__sticky {
+  position: sticky;
+  top: 0;
+  display: grid;
+  align-items: center;
+  min-height: 100vh;
+  padding-block: clamp(78px, 11vh, 116px) clamp(28px, 5vh, 56px);
 }
 
 .capability-deck {
   display: grid;
-  grid-template-columns: 0.86fr 2.14fr;
-  gap: clamp(20px, 3vw, 42px);
+  grid-template-columns: 0.78fr 2.22fr;
+  gap: clamp(18px, 2.6vw, 38px);
   width: min(100%, var(--wrap));
-  margin: clamp(52px, 7vw, 104px) auto 0;
+  margin-inline: auto;
 }
 
+/* ---- Selector --------------------------------------------- */
 .capability-deck__selector {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  padding-left: 14px;
+}
+
+.capability-deck__progress {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 0;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--line);
+}
+
+.capability-deck__progress i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--accent);
+  transform-origin: 50% 0;
+  transition: transform var(--d-slow) var(--ease);
 }
 
 .capability-deck__selector button {
   position: relative;
   display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  grid-template-columns: auto 1fr auto;
   gap: 12px;
   align-items: center;
-  padding: 20px 18px;
+  padding: 17px 16px;
   overflow: hidden;
-  border: 1px solid var(--line);
+  border: 1px solid transparent;
   border-radius: var(--r-lg);
-  background: rgba(255, 255, 255, 0.5);
+  background: transparent;
   text-align: left;
   transition:
-    transform var(--d-fast) var(--ease),
-    border-color var(--d-fast) var(--ease),
-    background var(--d-fast) var(--ease);
-}
-
-.capability-deck__selector button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 3px;
-  height: 100%;
-  background: var(--accent);
-  transform: scaleY(0);
-  transform-origin: 50% 0;
-  transition: transform var(--d-base) var(--ease);
+    transform var(--d-base) var(--ease),
+    border-color var(--d-base) var(--ease),
+    background var(--d-base) var(--ease),
+    opacity var(--d-base) var(--ease);
+  opacity: 0.5;
 }
 
 .capability-deck__selector button:hover {
+  opacity: 0.85;
   transform: translateX(3px);
-  border-color: var(--line-strong);
-  background: #fff;
 }
 
 .capability-deck__selector button.active {
-  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+  border-color: color-mix(in srgb, var(--tab-accent) 45%, var(--line));
   background: #fff;
   box-shadow: var(--e-1);
-}
-
-.capability-deck__selector button.active::before {
-  transform: scaleY(1);
+  opacity: 1;
 }
 
 .capability-deck__selector button > span {
-  color: var(--ink-muted);
+  color: var(--tab-accent);
   font-family: var(--font-display);
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: var(--w-label);
 }
 
 .capability-deck__selector button strong {
   font-family: var(--font-display);
-  font-size: 1.08rem;
+  font-size: 1.05rem;
   font-weight: var(--w-bold);
   letter-spacing: -0.03em;
 }
 
-.capability-deck__selector button i {
-  color: var(--ink-muted);
-  font-size: 0.63rem;
-  font-style: normal;
-  font-weight: 780;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
 .capability-deck__selector button svg {
   color: var(--ink-muted);
-  transition: transform var(--d-fast) var(--ease);
+  opacity: 0;
+  transition: opacity var(--d-fast) var(--ease), transform var(--d-fast) var(--ease);
 }
 
 .capability-deck__selector button.active svg {
   transform: translate(2px, -2px);
+  opacity: 1;
   color: var(--ink-strong);
 }
 
-/* ---- Panel ------------------------------------------------ */
+/* ---- Panel ------------------------------------------------- */
 .capability-deck__panel {
   display: grid;
   grid-template-rows: auto 1fr auto;
+  min-width: 0;
   overflow: hidden;
-  border: 1px solid rgba(19, 20, 18, 0.3);
+  border: 1px solid rgba(19, 20, 18, 0.28);
   border-radius: var(--r-xl);
+  /* El acento se interpola gracias a @property: el cambio de servicio ya no
+     salta de color, se funde. */
   background: var(--accent);
   box-shadow:
-    inset 0 1px rgba(255, 255, 255, 0.42),
+    inset 0 1px rgba(255, 255, 255, 0.4),
     0 8px 0 color-mix(in srgb, var(--accent) 58%, #000),
-    0 26px 60px color-mix(in srgb, var(--accent) 22%, transparent);
+    0 30px 64px color-mix(in srgb, var(--accent) 24%, transparent);
   color: var(--panel-ink);
   transition:
-    background var(--d-slow) var(--ease),
-    box-shadow var(--d-slow) var(--ease),
-    color var(--d-slow) var(--ease);
+    --accent 760ms var(--ease),
+    --panel-ink 760ms var(--ease),
+    box-shadow 760ms var(--ease);
 }
 
 .panel-chrome,
@@ -125,6 +148,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 14px;
   padding: 12px 20px;
   color: color-mix(in srgb, var(--panel-ink) 62%, transparent);
   font-size: 0.62rem;
@@ -152,13 +176,43 @@
   box-shadow: 0 0 0 4px color-mix(in srgb, currentColor 14%, transparent);
 }
 
-.panel-content {
-  display: grid;
-  grid-template-columns: 0.78fr 1.22fr;
-  gap: clamp(20px, 3.2vw, 48px);
-  align-items: center;
-  padding: clamp(26px, 4vw, 60px);
+/* ---- Capas: todas montadas, solo cambia la opacidad -------- */
+.panel-stage {
+  position: relative;
+  min-height: min(66vh, 540px);
 }
+
+.panel-layer {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 0.92fr 1.08fr;
+  gap: clamp(18px, 2.6vw, 40px);
+  align-items: center;
+  padding: clamp(22px, 3.4vw, 50px);
+  transition:
+    opacity 620ms var(--ease),
+    transform 720ms var(--ease),
+    filter 620ms var(--ease);
+  will-change: opacity, transform;
+}
+
+.panel-layer.is-active {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+  pointer-events: auto;
+}
+
+.panel-layer.is-past,
+.panel-layer.is-next {
+  opacity: 0;
+  filter: blur(7px);
+  pointer-events: none;
+}
+
+.panel-layer.is-past { transform: translateY(-26px) scale(0.985); }
+.panel-layer.is-next { transform: translateY(26px) scale(0.985); }
 
 .panel-copy__eyebrow {
   opacity: 0.72;
@@ -169,18 +223,19 @@
 }
 
 .panel-copy h3 {
-  margin: var(--sp-4) 0 var(--sp-4);
+  margin: var(--sp-4) 0;
   font-family: var(--font-display);
-  font-size: clamp(1.9rem, 3.2vw, 3.5rem);
+  font-size: clamp(1.6rem, 2.4vw, 2.65rem);
   font-weight: var(--w-bold);
-  letter-spacing: -0.05em;
-  line-height: 0.99;
+  letter-spacing: -0.048em;
+  line-height: 1.02;
+  text-wrap: balance;
 }
 
 .panel-copy__desc {
   max-width: 42ch;
   opacity: 0.78;
-  font-size: 0.96rem;
+  font-size: 0.94rem;
   line-height: 1.66;
 }
 
@@ -188,7 +243,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: var(--sp-5);
+  margin-top: var(--sp-4);
 }
 
 .panel-tags small {
@@ -202,13 +257,13 @@
   font-weight: 720;
 }
 
-.panel-tags svg {
-  opacity: 0.7;
-}
+.panel-tags svg { opacity: 0.7; }
 
 .panel-screen-wrap {
   position: relative;
-  padding: 18px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 16px;
   border: 1px solid color-mix(in srgb, var(--panel-ink) 16%, transparent);
   border-radius: var(--r-lg);
   background: color-mix(in srgb, var(--panel-ink) 6%, transparent);
@@ -228,7 +283,6 @@
 .panel-screen-wrap__screw--br { right: 7px; bottom: 7px; }
 
 .panel-controls {
-  gap: 16px;
   border-top: 1px solid color-mix(in srgb, var(--panel-ink) 14%, transparent);
 }
 
@@ -251,27 +305,56 @@
 }
 
 @media (max-width: 1100px) {
-  .capability-deck,
-  .panel-content {
+  .capability-deck {
     grid-template-columns: 1fr;
   }
 
   .capability-deck__selector {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    padding-left: 0;
+  }
+
+  .capability-deck__progress { display: none; }
+
+  .capability-deck__selector button {
+    border-color: var(--line);
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0.72;
+  }
+
+  .panel-layer {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-stage {
+    min-height: 620px;
+  }
+}
+
+@media (max-width: 900px) {
+  /* Sin scroll pegado en pantallas chicas: solo navegación manual. */
+  .capabilities__scroller { height: auto; }
+
+  .capabilities__sticky {
+    position: static;
+    min-height: 0;
+    padding-block: clamp(34px, 6vh, 60px) var(--sp-section);
   }
 }
 
 @media (max-width: 640px) {
+  .capability-deck__panel { border-radius: var(--r-lg); }
+  .panel-stage { min-height: 560px; }
+}
+
+@media (max-width: 520px) {
+  /* «Software a la medida» y «Automatización» no caben a dos columnas. */
   .capability-deck__selector {
     grid-template-columns: 1fr;
   }
 
-  .capability-deck__selector button {
-    padding: 15px 14px;
-  }
-
-  .capability-deck__panel {
-    border-radius: var(--r-lg);
+  .capability-deck__selector button strong {
+    font-size: 0.98rem;
   }
 }

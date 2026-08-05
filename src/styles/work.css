@@ -1,5 +1,5 @@
 /* ============================================================
-   Trabajo — sección en tinta (contraste con el papel)
+   Trabajo — tarjetas que se apilan con el scroll
    ============================================================ */
 
 .work {
@@ -10,6 +10,7 @@
   --line: var(--line-invert);
 
   position: relative;
+  z-index: 4;
   padding-block: var(--sp-section);
   background: var(--surface-night);
   color: var(--ink-invert);
@@ -26,39 +27,45 @@
   pointer-events: none;
 }
 
-.work::before {
-  top: -1px;
-  clip-path: polygon(0 100%, 100% 0, 100% 100%, 0 100%);
-}
+.work::before { top: -1px; clip-path: polygon(0 100%, 100% 0, 100% 100%, 0 100%); }
+.work::after { bottom: -1px; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 0); }
 
-.work::after {
-  bottom: -1px;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 0);
-}
-
+/* ---- La pila ----------------------------------------------- */
 .project-stack {
-  display: grid;
-  gap: clamp(20px, 3vw, 34px);
   width: min(100%, var(--wrap));
   margin: clamp(52px, 7vw, 96px) auto 0;
 }
 
-.project-scene {
+.project-card {
+  position: sticky;
+  /* `top` y `z-index` los pone el componente: cada tarjeta se detiene
+     16 px más abajo que la anterior y deja ver su canto. */
+  display: block;
+  margin-bottom: clamp(28px, 5vh, 52px);
+  min-width: 0;
+}
+
+/* La última no necesita separación: cierra la pila. */
+.project-card:last-child { margin-bottom: 0; }
+
+.project-card__inner {
   --rb-accent: var(--scene-accent);
 
   display: block;
   padding: clamp(20px, 2.4vw, 30px);
   border: 1px solid var(--line-invert);
   border-radius: var(--r-xl);
-  background: var(--surface-night-raised);
+  /* Opaca: es lo que hace que la pila se vea como un mazo. */
+  background: #14171a;
+  box-shadow: 0 -1px 0 rgba(246, 243, 234, 0.1), 0 -24px 60px rgba(0, 0, 0, 0.55);
   transition: border-color var(--d-base) var(--ease);
 }
 
-.project-scene:hover {
+.project-card:hover .project-card__inner {
   border-color: color-mix(in srgb, var(--scene-accent) 46%, transparent);
 }
 
-.project-scene__meta {
+.project-card__meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -70,15 +77,17 @@
   letter-spacing: 0.15em;
 }
 
-.project-scene__layout {
+.project-card__layout {
   display: grid;
   grid-template-columns: 0.86fr 1.14fr;
-  gap: clamp(24px, 4vw, 62px);
+  gap: clamp(24px, 4vw, 58px);
   align-items: center;
-  padding-top: clamp(24px, 3vw, 42px);
+  padding-top: clamp(22px, 3vw, 38px);
 }
 
-.project-scene__category {
+.project-card__layout > * { min-width: 0; }
+
+.project-card__category {
   color: var(--scene-accent);
   font-size: 0.72rem;
   font-weight: 800;
@@ -86,27 +95,27 @@
   text-transform: uppercase;
 }
 
-.project-scene h3 {
+.project-card h3 {
   margin: var(--sp-3) 0 var(--sp-4);
   font-family: var(--font-display);
-  font-size: clamp(2.2rem, 3.6vw, 4rem);
+  font-size: clamp(2rem, 3.4vw, 3.7rem);
   font-weight: var(--w-bold);
   letter-spacing: -0.05em;
   line-height: 0.98;
 }
 
-.project-scene__desc {
+.project-card__desc {
   max-width: 46ch;
   color: #cfcdc3;
-  font-size: 0.98rem;
-  line-height: 1.66;
+  font-size: 0.96rem;
+  line-height: 1.64;
 }
 
-.project-scene__outcome {
+.project-card__outcome {
   display: flex;
   gap: 10px;
   margin-top: var(--sp-5);
-  padding: 14px 18px;
+  padding: 13px 17px;
   border-left: 2px solid var(--scene-accent);
   border-radius: 0 var(--r-sm) var(--r-sm) 0;
   background: color-mix(in srgb, var(--scene-accent) 9%, transparent);
@@ -115,18 +124,16 @@
   font-weight: 620;
 }
 
-.project-scene__outcome span {
-  color: var(--scene-accent);
-}
+.project-card__outcome span { color: var(--scene-accent); }
 
-.project-scene__tags {
+.project-card__tags {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin-top: var(--sp-5);
 }
 
-.project-scene__tags small {
+.project-card__tags small {
   padding: 7px 13px;
   border: 1px solid var(--line-invert);
   border-radius: var(--r-full);
@@ -136,7 +143,7 @@
   letter-spacing: 0.06em;
 }
 
-.project-scene__link {
+.project-card__link {
   display: inline-flex;
   align-items: center;
   gap: 9px;
@@ -150,22 +157,21 @@
   transition: transform var(--d-fast) var(--ease);
 }
 
-.project-scene__link:hover {
-  transform: translateY(-3px);
-}
+.project-card__link:hover { transform: translateY(-3px); }
 
-.project-scene__visual {
+.project-card__visual {
   position: relative;
   display: grid;
   place-items: center;
-  min-height: 340px;
-  padding: clamp(18px, 2.6vw, 34px);
+  min-width: 0;
+  min-height: 320px;
+  padding: clamp(16px, 2.4vw, 32px);
   overflow: hidden;
   border-radius: var(--r-lg);
   background: var(--scene-surface);
 }
 
-.project-scene__visual::before {
+.project-card__visual::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -173,13 +179,13 @@
   background: radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.6), transparent 58%);
 }
 
-.project-scene__visual-index {
+.project-card__index {
   position: absolute;
   right: 12px;
   bottom: -14px;
   color: rgba(16, 17, 15, 0.14);
   font-family: var(--font-display);
-  font-size: clamp(6rem, 12vw, 13rem);
+  font-size: clamp(5rem, 11vw, 12rem);
   font-weight: var(--w-label);
   letter-spacing: -0.07em;
   line-height: 1;
@@ -188,7 +194,7 @@
 
 .work__truth {
   width: min(100%, 900px);
-  margin: clamp(52px, 6vw, 84px) auto 0;
+  margin: clamp(70px, 9vw, 120px) auto 0;
   color: var(--ink-invert-muted);
   font-family: var(--font-display);
   font-size: clamp(1.1rem, 1.8vw, 1.6rem);
@@ -200,34 +206,20 @@
 }
 
 @media (max-width: 1000px) {
-  .project-scene__layout {
-    grid-template-columns: 1fr;
-  }
+  .project-card__layout { grid-template-columns: 1fr; }
+  .project-card__visual { min-height: 280px; }
+}
 
-  .project-scene__visual {
-    min-height: 300px;
+@media (max-width: 900px) {
+  /* Apilar en móvil marea y tapa contenido: se vuelve una lista normal. */
+  .project-card {
+    position: static;
+    margin-bottom: 18px;
   }
 }
 
 @media (max-width: 640px) {
-  .project-scene {
-    border-radius: var(--r-lg);
-  }
-
-  .project-scene__visual {
-    min-height: 250px;
-  }
-
-  .project-scene__link {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-/* Los elementos de rejilla no deben crecer por su contenido intrínseco. */
-.project-stack > *,
-.project-scene,
-.project-scene__layout > *,
-.rb-tilt {
-  min-width: 0;
+  .project-card__inner { border-radius: var(--r-lg); }
+  .project-card__visual { min-height: 240px; }
+  .project-card__link { width: 100%; justify-content: center; }
 }
