@@ -919,23 +919,6 @@
     min-height: 340px;
   }
 
-  .panel-copy {
-    padding: 18px 4px 10px;
-  }
-
-  .panel-copy h3 {
-    font-size: 2.6rem;
-  }
-
-  .panel-controls {
-    grid-template-columns: auto auto;
-    padding-inline: 18px;
-  }
-
-  .panel-controls__track {
-    display: none;
-  }
-
   .pos-body {
     grid-template-columns: 1fr;
   }
@@ -957,31 +940,10 @@
   .flow-line--one { width: 80px; }
   .flow-line--two { left: 51%; width: 76px; }
 
-  .project-scene {
-    border-radius: 17px;
-  }
-
-  .project-scene__meta {
-    padding: 0 16px;
-    font-size: 0.45rem;
-  }
-
-  .project-scene__layout {
-    padding: 22px;
-  }
-
   .project-ui {
     min-height: 330px;
     border-radius: 13px;
     transform: none;
-  }
-
-  .project-scene__copy h3 {
-    font-size: 3.2rem;
-  }
-
-  .project-scene__copy > span {
-    font-size: 0.9rem;
   }
 
   .project-ui--confetti {
@@ -1044,10 +1006,6 @@
 
   .berlin-receipt {
     display: none;
-  }
-
-  .process-console {
-    border-radius: 16px;
   }
 
 }

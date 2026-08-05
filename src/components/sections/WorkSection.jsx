@@ -1,7 +1,7 @@
 import { ArrowUpRight } from 'lucide-react';
 import { SectionHeading } from '../primitives/SectionHeading';
 import { BerlinVisual, ConfettiVisual, FiestaVisual, HipicoVisual } from '../mockups/ProjectVisuals';
-import { GlareHover, Reveal, SpotlightCard, TiltedCard } from '../reactbits';
+import { BlurText, GlareHover, Reveal, SpotlightCard, TiltedCard } from '../reactbits';
 import { PROJECTS, SECTIONS } from '../../content';
 
 const PROJECT_VISUALS = {
@@ -83,9 +83,7 @@ export function WorkSection() {
         ))}
       </div>
 
-      <Reveal as="p" className="work__truth">
-        {SECTIONS.work.truth}
-      </Reveal>
+      <BlurText text={SECTIONS.work.truth} className="work__truth" stagger={0.03} />
     </section>
   );
 }
