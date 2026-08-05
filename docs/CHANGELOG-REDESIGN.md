@@ -1,5 +1,8 @@
 # CHANGELOG — rediseño v3
 
+**Publicado en producción** el 5 de agosto de 2026 en
+`https://www.mh-astral-systems.com` (commit `50dd1dc`).
+
 Qué cambió respecto de la versión anterior, guardada en la rama
 `backup/v2.0-original` (commit `3b2cfe5`).
 
@@ -118,11 +121,49 @@ Con Chromium real (Playwright) contra el build de producción:
 - Los 4 enlaces de casos apuntan a sitios que responden 200
 - `npm run lint` y `npm run build` limpios
 
-## 7. Números por confirmar
+## 7. El sitio se publica sin cifras
 
-`src/content/index.js` lleva un aviso al inicio. Son propuestas, no datos
-verificados: cifras del hero (12+ proyectos, 4 años), precios ($18,000 /
-$35,000), plazos y las respuestas del FAQ que citan importes.
+Decisión explícita antes de salir a producción: los precios, plazos y conteos
+del rediseño eran propuestas, no datos verificados, así que **no se publicaron**.
 
-**El sitio promete «sin métricas de humo». Ningún número debe publicarse en el
-dominio real sin que Miguel lo confirme.**
+Retirado:
+
+| Dónde | Antes | Ahora |
+| --- | --- | --- |
+| Paquetes | Desde $18,000 / $35,000 | «A cotizar» |
+| Paquetes | 2–3 / 4–6 / 6–10 semanas | sin plazo |
+| Proceso | 3–5 días … 2–6 semanas por fase | sin duración |
+| Capacidades | «Desde N semanas» | sin plazo |
+| Hero | 12+ proyectos · 4 años · 100 % | credenciales cualitativas |
+| Condiciones | «50 / 50» | «Precio cerrado» |
+| Paquete Operación | «Un mes de ajustes incluido» | «Ajustes incluidos tras la entrega» |
+| FAQ | importes, dominio ~$300/año, medio pago | respuestas sin números |
+| Caso Berlín | «negocio de 50 años» | «negocio familiar» |
+
+**Los campos siguen en el modelo de datos y los componentes los pintan si
+existen** (`price`, `time`, `duration`, `meta` son opcionales). Añadir las
+cifras cuando estén validadas es editar `src/content/index.js` y nada más:
+la sección Inversión, el proceso y el hero ya tienen su sitio reservado.
+
+Verificado contra producción: ninguna de las cifras retiradas aparece en el
+bundle publicado.
+
+## 8. Estado en producción
+
+Comprobado el día de la publicación contra `www.mh-astral-systems.com`:
+
+- Los 6 archivos del build son byte a byte idénticos al build local
+- `cache-control: public, max-age=31536000, immutable` en assets con hash
+- Cabeceras de seguridad completas (`nosniff`, `referrer-policy`,
+  `permissions-policy`, `x-frame-options`, HSTS)
+- El apex redirige 308 a `www`
+- `/_vercel/insights/script.js` responde 200 — la analítica está midiendo
+- Los cuatro enlaces de casos apuntan a los sitios de cliente en vivo
+
+### Pendiente
+
+- **V2** — el sitio v1 sigue público e indexable en
+  `mh-astral-systems.vercel.app`. Borrar el proyecto o protegerlo
+- **S2** — `og:image` sigue siendo el logo; falta una tarjeta social 1200×630
+- **P2** — el chunk 3D pesa 236 KB gzip; se puede aligerar más
+- **S5 · C3 · C4** — páginas por servicio, TypeScript y CI
