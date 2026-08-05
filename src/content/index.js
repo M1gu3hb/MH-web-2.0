@@ -2,15 +2,15 @@
  * Fuente única de todo el copy del sitio.
  * Editar aquí no requiere abrir un solo componente.
  *
- * ⚠️ REVISAR ANTES DE PUBLICAR EN PRODUCCIÓN
- * Los siguientes valores son propuestas y deben confirmarse con Miguel:
- *   · HERO.stats           → 12+ proyectos, 4 años
- *   · PRICING.tiers[].price → $18,000 / $35,000 / a cotizar
- *   · PRICING.tiers[].time  → plazos por paquete
- *   · PROCESS[].duration    → duración por fase
- *   · FAQ                   → precios, dominio (~$300/año) y mes de ajustes
- * El sitio promete «sin métricas de humo»: ningún número debe quedar
- * publicado sin que sea verdad.
+ * SIN CIFRAS POR DECISIÓN EXPLÍCITA
+ * El sitio promete «sin métricas de humo», así que no publica ningún número
+ * que no esté confirmado: ni precios, ni plazos, ni conteo de proyectos.
+ * Para añadirlos cuando estén validados:
+ *   · PRICING.tiers[].price  → sustituir 'A cotizar' por el importe
+ *   · PRICING.tiers[].time   → añadir el plazo (el componente ya lo pinta)
+ *   · PROCESS[].duration     → añadir la duración por fase
+ *   · CAPABILITIES[].meta    → añadir el plazo por frente
+ *   · HERO.credentials       → cambiar por cifras si se quieren mostrar
  */
 
 export const CONTACT = {
@@ -47,10 +47,10 @@ export const HERO = {
   lead: 'Páginas que convencen. Sistemas que ordenan. Una sola visión para convertir la operación de tu negocio en una ventaja.',
   primaryCta: 'Cuéntame tu proyecto',
   secondaryCta: 'Ver trabajo real',
-  stats: [
-    { value: 12, suffix: '+', label: 'Proyectos entregados' },
-    { value: 4, suffix: '', label: 'Años construyendo' },
-    { value: 100, suffix: '%', label: 'Atención directa' },
+  credentials: [
+    { label: 'Atención directa', note: 'Tratas conmigo, no con una cuenta' },
+    { label: 'Diseño + desarrollo', note: 'Las dos disciplinas, una sola persona' },
+    { label: 'CDMX', note: 'Voy a verte si hace falta' },
   ],
   chrome: { id: 'MH / SYSTEM CORE', status: 'EN LÍNEA', hint: 'Mueve el cursor', tech: 'WEBGL / REALTIME' },
 };
@@ -110,7 +110,7 @@ export const PROJECTS = [
     category: 'Punto de venta + presencia web',
     description:
       'Sistema de cobro y presencia digital para un negocio familiar de electrónica, unidos por una identidad visual propia.',
-    outcome: 'Un negocio de 50 años con identidad y caja digital',
+    outcome: 'Un negocio familiar con identidad propia y caja digital',
     tags: ['POS', 'Web', 'Identidad'],
     accent: '#36d7d1',
     surface: '#b9e6e2',
@@ -132,7 +132,6 @@ export const CAPABILITIES = [
     ink: '#171817',
     foreground: '#171817',
     tags: ['Dirección UI/UX', 'Desarrollo a medida', 'SEO técnico'],
-    meta: 'Desde 2 semanas',
     screen: 'website',
   },
   {
@@ -147,7 +146,6 @@ export const CAPABILITIES = [
     ink: '#10110f',
     foreground: '#10110f',
     tags: ['Caja e inventario', 'Pedidos y cocina', 'Multi-sucursal'],
-    meta: 'Desde 4 semanas',
     screen: 'pos',
   },
   {
@@ -162,7 +160,6 @@ export const CAPABILITIES = [
     ink: '#f5f2e9',
     foreground: '#f8f6ef',
     tags: ['Prospectos', 'Cotizadores', 'Dashboards'],
-    meta: 'Desde 4 semanas',
     screen: 'crm',
   },
   {
@@ -177,7 +174,6 @@ export const CAPABILITIES = [
     ink: '#10110f',
     foreground: '#10110f',
     tags: ['Flujos', 'Documentos', 'Integraciones'],
-    meta: 'Desde 1 semana',
     screen: 'automation',
   },
 ];
@@ -186,25 +182,21 @@ export const PROCESS = [
   {
     index: '01',
     title: 'Entender',
-    duration: '3 – 5 días',
     text: 'Detecto qué debe vender, ordenar o automatizar la solución antes de abrir el editor.',
   },
   {
     index: '02',
     title: 'Dirigir',
-    duration: '1 semana',
     text: 'Defino una idea visual y un recorrido claro. Ves la personalidad antes de construir todo.',
   },
   {
     index: '03',
     title: 'Construir',
-    duration: '2 – 6 semanas',
     text: 'Diseño, código y lógica avanzan juntos. Te enseño producto real, no presentaciones eternas.',
   },
   {
     index: '04',
     title: 'Lanzar',
-    duration: '3 – 5 días',
     text: 'Publicamos, probamos y dejamos una base que tu negocio pueda operar y hacer crecer.',
   },
 ];
@@ -217,8 +209,7 @@ export const PRICING = {
     {
       id: 'presencia',
       name: 'Presencia',
-      price: 'Desde $18,000',
-      time: '2 – 3 semanas',
+      price: 'A cotizar',
       pitch: 'Para el negocio que necesita verse como lo que ya es.',
       accent: '#ff684f',
       features: [
@@ -232,8 +223,7 @@ export const PRICING = {
     {
       id: 'operacion',
       name: 'Operación',
-      price: 'Desde $35,000',
-      time: '4 – 6 semanas',
+      price: 'A cotizar',
       pitch: 'Para el negocio que ya vende y necesita dejar de perder tiempo.',
       accent: '#ceff3d',
       featured: true,
@@ -242,14 +232,13 @@ export const PRICING = {
         'Inventario, cortes y reportes',
         'Multi-usuario y permisos',
         'Capacitación a tu equipo',
-        'Un mes de ajustes incluido',
+        'Ajustes incluidos tras la entrega',
       ],
     },
     {
       id: 'sistema',
       name: 'Sistema completo',
       price: 'A cotizar',
-      time: '6 – 10 semanas',
       pitch: 'Para el negocio que quiere que todo hable entre sí.',
       accent: '#5e63ff',
       features: [
@@ -262,7 +251,7 @@ export const PRICING = {
     },
   ],
   terms: [
-    ['50 / 50', 'Mitad para arrancar, mitad contra entrega.'],
+    ['Precio cerrado', 'Te doy el número antes de empezar y ese es el número.'],
     ['Sin mensualidades', 'No te amarro a una renta obligatoria.'],
     ['Es tuyo', 'El código, el dominio y los accesos quedan a tu nombre.'],
   ],
@@ -286,11 +275,11 @@ export const FAQ = {
   items: [
     {
       q: '¿Cuánto cuesta una página web?',
-      a: 'Una presencia completa arranca en $18,000 MXN. Un sistema de operación en $35,000. El número final depende de cuántas pantallas y cuánta lógica necesites, y te lo doy cerrado antes de empezar — no por hora.',
+      a: 'Depende de cuántas pantallas y cuánta lógica necesites: no es lo mismo una página de presentación que un sistema de caja con inventario. Cuéntame qué haces y te doy un número cerrado antes de empezar, no una tarifa por hora que no puedas prever.',
     },
     {
       q: '¿Cuánto tiempo tarda?',
-      a: 'Una página, entre dos y tres semanas. Un punto de venta o CRM, entre cuatro y seis. Un sistema completo, de seis a diez. Te entrego avances reales cada semana, no reportes.',
+      a: 'Depende del alcance, y te doy una fecha antes de arrancar. Lo que no cambia es el ritmo: cada semana ves producto real funcionando, no reportes de avance ni presentaciones.',
     },
     {
       q: '¿Yo puedo editar el contenido después?',
@@ -298,11 +287,11 @@ export const FAQ = {
     },
     {
       q: '¿El dominio y el hosting van incluidos?',
-      a: 'La publicación y el primer año de dominio van incluidos. Después el dominio cuesta unos $300 al año y el hosting suele quedarse en cero. Todo queda a tu nombre, no al mío.',
+      a: 'La publicación y el dominio los dejo resueltos como parte del proyecto, y el hosting de una página así normalmente no cuesta nada. Lo importante: todo queda registrado a tu nombre, no al mío.',
     },
     {
       q: '¿Qué pasa si necesito cambios después de entregar?',
-      a: 'Tienes un mes de ajustes incluido. Pasado eso trabajamos por bloque de horas o por proyecto nuevo, lo que te salga mejor. No hay contrato de permanencia.',
+      a: 'Los ajustes que salen justo después de entregar van incluidos; lo acordamos por escrito al cerrar. Más adelante trabajamos por bloque o por proyecto nuevo, lo que te salga mejor. No hay contrato de permanencia.',
     },
     {
       q: '¿Trabajas con negocios fuera de CDMX?',
@@ -314,7 +303,7 @@ export const FAQ = {
     },
     {
       q: '¿Cómo sé que no vas a desaparecer a medio proyecto?',
-      a: 'Porque el trabajo está en línea y lo puedes ver: los cuatro casos de esta página tienen enlace directo. Y porque cobro la mitad al final — si no entrego, no cobro.',
+      a: 'Porque el trabajo está en línea y lo puedes ver: los cuatro casos de esta página tienen enlace directo, ábrelos. Y porque parte del pago va contra entrega — si no entrego, no lo cobro.',
     },
   ],
 };

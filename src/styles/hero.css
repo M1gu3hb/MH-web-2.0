@@ -105,31 +105,41 @@
   margin-top: var(--sp-7);
 }
 
-/* ---- Cifras ----------------------------------------------- */
-.hero__stats {
+/* ---- Credenciales ------------------------------------------ */
+.hero__credentials {
   display: flex;
   flex-wrap: wrap;
-  gap: clamp(22px, 3.4vw, 52px);
+  gap: clamp(20px, 3vw, 46px);
   margin: var(--sp-7) 0 0;
   padding-top: var(--sp-5);
   border-top: 1px solid var(--line-soft);
 }
 
-.hero__stats dt {
+.hero__credentials dt {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
   font-family: var(--font-display);
-  font-size: clamp(1.7rem, 2.6vw, 2.5rem);
+  font-size: clamp(1.05rem, 1.5vw, 1.35rem);
   font-weight: var(--w-bold);
-  letter-spacing: -0.05em;
-  line-height: 1;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
 }
 
-.hero__stats dd {
-  margin: 6px 0 0;
-  color: var(--ink-muted);
-  font-size: 0.74rem;
-  font-weight: 700;
+.hero__credentials dt i {
+  color: var(--accent-brand);
+  font-size: 0.68rem;
+  font-style: normal;
+  font-weight: var(--w-label);
   letter-spacing: 0.1em;
-  text-transform: uppercase;
+}
+
+.hero__credentials dd {
+  margin: 7px 0 0 25px;
+  max-width: 24ch;
+  color: var(--ink-muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
 }
 
 /* ---- Escenario 3D ----------------------------------------- */
@@ -298,7 +308,7 @@
     flex: 1 1 100%;
   }
 
-  .hero__stats {
+  .hero__credentials {
     gap: var(--sp-5);
   }
 

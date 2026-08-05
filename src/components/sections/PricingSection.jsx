@@ -15,7 +15,7 @@ function Tier({ tier, index }) {
 
       <p className="tier__name">{tier.name}</p>
       <p className="tier__price">{tier.price}</p>
-      <p className="tier__time">{tier.time}</p>
+      {tier.time && <p className="tier__time">{tier.time}</p>}
       <p className="tier__pitch">{tier.pitch}</p>
 
       <ul className="tier__features">

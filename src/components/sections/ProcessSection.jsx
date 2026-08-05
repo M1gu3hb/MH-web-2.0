@@ -55,7 +55,7 @@ export function ProcessSection() {
             >
               <span className="process-console__phase">
                 FASE / {active.index}
-                <em>{active.duration}</em>
+                {active.duration && <em>{active.duration}</em>}
               </span>
               <h3>{active.title}</h3>
               <p>{active.text}</p>

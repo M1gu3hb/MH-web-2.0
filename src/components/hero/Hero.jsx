@@ -3,7 +3,7 @@ import { ArrowDown, ArrowUpRight, MessageCircle, Move3D } from 'lucide-react';
 import { motion as Motion, useScroll, useTransform } from 'motion/react';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
-import { CountUp, DecryptedText, DotGrid, Magnet, ShinyText, SplitText } from '../reactbits';
+import { DecryptedText, DotGrid, Magnet, ShinyText, SplitText } from '../reactbits';
 import { HERO } from '../../content';
 import { trackWhatsApp, whatsappUrl } from '../../lib/whatsapp';
 import { StaticHeroMark } from './StaticHeroMark';
@@ -121,13 +121,14 @@ export function Hero() {
             </a>
           </div>
 
-          <dl className="hero__stats">
-            {HERO.stats.map((stat) => (
-              <div key={stat.label}>
+          <dl className="hero__credentials">
+            {HERO.credentials.map((item, index) => (
+              <div key={item.label}>
                 <dt>
-                  <CountUp to={stat.value} suffix={stat.suffix} />
+                  <i aria-hidden="true">{String(index + 1).padStart(2, '0')}</i>
+                  {item.label}
                 </dt>
-                <dd>{stat.label}</dd>
+                <dd>{item.note}</dd>
               </div>
             ))}
           </dl>
