@@ -3,6 +3,7 @@ import { motion as Motion } from 'motion/react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { Magnet, ScrambleText } from '../reactbits';
 import Scanner from '../reactbits/Scanner';
+import { pokeLaptop } from './laptopBus';
 import { HERO } from '../../content';
 import { trackWhatsApp, whatsappUrl } from '../../lib/whatsapp';
 
@@ -40,6 +41,7 @@ export function Hero() {
           mouseInteraction
           mouseRadius={0.5}
           mouseStrength={0.5}
+          maxDpr={1.25}
         />
         <span className="hero__fade" />
       </div>
@@ -74,7 +76,7 @@ export function Hero() {
           </h1>
 
           <p className="hero__lead">
-            <ScrambleText text={HERO.lead} speed={22} revealPerFrame={1.6} />
+            <ScrambleText text={HERO.lead} speed={22} />
           </p>
 
           <div className="hero__actions">
@@ -110,11 +112,15 @@ export function Hero() {
           </dl>
         </Motion.div>
 
-        {/* La laptop 3D vive en una capa fija (LaptopStage); este hueco solo
-            le reserva el espacio del layout. */}
-        <div className="hero__viewport">
-          <p className="hero__viewport-hint">
-            <MousePointer2 size={14} aria-hidden="true" /> Muévela con el cursor
+        {/* La laptop 3D vive en una capa fija (LaptopStage), que es inerte a
+            los clics para no tapar la página entera. Este hueco le reserva el
+            sitio en el layout y recoge el clic por ella. */}
+        <div className="hero__viewport" id="hero-viewport">
+          <button type="button" className="hero__viewport-hit" onClick={pokeLaptop}>
+            <span className="rb-visually-hidden">Encender el modo desarrollador de la laptop</span>
+          </button>
+          <p className="hero__viewport-hint" aria-hidden="true">
+            <MousePointer2 size={14} /> Haz clic en la laptop
           </p>
         </div>
       </div>

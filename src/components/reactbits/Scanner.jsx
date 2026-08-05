@@ -4,8 +4,13 @@ import './Scanner.css';
 
 /**
  * Scanner — componente de ReactBits, integrado tal cual (JavaScript + CSS,
- * dependencia `ogl`). Solo se añade el respeto a `prefers-reduced-motion`:
- * con esa preferencia activa se pinta un fotograma y el bucle se detiene.
+ * dependencia `ogl`). Dos añadidos, ninguno cambia el aspecto:
+ *
+ * - respeta `prefers-reduced-motion`: pinta un fotograma y no arranca el bucle
+ * - `maxDpr` limita la resolución del buffer. Es un shader a pantalla completa
+ *   y bastante caro por píxel: en una pantalla de densidad 2 se dibujaban más
+ *   de siete millones de fragmentos por fotograma y el hero se arrastraba.
+ *   Por defecto se queda en 2, como el original.
  */
 
 const hexToRgb = (hex) => {
@@ -169,6 +174,7 @@ const Scanner = ({
   mouseInteraction = true,
   mouseRadius = 0.5,
   mouseStrength = 0.5,
+  maxDpr = 2,
   className = '',
 }) => {
   const containerRef = useRef(null);
@@ -185,7 +191,7 @@ const Scanner = ({
       alpha: true,
       premultipliedAlpha: true,
       antialias: false,
-      dpr: Math.min(window.devicePixelRatio || 1, 2),
+      dpr: Math.min(window.devicePixelRatio || 1, maxDpr),
     });
 
     const gl = renderer.gl;
@@ -341,7 +347,7 @@ const Scanner = ({
       }
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
-  }, []);
+  }, [maxDpr]);
 
   useEffect(() => {
     const container = containerRef.current;

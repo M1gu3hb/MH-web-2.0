@@ -31,6 +31,10 @@ export function ScrambleText({
   trigger = 'hover',
   speed = 34,
   duration = 1700,
+  /* Al soltar el cursor la palabra tiene que volver casi de inmediato: la
+     duración de entrada, pensada para que se lea la recomposición, se sentía
+     como un retraso cuando ya habías apartado el ratón. */
+  exitDuration = 380,
   className = '',
   children,
 }) {
@@ -86,12 +90,12 @@ export function ScrambleText({
   /* El avance se mide con el reloj, no contando fotogramas: con la escena 3D
      en marcha los temporizadores se retrasan y un párrafo largo tardaba
      medio minuto en recomponerse. Así siempre acaba en `duration`. */
-  const resolve = useCallback(() => {
+  const resolve = useCallback((ms = duration) => {
     stop();
     phase.current = 'running';
     const startedAt = performance.now();
     const step = (now) => {
-      const t = (now - startedAt) / duration;
+      const t = (now - startedAt) / ms;
       if (t >= 1) {
         timer.current = 0;
         phase.current = 'done';
@@ -172,9 +176,12 @@ export function ScrambleText({
   if (reduced) return <Tag className={className}>{source}</Tag>;
 
   const pieces = source.split(' ');
+  /* Los manejadores se envuelven a propósito: pasar `resolve` directo le
+     entregaría el evento como duración. */
+  const settle = () => resolve(exitDuration);
   const hoverProps =
     trigger === 'hover'
-      ? { onMouseEnter: churn, onMouseLeave: resolve, onFocus: churn, onBlur: resolve }
+      ? { onMouseEnter: churn, onMouseLeave: settle, onFocus: churn, onBlur: settle }
       : {};
 
   return (

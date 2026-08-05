@@ -32,13 +32,83 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
+/* ---- Modo matrix: lluvia de caracteres --------------------------------- */
+
+const RAIN_CHARS = 'MHASTRAL01アイウエオカキクケコサシスセソタチツテト<>{}[]/\\$#@%&*+=';
+const COLUMN = 22;
+
+function createRain() {
+  const columns = Math.ceil(W / COLUMN);
+  /* Cada columna cae a su ritmo y arranca repartida por toda la altura: si
+     todas empezaran arriba se vería una cortina bajando, y si arrancaran muy
+     por encima del borde la pantalla tardaría segundos en poblarse. */
+  return Array.from({ length: columns }, (_, i) => ({
+    y: ((i * 137) % (H + 260)) - 120,
+    speed: 190 + ((i * 53) % 220),
+    length: 8 + ((i * 7) % 14),
+  }));
+}
+
 export function createBrandOS(logoImage) {
   const canvas = document.createElement('canvas');
   canvas.width = W;
   canvas.height = H;
   const ctx = canvas.getContext('2d');
 
+  let mode = 'os';
+  let rain = null;
+  let lastTime = 0;
+
+  const drawMatrix = (time) => {
+    if (!rain) rain = createRain();
+    const delta = Math.min(0.05, Math.max(0, time - lastTime));
+
+    ctx.fillStyle = '#02060a';
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.font = '700 18px ui-monospace, monospace';
+    ctx.textBaseline = 'top';
+
+    rain.forEach((col, i) => {
+      col.y += col.speed * delta;
+      if (col.y - col.length * COLUMN > H) col.y = -((i * 31) % 220) - col.length * COLUMN;
+
+      for (let k = 0; k < col.length; k += 1) {
+        const y = col.y - k * COLUMN;
+        if (y < -COLUMN || y > H) continue;
+        /* El carácter cambia solo de vez en cuando: si cambiara cada
+           fotograma la lluvia se leería como ruido y no como texto. */
+        const seed = (i * 31 + k * 7 + Math.floor(time * 9 + i)) % RAIN_CHARS.length;
+        const head = k === 0;
+        ctx.fillStyle = head ? '#e8ffe8' : `rgba(120, 255, 140, ${Math.max(0.06, 0.85 - k / col.length)})`;
+        ctx.fillText(RAIN_CHARS[seed], i * COLUMN + 4, y);
+      }
+    });
+
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'rgba(2, 6, 10, 0.72)';
+    ctx.fillRect(0, H / 2 - 46, W, 92);
+    ctx.fillStyle = '#ceff3d';
+    ctx.font = '800 42px ui-sans-serif, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('MH ASTRAL OS', W / 2, H / 2 - 12);
+    ctx.fillStyle = 'rgba(160, 255, 180, 0.8)';
+    ctx.font = '700 15px ui-monospace, monospace';
+    ctx.fillText('modo desarrollador · toca otra vez para salir', W / 2, H / 2 + 26);
+    ctx.textAlign = 'left';
+  };
+
   const draw = (time) => {
+    if (mode === 'matrix') {
+      drawMatrix(time);
+      lastTime = time;
+      return;
+    }
+    lastTime = time;
+    drawOS(time);
+  };
+
+  const drawOS = (time) => {
     /* ---- Escritorio ---- */
     const bg = ctx.createLinearGradient(0, 0, W, H);
     bg.addColorStop(0, '#0d1220');
@@ -176,6 +246,13 @@ export function createBrandOS(logoImage) {
     ctx.fillRect(0, 0, W, H);
   };
 
+  /** Alterna entre el escritorio y la lluvia de caracteres. */
+  const toggleMode = () => {
+    mode = mode === 'os' ? 'matrix' : 'os';
+    if (mode === 'matrix') rain = createRain();
+    return mode;
+  };
+
   draw(0);
-  return { canvas, draw };
+  return { canvas, draw, toggleMode };
 }

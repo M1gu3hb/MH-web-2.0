@@ -175,9 +175,27 @@ body.no-stage .hero__fade {
   min-height: min(72vh, 620px);
 }
 
+/* Zona sensible que recoge el clic destinado a la laptop, que vive en una
+   capa fija e inerte. Invisible a propósito: lo que se ve es el modelo. */
+.hero__viewport-hit {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  border-radius: var(--r-lg);
+  background: none;
+  cursor: pointer;
+}
+
+.hero__viewport-hit:focus-visible {
+  outline: 2px solid var(--ink-strong);
+  outline-offset: 4px;
+}
+
 .hero__viewport-hint {
+  position: relative;
   align-self: end;
   justify-self: center;
+  pointer-events: none;
   display: inline-flex;
   align-items: center;
   gap: 8px;

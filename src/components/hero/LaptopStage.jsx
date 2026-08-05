@@ -9,8 +9,17 @@ const LaptopScene = lazy(() => import('./LaptopScene').then((m) => ({ default: m
  * Capa fija donde vive la laptop, más el velo negro y el destello de
  * encendido que hacen la transición «entramos a la pantalla».
  *
- * El velo y el destello se actualizan por rAF escribiendo el estilo a mano:
- * pasarlos por el estado de React provocaría un render por fotograma.
+ * Dos cosas que importan:
+ *
+ * 1. La escena se monta una vez y no se desmonta nunca. Desmontarla ahorraba
+ *    memoria pero rehacía el contexto WebGL y el entorno cada vez que la
+ *    laptop volvía a hacer falta: al subir de nuevo al hero o al llegar al
+ *    tramo final, la laptop tardaba tanto en aparecer que no se veía. En vez
+ *    de eso el bucle de dibujo se apaga cuando no se ve, que sale gratis.
+ *
+ * 2. El velo y el destello se actualizan por rAF escribiendo el estilo a
+ *    mano: pasarlos por el estado de React provocaría un render por
+ *    fotograma.
  */
 export function LaptopStage({ enabled = true }) {
   const reducedMotion = useReducedMotion();
@@ -19,11 +28,12 @@ export function LaptopStage({ enabled = true }) {
   const choreography = useLaptopChoreography();
 
   const [capable, setCapable] = useState(false);
-  const [awake, setAwake] = useState(true);
+  const [running, setRunning] = useState(true);
 
   const veil = useRef(null);
   const power = useRef(null);
   const inside = useRef(null);
+  const stage = useRef(null);
 
   /* ¿Tiene sentido montar la escena en este dispositivo? */
   useEffect(() => {
@@ -63,18 +73,19 @@ export function LaptopStage({ enabled = true }) {
     return () => document.body.classList.remove('no-stage');
   }, [capable, enabled]);
 
-  /* Velo, destello y viñeta interior. */
+  /* Velo, destello, viñeta interior y encendido del bucle de dibujo. */
   useEffect(() => {
     if (!enabled || !capable) return undefined;
     let frame;
-    let quiet = 0;
     let transit = false;
+    let awake = true;
 
     const tick = () => {
       const s = choreography.current;
       if (veil.current) veil.current.style.opacity = String(s.veil);
       if (power.current) power.current.style.opacity = String(s.power);
       if (inside.current) inside.current.style.opacity = String(s.inside * 0.9);
+      if (stage.current) stage.current.style.visibility = s.visible ? 'visible' : 'hidden';
 
       /* Mientras dura el viaje, la navegación y el botón flotante estorban:
          flotarían sobre la laptop y romperían la ilusión de entrar en ella. */
@@ -84,13 +95,10 @@ export function LaptopStage({ enabled = true }) {
         document.body.classList.toggle('in-transit', travelling);
       }
 
-      /* Se apaga el canvas cuando lleva un rato invisible. */
-      if (s.visible) {
-        quiet = 0;
-        setAwake((a) => (a ? a : true));
-      } else {
-        quiet += 1;
-        if (quiet === 40) setAwake(false);
+      /* El bucle de la escena solo corre cuando la laptop se ve. */
+      if (s.visible !== awake) {
+        awake = s.visible;
+        setRunning(awake);
       }
 
       frame = requestAnimationFrame(tick);
@@ -110,16 +118,15 @@ export function LaptopStage({ enabled = true }) {
       <div className="stage-veil" ref={veil} aria-hidden="true" />
       <div className="stage-inside" ref={inside} aria-hidden="true" />
 
-      <div className="laptop-stage" aria-hidden="true">
-        {awake && (
-          <Suspense fallback={null}>
-            <LaptopScene
-              choreography={choreography}
-              reducedMotion={reducedMotion}
-              quality={isPhone || coarse ? 'low' : 'high'}
-            />
-          </Suspense>
-        )}
+      <div className="laptop-stage" ref={stage} aria-hidden="true">
+        <Suspense fallback={null}>
+          <LaptopScene
+            choreography={choreography}
+            reducedMotion={reducedMotion}
+            quality={isPhone || coarse ? 'low' : 'high'}
+            running={running}
+          />
+        </Suspense>
       </div>
 
       <div className="stage-power" ref={power} aria-hidden="true">

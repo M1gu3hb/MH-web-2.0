@@ -35,7 +35,7 @@ export function AboutSection() {
                   trigger="view"
                   className={index ? 'section-heading__soft' : ''}
                   speed={30}
-                  revealPerFrame={0.5}
+                  duration={2200}
                 />
               </span>
             ))}
@@ -51,7 +51,7 @@ export function AboutSection() {
                 text={paragraph}
                 trigger="view"
                 speed={16}
-                revealPerFrame={2.6 + index * 0.5}
+                duration={1500 + index * 120}
               />
             </p>
           ))}

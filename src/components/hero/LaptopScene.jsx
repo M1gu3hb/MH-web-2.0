@@ -1,19 +1,18 @@
-import { Suspense, useLayoutEffect, useMemo, useRef } from 'react';
+import { Suspense, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { AdaptiveDpr, useGLTF } from '@react-three/drei';
 import { RoomEnvironment } from 'three-stdlib';
 import * as THREE from 'three';
 import { createBrandOS } from './brandOS';
+import { onLaptopPoke } from './laptopBus';
 
 const MODEL = '/laptop.glb';
-const ACCENTS = ['#ff684f', '#ceff3d', '#5e63ff'];
 
 /* ---- La laptop ---------------------------------------------------------- */
 
 function Laptop({ choreography, reducedMotion }) {
   const { scene } = useGLTF(MODEL, false, true);
   const root = useRef(null);
-  const { pointer } = useThree();
 
   /* Instancia propia: evita que el caché de drei comparta materiales. */
   const model = useMemo(() => scene.clone(true), [scene]);
@@ -43,6 +42,18 @@ function Laptop({ choreography, reducedMotion }) {
      ninguna transformación del grupo. Con esto la escena calcula sola la
      pose que tapa el viewport, en vez de fiarse de números a ojo. */
   const fit = useRef({ pivot: new THREE.Vector3(), width: 1, height: 1, tilt: 0 });
+
+  /* Vuelta extra que se acumula al tocar la laptop. */
+  const poke = useRef(0);
+
+  useEffect(
+    () =>
+      onLaptopPoke(() => {
+        poke.current += Math.PI * 2;
+        os.toggleMode();
+      }),
+    [os],
+  );
 
   useLayoutEffect(() => {
     const collected = [];
@@ -196,21 +207,29 @@ function Laptop({ choreography, reducedMotion }) {
     if (!g) return;
     const target = choreography.current;
 
+    /* Fuera de pantalla no hay nada que calcular: ni el sistema operativo ni
+       la pose. El bucle sigue vivo solo para no perder el contexto WebGL. */
+    if (!target.visible && intro.current >= 1) return;
+
+    /* Tras una pausa hay que colocarse de golpe: amortiguar desde la última
+       pose dejaría ver a la laptop «viajando» hasta su sitio. */
+    const resumed = delta > 0.2;
+
     /* --- pantalla --- */
     osClock.current += delta;
-    if (osClock.current > 0.07) {
+    if (osClock.current > 0.13) {
       os.draw(three.clock.elapsedTime);
       osTexture.needsUpdate = true;
       osClock.current = 0;
     }
 
-    /* --- entrada --- */
-    intro.current = Math.min(1, intro.current + delta / (reducedMotion ? 0.001 : 1.9));
+    /* --- entrada, una sola vez --- */
+    intro.current = Math.min(1, intro.current + delta / (reducedMotion ? 0.001 : 1.7));
     const introEase = 1 - (1 - intro.current) ** 4;
     const introSpin = (1 - introEase) * Math.PI * 2.6;
     const introLift = (1 - introEase) * 1.4;
 
-    const damp = (a, b, l) => THREE.MathUtils.damp(a, b, l, delta);
+    const damp = (a, b, l) => (resumed ? b : THREE.MathUtils.damp(a, b, l, delta));
     const mix = THREE.MathUtils.lerp;
 
     /* --- pose que tapa el viewport, recalculada cada fotograma ---------
@@ -221,10 +240,8 @@ function Laptop({ choreography, reducedMotion }) {
     const cover = Math.max(three.viewport.width / width, three.viewport.height / height) * 1.03;
 
     const scale = mix(target.scale, cover, f);
-    /* El cursor solo manda en el hero. */
-    const p = reducedMotion ? 0 : target.pointer;
-    const rotY = mix(target.rotY, 0, f) + pointer.x * 0.5 * p;
-    const rotX = mix(target.rotX, tilt, f) - pointer.y * 0.26 * p;
+    const rotY = mix(target.rotY, 0, f);
+    const rotX = mix(target.rotX, tilt, f);
 
     /* El grupo gira sobre su origen, no sobre la pantalla: hay que restar
        dónde acaba el centro del panel para dejarlo justo en el centro. */
@@ -232,14 +249,26 @@ function Laptop({ choreography, reducedMotion }) {
 
     /* Al cubrir la pantalla el seguimiento tiene que ser inmediato: si se
        amortigua, la laptop llega tarde y se ve el fondo por los bordes. */
-    const speed = target.phase === 'hero' ? 3.6 : 9;
+    const speed = target.phase === 'hero' ? 3.6 : 11;
+
+    /* El ancla llega en fracciones de alto de pantalla; aquí se pasa a
+       unidades de mundo, que es donde se conoce la cámara. */
+    const looseY = target.y - target.anchor * three.viewport.height;
 
     g.position.x = damp(g.position.x, mix(target.x, 0, f) - offset.current.x, speed);
-    g.position.y = damp(g.position.y, mix(target.y, 0, f) - offset.current.y + introLift, speed);
+    g.position.y = damp(g.position.y, mix(looseY, 0, f) - offset.current.y + introLift, speed);
     g.position.z = damp(g.position.z, mix(target.z, 0, f) - offset.current.z, speed);
     g.scale.setScalar(damp(g.scale.x, scale, speed));
 
-    g.rotation.y = damp(g.rotation.y, rotY + introSpin, speed);
+    /* La vuelta del clic se consume poco a poco, no de golpe. */
+    if (poke.current > 0.001) {
+      const eaten = Math.min(poke.current, delta * 7.5);
+      poke.current -= eaten;
+    } else {
+      poke.current = 0;
+    }
+
+    g.rotation.y = damp(g.rotation.y, rotY + introSpin + poke.current, speed);
     g.rotation.x = damp(g.rotation.x, rotX, speed);
 
     /* --- flotación, solo en reposo --- */
@@ -262,7 +291,7 @@ function Laptop({ choreography, reducedMotion }) {
     }
   });
 
-  return <primitive ref={root} object={model} position={[2.0, 1.35, 0]} />;
+  return <primitive ref={root} object={model} position={[1.85, 1.35, 0]} />;
 }
 
 /* ---- Entorno generado en local ----------------------------------------- */
@@ -284,41 +313,28 @@ function LocalEnvironment() {
   return null;
 }
 
-/* ---- Luces -------------------------------------------------------------- */
+/* ---- Luces --------------------------------------------------------------
+   Tres luces, todas fijas. Cada luz de más se paga en cada fragmento de cada
+   fotograma, y el entorno ya aporta casi todo el modelado. */
 
 function Rig() {
-  const key = useRef(null);
-  useFrame(({ clock }) => {
-    if (!key.current) return;
-    key.current.position.x = Math.sin(clock.elapsedTime * 0.3) * 4;
-  });
-
   return (
     <>
-      <ambientLight intensity={0.8} />
-      <directionalLight ref={key} position={[3.5, 4.5, 5]} intensity={2.6} color="#eef1ff" />
-      <directionalLight position={[-5, 1, 2]} intensity={1.5} color="#5227ff" />
-      <pointLight position={[0, -1.5, 3]} intensity={1.1} color="#ceff3d" distance={9} />
-      {ACCENTS.map((c, i) => (
-        <pointLight
-          key={c}
-          color={c}
-          intensity={0.5}
-          distance={7}
-          position={[Math.cos((i / 3) * Math.PI * 2) * 3.4, 1.2, Math.sin((i / 3) * Math.PI * 2) * 2.2]}
-        />
-      ))}
+      <ambientLight intensity={0.85} />
+      <directionalLight position={[3.5, 4.5, 5]} intensity={2.6} color="#eef1ff" />
+      <directionalLight position={[-5, 1, 2]} intensity={1.4} color="#5227ff" />
     </>
   );
 }
 
 /* ---- Escena ------------------------------------------------------------- */
 
-export function LaptopScene({ choreography, reducedMotion = false, quality = 'high' }) {
+export function LaptopScene({ choreography, reducedMotion = false, quality = 'high', running = true }) {
   return (
     <Canvas
+      frameloop={running ? 'always' : 'never'}
       camera={{ position: [0, 0.15, 8], fov: 38 }}
-      dpr={quality === 'high' ? [1, 1.75] : [1, 1.25]}
+      dpr={quality === 'high' ? [1, 1.25] : [0.75, 1]}
       gl={{
         alpha: true,
         antialias: quality === 'high',
