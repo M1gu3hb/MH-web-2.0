@@ -4,7 +4,7 @@ import { AdaptiveDpr, useGLTF } from '@react-three/drei';
 import { RoomEnvironment } from 'three-stdlib';
 import * as THREE from 'three';
 import { createBrandOS } from './brandOS';
-import { onLaptopPoke } from './laptopBus';
+import { markLaptopReady, onLaptopPoke } from './laptopBus';
 
 const MODEL = '/laptop.glb';
 
@@ -35,6 +35,29 @@ function Laptop({ choreography, reducedMotion }) {
     return t;
   }, [os]);
 
+  /* Monograma para la tapa: se pinta en su propio lienzo con fondo
+     transparente para poder pegarlo como calca sobre la carcasa. */
+  const lidTexture = useMemo(() => {
+    const c = document.createElement('canvas');
+    c.width = 256;
+    c.height = 256;
+    const g = c.getContext('2d');
+    const t = new THREE.CanvasTexture(c);
+    t.colorSpace = THREE.SRGBColorSpace;
+    t.flipY = true;
+
+    const logo = new Image();
+    logo.onload = () => {
+      const w = 210;
+      const h = w * (logo.naturalHeight / logo.naturalWidth);
+      g.clearRect(0, 0, 256, 256);
+      g.drawImage(logo, (256 - w) / 2, (256 - h) / 2, w, h);
+      t.needsUpdate = true;
+    };
+    logo.src = '/mh-logo.png';
+    return t;
+  }, []);
+
   const materials = useRef([]);
   const panels = useRef([]);
 
@@ -43,13 +66,16 @@ function Laptop({ choreography, reducedMotion }) {
      pose que tapa el viewport, en vez de fiarse de números a ojo. */
   const fit = useRef({ pivot: new THREE.Vector3(), width: 1, height: 1, tilt: 0 });
 
-  /* Vuelta extra que se acumula al tocar la laptop. */
-  const poke = useRef(0);
+  /* Vuelta del clic. Va por su propio reloj y se suma a la rotación ya
+     amortiguada: dejársela al amortiguador hacía que la vuelta se comiera a
+     sí misma y solo se viera media. */
+  const spin = useRef(-1);
 
   useEffect(
     () =>
       onLaptopPoke(() => {
-        poke.current += Math.PI * 2;
+        if (spin.current >= 0) return; // una vuelta a la vez
+        spin.current = 0;
         os.toggleMode();
       }),
     [os],
@@ -160,6 +186,46 @@ function Laptop({ choreography, reducedMotion }) {
       collected.push(panel.material);
     });
 
+    /* Monograma en la tapa: la marca de la laptop. Se coloca en la cara
+       opuesta al panel del sistema, reutilizando su misma orientación y
+       empujándolo hacia el otro lado del grosor de la pantalla. */
+    if (screens.length && added.length) {
+      const screen = screens[0];
+      const front = added[0];
+      const size = new THREE.Vector3();
+      const center = new THREE.Vector3();
+      screen.geometry.boundingBox.getSize(size);
+      screen.geometry.boundingBox.getCenter(center);
+
+      const axes = [size.x, size.y, size.z];
+      const thin = axes.indexOf(Math.min(...axes));
+      const [a] = [0, 1, 2].filter((i) => i !== thin);
+      const mark = axes[a] * 0.19;
+
+      /* Normal del panel, ya en el espacio local de la pantalla. */
+      const outward = new THREE.Vector3(0, 0, 1).applyQuaternion(front.quaternion).normalize();
+
+      const badge = new THREE.Mesh(
+        new THREE.PlaneGeometry(mark, mark),
+        new THREE.MeshBasicMaterial({
+          map: lidTexture,
+          toneMapped: false,
+          transparent: true,
+          opacity: 0.85,
+          side: THREE.DoubleSide,
+          depthWrite: false,
+        }),
+      );
+
+      badge.quaternion.copy(front.quaternion);
+      badge.rotateY(Math.PI);
+      badge.position.copy(center).addScaledVector(outward, -Math.max(axes[thin] * 1.6, 0.004));
+
+      screen.add(badge);
+      added.push(badge);
+      collected.push(badge.material);
+    }
+
     /* Del panel ya colocado salen las tres cosas que necesita la portada:
        dónde está el centro de la pantalla, cuánto mide de verdad y cuánto
        hay que girar en X para que mire de frente a la cámara. */
@@ -179,6 +245,12 @@ function Laptop({ choreography, reducedMotion }) {
       };
     }
 
+    /* El lienzo del sistema toma la forma de la pantalla medida. */
+    if (os.setAspect(fit.current.width / fit.current.height)) {
+      os.draw(0, 0);
+      osTexture.needsUpdate = true;
+    }
+
     model.position.copy(keep.position);
     model.quaternion.copy(keep.quaternion);
     model.scale.copy(keep.scale);
@@ -194,9 +266,10 @@ function Laptop({ choreography, reducedMotion }) {
       });
       collected.forEach((m) => m.dispose?.());
     };
-  }, [model, osTexture]);
+  }, [lidTexture, model, os, osTexture]);
 
   const intro = useRef(0);
+  const announced = useRef(false);
   const lastOpacity = useRef(-1);
   const osClock = useRef(0);
   const offset = useRef(new THREE.Vector3());
@@ -205,6 +278,10 @@ function Laptop({ choreography, reducedMotion }) {
   useFrame((three, delta) => {
     const g = root.current;
     if (!g) return;
+    if (!announced.current) {
+      announced.current = true;
+      markLaptopReady();
+    }
     const target = choreography.current;
 
     /* Fuera de pantalla no hay nada que calcular: ni el sistema operativo ni
@@ -217,8 +294,11 @@ function Laptop({ choreography, reducedMotion }) {
 
     /* --- pantalla --- */
     osClock.current += delta;
-    if (osClock.current > 0.13) {
-      os.draw(three.clock.elapsedTime);
+    /* Mientras se abre o se cierra la ventana hace falta cada fotograma: es
+       una animación, no un adorno de fondo. */
+    const moving = target.osWindow > 0.001 && target.osWindow < 0.999;
+    if (osClock.current > (moving ? 0.016 : 0.13)) {
+      os.draw(three.clock.elapsedTime, target.osWindow);
       osTexture.needsUpdate = true;
       osClock.current = 0;
     }
@@ -260,15 +340,19 @@ function Laptop({ choreography, reducedMotion }) {
     g.position.z = damp(g.position.z, mix(target.z, 0, f) - offset.current.z, speed);
     g.scale.setScalar(damp(g.scale.x, scale, speed));
 
-    /* La vuelta del clic se consume poco a poco, no de golpe. */
-    if (poke.current > 0.001) {
-      const eaten = Math.min(poke.current, delta * 7.5);
-      poke.current -= eaten;
-    } else {
-      poke.current = 0;
+    /* Vuelta completa: 0 -> 2π con easing y de vuelta a 0, que es la misma
+       orientación, así no queda desfase al terminar. */
+    let turn = 0;
+    if (spin.current >= 0) {
+      spin.current += delta / 1.15;
+      if (spin.current >= 1) spin.current = -1;
+      else {
+        const t = spin.current;
+        turn = (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2) * Math.PI * 2;
+      }
     }
 
-    g.rotation.y = damp(g.rotation.y, rotY + introSpin + poke.current, speed);
+    g.rotation.y = damp(g.rotation.y, rotY + introSpin, speed) + turn;
     g.rotation.x = damp(g.rotation.x, rotX, speed);
 
     /* --- flotación, solo en reposo --- */

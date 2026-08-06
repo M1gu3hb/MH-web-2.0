@@ -3,7 +3,8 @@ import { ArrowUpRight, Check } from 'lucide-react';
 import { SectionHeading } from '../primitives/SectionHeading';
 import { AutomationScreen, CrmScreen, PosScreen, SoftwareScreen, WebsiteScreen } from '../mockups/ServiceScreens';
 import { ScrambleText } from '../reactbits';
-import { useMediaQuery } from '../../hooks/useMediaQuery';
+import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { ScrollCue } from '../primitives/ScrollCue';
 import { useScrollSequence } from '../../hooks/useScrollSequence';
 import { CAPABILITIES, SECTIONS } from '../../content';
 
@@ -18,11 +19,11 @@ const SERVICE_SCREENS = {
 export function CapabilitiesSection() {
   const baseId = useId();
   const tabsRef = useRef([]);
-  const compact = useMediaQuery('(max-width: 900px)');
+  const reducedMotion = useReducedMotion();
 
-  /* En pantallas chicas el modo pegado estorba: ahí solo se navega a mano. */
+  /* El scroll pegado también en teléfono: es la animación de la sección. */
   const { containerRef, index: activeIndex, select } = useScrollSequence(CAPABILITIES.length, {
-    enabled: !compact,
+    enabled: !reducedMotion,
   });
 
   const active = CAPABILITIES[activeIndex] ?? CAPABILITIES[0];
@@ -54,6 +55,7 @@ export function CapabilitiesSection() {
       </div>
 
       <div className="capabilities__scroller" ref={containerRef}>
+        <ScrollCue label="Desliza para recorrer" />
         <div className="capabilities__sticky section-pad">
           <div
             className="capability-deck"

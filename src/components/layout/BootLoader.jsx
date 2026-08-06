@@ -1,13 +1,30 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion as Motion } from 'motion/react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { laptopReady, skipLaptopReady } from '../hero/laptopBus';
 
 const STEPS = [
   ['fuentes', () => document.fonts?.ready ?? Promise.resolve()],
   ['identidad', () => preloadImage('/mh-logo.png')],
   ['modelo 3d', () => preloadBinary('/laptop.glb')],
+  /* La escena vive detrás del velo de carga; se espera a que haya pintado su
+     primer fotograma para que la laptop no aparezca sola a media página. */
+  ['escena 3d', () => withDeadline(laptopReady, 3500, skipLaptopReady)],
   ['interfaz', () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))],
 ];
+
+/** Espera a `promise`, pero nunca más de `ms`. */
+function withDeadline(promise, ms, onTimeout) {
+  return Promise.race([
+    promise,
+    new Promise((resolve) => {
+      window.setTimeout(() => {
+        onTimeout?.();
+        resolve(false);
+      }, ms);
+    }),
+  ]);
+}
 
 function preloadImage(src) {
   return new Promise((resolve) => {
@@ -52,7 +69,7 @@ export function BootLoader({ onDone }) {
     };
 
     /* Tope duro: pase lo que pase, la página entra. */
-    const bail = window.setTimeout(finish, 7000);
+    const bail = window.setTimeout(finish, 7500);
 
     (async () => {
       for (let i = 0; i < STEPS.length; i += 1) {

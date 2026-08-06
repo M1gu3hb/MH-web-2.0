@@ -332,13 +332,13 @@
   box-shadow: 0 0 9px var(--accent-auto);
 }
 
+/* Mismo scroll pegado que en escritorio; solo se apila la consola. */
 @media (max-width: 900px) {
-  .process__scroller { height: auto; }
+  .process__scroller { height: calc(100svh + 4 * 44svh); }
 
   .process__sticky {
-    position: static;
-    min-height: 0;
-    padding-block: clamp(34px, 6vh, 60px) var(--sp-section);
+    min-height: 100svh;
+    padding-block: clamp(70px, 10svh, 96px) clamp(16px, 3svh, 32px);
   }
 
   .process-console {

@@ -1,4 +1,5 @@
 import { ArrowUpRight, Github, MessageCircle } from 'lucide-react';
+import { ScrollCue } from '../primitives/ScrollCue';
 import { SectionHeading } from '../primitives/SectionHeading';
 import {
   BerlinVisual,
@@ -41,7 +42,7 @@ function ProjectCard({ project, index, total }) {
         '--stack-index': index,
         /* Cada tarjeta se pega un poco más abajo que la anterior: así se ve
            el canto de las que quedaron debajo. */
-        top: `calc(var(--stack-top) + ${index * 16}px)`,
+        top: `calc(var(--stack-top) + ${index} * var(--stack-step))`,
         zIndex: index + 1,
       }}
     >
@@ -109,7 +110,18 @@ export function WorkSection() {
         tone="night"
       />
 
-      <div className="project-stack" style={{ '--stack-top': 'clamp(84px, 12vh, 132px)' }}>
+      {/* El escalón del mazo se declara aquí porque el alto útil de cada
+          tarjeta depende de cuántas haya: la última se pega N escalones más
+          abajo y tiene que seguir cabiendo en pantalla. */}
+      <div
+        className="project-stack"
+        style={{
+          '--stack-top': 'clamp(84px, 12vh, 132px)',
+          '--stack-step': 'clamp(9px, 1.4vh, 14px)',
+          '--stack-deck': `calc(${PROJECTS.length - 1} * var(--stack-step))`,
+        }}
+      >
+        <ScrollCue label="Desliza para ver los casos" />
         {PROJECTS.map((project, index) => (
           <ProjectCard key={project.client} project={project} index={index} total={PROJECTS.length} />
         ))}

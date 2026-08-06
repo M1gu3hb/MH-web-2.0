@@ -425,10 +425,13 @@
 
 
 /* ---- Ilustraciones de caso ---- */
+/* La maqueta llena el hueco que le deja la tarjeta en lugar de imponer su
+   alto: el alto de la tarjeta lo manda el viewport, no la ilustración. */
 .project-ui {
   position: relative;
   z-index: 2;
-  min-height: 440px;
+  min-height: 0;
+  height: 100%;
   overflow: hidden;
   border: 1px solid rgba(21, 22, 20, 0.32);
   border-radius: 19px;

@@ -332,20 +332,39 @@
   }
 }
 
+/* En teléfono se conserva el mismo scroll pegado —es la animación, no un
+   adorno—: lo único que cambia es el formato de la baraja. */
 @media (max-width: 900px) {
-  /* Sin scroll pegado en pantallas chicas: solo navegación manual. */
-  .capabilities__scroller { height: auto; }
+  .capabilities__scroller { height: calc(100svh + 5 * 46svh); }
 
   .capabilities__sticky {
-    position: static;
-    min-height: 0;
-    padding-block: clamp(34px, 6vh, 60px) var(--sp-section);
+    min-height: 100svh;
+    padding-block: clamp(70px, 10svh, 96px) clamp(16px, 3svh, 32px);
+  }
+
+  /* La baraja se apila: selector arriba, panel debajo ocupando lo que queda. */
+  .capability-deck {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    align-content: start;
+  }
+
+  .capability-deck__selector { flex-direction: row; }
+  .capability-deck__progress { display: none; }
+
+  .panel-stage { min-height: min(52svh, 460px); }
+
+  .panel-layer {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    align-items: start;
+    gap: 14px;
+    padding: 18px;
   }
 }
 
 @media (max-width: 640px) {
   .capability-deck__panel { border-radius: var(--r-lg); }
-  .panel-stage { min-height: 560px; }
 }
 
 @media (max-width: 520px) {

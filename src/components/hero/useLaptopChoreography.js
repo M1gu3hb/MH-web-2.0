@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 
 const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
 const easeInOut = (t) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
+const easeOut = (t) => 1 - (1 - t) ** 3;
+const easeIn = (t) => t * t * t;
 
 /** Mapea un valor dentro de un tramo a 0..1. */
 const span = (v, a, b) => clamp01((v - a) / Math.max(1e-6, b - a));
@@ -13,25 +15,33 @@ const REST_MID = { x: 1.35, y: -0.05, z: 0, scale: 1.45, rotY: -0.4, rotX: 0.06 
 const REST_NARROW = { x: 0, y: -0.05, z: 0, scale: 0.98, rotY: -0.3, rotX: 0.08 };
 
 const restFor = (w) => (w >= 1180 ? REST_WIDE : w >= 900 ? REST_MID : REST_NARROW);
+
+/* Teléfono: la laptop entera y de frente mientras se abre la ventana, antes
+   del zoom. Es la pose que pidió verse completa. */
+const SHOW_NARROW = { x: 0, y: 0, z: 0, scale: 1.5, rotY: -0.1, rotX: 0.04 };
+
 /* Lejos y de lado: la pose a la que se va al final, ya pequeña. */
 const AWAY = { x: -0.55, y: 0.05, z: -3.2, scale: 0.95, rotY: -0.55, rotX: 0.12 };
 
 /**
  * Coreografía de la laptop.
  *
- *   1. Hero        flota quieta, sin seguir al cursor; a la derecha si el
- *                  ancho da, centrada y más pequeña si no
- *   2. Tramo de    todo se oscurece y la laptop se acerca hasta CUBRIR la
- *      entrada     pantalla; entonces se apaga en negro y se enciende: a
- *                  partir de ahí la página ocurre dentro de la laptop
- *   3. Dentro      oculta; el canvas se duerme
- *   4. Tramo de    todo se apaga, la laptop reaparece a pantalla completa y
- *      salida      se aleja: salimos de la laptop y aparece el contacto
+ *   1. Hero        flota quieta, sin seguir al cursor
+ *   2. Entrada     todo a negro, la laptop se acerca hasta que su pantalla
+ *                  cubre el viewport, y entonces se abre la ventana del
+ *                  navegador desde la barra de tareas hasta llenarla: al
+ *                  terminar, esa ventana se funde con la web de verdad
+ *   3. Dentro      oculta; el bucle de dibujo se apaga
+ *   4. Salida      la ventana se cierra, vuelve el escritorio y la laptop se
+ *                  aleja hasta irse; aparece el contacto
  *
- * `focus` es cuánto se acerca a cubrir la pantalla (0 = pose suelta,
- * 1 = tapando el viewport). La pose de «tapando» no se fija aquí: la calcula
- * la escena a partir del tamaño real de la pantalla del modelo y del
- * viewport, que es lo único que garantiza que cubra en cualquier formato.
+ * En teléfono el orden cambia a propósito: primero se ve la laptop entera
+ * con la ventana abriéndose en su pantalla, y solo después entra el zoom,
+ * rápido pero visible.
+ *
+ * `focus` es cuánto se acerca a cubrir la pantalla y `osWindow` cuánto está
+ * abierta la ventana. La pose de «cubriendo» no se fija aquí: la calcula la
+ * escena con el tamaño real de la pantalla del modelo y el viewport.
  *
  * Los dos tramos son elementos reales del documento (#zoom-in y #zoom-out),
  * así que el recorrido es explícito y no depende de adivinar alturas.
@@ -44,7 +54,9 @@ export function useLaptopChoreography() {
     power: 0,
     inside: 0,
     focus: 0,
+    osWindow: 0,
     anchor: 0,
+    progress: 0,
     phase: 'hero',
     ...REST_WIDE,
   });
@@ -89,42 +101,76 @@ export function useLaptopChoreography() {
       }
 
       if (exit > 0) {
-        /* ---- Salida: espejo exacto de la entrada ----------------------
-           La pantalla se apaga, la laptop aparece tapando el viewport y se
-           aleja hasta irse. Subiendo se recorre al revés: vuelve, crece
-           hasta tapar y se enciende otra vez. */
+        /* ---- Salida: la ventana se cierra y la laptop se va ------------ */
         s.phase = 'exit';
-
-        s.veil = exit < 0.88 ? Math.min(1, exit / 0.08) : 1 - span(exit, 0.88, 1);
-        /* Destello del apagado, justo cuando aparece la laptop. */
-        s.power = Math.max(0, 1 - Math.abs(exit - 0.12) / 0.1);
-
+        s.progress = exit;
+        s.anchor = 0;
         Object.assign(s, AWAY);
-        s.focus = 1 - easeInOut(span(exit, 0.18, 0.86));
-        /* Se apaga solo al final: antes tiene que vérsela marcharse. */
-        s.opacity = Math.min(span(exit, 0.06, 0.16), 1 - span(exit, 0.9, 1));
+
+        if (narrow) {
+          /* Zoom hacia fuera de golpe y ya se ve la laptop entera. */
+          s.opacity = Math.min(span(exit, 0, 0.05), 1 - span(exit, 0.9, 1));
+          s.veil = exit < 0.88 ? Math.min(1, exit / 0.05) : 1 - span(exit, 0.88, 1);
+          s.focus = 1 - easeOut(span(exit, 0.02, 0.16));
+          s.osWindow = 1 - easeInOut(span(exit, 0.22, 0.46));
+          s.power = Math.max(0, 1 - Math.abs(exit - 0.16) / 0.09);
+          Object.assign(s, SHOW_NARROW);
+          /* Ya cerrada la ventana, se aleja de verdad. */
+          const leave = easeInOut(span(exit, 0.5, 0.9));
+          s.x = SHOW_NARROW.x + (AWAY.x - SHOW_NARROW.x) * leave;
+          s.y = SHOW_NARROW.y + (AWAY.y - SHOW_NARROW.y) * leave;
+          s.z = SHOW_NARROW.z + (AWAY.z - SHOW_NARROW.z) * leave;
+          s.scale = SHOW_NARROW.scale + (AWAY.scale - SHOW_NARROW.scale) * leave;
+          s.rotY = SHOW_NARROW.rotY + (AWAY.rotY - SHOW_NARROW.rotY) * leave;
+          s.rotX = SHOW_NARROW.rotX + (AWAY.rotX - SHOW_NARROW.rotX) * leave;
+        } else {
+          s.opacity = Math.min(span(exit, 0, 0.08), 1 - span(exit, 0.9, 1));
+          s.veil = exit < 0.88 ? Math.min(1, span(exit, 0.05, 0.13)) : 1 - span(exit, 0.88, 1);
+          s.osWindow = 1 - easeInOut(span(exit, 0.14, 0.4));
+          s.focus = 1 - easeInOut(span(exit, 0.42, 0.9));
+          s.power = Math.max(0, 1 - Math.abs(exit - 0.44) / 0.07);
+        }
         s.inside = 0;
       } else if (enter > 0) {
-        /* ---- Entrada: se acerca hasta cubrir y la pantalla se enciende -- */
+        /* ---- Entrada: cubre, abre la ventana y se funde con la web ----- */
         s.phase = 'enter';
+        s.progress = enter;
 
-        /* El fondo se va a negro antes de que la laptop llene. */
-        s.veil = enter < 0.88 ? span(enter, 0, 0.4) : 1 - span(enter, 0.88, 1);
-        s.power = Math.max(0, 1 - Math.abs(enter - 0.9) / 0.1);
-
-        Object.assign(s, REST);
-        s.focus = easeInOut(span(enter, 0, 0.86));
-        /* Ya tapando del todo: se apaga en negro para encenderse enseguida. */
-        s.opacity = 1 - span(enter, 0.87, 0.94);
-        s.inside = span(enter, 0.9, 1);
+        if (narrow) {
+          s.anchor = 0;
+          Object.assign(s, SHOW_NARROW);
+          s.veil = enter < 0.7 ? span(enter, 0, 0.12) : 1 - span(enter, 0.7, 0.77);
+          s.osWindow = easeOut(span(enter, 0.18, 0.52));
+          /* El zoom entra tarde y corto: rápido, pero se ve. */
+          s.focus = easeIn(span(enter, 0.55, 0.76));
+          s.power = Math.max(0, 1 - Math.abs(enter - 0.56) / 0.06);
+          /* En vertical, cubriendo del todo solo cabe un trozo de la ventana:
+             el relevo con la página real entra en cuanto el zoom aprieta, no
+             después, para no quedarse en ese primer plano ilegible. */
+          s.opacity = 1 - span(enter, 0.71, 0.8);
+          s.inside = span(enter, 0.78, 1);
+        } else {
+          Object.assign(s, REST);
+          s.anchor = 0;
+          s.veil = enter < 0.84 ? span(enter, 0, 0.14) : 1 - span(enter, 0.84, 0.9);
+          s.focus = easeInOut(span(enter, 0.04, 0.5));
+          s.osWindow = easeOut(span(enter, 0.56, 0.84));
+          s.power = Math.max(0, 1 - Math.abs(enter - 0.54) / 0.06);
+          /* Fundido corto: si se alarga, la maqueta de la ventana se lee como
+             un fantasma encima del contenido real. */
+          s.opacity = 1 - span(enter, 0.86, 0.93);
+          s.inside = span(enter, 0.9, 1);
+        }
       } else {
         /* ---- Hero ------------------------------------------------------ */
         s.phase = 'hero';
+        s.progress = 0;
         s.veil = 0;
         s.power = 0;
         s.opacity = 1;
         s.inside = 0;
         s.focus = 0;
+        s.osWindow = 0;
         Object.assign(s, REST);
       }
 

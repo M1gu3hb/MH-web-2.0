@@ -184,8 +184,16 @@ body.no-stage .hero__fade {
   border-radius: var(--r-lg);
   background: none;
   cursor: pointer;
+  /* Nada de recuadros al pulsar: cualquier marca de selección o de foco de
+     ratón rompe la ilusión de estar tocando la laptop, no un botón. */
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
 }
 
+/* El aro solo aparece llegando por teclado, donde sí hace falta. */
 .hero__viewport-hit:focus-visible {
   outline: 2px solid var(--ink-strong);
   outline-offset: 4px;
@@ -376,4 +384,74 @@ body.in-transit .scroll-meter {
   .hero__fade {
     background: linear-gradient(180deg, transparent, rgba(8, 6, 21, 0.55) 45%, var(--surface-base));
   }
+}
+
+/* ---- Indicador de scroll ------------------------------------------------
+   Fijo abajo, por encima de la laptop: también hace falta en los tramos
+   negros, que es justo donde no hay nada más que indique que hay que seguir
+   bajando. Lo enciende y lo apaga ScrollCue según el tramo. */
+.scroll-cue {
+  position: fixed;
+  bottom: clamp(14px, 3.5vh, 34px);
+  left: 50%;
+  z-index: 520;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px 9px 11px;
+  border: 1px solid rgba(246, 243, 234, 0.16);
+  border-radius: var(--r-full);
+  background: rgba(10, 10, 14, 0.55);
+  backdrop-filter: blur(10px);
+  color: rgba(246, 243, 234, 0.82);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-50%);
+  pointer-events: none;
+  transition: opacity 0.28s var(--ease);
+}
+
+.scroll-cue__mouse {
+  position: relative;
+  width: 15px;
+  height: 24px;
+  border: 1.5px solid currentcolor;
+  border-radius: 8px;
+  opacity: 0.75;
+}
+
+.scroll-cue__mouse i {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  width: 2px;
+  height: 5px;
+  border-radius: 2px;
+  background: currentcolor;
+  animation: scroll-cue-wheel 1.5s var(--ease) infinite;
+}
+
+@keyframes scroll-cue-wheel {
+  0% { transform: translate(-50%, 0); opacity: 0; }
+  22% { opacity: 1; }
+  70% { transform: translate(-50%, 9px); opacity: 0; }
+  100% { transform: translate(-50%, 9px); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue { display: none; }
+}
+
+@media (max-width: 520px) {
+  .scroll-cue {
+    padding: 7px 13px 7px 9px;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+  }
+
+  .scroll-cue__mouse { width: 13px; height: 20px; }
 }

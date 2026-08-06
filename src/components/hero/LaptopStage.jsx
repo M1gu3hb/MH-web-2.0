@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { skipLaptopReady } from './laptopBus';
 import { useLaptopChoreography } from './useLaptopChoreography';
 
 const LaptopScene = lazy(() => import('./LaptopScene').then((m) => ({ default: m.LaptopScene })));
@@ -52,17 +53,18 @@ export function LaptopStage({ enabled = true }) {
       const memory = navigator.deviceMemory ?? 8;
       const cores = navigator.hardwareConcurrency ?? 8;
       ctx?.getExtension('WEBGL_lose_context')?.loseContext();
-      setCapable(Boolean(ctx) && memory >= 4 && cores >= 4);
+      const ok = Boolean(ctx) && memory >= 4 && cores >= 4;
+      /* Si no va a haber escena, el arranque no debe quedarse esperándola. */
+      if (!ok) skipLaptopReady();
+      setCapable(ok);
     };
 
-    const idle = window.requestIdleCallback
-      ? window.requestIdleCallback(probe, { timeout: 1500 })
-      : window.setTimeout(probe, 500);
+    /* Sin esperar a un hueco ocioso: la escena tiene que estar montada
+       mientras se ve la pantalla de carga, no varios segundos después. */
+    probe();
 
     return () => {
       cancelled = true;
-      if (window.cancelIdleCallback && window.requestIdleCallback) window.cancelIdleCallback(idle);
-      else window.clearTimeout(idle);
     };
   }, [enabled]);
 

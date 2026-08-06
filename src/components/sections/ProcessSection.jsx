@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useId, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
+import { ScrollCue } from '../primitives/ScrollCue';
 import { SectionHeading } from '../primitives/SectionHeading';
 import { ScrambleText } from '../reactbits';
-import { useMediaQuery } from '../../hooks/useMediaQuery';
+import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { useScrollSequence } from '../../hooks/useScrollSequence';
 import { PROCESS, SECTIONS } from '../../content';
 
@@ -17,9 +18,9 @@ export function ProcessSection() {
   const tabsRef = useRef([]);
   const knobRef = useRef(null);
   const dragging = useRef(false);
-  const compact = useMediaQuery('(max-width: 900px)');
+  const reducedMotion = useReducedMotion();
 
-  const { containerRef, index, select } = useScrollSequence(PROCESS.length, { enabled: !compact });
+  const { containerRef, index, select } = useScrollSequence(PROCESS.length, { enabled: !reducedMotion });
   const active = PROCESS[index] ?? PROCESS[0];
   const rotation = angleFor(index, PROCESS.length);
 
@@ -113,6 +114,7 @@ export function ProcessSection() {
       </div>
 
       <div className="process__scroller" ref={containerRef}>
+        <ScrollCue label="Desliza para avanzar" />
         <div className="process__sticky section-pad">
           <div className="process-console" style={{ '--phase': index }}>
             {/* ---- Pantalla ---- */}

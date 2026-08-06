@@ -11,6 +11,7 @@ import { ProjectCarousel } from './components/layout/ProjectCarousel';
 import { BootLoader } from './components/layout/BootLoader';
 import { Hero } from './components/hero/Hero';
 import { LaptopStage } from './components/hero/LaptopStage';
+import { ScrollCue } from './components/primitives/ScrollCue';
 import { CapabilitiesSection } from './components/sections/CapabilitiesSection';
 import { WorkSection } from './components/sections/WorkSection';
 import { ProcessSection } from './components/sections/ProcessSection';
@@ -69,14 +70,18 @@ export default function App() {
       <div className="paper-grain" aria-hidden="true" />
 
       <Navigation />
-      <LaptopStage enabled={!booting} />
+      {/* Se monta desde el arranque: la pantalla de carga espera a que
+          la laptop esté lista, que para eso está. */}
+      <LaptopStage enabled />
 
       <main id="contenido">
         <Hero />
 
         {/* Tramo negro donde la laptop crece hasta cubrir la pantalla: a
             partir de aquí la página ocurre «dentro» de ella. */}
-        <div className="stage-gap stage-gap--in" id="zoom-in" aria-hidden="true" />
+        <div className="stage-gap stage-gap--in" id="zoom-in">
+          <ScrollCue label="Desliza para entrar" />
+        </div>
 
         <ProjectCarousel />
         <CapabilitiesSection />
@@ -87,7 +92,9 @@ export default function App() {
         <FaqSection />
 
         {/* Todo se apaga y la laptop se aleja: salimos de la pantalla. */}
-        <div className="stage-gap stage-gap--out" id="zoom-out" aria-hidden="true" />
+        <div className="stage-gap stage-gap--out" id="zoom-out">
+          <ScrollCue label="Desliza para salir" />
+        </div>
 
         <ContactSection />
       </main>
