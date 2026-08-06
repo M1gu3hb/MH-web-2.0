@@ -92,7 +92,24 @@ export function useLaptopChoreography() {
 
       /* La entrada empieza cuando el tramo asoma por abajo. */
       const enter = span(y, inTop - vh * 0.75, inTop + inLen - vh * 0.1);
-      const exit = span(y, outTop - vh * 0.85, outTop + outLen - vh * 0.15);
+
+      /* La salida va exactamente sobre el tramo en que las preguntas se
+         quedan pegadas: empieza cuando su final toca el borde de abajo y
+         acaba cuando el pegado se agota. Atarlo al hueco de después dejaba
+         los dos recorridos desalineados, y en la franja que sobraba —casi una
+         pantalla— la laptop ya se había ido pero la página seguía quieta: se
+         leía como que todo se había trabado. */
+      const stage = document.querySelector('.stage-exit');
+      const faq = stage?.firstElementChild;
+      let exitFrom = outTop - vh * 0.85;
+      let exitTo = outTop + outLen - vh * 0.15;
+      if (faq && getComputedStyle(faq).position === 'sticky') {
+        /* La medida se toma del contenedor, no de la sección: pegada, su
+           rectángulo ya viene desplazado y usarlo se realimentaría. */
+        exitFrom = stage.getBoundingClientRect().top + y + faq.offsetHeight - vh;
+        exitTo = exitFrom + outLen;
+      }
+      const exit = span(y, exitFrom, exitTo);
 
       const narrow = window.innerWidth < 900;
       const REST = restFor(window.innerWidth);
@@ -149,7 +166,11 @@ export function useLaptopChoreography() {
           s.rotX = SHOW_NARROW.rotX + (AWAY.rotX - SHOW_NARROW.rotX) * leave;
         } else {
           s.opacity = Math.min(span(exit, 0, 0.08), 1 - span(exit, 0.9, 1));
-          s.veil = exit < 0.88 ? Math.min(1, span(exit, 0.05, 0.13)) : 1 - span(exit, 0.88, 1);
+          /* El negro entra tarde y a propósito. Antes cubría desde el primer
+             momento y tapaba las preguntas justo cuando la gracia es verlas
+             quietas detrás mientras la ventana se cierra encima; solo cuando
+             la laptop empieza a irse de verdad se apaga todo. */
+          s.veil = exit < 0.88 ? Math.min(0.94, span(exit, 0.46, 0.72)) : 0.94 - 0.94 * span(exit, 0.88, 1);
           /* Mismo camino que a la entrada pero del revés: primero la pantalla
              se despega del viewport y se ve entera, y solo entonces se cierra
              la ventana. Cerrarla estando aún recortada era lo que hacía que no

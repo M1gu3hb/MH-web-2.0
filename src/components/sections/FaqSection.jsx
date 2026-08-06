@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion as Motion } from 'motion/react';
 import { Plus } from 'lucide-react';
 import { SectionHeading } from '../primitives/SectionHeading';
@@ -44,8 +44,31 @@ function FaqItem({ item, index, open, onToggle }) {
 export function FaqSection({ embedded = false }) {
   const [openIndex, setOpenIndex] = useState(0);
 
+  /* La salida deja las preguntas quietas mientras la ventana se cierra, y
+     para pegarlas por su final hace falta saber cuánto miden: Chrome ignora
+     `bottom` en un elemento más alto que el viewport, así que el pegado se
+     hace con un `top` negativo que solo se puede calcular con la medida real.
+     Cambia al abrir y cerrar respuestas, de ahí el observador. */
+  const box = useRef(null);
+  useEffect(() => {
+    const el = box.current;
+    if (embedded || !el) return undefined;
+    const write = () => {
+      document.documentElement.style.setProperty('--faq-h', `${Math.round(el.offsetHeight)}px`);
+    };
+    write();
+    /* Por caja de borde: el respiro de abajo cambia al montarse la escena, y
+       observando la caja de contenido ese cambio no llega a notificarse. La
+       medida se quedaba con el alto de antes y el pegado caía un centenar de
+       píxeles más abajo de la cuenta. */
+    const ro = new ResizeObserver(write);
+    ro.observe(el, { box: 'border-box' });
+    return () => ro.disconnect();
+  }, [embedded]);
+
   return (
     <section
+      ref={embedded ? undefined : box}
       className="faq section-pad"
       id={embedded ? undefined : 'preguntas'}
       aria-hidden={embedded || undefined}

@@ -323,20 +323,44 @@ body.no-stage .hero__fade {
 .stage-gap--in { height: 130vh; }
 
 /* El tramo de salida ya no pinta nada: lo que se ve debajo son las preguntas,
-   pegadas por su borde inferior. Pegarlas por abajo y no por arriba es lo que
-   deja a la vista la última pregunta —donde el visitante se quedó— en vez de
-   saltar al principio de la sección. */
+   quietas por su final mientras la ventana se cierra encima. */
+/* El tramo de salida no pinta nada y no se ve: queda por detrás de las
+   preguntas, que se quedan quietas encima. Solo aporta el recorrido. */
 .stage-gap--out {
-  height: 120vh;
+  height: 150vh;
   background: none;
 }
 
-.stage-exit .faq {
+/* La pista sí tiene que verse, así que va pegada al borde de abajo. */
+.stage-gap--out .scroll-cue {
   position: sticky;
-  bottom: 0;
+  z-index: 3;
+  bottom: clamp(18px, 4vh, 44px);
 }
 
-body.no-stage .stage-exit .faq { position: static; }
+/* Pegadas por el final, que es donde se quedó el visitante. Con `bottom: 0`
+   Chrome no pega nada cuando el elemento es más alto que el viewport —lo
+   comprobé—, así que hay que pegarlo por arriba con el desplazamiento justo,
+   y ese número solo sale de medir la sección (ver FaqSection). Sin la medida
+   no se pegaba nada y el tramo se quedaba en blanco. */
+.stage-exit .faq {
+  position: sticky;
+  top: min(0px, calc(100svh - var(--faq-h, 100svh)));
+}
+
+/* Sin el respiro de abajo, y también en la copia que va dentro de la laptop:
+   las dos maquetas tienen que medir lo mismo o el reflejo deja de cuadrar.
+   Pegada por el final, ese hueco se quedaba fijo bajo la última pregunta y
+   dentro de la pantalla se leía como una franja muerta. */
+.stage-exit .faq,
+.laptop-screen__view .faq {
+  padding-bottom: clamp(24px, 4vh, 44px);
+}
+
+body.no-stage .stage-exit .faq {
+  position: static;
+  padding-bottom: var(--sp-section);
+}
 
 /* Sin escena 3D no hay transición que mostrar. */
 body.no-stage .stage-gap { height: 0; }
