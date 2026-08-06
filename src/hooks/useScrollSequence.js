@@ -48,13 +48,24 @@ export function useScrollSequence(count, { enabled = true } = {}) {
       /* Bien fuera del tramo: la elección manual caduca. */
       if (raw < -0.15 || raw > 1.15) offset.current = 0;
 
-      /* El recorrido se reparte en `count` tramos, pero no a partes iguales:
-         los primeros van cortos y los últimos largos. Con tramos iguales el
-         primer paso se comía más de un cuarto del recorrido y había que dar
-         tres o cuatro vueltas de rueda antes de ver moverse nada, que se lee
-         como que la sección no responde. */
+      /* El primer tramo va corto y todos los demás miden igual.
+         Con tramos iguales, el primero se comía su parte entera y había que
+         dar tres o cuatro vueltas de rueda antes de ver moverse nada. Pero
+         curvar el reparto entero para arreglar eso salió peor: los últimos
+         tramos se estiraban hasta ocupar un tercio del recorrido cada uno, y
+         las dos últimas tarjetas se quedaban clavadas media pantalla larga.
+         Así que el atajo es solo para arrancar; a partir del primer cambio el
+         reparto vuelve a ser parejo. */
       const progress = clamp(raw, 0, 1);
-      const eased = clamp(progress ** 0.62, 0, 0.9999);
+      const lead = 0.45 / count; // el primer tramo, poco menos de la mitad
+      const paso = 1 / count;
+      const eased = clamp(
+        progress < lead
+          ? (progress / lead) * paso
+          : paso + ((progress - lead) / (1 - lead)) * (1 - paso),
+        0,
+        0.9999,
+      );
       const n = Math.min(count - 1, Math.floor(eased * count));
       natural.current = n;
 

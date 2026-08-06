@@ -12,9 +12,11 @@
   padding-block: var(--sp-section) 0;
 }
 
-/* Altura del recorrido: un tramo por servicio más la pantalla pegada. */
+/* Altura del recorrido: un tramo por servicio más la pantalla pegada. A 58vh
+   por servicio cada tarjeta pedía más de media pantalla de rueda para pasar a
+   la siguiente y la sección se sentía atascada. */
 .capabilities__scroller {
-  height: calc(100vh + 5 * 58vh);
+  height: calc(100vh + 5 * 42vh);
 }
 
 .capabilities__sticky {
@@ -194,7 +196,6 @@
     opacity 620ms var(--ease),
     transform 720ms var(--ease),
     filter 620ms var(--ease);
-  will-change: opacity, transform;
 }
 
 .panel-layer.is-active {
@@ -335,7 +336,7 @@
 /* En teléfono se conserva el mismo scroll pegado —es la animación, no un
    adorno—: lo único que cambia es el formato de la baraja. */
 @media (max-width: 900px) {
-  .capabilities__scroller { height: calc(100svh + 5 * 46svh); }
+  .capabilities__scroller { height: calc(100svh + 5 * 34svh); }
 
   .capabilities__sticky {
     min-height: 100svh;

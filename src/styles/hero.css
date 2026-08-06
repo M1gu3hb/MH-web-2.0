@@ -66,8 +66,7 @@ body.no-stage .hero__fade {
   padding: 9px 17px 9px 13px;
   border: 1px solid rgba(243, 242, 249, 0.22);
   border-radius: var(--r-full);
-  background: rgba(243, 242, 249, 0.07);
-  backdrop-filter: blur(10px);
+  background: rgba(243, 242, 249, 0.12);
   color: #dcdcf3;
   font-size: 0.72rem;
   font-weight: 760;
@@ -454,8 +453,7 @@ body.in-transit .scroll-meter {
   padding: 9px 16px 9px 11px;
   border: 1px solid rgba(246, 243, 234, 0.16);
   border-radius: var(--r-full);
-  background: rgba(10, 10, 14, 0.55);
-  backdrop-filter: blur(10px);
+  background: rgba(10, 10, 14, 0.72);
   color: rgba(246, 243, 234, 0.82);
   font-size: 0.62rem;
   font-weight: 800;

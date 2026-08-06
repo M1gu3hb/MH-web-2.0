@@ -34,10 +34,14 @@
   padding-bottom: 0.06em;
 }
 
+/* Sin `will-change`: son decenas de trozos por titular y solo se mueven una
+   vez, al aparecer. Dejarlo puesto obliga al navegador a mantener una capa de
+   composición por trozo durante toda la visita —cuarenta y tantas en esta
+   página—, que es justo lo que la propiedad advierte que no se haga. Al
+   animar, el navegador las promociona solo. */
 .rb-split__piece {
   display: inline-block;
   white-space: pre;
-  will-change: transform;
 }
 
 /* ---- ShinyText ------------------------------------------- */
@@ -75,7 +79,6 @@
   display: inline-block;
   /* pre conserva el espacio final; sin esto las palabras se pegan. */
   white-space: pre;
-  will-change: opacity, filter;
 }
 
 /* ---- DotGrid --------------------------------------------- */
@@ -88,7 +91,6 @@
 /* ---- Magnet ---------------------------------------------- */
 .rb-magnet {
   display: inline-flex;
-  will-change: transform;
 }
 
 /* ---- SpotlightCard --------------------------------------- */

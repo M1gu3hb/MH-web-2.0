@@ -1,4 +1,4 @@
-import { useEffect, useRef, useSyncExternalStore } from 'react';
+import { useEffect, useId, useRef, useSyncExternalStore } from 'react';
 import { AnimatePresence, motion as Motion } from 'motion/react';
 import { Plus } from 'lucide-react';
 import { SectionHeading } from '../primitives/SectionHeading';
@@ -7,10 +7,14 @@ import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { FAQ } from '../../content';
 import { getFaqOpen, setFaqOpen, subscribeFaqOpen } from './faqOpenStore';
 
-function FaqItem({ item, index, open, onToggle }) {
+function FaqItem({ item, index, open, onToggle, base }) {
   const reduced = useReducedMotion();
-  const panelId = `faq-panel-${index}`;
-  const buttonId = `faq-button-${index}`;
+  /* El identificador lleva el prefijo de su instancia: las preguntas se montan
+     dos veces —la sección y su copia dentro de la laptop— y con un número fijo
+     las dos parejas de botón y respuesta compartían identificador. Un lector
+     de pantalla seguía el vínculo a la copia equivocada. */
+  const panelId = `${base}-panel-${index}`;
+  const buttonId = `${base}-button-${index}`;
 
   return (
     <Reveal as="div" className={`faq-item ${open ? 'faq-item--open' : ''}`} delay={index * 0.03} amount={0.2}>
@@ -47,6 +51,7 @@ export function FaqSection({ embedded = false }) {
      la suya, los dos árboles dejarían de tener los mismos nodos y el reflejo
      —que empareja nodo a nodo— se rendiría. */
   const openIndex = useSyncExternalStore(subscribeFaqOpen, getFaqOpen, getFaqOpen);
+  const base = useId();
 
   /* La salida deja las preguntas quietas mientras la ventana se cierra, y
      para pegarlas por su final hace falta saber cuánto miden: Chrome ignora
@@ -102,6 +107,7 @@ export function FaqSection({ embedded = false }) {
             key={item.q}
             item={item}
             index={index}
+            base={base}
             open={openIndex === index}
             onToggle={() => setFaqOpen(openIndex === index ? -1 : index)}
           />
