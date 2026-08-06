@@ -324,11 +324,14 @@ body.no-stage .hero__fade {
 
 /* El tramo de salida ya no pinta nada: lo que se ve debajo son las preguntas,
    quietas por su final mientras la ventana se cierra encima. */
-/* El tramo de salida no pinta nada y no se ve: queda por detrás de las
-   preguntas, que se quedan quietas encima. Solo aporta el recorrido. */
+/* El tramo de salida vuelve a ser negro, y esta vez por una razón concreta:
+   cuando la ventana ya se cerró y la laptop se fue, la web se ha quedado
+   dentro de la laptop. Que asomaran las preguntas por detrás rompía la
+   ilusión entera. Durante el trecho pegado no se ve —lo tapan las preguntas y
+   el velo—; se ve justo después, que es cuando toca. */
 .stage-gap--out {
   height: 150vh;
-  background: none;
+  background: #000;
 }
 
 /* La pista sí tiene que verse, así que va pegada al borde de abajo. */
@@ -348,13 +351,18 @@ body.no-stage .hero__fade {
   top: min(0px, calc(100svh - var(--faq-h, 100svh)));
 }
 
-/* Sin el respiro de abajo, y también en la copia que va dentro de la laptop:
-   las dos maquetas tienen que medir lo mismo o el reflejo deja de cuadrar.
-   Pegada por el final, ese hueco se quedaba fijo bajo la última pregunta y
-   dentro de la pantalla se leía como una franja muerta. */
+/* Un respiro largo al final, con el fondo de la propia sección. No es adorno:
+   la salida arranca justo cuando el final de las preguntas toca el borde de
+   abajo, así que sin él la animación empezaba en el mismo instante en que
+   aparecía la última pregunta y nadie llegaba a leerla —al bajar un poco más,
+   que es lo que hace cualquiera, ya estaba en marcha—. Este trecho es scroll
+   de verdad y va antes de que pase nada.
+
+   La misma medida en la copia que va dentro de la laptop: las dos maquetas
+   tienen que medir igual o el reflejo deja de cuadrar. */
 .stage-exit .faq,
 .laptop-screen__view .faq {
-  padding-bottom: clamp(24px, 4vh, 44px);
+  padding-bottom: 40vh;
 }
 
 body.no-stage .stage-exit .faq {

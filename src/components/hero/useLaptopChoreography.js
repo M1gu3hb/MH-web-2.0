@@ -72,6 +72,11 @@ export function useLaptopChoreography() {
     ...REST_WIDE,
   });
 
+  /* El contenedor de salida y si sus preguntas van pegadas. Se resuelve una
+     vez: buscarlo y pedir su estilo calculado en cada fotograma de scroll
+     saldría caro para un dato que no cambia. */
+  const pinned = useRef({ stage: null, sticky: false, checked: false, height: 0 });
+
   useEffect(() => {
     let frame = 0;
 
@@ -99,14 +104,31 @@ export function useLaptopChoreography() {
          los dos recorridos desalineados, y en la franja que sobraba —casi una
          pantalla— la laptop ya se había ido pero la página seguía quieta: se
          leía como que todo se había trabado. */
-      const stage = document.querySelector('.stage-exit');
+      const stage = pinned.current.stage?.isConnected
+        ? pinned.current.stage
+        : (pinned.current = { stage: document.querySelector('.stage-exit'), sticky: false }).stage;
       const faq = stage?.firstElementChild;
+      /* Si está pegada se comprueba una vez por elemento: el estilo calculado
+         es caro y esto corre en cada fotograma de scroll. */
+      if (stage && !pinned.current.checked) {
+        pinned.current.checked = true;
+        pinned.current.sticky = faq ? getComputedStyle(faq).position === 'sticky' : false;
+      }
+
       let exitFrom = outTop - vh * 0.85;
       let exitTo = outTop + outLen - vh * 0.15;
-      if (faq && getComputedStyle(faq).position === 'sticky') {
+      if (faq && pinned.current.sticky) {
         /* La medida se toma del contenedor, no de la sección: pegada, su
-           rectángulo ya viene desplazado y usarlo se realimentaría. */
-        exitFrom = stage.getBoundingClientRect().top + y + faq.offsetHeight - vh;
+           rectángulo ya viene desplazado y usarlo se realimentaría.
+
+           Y el alto se congela mientras el recorrido está en marcha. Abrir o
+           cerrar una pregunta cambia el alto casi trescientos píxeles, y con
+           la medida en vivo eso movía los dos extremos del recorrido bajo los
+           pies del visitante: sin que él tocara la rueda, la animación pegaba
+           un tirón. Fuera del tramo se vuelve a medir, que es cuando puede. */
+        const running = pinned.current.height > 0 && s.phase === 'exit' && s.progress > 0 && s.progress < 1;
+        if (!running) pinned.current.height = faq.offsetHeight;
+        exitFrom = stage.getBoundingClientRect().top + y + pinned.current.height - vh;
         exitTo = exitFrom + outLen;
       }
       const exit = span(y, exitFrom, exitTo);
@@ -166,11 +188,13 @@ export function useLaptopChoreography() {
           s.rotX = SHOW_NARROW.rotX + (AWAY.rotX - SHOW_NARROW.rotX) * leave;
         } else {
           s.opacity = Math.min(span(exit, 0, 0.08), 1 - span(exit, 0.9, 1));
-          /* El negro entra tarde y a propósito. Antes cubría desde el primer
-             momento y tapaba las preguntas justo cuando la gracia es verlas
-             quietas detrás mientras la ventana se cierra encima; solo cuando
-             la laptop empieza a irse de verdad se apaga todo. */
-          s.veil = exit < 0.88 ? Math.min(0.94, span(exit, 0.46, 0.72)) : 0.94 - 0.94 * span(exit, 0.88, 1);
+          /* El negro entra en cuanto el relevo ya se ha hecho y no se levanta
+             mientras las preguntas sigan ahí detrás: la web se ha metido en la
+             laptop, y verlas asomar aunque fuera un momento deshacía la
+             ilusión. Se apaga después del recorrido, cuando las preguntas ya
+             se despegaron y lo que hay debajo es el tramo negro de verdad, así
+             que apagarlo no descubre nada. */
+          s.veil = Math.min(1, span(exit, 0.06, 0.2)) * (1 - span(y, exitTo, exitTo + vh * 0.8));
           /* Mismo camino que a la entrada pero del revés: primero la pantalla
              se despega del viewport y se ve entera, y solo entonces se cierra
              la ventana. Cerrarla estando aún recortada era lo que hacía que no

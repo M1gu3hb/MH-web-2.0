@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { AnimatePresence, motion as Motion } from 'motion/react';
 import { Plus } from 'lucide-react';
 import { SectionHeading } from '../primitives/SectionHeading';
 import { Reveal } from '../reactbits';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { FAQ } from '../../content';
+import { getFaqOpen, setFaqOpen, subscribeFaqOpen } from './faqOpenStore';
 
 function FaqItem({ item, index, open, onToggle }) {
   const reduced = useReducedMotion();
@@ -42,7 +43,10 @@ function FaqItem({ item, index, open, onToggle }) {
 }
 
 export function FaqSection({ embedded = false }) {
-  const [openIndex, setOpenIndex] = useState(0);
+  /* Compartido con la copia que vive dentro de la laptop: si cada una abriera
+     la suya, los dos árboles dejarían de tener los mismos nodos y el reflejo
+     —que empareja nodo a nodo— se rendiría. */
+  const openIndex = useSyncExternalStore(subscribeFaqOpen, getFaqOpen, getFaqOpen);
 
   /* La salida deja las preguntas quietas mientras la ventana se cierra, y
      para pegarlas por su final hace falta saber cuánto miden: Chrome ignora
@@ -54,6 +58,10 @@ export function FaqSection({ embedded = false }) {
     const el = box.current;
     if (embedded || !el) return undefined;
     const write = () => {
+      /* Durante el viaje no se remide: si el alto cambiara ahí, el pegado
+         daría un salto en medio de la animación. Va tapado por el velo, pero
+         el reflejo lo seguiría y la ventana se movería sin motivo. */
+      if (document.body.classList.contains('in-transit')) return;
       document.documentElement.style.setProperty('--faq-h', `${Math.round(el.offsetHeight)}px`);
     };
     write();
@@ -83,7 +91,7 @@ export function FaqSection({ embedded = false }) {
             item={item}
             index={index}
             open={openIndex === index}
-            onToggle={() => setOpenIndex(openIndex === index ? -1 : index)}
+            onToggle={() => setFaqOpen(openIndex === index ? -1 : index)}
           />
         ))}
       </div>

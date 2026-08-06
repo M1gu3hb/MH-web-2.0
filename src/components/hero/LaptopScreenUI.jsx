@@ -73,7 +73,7 @@ export function LaptopScreenUI({ screen, choreography }) {
      la página está enseñando en ese fotograma. */
   const reflect = useCallback((realEl, embEl, key) => {
     let entry = mirror.current.get(key);
-    if (!entry || entry.real !== realEl || entry.emb !== embEl || !entry.emb.isConnected) {
+    if (!entry || entry.real !== realEl || entry.emb !== embEl || !entry.emb.isConnected || entry.stale) {
       const rs = realEl.querySelectorAll('*');
       const es = embEl.querySelectorAll('*');
       /* Si los árboles no coinciden nodo a nodo no hay pareja fiable que
@@ -84,7 +84,23 @@ export function LaptopScreenUI({ screen, choreography }) {
         pairs: rs.length === es.length ? Array.from(rs, (node, i) => [node, es[i]]) : [],
         moving: [],
         age: 0,
+        stale: false,
+        watch: null,
       };
+
+      /* Abrir o cerrar una pregunta añade y quita nodos, y con la lista de
+         parejas ya hecha cada nodo pasaba a copiarse sobre el que no era: los
+         estilos acababan cruzados y, en cuanto una pareja caía sobre un SVG,
+         saltaba una excepción que se llevaba por delante el bucle entero y
+         dejaba la pantalla congelada. El árbol se vigila y las parejas se
+         rehacen en cuanto cambia. */
+      entry.watch = new MutationObserver(() => {
+        const current = mirror.current.get(key);
+        if (current) current.stale = true;
+      });
+      entry.watch.observe(realEl, { childList: true, subtree: true });
+
+      mirror.current.get(key)?.watch?.disconnect();
       mirror.current.set(key, entry);
     }
 
@@ -93,7 +109,10 @@ export function LaptopScreenUI({ screen, choreography }) {
       const [r, e] = pairs[i];
       const style = r.style.cssText;
       if (e.style.cssText !== style) e.style.cssText = style;
-      if (typeof r.className === 'string' && e.className !== r.className) e.className = r.className;
+      /* Solo entre elementos HTML: en SVG `className` es de solo lectura. */
+      if (typeof r.className === 'string' && typeof e.className === 'string' && e.className !== r.className) {
+        e.className = r.className;
+      }
       if (!r.firstElementChild && e.textContent !== r.textContent) e.textContent = r.textContent;
     }
 
@@ -137,8 +156,19 @@ export function LaptopScreenUI({ screen, choreography }) {
   useEffect(() => {
     if (!screen) return undefined;
     let frame = 0;
+    const pairs = mirror.current;
 
     const tick = () => {
+      /* El siguiente fotograma se pide ANTES de trabajar, y no después. Con la
+         petición al final, cualquier excepción en medio mataba el bucle para
+         siempre: la pantalla se quedaba clavada en el último fotograma pintado
+         y la transición entera parecía trabada. Así un fallo puntual cuesta un
+         fotograma, no la escena. */
+      frame = requestAnimationFrame(tick);
+      draw();
+    };
+
+    const draw = () => {
       const s = choreography.current;
 
       /* El contenido se monta al empezar la transición y se desmonta en cuanto
@@ -153,8 +183,10 @@ export function LaptopScreenUI({ screen, choreography }) {
       });
 
       if (!s.visible && !live) {
-        if (mirror.current.size) mirror.current.clear();
-        frame = requestAnimationFrame(tick);
+        if (mirror.current.size) {
+          mirror.current.forEach((entry) => entry.watch?.disconnect());
+          mirror.current.clear();
+        }
         return;
       }
 
@@ -286,12 +318,14 @@ export function LaptopScreenUI({ screen, choreography }) {
           if (rc && ec) reflect(rc, ec, 'caps');
         }
       }
-
-      frame = requestAnimationFrame(tick);
     };
 
     frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(frame);
+      pairs.forEach((entry) => entry.watch?.disconnect());
+      pairs.clear();
+    };
   }, [anchorEl, choreography, live, reflect, screen]);
 
   if (!screen) return null;
