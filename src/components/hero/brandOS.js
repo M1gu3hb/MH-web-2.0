@@ -6,12 +6,13 @@
  *
  *   escritorio  fondo con el monograma y su reflejo, barra de tareas con las
  *               herramientas del stack, y un par de paneles vivos
- *   ventana     el navegador que se abre desde la barra hasta llenar la
- *               pantalla: es la transición de entrada a la web, y al revés
- *               la de salida
  *   terminal    lo que abre el clic en la laptop; lluvia de caracteres y el
  *               arranque de la web, para que sea una aplicación del mismo
  *               sistema y no otra pantalla distinta
+ *
+ * La ventana del navegador NO se dibuja aquí: es DOM de verdad, colocado en
+ * la escena con CSS3D, para que lo que se abre sea la página misma y no una
+ * recreación. Ver LaptopScreenUI.
  */
 
 const W = 1024;
@@ -130,7 +131,7 @@ function drawReactMark(ctx, cx, cy, r, color) {
   ctx.restore();
 }
 
-function drawTaskbar(ctx, time, highlight) {
+function drawTaskbar(ctx, time) {
   const y = H - BAR;
   ctx.fillStyle = 'rgba(6, 12, 32, 0.72)';
   ctx.fillRect(0, y, W, BAR);
@@ -144,9 +145,7 @@ function drawTaskbar(ctx, time, highlight) {
 
   DOCK.forEach((app, i) => {
     const x = startX + i * (size + gap);
-    /* El primero es el navegador: rebota justo antes de abrirse. */
-    const bounce = i === 0 ? Math.max(0, Math.sin(time * 6)) * highlight * 6 : 0;
-    const iy = y + (BAR - size) / 2 - bounce;
+    const iy = y + (BAR - size) / 2;
 
     ctx.fillStyle = app.bg;
     roundRect(ctx, x, iy, size, size, 9);
@@ -233,259 +232,6 @@ function drawDesktopPanels(ctx, time) {
 }
 
 /* ---- La ventana del navegador ------------------------------------------ */
-
-/* Lo que la ventana enseña es la parte de la página a la que se entra o de
-   la que se sale, no el inicio: si enseñara otra cosa, al fundirse con la web
-   real el contenido no cuadraría y se rompería la ilusión de que la página
-   vive dentro de la laptop. */
-
-const CAROUSEL_ITEMS = [
-  ['Pastelería Confetti', 'WEB + POS'],
-  ['Jardines Club Hípico', 'WEB + CRM'],
-  ['MH Photo Booth', 'SOFTWARE'],
-  ['Qyro', 'SOFTWARE'],
-  ['GESTECH', 'SOFTWARE'],
-  ['Vero Seguros', 'WEB'],
-  ['Morphiq UI', 'DISEÑO'],
-];
-
-const FAQ_ITEMS = [
-  '¿Cuánto cuesta una página web?',
-  '¿Cuánto tiempo tarda?',
-  '¿Yo puedo editar el contenido después?',
-  '¿El dominio y el hosting van incluidos?',
-  '¿Qué pasa si necesito cambios después de entregar?',
-  '¿Trabajas con negocios fuera de CDMX?',
-];
-
-/** Fondo de papel y barra de navegación, comunes a las dos vistas. */
-function drawPageChrome(ctx, x, y, w, h, u, m, logo) {
-  ctx.fillStyle = '#f6f3ea';
-  ctx.fillRect(x, y, w, h);
-
-  if (logo?.complete && logo.naturalWidth) {
-    const s = u * 6.4;
-    ctx.drawImage(logo, m, y + u * 3.6, s, s * (logo.naturalHeight / logo.naturalWidth));
-  }
-  ctx.fillStyle = '#151614';
-  ctx.font = `800 ${u * 3.1}px ui-sans-serif, system-ui, sans-serif`;
-  ctx.fillText('MH ASTRAL', m + u * 8.4, y + u * 4.6);
-
-  const links = ['Servicios', 'Trabajo', 'Proceso', 'Contacto'];
-  ctx.font = `600 ${u * 3}px ui-sans-serif, system-ui, sans-serif`;
-  const widths = links.map((t) => ctx.measureText(t).width);
-  const gap = u * 5;
-  let lx = x + w * 0.52 - (widths.reduce((a, v) => a + v, 0) + gap * (links.length - 1)) / 2;
-  links.forEach((t, i) => {
-    ctx.fillStyle = 'rgba(21, 22, 20, 0.66)';
-    ctx.fillText(t, lx, y + u * 5);
-    lx += widths[i] + gap;
-  });
-
-  /* La pastilla se mide contra su texto y se ancla al margen seguro. */
-  const cta = 'Iniciar proyecto';
-  ctx.font = `700 ${u * 2.6}px ui-sans-serif, system-ui, sans-serif`;
-  const ctaW = ctx.measureText(cta).width + u * 7;
-  const ctaX = x + w - w * 0.15 - ctaW;
-  ctx.fillStyle = '#151614';
-  roundRect(ctx, ctaX, y + u * 3, ctaW, u * 7.4, u * 3.7);
-  ctx.fill();
-  ctx.fillStyle = '#f6f3ea';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(cta, ctaX + u * 3.5, y + u * 6.7);
-  ctx.textBaseline = 'top';
-}
-
-/** Lo que continúa al entrar: el carrusel y el arranque de capacidades. */
-function drawNextPreview(ctx, x, y, w, h, logo) {
-  ctx.save();
-  ctx.beginPath();
-  ctx.rect(x, y, w, h);
-  ctx.clip();
-
-  const u = h / 100;
-  const m = x + w * 0.15;
-  drawPageChrome(ctx, x, y, w, h, u, m, logo);
-
-  /* Carrusel de repositorios. */
-  ctx.fillStyle = 'rgba(21, 22, 20, 0.5)';
-  ctx.font = `800 ${u * 2.3}px ui-monospace, monospace`;
-  ctx.fillText('PROYECTOS · GITHUB', m, y + u * 17);
-  ctx.textAlign = 'right';
-  ctx.fillText('Cada uno abre su repositorio', x + w - w * 0.15, y + u * 17);
-  ctx.textAlign = 'left';
-
-  let cx = m;
-  CAROUSEL_ITEMS.forEach(([name, kind]) => {
-    /* Cada medida con su propia tipografía ya puesta: si se mide el nombre
-       con la fuente de la etiqueta, las dos se montan una encima de la otra. */
-    ctx.font = `700 ${u * 3}px ui-sans-serif, system-ui, sans-serif`;
-    const nw = ctx.measureText(name).width;
-    ctx.font = `800 ${u * 2.1}px ui-monospace, monospace`;
-    const kw = ctx.measureText(kind).width;
-    const pill = nw + kw + u * 12;
-    if (cx + pill > x + w - w * 0.1) return;
-
-    ctx.strokeStyle = 'rgba(21, 22, 20, 0.16)';
-    ctx.lineWidth = 1;
-    roundRect(ctx, cx, y + u * 22, pill, u * 9, u * 4.5);
-    ctx.stroke();
-
-    /* Marca de repositorio. */
-    ctx.fillStyle = 'rgba(21, 22, 20, 0.55)';
-    ctx.beginPath();
-    ctx.arc(cx + u * 4, y + u * 26.5, u * 1.6, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = '#151614';
-    ctx.font = `700 ${u * 3}px ui-sans-serif, system-ui, sans-serif`;
-    ctx.fillText(name, cx + u * 7, y + u * 25);
-    ctx.fillStyle = 'rgba(21, 22, 20, 0.42)';
-    ctx.font = `800 ${u * 2.1}px ui-monospace, monospace`;
-    ctx.fillText(kind, cx + u * 8 + nw, y + u * 25.8);
-
-    cx += pill + u * 3;
-  });
-
-  /* Capacidades. */
-  ctx.fillStyle = 'rgba(21, 22, 20, 0.5)';
-  ctx.font = `800 ${u * 2.3}px ui-monospace, monospace`;
-  ctx.fillText('01 / CAPACIDADES', m, y + u * 42);
-
-  ctx.fillStyle = '#151614';
-  ctx.font = `800 ${u * 11}px ui-sans-serif, system-ui, sans-serif`;
-  ctx.fillText('Un estudio.', m, y + u * 48);
-  ctx.fillStyle = 'rgba(21, 22, 20, 0.42)';
-  ctx.fillText('Cinco frentes.', m, y + u * 61);
-
-  ctx.fillStyle = 'rgba(21, 22, 20, 0.66)';
-  ctx.font = `400 ${u * 3.1}px ui-sans-serif, system-ui, sans-serif`;
-  ctx.fillText('No vendo una colección de herramientas sueltas.', m, y + u * 78);
-  ctx.fillText('Diseño cómo se conectan para que tu negocio', m, y + u * 83.5);
-  ctx.fillText('se vea mejor y funcione mejor.', m, y + u * 89);
-
-  ctx.restore();
-}
-
-/** De lo que se sale al cerrar: las preguntas. */
-function drawBackPreview(ctx, x, y, w, h, logo) {
-  ctx.save();
-  ctx.beginPath();
-  ctx.rect(x, y, w, h);
-  ctx.clip();
-
-  const u = h / 100;
-  const m = x + w * 0.15;
-  drawPageChrome(ctx, x, y, w, h, u, m, logo);
-
-  ctx.fillStyle = 'rgba(21, 22, 20, 0.5)';
-  ctx.font = `800 ${u * 2.3}px ui-monospace, monospace`;
-  ctx.fillText('06 / PREGUNTAS', m, y + u * 18);
-
-  ctx.fillStyle = '#151614';
-  ctx.font = `800 ${u * 9}px ui-sans-serif, system-ui, sans-serif`;
-  ctx.fillText('Lo que todos', m, y + u * 23);
-  ctx.fillStyle = 'rgba(21, 22, 20, 0.42)';
-  ctx.fillText('preguntan primero.', m, y + u * 34);
-
-  const right = x + w - w * 0.15;
-  FAQ_ITEMS.forEach((q, i) => {
-    const qy = y + u * 50 + i * u * 8;
-    ctx.strokeStyle = 'rgba(21, 22, 20, 0.14)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(m, qy + u * 6.6);
-    ctx.lineTo(right, qy + u * 6.6);
-    ctx.stroke();
-
-    ctx.fillStyle = 'rgba(21, 22, 20, 0.82)';
-    ctx.font = `600 ${u * 3.1}px ui-sans-serif, system-ui, sans-serif`;
-    ctx.fillText(q, m, qy + u * 1.6);
-
-    ctx.fillStyle = 'rgba(21, 22, 20, 0.4)';
-    ctx.font = `600 ${u * 3.4}px ui-sans-serif, system-ui, sans-serif`;
-    ctx.textAlign = 'right';
-    ctx.fillText('+', right, qy + u * 1.4);
-    ctx.textAlign = 'left';
-  });
-
-  ctx.restore();
-}
-
-/**
- * Ventana que crece desde la barra de tareas hasta llenar la pantalla.
- * `open` va de 0 (cerrada, en la barra) a 1 (ocupando todo) y `variant` dice
- * qué parte de la web enseña: la que sigue al entrar, la que se deja al salir.
- */
-function drawWindow(ctx, open, logo, variant) {
-  if (open <= 0.001) return;
-
-  const size = 34;
-  const gap = 12;
-  const startX = (W - (DOCK.length * size + (DOCK.length - 1) * gap)) / 2;
-  const from = { x: startX, y: H - BAR + 10, w: size, h: size };
-  const to = { x: 0, y: 0, w: W, h: H };
-
-  const x = from.x + (to.x - from.x) * open;
-  const y = from.y + (to.y - from.y) * open;
-  const w = from.w + (to.w - from.w) * open;
-  const h = from.h + (to.h - from.h) * open;
-  const radius = 12 * (1 - open) + 2;
-
-  ctx.save();
-  ctx.shadowColor = 'rgba(0, 0, 0, 0.55)';
-  ctx.shadowBlur = 40 * open;
-  ctx.shadowOffsetY = 10 * open;
-  ctx.fillStyle = '#0a0818';
-  roundRect(ctx, x, y, w, h, radius);
-  ctx.fill();
-  ctx.restore();
-
-  ctx.save();
-  roundRect(ctx, x, y, w, h, radius);
-  ctx.clip();
-
-  const chrome = Math.min(36, h * 0.09);
-  const preview = variant === 'back' ? drawBackPreview : drawNextPreview;
-  preview(ctx, x, y + chrome, w, Math.max(1, h - chrome), logo);
-
-  /* Cromo de la ventana. */
-  ctx.fillStyle = '#161a24';
-  ctx.fillRect(x, y, w, chrome);
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-  ctx.fillRect(x, y + chrome - 1, w, 1);
-
-  if (chrome > 14) {
-    ['#ff5f57', '#febc2e', '#28c840'].forEach((c, i) => {
-      ctx.fillStyle = c;
-      ctx.beginPath();
-      ctx.arc(x + 16 + i * 15, y + chrome / 2, 5, 0, Math.PI * 2);
-      ctx.fill();
-    });
-
-    const bw = Math.min(340, w * 0.42);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
-    roundRect(ctx, x + (w - bw) / 2, y + chrome * 0.22, bw, chrome * 0.56, chrome * 0.28);
-    ctx.fill();
-
-    if (logo?.complete && logo.naturalWidth) {
-      const s = chrome * 0.42;
-      ctx.drawImage(logo, x + (w - bw) / 2 + 8, y + chrome / 2 - s / 2, s, s * (logo.naturalHeight / logo.naturalWidth));
-    }
-    ctx.fillStyle = 'rgba(226, 232, 255, 0.8)';
-    ctx.font = `600 ${Math.max(9, chrome * 0.34)}px ui-monospace, monospace`;
-    ctx.textBaseline = 'middle';
-    ctx.fillText('mh-astral-systems.com', x + (w - bw) / 2 + 8 + chrome * 0.5, y + chrome / 2);
-    ctx.textBaseline = 'top';
-  }
-
-  ctx.restore();
-
-  ctx.strokeStyle = 'rgba(150, 190, 255, 0.24)';
-  ctx.lineWidth = 1;
-  roundRect(ctx, x + 0.5, y + 0.5, w - 1, h - 1, radius);
-  ctx.stroke();
-}
 
 /* ---- La terminal -------------------------------------------------------- */
 
@@ -609,12 +355,8 @@ export function createBrandOS(logoImage) {
   let terminal = 0;
   let last = 0;
 
-  /**
-   * @param {number} time   segundos desde que arrancó la escena
-   * @param {number} windowOpen 0..1 — cuánto está abierta la ventana
-   * @param {'next'|'back'} variant qué parte de la web enseña la ventana
-   */
-  const draw = (time, windowOpen = 0, variant = 'next') => {
+  /** @param {number} time segundos desde que arrancó la escena */
+  const draw = (time) => {
     const delta = Math.min(0.06, Math.max(0, time - last));
     last = time;
 
@@ -628,9 +370,7 @@ export function createBrandOS(logoImage) {
     drawWallpaper(ctx, logoImage, time);
     drawDesktopPanels(ctx, time);
     drawTerminal(ctx, terminal, rain, time, delta);
-    /* La barra se dibuja antes que la ventana: la ventana sale de ella. */
-    drawTaskbar(ctx, time, windowOpen > 0 && windowOpen < 0.12 ? 1 : 0);
-    drawWindow(ctx, windowOpen, logoImage, variant);
+    drawTaskbar(ctx, time);
   };
 
   /** Ajusta la forma del lienzo a la de la pantalla del modelo. */
@@ -649,6 +389,6 @@ export function createBrandOS(logoImage) {
     return terminalTarget > 0.5 ? 'terminal' : 'os';
   };
 
-  draw(0, 0);
+  draw(0);
   return { canvas, draw, toggleMode, setAspect };
 }

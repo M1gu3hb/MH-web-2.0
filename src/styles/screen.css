@@ -1,0 +1,132 @@
+/* ============================================================
+   La pantalla de la laptop — DOM real dentro de la escena 3D
+   ============================================================
+
+   Este bloque vive dentro de un CSS3DObject: el navegador lo coloca en
+   perspectiva con la misma cámara que la escena, así que hereda toda la
+   coreografía. Lo que hay dentro de la ventana son las secciones de verdad
+   del sitio, montadas y corriendo, no una recreación. */
+
+.laptop-screen {
+  position: relative;
+  overflow: hidden;
+  background: #050d2a;
+  transform-style: flat;
+}
+
+.laptop-screen__desktop {
+  position: absolute;
+  inset: 0;
+}
+
+/* ---- La ventana ------------------------------------------- */
+.laptop-screen__window {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #f6f3ea;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+}
+
+.laptop-screen__chrome {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 14px;
+  padding: 0 12px;
+  overflow: hidden;
+  background: #161a24;
+}
+
+.laptop-screen__lights {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 7px;
+}
+
+.laptop-screen__lights i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #ff5f57;
+}
+
+.laptop-screen__lights i:nth-child(2) { background: #febc2e; }
+.laptop-screen__lights i:nth-child(3) { background: #28c840; }
+
+.laptop-screen__url {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: min(420px, 46%);
+  margin-inline: auto;
+  padding: 5px 12px;
+  border-radius: var(--r-full);
+  background: rgba(255, 255, 255, 0.09);
+  color: rgba(226, 232, 255, 0.82);
+  font-family: ui-monospace, monospace;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.laptop-screen__url img { flex: 0 0 auto; }
+
+/* ---- El documento ----------------------------------------- */
+.laptop-screen__viewport {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--surface-base);
+}
+
+/* Se maqueta al ancho completo de la pantalla y se encoge con la ventana:
+   así el diseño no salta de móvil a escritorio mientras se abre. */
+.laptop-screen__view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+}
+
+/* Incrustada, la sección de capacidades no tiene scroll que seguir: se
+   muestra la primera tarjeta y ya. */
+.capabilities--embedded .capabilities__scroller { height: auto; }
+
+.capabilities--embedded .capabilities__sticky {
+  position: static;
+  min-height: 0;
+  padding-block: clamp(24px, 4vh, 44px) clamp(24px, 4vh, 44px);
+}
+
+.capabilities--embedded .scroll-cue { display: none; }
+
+/* ---- Cristal ---------------------------------------------- */
+.laptop-screen__glass {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0) 42%);
+  pointer-events: none;
+}
+
+/* La desfragmentación congela el ancho de cada palabra midiéndola. Dentro de
+   la pantalla el documento está escalado, así que esa medida sale minúscula y
+   las palabras quedan aplastadas: aquí no se congela nada. */
+.laptop-screen__view .rb-scramble__word {
+  width: auto !important;
+  overflow: visible !important;
+}
+
+/* Las apariciones por scroll no se disparan dentro de la pantalla —su caja de
+   layout no está donde se ve—, así que se muestran ya resueltas. */
+.laptop-screen__view [style*='opacity: 0'],
+.laptop-screen__view .rb-split__char,
+.laptop-screen__view .rb-scroll-reveal__word,
+.laptop-screen__view .rb-blur-text span {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+}

@@ -16,14 +16,15 @@ const SERVICE_SCREENS = {
   software: SoftwareScreen,
 };
 
-export function CapabilitiesSection() {
+export function CapabilitiesSection({ embedded = false }) {
   const baseId = useId();
   const tabsRef = useRef([]);
   const reducedMotion = useReducedMotion();
 
   /* El scroll pegado también en teléfono: es la animación de la sección. */
   const { containerRef, index: activeIndex, select } = useScrollSequence(CAPABILITIES.length, {
-    enabled: !reducedMotion,
+    /* Incrustada no hay scroll que seguir: se queda en la primera. */
+    enabled: !reducedMotion && !embedded,
   });
 
   const active = CAPABILITIES[activeIndex] ?? CAPABILITIES[0];
@@ -45,7 +46,12 @@ export function CapabilitiesSection() {
   );
 
   return (
-    <section className="capabilities" id="servicios">
+    <section
+      className={`capabilities ${embedded ? 'capabilities--embedded' : ''}`}
+      id={embedded ? undefined : 'servicios'}
+      aria-hidden={embedded || undefined}
+      inert={embedded ? '' : undefined}
+    >
       <div className="capabilities__intro section-pad">
         <SectionHeading
           eyebrow={SECTIONS.capabilities.eyebrow}

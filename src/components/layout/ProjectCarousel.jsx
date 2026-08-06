@@ -8,11 +8,11 @@ import { CAROUSEL } from '../../content';
  * cada pieza es un enlace real al repositorio (o al sitio en vivo cuando el
  * repo no es público). Se detiene al pasar el cursor para poder hacer clic.
  */
-export function ProjectCarousel() {
+export function ProjectCarousel({ embedded = false }) {
   const isRepo = (href) => href.includes('github.com');
 
   return (
-    <section className="carousel" aria-label="Proyectos">
+    <section className="carousel" aria-label="Proyectos" aria-hidden={embedded || undefined} inert={embedded ? '' : undefined}>
       <div className="carousel__head">
         <p className="section-index">
           <ScrambleText text="PROYECTOS · GITHUB" />

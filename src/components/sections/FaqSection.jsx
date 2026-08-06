@@ -41,11 +41,16 @@ function FaqItem({ item, index, open, onToggle }) {
   );
 }
 
-export function FaqSection() {
+export function FaqSection({ embedded = false }) {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <section className="faq section-pad" id="preguntas">
+    <section
+      className="faq section-pad"
+      id={embedded ? undefined : 'preguntas'}
+      aria-hidden={embedded || undefined}
+      inert={embedded ? '' : undefined}
+    >
       <SectionHeading eyebrow={FAQ.eyebrow} title={FAQ.title} />
 
       <div className="faq__list">

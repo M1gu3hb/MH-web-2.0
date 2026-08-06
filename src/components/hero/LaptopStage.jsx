@@ -1,6 +1,8 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { LaptopScreenUI } from './LaptopScreenUI';
 import { skipLaptopReady } from './laptopBus';
 import { useLaptopChoreography } from './useLaptopChoreography';
 
@@ -30,6 +32,11 @@ export function LaptopStage({ enabled = true }) {
 
   const [capable, setCapable] = useState(false);
   const [running, setRunning] = useState(true);
+  /* Nodo DOM que la escena coloca dentro de la pantalla del modelo. Ahí se
+     monta la web de verdad, no una copia. */
+  const [screen, setScreen] = useState(null);
+
+  const handleScreen = useCallback((next) => setScreen(next), []);
 
   const veil = useRef(null);
   const power = useRef(null);
@@ -127,9 +134,14 @@ export function LaptopStage({ enabled = true }) {
             reducedMotion={reducedMotion}
             quality={isPhone || coarse ? 'low' : 'high'}
             running={running}
+            onScreenReady={handleScreen}
           />
         </Suspense>
       </div>
+
+      {screen?.root
+        ? createPortal(<LaptopScreenUI screen={screen} choreography={choreography} />, screen.root)
+        : null}
 
       <div className="stage-power" ref={power} aria-hidden="true">
         <span />
