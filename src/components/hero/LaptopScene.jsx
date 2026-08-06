@@ -314,6 +314,7 @@ function Laptop({ choreography, reducedMotion, onScreenReady }) {
   const baseY = useRef(0);
   const offset = useRef(new THREE.Vector3());
   const euler = useRef(new THREE.Euler());
+  const camEuler = useRef(new THREE.Euler());
 
   useFrame((three, delta) => {
     const g = root.current;
@@ -356,9 +357,17 @@ function Laptop({ choreography, reducedMotion, onScreenReady }) {
     const { pivot, width, height, tilt } = fit.current;
     const cover = Math.max(three.viewport.width / width, three.viewport.height / height) * 1.03;
 
+    /* La cámara está un poco por encima del origen y mira hacia él, así que
+       apunta algo más de un grado hacia abajo. Dejar la pantalla horizontal
+       en el mundo no la deja paralela a la cámara: quedaba esa pizca de
+       perspectiva y el texto de arriba salía un uno por ciento más grande que
+       el de la página, con el consiguiente salto al hacer el relevo. Sumando
+       la inclinación de la cámara el panel cae plano de verdad. */
+    camEuler.current.setFromQuaternion(three.camera.quaternion, 'YXZ');
+
     const scale = mix(target.scale, cover, f);
     const rotY = mix(target.rotY, 0, f);
-    const rotX = mix(target.rotX, tilt, f);
+    const rotX = mix(target.rotX, tilt + camEuler.current.x, f);
 
     /* El grupo gira sobre su origen, no sobre la pantalla: hay que restar
        dónde acaba el centro del panel para dejarlo justo en el centro. */

@@ -56,9 +56,19 @@ export function ScrambleText({
       node.style.width = '';
       node.textContent = word;
     });
+    /* El rectángulo que devuelve el navegador viene ya con la escala de los
+       ancestros. Dentro de la pantalla de la laptop el documento va escalado,
+       así que hay que dividir por esa escala o las palabras se congelan a un
+       tamaño que no es el suyo y el texto rompe por otro sitio. */
+    const host = words.current[0]?.node.offsetParent ?? words.current[0]?.node.parentElement;
+    const layout = host?.offsetWidth ?? 0;
+    const drawn = host ? host.getBoundingClientRect().width : 0;
+    const k = layout > 4 && drawn > 0 ? drawn / layout : 1;
+    const unscale = Math.abs(k - 1) < 0.01 ? 1 : k;
+
     /* Se leen todos los anchos y luego se escriben: intercalarlos obligaría
        al navegador a recalcular el layout una vez por palabra. */
-    const widths = words.current.map(({ node }) => node.getBoundingClientRect().width);
+    const widths = words.current.map(({ node }) => node.getBoundingClientRect().width / unscale);
     words.current.forEach(({ node }, i) => {
       node.style.width = `${widths[i]}px`;
     });

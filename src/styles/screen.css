@@ -83,25 +83,28 @@
   background: var(--surface-base);
 }
 
-/* Se maqueta al ancho completo de la pantalla y se encoge con la ventana:
-   así el diseño no salta de móvil a escritorio mientras se abre. */
+/* Se maqueta al ancho del viewport real y se coloca por transformación: la
+   posición vertical la manda el scroll de la página, para que la franja que
+   se ve aquí sea la misma que la página enseñará al terminar. El alto va
+   suelto —lo pone el contenido— y el recorte lo hace el viewport de arriba. */
 .laptop-screen__view {
   position: absolute;
   top: 0;
   left: 0;
   transform-origin: 0 0;
+  will-change: transform;
 }
 
-/* Incrustada, la sección de capacidades no tiene scroll que seguir: se
-   muestra la primera tarjeta y ya. */
-.capabilities--embedded .capabilities__scroller { height: auto; }
-
-.capabilities--embedded .capabilities__sticky {
-  position: static;
-  min-height: 0;
-  padding-block: clamp(24px, 4vh, 44px) clamp(24px, 4vh, 44px);
+/* El tramo negro que hay antes del carrusel y después de las preguntas: sin
+   él la coincidencia se rompería justo en el borde de la sección. */
+.laptop-screen__gap {
+  height: 100vh;
+  background: #000;
 }
 
+/* La maqueta incrustada tiene que ser idéntica a la de la página: nada de
+   desactivar el scroll pegado, o las alturas dejarían de coincidir. Lo único
+   que sobra ahí dentro es la pista de scroll. */
 .capabilities--embedded .scroll-cue { display: none; }
 
 /* ---- Cristal ---------------------------------------------- */
@@ -112,21 +115,6 @@
   pointer-events: none;
 }
 
-/* La desfragmentación congela el ancho de cada palabra midiéndola. Dentro de
-   la pantalla el documento está escalado, así que esa medida sale minúscula y
-   las palabras quedan aplastadas: aquí no se congela nada. */
-.laptop-screen__view .rb-scramble__word {
-  width: auto !important;
-  overflow: visible !important;
-}
-
-/* Las apariciones por scroll no se disparan dentro de la pantalla —su caja de
-   layout no está donde se ve—, así que se muestran ya resueltas. */
-.laptop-screen__view [style*='opacity: 0'],
-.laptop-screen__view .rb-split__char,
-.laptop-screen__view .rb-scroll-reveal__word,
-.laptop-screen__view .rb-blur-text span {
-  opacity: 1 !important;
-  transform: none !important;
-  filter: none !important;
-}
+/* Las apariciones por scroll de la copia no se fuerzan a nada: se le copia
+   fotograma a fotograma el estado de la sección de verdad (ver `reflect` en
+   LaptopScreenUI), que es lo único que hace que el relevo no salte. */

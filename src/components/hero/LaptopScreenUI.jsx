@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ProjectCarousel } from '../layout/ProjectCarousel';
 import { CapabilitiesSection } from '../sections/CapabilitiesSection';
 import { FaqSection } from '../sections/FaqSection';
@@ -9,25 +9,91 @@ const DOCK_X = 0.326;
 const DOCK_Y = 0.955;
 const DOCK_SIZE = 34 / 1024;
 
+const CHROME = 40; // alto del cromo de la ventana, en píxeles de pantalla
+
+const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+const smooth = (t) => t * t * (3 - 2 * t);
+
 /**
  * Lo que se ve dentro de la pantalla de la laptop.
  *
  * No es un dibujo ni una captura: el escritorio es el mismo lienzo que pinta
  * el sistema operativo, y la ventana contiene las secciones reales de la web,
- * montadas de verdad y corriendo en vivo. Cuando la ventana termina de
- * abrirse y la página toma el relevo, lo de dentro y lo de fuera son lo mismo.
+ * montadas de verdad y corriendo en vivo.
  *
- * El contenido solo se monta mientras hay transición: el resto del tiempo la
- * pantalla es únicamente el escritorio, que es barato.
+ * Para que el relevo con la página no se note hacen falta tres cosas, y las
+ * tres se calculan aquí en cada fotograma:
+ *
+ *   posición  el documento incrustado se desplaza con el scroll real, así que
+ *             la franja que se ve dentro de la ventana es exactamente la que
+ *             la página enseñará al terminar. Sin esto la ventana abría por el
+ *             principio de la sección mientras la página estaba por la mitad,
+ *             y al fundirse se veía todo doble.
+ *   escala    al abrirse, el documento cabe entero en la ventana; al final se
+ *             ajusta a tamaño real, uno a uno con el viewport, para que la
+ *             tipografía mida lo mismo dentro que fuera.
+ *   cromo     la barra de la ventana se retira en el último tramo: al final
+ *             la ventana ya no es una ventana, es la página.
  */
 export function LaptopScreenUI({ screen, choreography }) {
   const desktop = useRef(null);
   const windowRef = useRef(null);
   const chromeRef = useRef(null);
+  const viewportRef = useRef(null);
   const viewRef = useRef(null);
+
+  /* Las secciones de la página real contra las que se alinea el reflejo. Se
+     leen del DOM en cada fotograma y no de un estado: la variante puede
+     cambiar entre renders y un ancla vieja descoloca todo el documento. */
+  const anchors = useRef({ next: null, back: null });
+
+  /* Parejas de nodos entre cada sección de verdad y su copia incrustada. */
+  const mirror = useRef(new Map());
 
   const [variant, setVariant] = useState('next');
   const [live, setLive] = useState(false);
+
+  const anchorEl = useCallback((which) => {
+    const cache = anchors.current;
+    if (!cache[which] || !cache[which].isConnected) {
+      cache[which] = which === 'back'
+        ? document.querySelector('main .faq')
+        : document.querySelector('main .carousel');
+    }
+    return cache[which];
+  }, []);
+
+  /* La copia corre sus propias animaciones, pero fuera de sitio: su caja de
+     layout no está donde se la ve, así que las apariciones por scroll se
+     disparan cuando no toca. Antes se las forzaba a estado final y por eso al
+     relevo saltaba: la página real seguía a media aparición y la copia ya
+     estaba puesta. En vez de inventarle un estado se le copia el de verdad
+     —estilos, clases y texto— y así la ventana enseña, literalmente, lo que
+     la página está enseñando en ese fotograma. */
+  const reflect = useCallback((realEl, embEl, key) => {
+    let entry = mirror.current.get(key);
+    if (!entry || entry.real !== realEl || entry.emb !== embEl || !entry.emb.isConnected) {
+      const rs = realEl.querySelectorAll('*');
+      const es = embEl.querySelectorAll('*');
+      /* Si los árboles no coinciden nodo a nodo no hay pareja fiable que
+         copiar, y es mejor no tocar nada que descolocarlo todo. */
+      entry = {
+        real: realEl,
+        emb: embEl,
+        pairs: rs.length === es.length ? Array.from(rs, (node, i) => [node, es[i]]) : [],
+      };
+      mirror.current.set(key, entry);
+    }
+
+    const { pairs } = entry;
+    for (let i = 0; i < pairs.length; i += 1) {
+      const [r, e] = pairs[i];
+      const style = r.style.cssText;
+      if (e.style.cssText !== style) e.style.cssText = style;
+      if (typeof r.className === 'string' && e.className !== r.className) e.className = r.className;
+      if (!r.firstElementChild && e.textContent !== r.textContent) e.textContent = r.textContent;
+    }
+  }, []);
 
   /* El escritorio es el lienzo del sistema, insertado tal cual. */
   useEffect(() => {
@@ -43,33 +109,42 @@ export function LaptopScreenUI({ screen, choreography }) {
     };
   }, [screen]);
 
-  /* La ventana se abre desde la barra de tareas hasta llenar la pantalla. Se
-     escribe por rAF: es una animación por fotograma, no estado de React. */
+  /* Todo el movimiento se escribe por rAF: es una animación por fotograma,
+     no estado de React. */
   useEffect(() => {
     if (!screen) return undefined;
     let frame = 0;
 
     const tick = () => {
       const s = choreography.current;
-      const open = s.osWindow ?? 0;
 
-      /* Con la laptop fuera de plano no hay nada que escribir. */
-      if (!s.visible && !live) {
-        frame = requestAnimationFrame(tick);
-        return;
-      }
-
-      /* El contenido real se monta al empezar la transición, no al abrirse la
-         ventana: montarlo justo cuando arranca la animación daría un tirón.
-         Y se desmonta en cuanto la laptop deja de verse: dentro de la página
-         el tramo sigue siendo «enter», y dejarlo montado mantenía el carrusel
-         y la baraja animando dentro de una capa invisible. */
+      /* El contenido se monta al empezar la transición y se desmonta en cuanto
+         la laptop deja de verse: dentro de la página el tramo sigue siendo
+         «enter», y dejarlo montado mantenía el carrusel animando en una capa
+         invisible. */
       const wanted = s.visible && s.phase !== 'hero';
       setLive((current) => (current === wanted ? current : wanted));
       setVariant((current) => {
         const next = s.osVariant ?? 'next';
         return current === next ? current : next;
       });
+
+      if (!s.visible && !live) {
+        if (mirror.current.size) mirror.current.clear();
+        frame = requestAnimationFrame(tick);
+        return;
+      }
+
+      const open = s.osWindow ?? 0;
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      /* Se mide antes de escribir: leer después obligaría a recalcular el
+         layout en cada fotograma. Va un fotograma por detrás mientras la
+         ventana se mueve, y exacto en cuanto se para, que es lo que importa
+         para que el relevo cuadre. */
+      const rootRect = screen.root.getBoundingClientRect();
+      const vpRect = viewportRef.current?.getBoundingClientRect();
 
       const fromH = DOCK_SIZE * (screen.width / screen.height);
       const w = DOCK_SIZE + (1 - DOCK_SIZE) * open;
@@ -85,24 +160,90 @@ export function LaptopScreenUI({ screen, choreography }) {
         el.style.borderRadius = `${14 * (1 - open) + 3}px`;
       }
 
-      /* El cromo se encoge con la ventana para no comerse el contenido
-         mientras todavía es pequeña. */
+      /* El cromo entra al abrirse y se retira al final. */
+      const chromeH = CHROME * clamp01(open / 0.2) * (1 - clamp01((open - 0.86) / 0.14));
       if (chromeRef.current) {
-        chromeRef.current.style.height = `${6 + 34 * open}px`;
-        chromeRef.current.style.opacity = String(Math.min(1, open * 3));
+        chromeRef.current.style.height = `${chromeH}px`;
+        chromeRef.current.style.opacity = String(clamp01(chromeH / 20));
       }
 
-      /* El documento se maqueta al tamaño del viewport real y se encoge para
-         caber en la ventana. Es la pieza que hace que lo de dentro sea
-         idéntico a lo de fuera: las medidas en vw y vh de todo el sitio se
-         resuelven contra el mismo viewport, así que la tipografía, los aires
-         y los puntos de ruptura son exactamente los de la página. */
-      if (viewRef.current) {
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
-        viewRef.current.style.width = `${vw}px`;
-        viewRef.current.style.height = `${vh}px`;
-        viewRef.current.style.transform = `scale(${Math.max(0.0005, (w * screen.width) / vw)})`;
+      const view = viewRef.current;
+      if (view && vpRect) {
+        /* Ancho real en pantalla del plano: con él se sabe cuánto encoger el
+           documento para que mida uno a uno con el viewport. */
+        const projected = rootRect.width || vw;
+
+        const which = s.osVariant === 'back' ? 'back' : 'next';
+        const realEl = anchorEl(which);
+        const embEl = view.querySelector(which === 'back' ? '.faq' : '.carousel');
+        const realRect = realEl?.getBoundingClientRect();
+
+        /* Píxeles de pantalla por píxel de documento, por unidad de escala.
+           Con el panel ya paralelo a la cámara la proyección es una escala
+           limpia, así que este número basta: medido contra la página da uno
+           a uno exacto y no hace falta corregir nada por encima. */
+        const unit = Math.max(0.0001, projected / screen.width);
+
+        /* Uno a uno solo cuando la pantalla está cubriendo el viewport: si se
+           atara a la ventana, al alejarse la laptop el documento se quedaría
+           a tamaño real dentro de una pantalla cada vez más pequeña y se
+           vería un recorte que no encoge. */
+        const fitK = (w * screen.width) / vw;
+        const oneK = 1 / unit;
+        const blend = smooth(clamp01(((s.focus ?? 0) - 0.86) / 0.14));
+        const k = fitK + (oneK - fitK) * blend;
+        const m = Math.max(0.0001, k * unit);
+
+        /* Dónde va el documento incrustado. No se deduce del scroll: se lee
+           dónde está ahora mismo la sección de verdad y se coloca su copia
+           encima, que es la única forma de que el relevo cuadre al píxel
+           venga de donde venga el scroll. La cuenta a ciegas queda de
+           reserva por si la sección aún no existe en el DOM. */
+        let offset;
+        if (realRect && embEl) {
+          offset = embEl.offsetTop - (realRect.top - vpRect.top) / m;
+
+          /* Antes y después del contenido hay sendos tramos negros de una
+             pantalla de alto, y el reflejo fiel los enseñaba tal cual: en
+             teléfono la ventana se abre mucho antes de que el primero termine
+             y se veía negra, como si la pantalla estuviera apagada. Mientras
+             la ventana es ventana se la sujeta al contenido; en cuanto la
+             pantalla cubre el viewport manda el reflejo y solo el reflejo,
+             que es donde el relevo tiene que ser exacto. */
+          if (blend < 1) {
+            let first = null;
+            let last = null;
+            for (let i = 0; i < view.children.length; i += 1) {
+              const c = view.children[i];
+              if (c.classList.contains('laptop-screen__gap')) continue;
+              if (!first) first = c;
+              last = c;
+            }
+            if (first && last) {
+              const lo = first.offsetTop;
+              const hi = Math.max(lo, last.offsetTop + last.offsetHeight - vpRect.height / m);
+              const held = Math.min(Math.max(offset, lo), hi);
+              offset += (held - offset) * (1 - blend);
+            }
+          }
+        } else {
+          const lead = which === 'back' ? 0 : vh;
+          offset = lead + vpRect.top / m;
+        }
+
+        view.style.width = `${vw}px`;
+        view.style.left = `${(w * screen.width - vw * k) / 2}px`;
+        view.style.transform = `scale(${k}) translateY(${-offset}px)`;
+
+        /* Al final, y nunca antes de medir: copiar estilos no obliga a
+           recalcular el layout, pero leer una posición después de haberlos
+           escrito sí, y saldría caro en cada fotograma. */
+        if (realEl && embEl) reflect(realEl, embEl, which);
+        if (which === 'next') {
+          const rc = document.querySelector('main .capabilities');
+          const ec = view.querySelector('.capabilities');
+          if (rc && ec) reflect(rc, ec, 'caps');
+        }
       }
 
       frame = requestAnimationFrame(tick);
@@ -110,7 +251,7 @@ export function LaptopScreenUI({ screen, choreography }) {
 
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [choreography, live, screen]);
+  }, [anchorEl, choreography, live, reflect, screen]);
 
   if (!screen) return null;
 
@@ -127,11 +268,18 @@ export function LaptopScreenUI({ screen, choreography }) {
           </span>
         </div>
 
-        <div className="laptop-screen__viewport">
+        <div className="laptop-screen__viewport" ref={viewportRef}>
           <div className="laptop-screen__view" ref={viewRef}>
-            {live && variant === 'back' ? <FaqSection embedded /> : null}
+            {live && variant === 'back' ? (
+              <>
+                <FaqSection embedded />
+                <div className="laptop-screen__gap" />
+              </>
+            ) : null}
+
             {live && variant !== 'back' ? (
               <>
+                <div className="laptop-screen__gap" />
                 <ProjectCarousel embedded />
                 <CapabilitiesSection embedded />
               </>
