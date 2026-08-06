@@ -178,8 +178,11 @@ body.no-stage .hero__fade {
 /* Zona sensible que recoge el clic destinado a la laptop, que vive en una
    capa fija e inerte. Invisible a propósito: lo que se ve es el modelo. */
 .hero__viewport-hit {
-  position: absolute;
-  inset: 0;
+  /* Fija y no absoluta: sus medidas las escribe el hero en cada fotograma a
+     partir de dónde está de verdad la pantalla de la laptop. */
+  position: fixed;
+  display: none;
+  z-index: 6;
   border: 0;
   border-radius: var(--r-lg);
   background: none;
@@ -200,9 +203,12 @@ body.no-stage .hero__fade {
 }
 
 .hero__viewport-hint {
-  position: relative;
-  align-self: end;
-  justify-self: center;
+  /* Igual que la zona sensible: la coloca el hero justo debajo de la laptop. */
+  position: fixed;
+  z-index: 6;
+  display: none;
+  transform: translateX(-50%);
+  white-space: nowrap;
   pointer-events: none;
   display: inline-flex;
   align-items: center;
@@ -315,7 +321,22 @@ body.no-stage .hero__fade {
 }
 
 .stage-gap--in { height: 130vh; }
-.stage-gap--out { height: 150vh; }
+
+/* El tramo de salida ya no pinta nada: lo que se ve debajo son las preguntas,
+   pegadas por su borde inferior. Pegarlas por abajo y no por arriba es lo que
+   deja a la vista la última pregunta —donde el visitante se quedó— en vez de
+   saltar al principio de la sección. */
+.stage-gap--out {
+  height: 120vh;
+  background: none;
+}
+
+.stage-exit .faq {
+  position: sticky;
+  bottom: 0;
+}
+
+body.no-stage .stage-exit .faq { position: static; }
 
 /* Sin escena 3D no hay transición que mostrar. */
 body.no-stage .stage-gap { height: 0; }

@@ -131,12 +131,62 @@ function drawReactMark(ctx, cx, cy, r, color) {
   ctx.restore();
 }
 
-function drawTaskbar(ctx, time) {
+/* El lanzador de la web, a un lado de la barra y separado del stack: es la
+   aplicación que se abre, así que tiene que leerse como una y no como una
+   herramienta más. Sus medidas se exportan para que la ventana salga
+   exactamente de aquí y el cursor sepa a dónde ir. */
+const LAUNCH_SIZE = 40;
+const LAUNCH_LEFT = 26;
+
+export const launcherSpot = () => ({
+  x: (LAUNCH_LEFT + LAUNCH_SIZE / 2) / W,
+  y: (H - BAR / 2) / H,
+  size: LAUNCH_SIZE / W,
+});
+
+function drawLauncher(ctx, logo, y, live) {
+  const iy = y + (BAR - LAUNCH_SIZE) / 2;
+
+  if (live > 0) {
+    ctx.save();
+    ctx.globalAlpha = live * 0.55;
+    ctx.fillStyle = '#ceff3d';
+    roundRect(ctx, LAUNCH_LEFT - 5, iy - 5, LAUNCH_SIZE + 10, LAUNCH_SIZE + 10, 14);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  const g = ctx.createLinearGradient(LAUNCH_LEFT, iy, LAUNCH_LEFT, iy + LAUNCH_SIZE);
+  g.addColorStop(0, '#1d2a5e');
+  g.addColorStop(1, '#0a1130');
+  ctx.fillStyle = g;
+  roundRect(ctx, LAUNCH_LEFT, iy, LAUNCH_SIZE, LAUNCH_SIZE, 11);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(190, 215, 255, 0.42)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  if (logo?.complete && logo.naturalWidth) {
+    const lw = LAUNCH_SIZE * 0.62;
+    const lh = lw * (logo.naturalHeight / logo.naturalWidth);
+    ctx.drawImage(logo, LAUNCH_LEFT + (LAUNCH_SIZE - lw) / 2, iy + (LAUNCH_SIZE - lh) / 2, lw, lh);
+  }
+
+  /* Punto de aplicación abierta, como el resto de la barra. */
+  ctx.fillStyle = 'rgba(206, 255, 61, 0.9)';
+  ctx.beginPath();
+  ctx.arc(LAUNCH_LEFT + LAUNCH_SIZE / 2, y + BAR - 6, 2, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawTaskbar(ctx, time, logo, live) {
   const y = H - BAR;
   ctx.fillStyle = 'rgba(6, 12, 32, 0.72)';
   ctx.fillRect(0, y, W, BAR);
   ctx.fillStyle = 'rgba(150, 190, 255, 0.18)';
   ctx.fillRect(0, y, W, 1);
+
+  drawLauncher(ctx, logo, y, live);
 
   const size = 34;
   const gap = 12;
@@ -355,8 +405,9 @@ export function createBrandOS(logoImage) {
   let terminal = 0;
   let last = 0;
 
-  /** @param {number} time segundos desde que arrancó la escena */
-  const draw = (time) => {
+  /** @param {number} time segundos desde que arrancó la escena
+   *  @param {number} live cuánto está encendido el lanzador de la web */
+  const draw = (time, live = 0) => {
     const delta = Math.min(0.06, Math.max(0, time - last));
     last = time;
 
@@ -370,7 +421,7 @@ export function createBrandOS(logoImage) {
     drawWallpaper(ctx, logoImage, time);
     drawDesktopPanels(ctx, time);
     drawTerminal(ctx, terminal, rain, time, delta);
-    drawTaskbar(ctx, time);
+    drawTaskbar(ctx, time, logoImage, live);
   };
 
   /** Ajusta la forma del lienzo a la de la pantalla del modelo. */

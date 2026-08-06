@@ -14,7 +14,9 @@
 }
 
 .process__scroller {
-  height: calc(100vh + 4 * 56vh);
+  /* Recorrido más corto: con el reparto de tramos ya adelantado, alargarlo
+     solo añadía scroll muerto entre paso y paso. */
+  height: calc(100vh + 4 * 42vh);
 }
 
 .process__sticky {
@@ -334,7 +336,7 @@
 
 /* Mismo scroll pegado que en escritorio; solo se apila la consola. */
 @media (max-width: 900px) {
-  .process__scroller { height: calc(100svh + 4 * 44svh); }
+  .process__scroller { height: calc(100svh + 4 * 34svh); }
 
   .process__sticky {
     min-height: 100svh;

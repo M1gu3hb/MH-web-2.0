@@ -107,6 +107,18 @@
    que sobra ahí dentro es la pista de scroll. */
 .capabilities--embedded .scroll-cue { display: none; }
 
+/* El puntero que pulsa el lanzador. Va por encima del escritorio y por
+   debajo de la ventana: lo que hace es abrirla, no acompañarla. */
+.laptop-screen__cursor {
+  position: absolute;
+  z-index: 2;
+  margin: -2px 0 0 -2px;
+  opacity: 0;
+  transform-origin: 2px 2px;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+  pointer-events: none;
+}
+
 /* ---- Cristal ---------------------------------------------- */
 .laptop-screen__glass {
   position: absolute;

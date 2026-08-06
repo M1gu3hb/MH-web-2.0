@@ -89,11 +89,14 @@ export default function App() {
         <ProcessSection />
         <PricingSection />
         <AboutSection />
-        <FaqSection />
-
-        {/* Todo se apaga y la laptop se aleja: salimos de la pantalla. */}
-        <div className="stage-gap stage-gap--out" id="zoom-out">
-          <ScrollCue label="Desliza para salir" />
+        {/* La salida no se hace sobre negro: las preguntas se quedan pegadas
+            por su final mientras el tramo corre por debajo, así que la ventana
+            se cierra encima de lo último que se estaba leyendo. */}
+        <div className="stage-exit">
+          <FaqSection />
+          <div className="stage-gap stage-gap--out" id="zoom-out">
+            <ScrollCue label="Desliza para salir" />
+          </div>
         </div>
 
         <ContactSection />

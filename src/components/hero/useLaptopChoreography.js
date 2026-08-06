@@ -10,9 +10,12 @@ const span = (v, a, b) => clamp01((v - a) / Math.max(1e-6, b - a));
 
 /* Reposo en el hero. A la derecha si hay sitio; en cuanto el layout se
    apila, centrada y más pequeña, o se salía por el borde. */
-const REST_WIDE = { x: 1.85, y: -0.05, z: 0, scale: 1.78, rotY: -0.42, rotX: 0.06 };
-const REST_MID = { x: 1.35, y: -0.05, z: 0, scale: 1.45, rotY: -0.4, rotX: 0.06 };
-const REST_NARROW = { x: 0, y: -0.05, z: 0, scale: 0.98, rotY: -0.3, rotX: 0.08 };
+/* La posición ya no va a mano: sale del hueco que el hero le reserva, así
+   que la laptop cae siempre junto a la frase y el clic la encuentra donde se
+   la ve. Aquí solo queda el tamaño y el giro. */
+const REST_WIDE = { x: 0, y: 0, z: 0, scale: 1.52, rotY: -0.42, rotX: 0.06 };
+const REST_MID = { x: 0, y: 0, z: 0, scale: 1.3, rotY: -0.4, rotX: 0.06 };
+const REST_NARROW = { x: 0, y: 0, z: 0, scale: 0.98, rotY: -0.3, rotX: 0.08 };
 
 const restFor = (w) => (w >= 1180 ? REST_WIDE : w >= 900 ? REST_MID : REST_NARROW);
 
@@ -54,9 +57,16 @@ export function useLaptopChoreography() {
     power: 0,
     inside: 0,
     focus: 0,
+    /* Cuánto pasa de «la pantalla entera a la vista» a «la pantalla tapa el
+       viewport». Separarlo de `focus` es lo que permite que la ventana se
+       abra con la pantalla completa delante y no ya recortada. */
+    fill: 0,
     osWindow: 0,
+    /* El cursor yendo al lanzador y pulsándolo. */
+    pointer: 0,
     osVariant: 'next',
     anchor: 0,
+    anchorX: 0,
     progress: 0,
     phase: 'hero',
     ...REST_WIDE,
@@ -69,6 +79,7 @@ export function useLaptopChoreography() {
       const s = state.current;
       const y = window.scrollY || document.documentElement.scrollTop;
       const vh = window.innerHeight;
+      const vw = window.innerWidth;
 
       const gapIn = document.getElementById('zoom-in');
       const gapOut = document.getElementById('zoom-out');
@@ -86,19 +97,26 @@ export function useLaptopChoreography() {
       const narrow = window.innerWidth < 900;
       const REST = restFor(window.innerWidth);
 
-      /* Con el layout apilado la laptop centrada en el viewport caería encima
-         del titular. Se ancla al hueco que el hero ya le reserva debajo del
-         texto: se guarda en fracciones de alto de pantalla y la escena lo pasa
-         a unidades de mundo, que es quien conoce la cámara. */
-      const box = narrow ? document.getElementById('hero-viewport') : null;
+      /* La laptop se ancla al hueco que el hero le reserva, en los dos ejes y
+         en cualquier ancho. Antes la pose iba a mano en unidades de mundo, y
+         eso tenía dos costes: en tableta caía descolocada, y el clic —que lo
+         recoge ese hueco— no estaba donde se veía la laptop. Se guarda en
+         fracciones de pantalla y la escena lo pasa a mundo, que es quien
+         conoce la cámara.
+
+         En vertical se sigue el hueco de cerca porque está debajo del titular
+         y taparlo sería peor. En horizontal la laptop se queda a media altura
+         y apenas acompaña al scroll: se pedía que no se fuera hacia arriba
+         mientras se recorre el hero. */
+      const box = document.getElementById('hero-viewport');
       if (box) {
         const r = box.getBoundingClientRect();
-        const offset = (r.top + r.height / 2) / vh - 0.5;
-        /* Acotado: si el hueco queda lejísimos la laptop se iría de la escena
-           en vez de asomar por el borde. */
-        s.anchor = Math.max(-0.85, Math.min(0.85, offset));
+        const limit = narrow ? 0.85 : 0.16;
+        s.anchor = Math.max(-limit, Math.min(limit, (r.top + r.height / 2) / vh - 0.5));
+        s.anchorX = Math.max(-0.85, Math.min(0.85, (r.left + r.width / 2) / vw - 0.5));
       } else {
         s.anchor = 0;
+        s.anchorX = 0;
       }
 
       if (exit > 0) {
@@ -108,6 +126,7 @@ export function useLaptopChoreography() {
         /* Al salir la ventana enseña lo que se deja atrás: las preguntas. */
         s.osVariant = 'back';
         s.anchor = 0;
+        s.anchorX = 0;
         Object.assign(s, AWAY);
 
         if (narrow) {
@@ -115,6 +134,8 @@ export function useLaptopChoreography() {
           s.opacity = Math.min(span(exit, 0, 0.05), 1 - span(exit, 0.9, 1));
           s.veil = exit < 0.88 ? Math.min(1, exit / 0.05) : 1 - span(exit, 0.88, 1);
           s.focus = 1 - easeOut(span(exit, 0.02, 0.16));
+          s.fill = s.focus;
+          s.pointer = 0;
           s.osWindow = 1 - easeInOut(span(exit, 0.22, 0.46));
           s.power = Math.max(0, 1 - Math.abs(exit - 0.16) / 0.09);
           Object.assign(s, SHOW_NARROW);
@@ -129,9 +150,15 @@ export function useLaptopChoreography() {
         } else {
           s.opacity = Math.min(span(exit, 0, 0.08), 1 - span(exit, 0.9, 1));
           s.veil = exit < 0.88 ? Math.min(1, span(exit, 0.05, 0.13)) : 1 - span(exit, 0.88, 1);
-          s.osWindow = 1 - easeInOut(span(exit, 0.14, 0.4));
-          s.focus = 1 - easeInOut(span(exit, 0.42, 0.9));
-          s.power = Math.max(0, 1 - Math.abs(exit - 0.44) / 0.07);
+          /* Mismo camino que a la entrada pero del revés: primero la pantalla
+             se despega del viewport y se ve entera, y solo entonces se cierra
+             la ventana. Cerrarla estando aún recortada era lo que hacía que no
+             se leyera como una aplicación cerrándose. */
+          s.fill = 1 - easeInOut(span(exit, 0.04, 0.2));
+          s.osWindow = 1 - easeInOut(span(exit, 0.22, 0.46));
+          s.focus = 1 - easeInOut(span(exit, 0.5, 0.92));
+          s.pointer = 0;
+          s.power = Math.max(0, 1 - Math.abs(exit - 0.5) / 0.07);
         }
         s.inside = 0;
       } else if (enter > 0) {
@@ -145,9 +172,11 @@ export function useLaptopChoreography() {
           s.anchor = 0;
           Object.assign(s, SHOW_NARROW);
           s.veil = enter < 0.7 ? span(enter, 0, 0.12) : 1 - span(enter, 0.7, 0.77);
+          s.pointer = span(enter, 0.06, 0.18);
           s.osWindow = easeOut(span(enter, 0.18, 0.52));
           /* El zoom entra tarde y corto: rápido, pero se ve. */
           s.focus = easeIn(span(enter, 0.55, 0.76));
+          s.fill = s.focus;
           s.power = Math.max(0, 1 - Math.abs(enter - 0.56) / 0.06);
           /* En vertical, cubriendo del todo solo cabe un trozo de la ventana:
              el relevo con la página real entra en cuanto el zoom aprieta, no
@@ -157,14 +186,22 @@ export function useLaptopChoreography() {
         } else {
           Object.assign(s, REST);
           s.anchor = 0;
-          s.veil = enter < 0.84 ? span(enter, 0, 0.14) : 1 - span(enter, 0.84, 0.9);
-          s.focus = easeInOut(span(enter, 0.04, 0.5));
-          s.osWindow = easeOut(span(enter, 0.56, 0.84));
-          s.power = Math.max(0, 1 - Math.abs(enter - 0.54) / 0.06);
+          s.anchorX = 0;
+          s.veil = enter < 0.88 ? span(enter, 0, 0.14) : 1 - span(enter, 0.88, 0.94);
+          /* La laptop se acerca hasta que su pantalla se ve entera y centrada,
+             y ahí se para. Antes seguía hasta recortar el viewport y la ventana
+             se abría sobre un escritorio ya cortado por los bordes. */
+          s.focus = easeInOut(span(enter, 0.04, 0.4));
+          /* El cursor va al lanzador y lo pulsa; la ventana sale de ahí. */
+          s.pointer = span(enter, 0.4, 0.54);
+          s.osWindow = easeOut(span(enter, 0.54, 0.76));
+          /* Y solo al final la pantalla termina de comerse el viewport. */
+          s.fill = easeInOut(span(enter, 0.76, 0.9));
+          s.power = Math.max(0, 1 - Math.abs(enter - 0.52) / 0.05);
           /* Fundido corto: si se alarga, la maqueta de la ventana se lee como
              un fantasma encima del contenido real. */
-          s.opacity = 1 - span(enter, 0.86, 0.93);
-          s.inside = span(enter, 0.9, 1);
+          s.opacity = 1 - span(enter, 0.9, 0.96);
+          s.inside = span(enter, 0.93, 1);
         }
       } else {
         /* ---- Hero ------------------------------------------------------ */
@@ -175,6 +212,8 @@ export function useLaptopChoreography() {
         s.opacity = 1;
         s.inside = 0;
         s.focus = 0;
+        s.fill = 0;
+        s.pointer = 0;
         s.osWindow = 0;
         Object.assign(s, REST);
       }

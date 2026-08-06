@@ -20,6 +20,23 @@ export function onLaptopPoke(fn) {
   return () => listeners.delete(fn);
 }
 
+/* ---- Dónde está la laptop, en píxeles de pantalla ----------------------
+   El hueco que el hero reserva en el layout no es la laptop: la laptop la
+   coloca la escena en 3D, y el clic caía donde el layout decía y no donde se
+   la veía —normalmente bastante más abajo—, así que pinchar la laptop no
+   hacía nada. La escena publica aquí el rectángulo real de la pantalla y el
+   hero pone su zona sensible justo encima. */
+
+let rect = null;
+
+export function setLaptopRect(next) {
+  rect = next;
+}
+
+export function getLaptopRect() {
+  return rect;
+}
+
 /* ---- Aviso de «la laptop ya está en pantalla» --------------------------
    La pantalla de carga existe para que todo entre de una vez. Sin esta
    señal el loader se iba antes de que la escena 3D estuviera montada y la

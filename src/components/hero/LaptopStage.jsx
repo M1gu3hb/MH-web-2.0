@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { LaptopScreenUI } from './LaptopScreenUI';
-import { skipLaptopReady } from './laptopBus';
+import { setLaptopRect, skipLaptopReady } from './laptopBus';
 import { useLaptopChoreography } from './useLaptopChoreography';
 
 const LaptopScene = lazy(() => import('./LaptopScene').then((m) => ({ default: m.LaptopScene })));
@@ -36,7 +36,13 @@ export function LaptopStage({ enabled = true }) {
      monta la web de verdad, no una copia. */
   const [screen, setScreen] = useState(null);
 
-  const handleScreen = useCallback((next) => setScreen(next), []);
+  /* En una referencia además del estado: el bucle por rAF no se rehace cuando
+     llega la pantalla, y necesita leerla sin volver a montarse. */
+  const screenRoot = useRef(null);
+  const handleScreen = useCallback((next) => {
+    screenRoot.current = next?.root ?? null;
+    setScreen(next);
+  }, []);
 
   const veil = useRef(null);
   const power = useRef(null);
@@ -95,6 +101,16 @@ export function LaptopStage({ enabled = true }) {
       if (power.current) power.current.style.opacity = String(s.power);
       if (inside.current) inside.current.style.opacity = String(s.inside * 0.9);
       if (stage.current) stage.current.style.visibility = s.visible ? 'visible' : 'hidden';
+
+      /* Dónde está la pantalla ahora mismo, para que el clic del hero caiga
+         encima de la laptop y no sobre el hueco del layout. Solo en reposo:
+         durante el viaje la laptop tapa toda la página y no hay nada que
+         pulsar. */
+      setLaptopRect(
+        s.phase === 'hero' && s.visible && screenRoot.current
+          ? screenRoot.current.getBoundingClientRect()
+          : null,
+      );
 
       /* Mientras dura el viaje, la navegación y el botón flotante estorban:
          flotarían sobre la laptop y romperían la ilusión de entrar en ella. */

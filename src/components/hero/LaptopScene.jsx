@@ -337,7 +337,9 @@ function Laptop({ choreography, reducedMotion, onScreenReady }) {
     osClock.current += delta;
     /* El escritorio es fondo: no necesita ir a la velocidad de la pantalla. */
     if (osClock.current > 0.13) {
-      os.draw(three.clock.elapsedTime);
+      /* El lanzador se enciende cuando el cursor lo pulsa y se queda
+         encendido mientras su ventana está abierta. */
+      os.draw(three.clock.elapsedTime, Math.max(target.pointer ?? 0, target.osWindow ?? 0));
       osClock.current = 0;
     }
 
@@ -355,7 +357,16 @@ function Laptop({ choreography, reducedMotion, onScreenReady }) {
        ve a z = 0, así cubre igual en 16:9 que en un móvil vertical. */
     const f = target.focus;
     const { pivot, width, height, tilt } = fit.current;
+
+    /* Dos encuadres, no uno. `contain` deja la pantalla entera a la vista y
+       centrada —que es donde se abre la ventana— y `cover` se la come del
+       todo, que es donde se hace el relevo con la página. Antes solo existía
+       el segundo: la ventana se abría sobre un escritorio ya recortado por
+       los bordes, y en tableta, con la pantalla y el viewport de proporciones
+       muy distintas, el recorte se comía la barra y los paneles. */
+    const contain = Math.min(three.viewport.width / width, three.viewport.height / height) * 0.94;
     const cover = Math.max(three.viewport.width / width, three.viewport.height / height) * 1.03;
+    const framed = contain + (cover - contain) * (target.fill ?? 1);
 
     /* La cámara está un poco por encima del origen y mira hacia él, así que
        apunta algo más de un grado hacia abajo. Dejar la pantalla horizontal
@@ -365,7 +376,7 @@ function Laptop({ choreography, reducedMotion, onScreenReady }) {
        la inclinación de la cámara el panel cae plano de verdad. */
     camEuler.current.setFromQuaternion(three.camera.quaternion, 'YXZ');
 
-    const scale = mix(target.scale, cover, f);
+    const scale = mix(target.scale, framed, f);
     const rotY = mix(target.rotY, 0, f);
     const rotX = mix(target.rotX, tilt + camEuler.current.x, f);
 
@@ -380,8 +391,9 @@ function Laptop({ choreography, reducedMotion, onScreenReady }) {
     /* El ancla llega en fracciones de alto de pantalla; aquí se pasa a
        unidades de mundo, que es donde se conoce la cámara. */
     const looseY = target.y - target.anchor * three.viewport.height;
+    const looseX = target.x + (target.anchorX ?? 0) * three.viewport.width;
 
-    g.position.x = damp(g.position.x, mix(target.x, 0, f) - offset.current.x, speed);
+    g.position.x = damp(g.position.x, mix(looseX, 0, f) - offset.current.x, speed);
     g.position.y = damp(g.position.y, mix(looseY, 0, f) - offset.current.y + introLift, speed);
     g.position.z = damp(g.position.z, mix(target.z, 0, f) - offset.current.z, speed);
     g.scale.setScalar(damp(g.scale.x, scale, speed));
@@ -408,8 +420,9 @@ function Laptop({ choreography, reducedMotion, onScreenReady }) {
     /* --- flotación, solo en reposo --- */
     if (!reducedMotion && target.phase === 'hero') {
       const t = three.clock.elapsedTime;
-      g.position.y += Math.sin(t * 0.7) * 0.035;
-      g.rotation.z = Math.sin(t * 0.5) * 0.02;
+      /* Flota, pero apenas: lo justo para que no parezca una imagen pegada. */
+      g.position.y += Math.sin(t * 0.7) * 0.008;
+      g.rotation.z = Math.sin(t * 0.5) * 0.005;
     } else {
       g.rotation.z = damp(g.rotation.z, 0, speed);
     }

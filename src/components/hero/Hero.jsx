@@ -1,15 +1,59 @@
+import { useEffect, useRef } from 'react';
 import { ArrowDown, ArrowUpRight, MessageCircle, MousePointer2 } from 'lucide-react';
 import { motion as Motion } from 'motion/react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { Magnet, ScrambleText } from '../reactbits';
 import Scanner from '../reactbits/Scanner';
-import { pokeLaptop } from './laptopBus';
+import { getLaptopRect, pokeLaptop } from './laptopBus';
 import { HERO } from '../../content';
 import { trackWhatsApp, whatsappUrl } from '../../lib/whatsapp';
 
 export function Hero() {
   const reducedMotion = useReducedMotion();
   const [lineA, accentA, lineB, accentB] = HERO.title;
+
+  /* La zona sensible se pega a la pantalla de la laptop, que la coloca la
+     escena en 3D. Estando ligada al hueco del layout el clic caía muy por
+     debajo de donde se veía la laptop y no pasaba nada al pulsarla. */
+  const hit = useRef(null);
+  const hint = useRef(null);
+  useEffect(() => {
+    let frame = 0;
+    const tick = () => {
+      const el = hit.current;
+      const tip = hint.current;
+      const r = getLaptopRect();
+      const on = Boolean(r) && r.width > 24;
+      if (el) {
+        if (on) {
+          const pad = Math.min(48, r.width * 0.06);
+          el.style.display = 'block';
+          el.style.left = `${r.left - pad}px`;
+          el.style.top = `${r.top - pad}px`;
+          el.style.width = `${r.width + pad * 2}px`;
+          el.style.height = `${r.height + pad * 2}px`;
+        } else {
+          el.style.display = 'none';
+        }
+      }
+      /* La pista va con la laptop: dentro del hueco del layout acababa por
+         debajo del pliegue, invitando a pulsar algo que no se veía. */
+      if (tip) {
+        /* Y solo si la laptop se está viendo: en teléfono queda por debajo
+           del pliegue hasta que se scrollea un poco, y la pista sin laptop
+           no invita a nada. */
+        const shown = on && r.bottom > 40 && r.top < window.innerHeight - 90;
+        tip.style.display = shown ? 'inline-flex' : 'none';
+        if (shown) {
+          tip.style.left = `${r.left + r.width / 2}px`;
+          tip.style.top = `${r.bottom + 54}px`;
+        }
+      }
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   return (
     <section className="hero" id="inicio">
@@ -116,10 +160,10 @@ export function Hero() {
             los clics para no tapar la página entera. Este hueco le reserva el
             sitio en el layout y recoge el clic por ella. */}
         <div className="hero__viewport" id="hero-viewport">
-          <button type="button" className="hero__viewport-hit" onClick={pokeLaptop}>
+          <button type="button" className="hero__viewport-hit" ref={hit} onClick={pokeLaptop}>
             <span className="rb-visually-hidden">Encender el modo desarrollador de la laptop</span>
           </button>
-          <p className="hero__viewport-hint" aria-hidden="true">
+          <p className="hero__viewport-hint" ref={hint} aria-hidden="true">
             <MousePointer2 size={14} /> Haz clic en la laptop
           </p>
         </div>

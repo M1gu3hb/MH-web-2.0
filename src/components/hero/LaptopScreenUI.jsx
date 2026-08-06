@@ -2,12 +2,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ProjectCarousel } from '../layout/ProjectCarousel';
 import { CapabilitiesSection } from '../sections/CapabilitiesSection';
 import { FaqSection } from '../sections/FaqSection';
+import { launcherSpot } from './brandOS';
 
-/* Punto del que sale la ventana: el primer icono de la barra de tareas, en
-   fracciones del ancho y alto de la pantalla. */
-const DOCK_X = 0.326;
-const DOCK_Y = 0.955;
-const DOCK_SIZE = 34 / 1024;
+/* Punto del que sale la ventana: el lanzador de la web en la barra de
+   tareas. Lo dice el propio sistema operativo, así que el icono, el cursor
+   que lo pulsa y la ventana que sale de él no pueden descuadrarse. */
+const { x: DOCK_X, y: DOCK_Y, size: DOCK_SIZE } = launcherSpot();
 
 const CHROME = 40; // alto del cromo de la ventana, en píxeles de pantalla
 
@@ -41,6 +41,7 @@ export function LaptopScreenUI({ screen, choreography }) {
   const chromeRef = useRef(null);
   const viewportRef = useRef(null);
   const viewRef = useRef(null);
+  const cursorRef = useRef(null);
 
   /* Las secciones de la página real contra las que se alinea el reflejo. Se
      leen del DOM en cada fotograma y no de un estado: la variante puede
@@ -81,6 +82,8 @@ export function LaptopScreenUI({ screen, choreography }) {
         real: realEl,
         emb: embEl,
         pairs: rs.length === es.length ? Array.from(rs, (node, i) => [node, es[i]]) : [],
+        moving: [],
+        age: 0,
       };
       mirror.current.set(key, entry);
     }
@@ -92,6 +95,26 @@ export function LaptopScreenUI({ screen, choreography }) {
       if (e.style.cssText !== style) e.style.cssText = style;
       if (typeof r.className === 'string' && e.className !== r.className) e.className = r.className;
       if (!r.firstElementChild && e.textContent !== r.textContent) e.textContent = r.textContent;
+    }
+
+    /* Lo que se mueve solo —la marquesina de proyectos— no lleva el estado en
+       un estilo en línea sino en una animación CSS, y cada copia arrancó la
+       suya cuando le tocó. Al fundirse se veían las dos listas corriendo
+       desfasadas, como un fantasma. Se les iguala el reloj. Buscar qué nodos
+       están animados es caro, así que la lista se rehace de tarde en tarde y
+       lo de cada fotograma es solo poner el tiempo. */
+    entry.age -= 1;
+    if (entry.age <= 0) {
+      entry.age = 40;
+      entry.moving = pairs.filter(([r]) => r.getAnimations?.().length);
+    }
+    for (let i = 0; i < entry.moving.length; i += 1) {
+      const [r, e] = entry.moving[i];
+      const ra = r.getAnimations();
+      const ea = e.getAnimations?.() ?? [];
+      for (let j = 0; j < ea.length && j < ra.length; j += 1) {
+        if (ea[j].currentTime !== ra[j].currentTime) ea[j].currentTime = ra[j].currentTime;
+      }
     }
   }, []);
 
@@ -160,6 +183,21 @@ export function LaptopScreenUI({ screen, choreography }) {
         el.style.borderRadius = `${14 * (1 - open) + 3}px`;
       }
 
+      /* El cursor va al lanzador y lo pulsa: sin ese gesto la ventana
+         aparecía sola y no se leía como una aplicación abriéndose. */
+      const cursor = cursorRef.current;
+      if (cursor) {
+        const p = s.pointer ?? 0;
+        const travel = smooth(clamp01(p / 0.72));
+        const press = clamp01((p - 0.72) / 0.18) * (1 - clamp01((p - 0.9) / 0.1));
+        const fromX = DOCK_X + 0.34;
+        const fromY = DOCK_Y - 0.42;
+        cursor.style.opacity = p > 0.01 && open < 0.14 ? String(clamp01(p / 0.14)) : '0';
+        cursor.style.left = `${(fromX + (DOCK_X - fromX) * travel) * 100}%`;
+        cursor.style.top = `${(fromY + (DOCK_Y - fromY) * travel) * 100}%`;
+        cursor.style.transform = `scale(${1 - press * 0.22})`;
+      }
+
       /* El cromo entra al abrirse y se retira al final. */
       const chromeH = CHROME * clamp01(open / 0.2) * (1 - clamp01((open - 0.86) / 0.14));
       if (chromeRef.current) {
@@ -190,7 +228,10 @@ export function LaptopScreenUI({ screen, choreography }) {
            vería un recorte que no encoge. */
         const fitK = (w * screen.width) / vw;
         const oneK = 1 / unit;
-        const blend = smooth(clamp01(((s.focus ?? 0) - 0.86) / 0.14));
+        /* Uno a uno cuando la pantalla se come el viewport, que ahora lo dice
+           `fill` y no `focus`: con la pantalla entera a la vista el documento
+           tiene que caber en la ventana, no medir a tamaño real. */
+        const blend = smooth(clamp01(((s.fill ?? 0) - 0.55) / 0.45));
         const k = fitK + (oneK - fitK) * blend;
         const m = Math.max(0.0001, k * unit);
 
@@ -287,6 +328,13 @@ export function LaptopScreenUI({ screen, choreography }) {
           </div>
         </div>
       </div>
+
+      <span className="laptop-screen__cursor" ref={cursorRef} aria-hidden="true">
+        <svg viewBox="0 0 12 18" width="22" height="33">
+          <path d="M1 1 L1 14.4 L4.5 11.2 L6.9 16.6 L9.3 15.5 L6.9 10.3 L11 10.1 Z"
+            fill="#ffffff" stroke="#0b1020" strokeWidth="1.1" strokeLinejoin="round" />
+        </svg>
+      </span>
 
       <span className="laptop-screen__glass" aria-hidden="true" />
     </>
