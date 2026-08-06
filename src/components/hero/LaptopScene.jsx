@@ -272,6 +272,7 @@ function Laptop({ choreography, reducedMotion }) {
   const announced = useRef(false);
   const lastOpacity = useRef(-1);
   const osClock = useRef(0);
+  const baseY = useRef(0);
   const offset = useRef(new THREE.Vector3());
   const euler = useRef(new THREE.Euler());
 
@@ -298,7 +299,7 @@ function Laptop({ choreography, reducedMotion }) {
        una animación, no un adorno de fondo. */
     const moving = target.osWindow > 0.001 && target.osWindow < 0.999;
     if (osClock.current > (moving ? 0.016 : 0.13)) {
-      os.draw(three.clock.elapsedTime, target.osWindow);
+      os.draw(three.clock.elapsedTime, target.osWindow, target.osVariant);
       osTexture.needsUpdate = true;
       osClock.current = 0;
     }
@@ -352,7 +353,11 @@ function Laptop({ choreography, reducedMotion }) {
       }
     }
 
-    g.rotation.y = damp(g.rotation.y, rotY + introSpin, speed) + turn;
+    /* La base amortiguada se guarda aparte. Leyéndola de `rotation.y` se
+       realimentaba con la vuelta del fotograma anterior y en vez de una
+       vuelta daba decenas. */
+    baseY.current = damp(baseY.current, rotY + introSpin, speed);
+    g.rotation.y = baseY.current + turn;
     g.rotation.x = damp(g.rotation.x, rotX, speed);
 
     /* --- flotación, solo en reposo --- */

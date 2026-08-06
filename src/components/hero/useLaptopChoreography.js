@@ -55,6 +55,7 @@ export function useLaptopChoreography() {
     inside: 0,
     focus: 0,
     osWindow: 0,
+    osVariant: 'next',
     anchor: 0,
     progress: 0,
     phase: 'hero',
@@ -104,6 +105,8 @@ export function useLaptopChoreography() {
         /* ---- Salida: la ventana se cierra y la laptop se va ------------ */
         s.phase = 'exit';
         s.progress = exit;
+        /* Al salir la ventana enseña lo que se deja atrás: las preguntas. */
+        s.osVariant = 'back';
         s.anchor = 0;
         Object.assign(s, AWAY);
 
@@ -135,6 +138,8 @@ export function useLaptopChoreography() {
         /* ---- Entrada: cubre, abre la ventana y se funde con la web ----- */
         s.phase = 'enter';
         s.progress = enter;
+        /* Al entrar enseña lo que continúa: el carrusel y las capacidades. */
+        s.osVariant = 'next';
 
         if (narrow) {
           s.anchor = 0;

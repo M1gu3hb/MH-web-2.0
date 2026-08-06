@@ -234,101 +234,190 @@ function drawDesktopPanels(ctx, time) {
 
 /* ---- La ventana del navegador ------------------------------------------ */
 
-/** Miniatura del inicio del sitio, dibujada dentro de la ventana. */
-function drawSitePreview(ctx, x, y, w, h, logo, time) {
-  ctx.save();
-  roundRect(ctx, x, y, w, h, 0);
-  ctx.clip();
+/* Lo que la ventana enseña es la parte de la página a la que se entra o de
+   la que se sale, no el inicio: si enseñara otra cosa, al fundirse con la web
+   real el contenido no cuadraría y se rompería la ilusión de que la página
+   vive dentro de la laptop. */
 
-  const bg = ctx.createLinearGradient(x, y, x + w, y + h);
-  bg.addColorStop(0, '#0a0818');
-  bg.addColorStop(1, '#120b2e');
-  ctx.fillStyle = bg;
+const CAROUSEL_ITEMS = [
+  ['Pastelería Confetti', 'WEB + POS'],
+  ['Jardines Club Hípico', 'WEB + CRM'],
+  ['MH Photo Booth', 'SOFTWARE'],
+  ['Qyro', 'SOFTWARE'],
+  ['GESTECH', 'SOFTWARE'],
+  ['Vero Seguros', 'WEB'],
+  ['Morphiq UI', 'DISEÑO'],
+];
+
+const FAQ_ITEMS = [
+  '¿Cuánto cuesta una página web?',
+  '¿Cuánto tiempo tarda?',
+  '¿Yo puedo editar el contenido después?',
+  '¿El dominio y el hosting van incluidos?',
+  '¿Qué pasa si necesito cambios después de entregar?',
+  '¿Trabajas con negocios fuera de CDMX?',
+];
+
+/** Fondo de papel y barra de navegación, comunes a las dos vistas. */
+function drawPageChrome(ctx, x, y, w, h, u, m, logo) {
+  ctx.fillStyle = '#f6f3ea';
   ctx.fillRect(x, y, w, h);
 
-  /* Las bandas del fondo del hero. */
-  ctx.save();
-  ctx.globalAlpha = 0.75;
-  for (let i = 0; i < 5; i += 1) {
-    const grad = ctx.createLinearGradient(x, 0, x + w, 0);
-    grad.addColorStop(0, 'rgba(26, 20, 211, 0)');
-    grad.addColorStop(0.5, i % 2 ? 'rgba(90, 220, 255, 0.5)' : 'rgba(120, 90, 255, 0.55)');
-    grad.addColorStop(1, 'rgba(26, 20, 211, 0)');
-    ctx.strokeStyle = grad;
-    ctx.lineWidth = Math.max(1, h * 0.012);
-    ctx.beginPath();
-    for (let px = 0; px <= w; px += 8) {
-      const py = y + h * (0.42 + i * 0.09) + Math.sin(px / (w * 0.16) + time * 0.6 + i) * h * 0.05;
-      if (px === 0) ctx.moveTo(x + px, py);
-      else ctx.lineTo(x + px, py);
-    }
-    ctx.stroke();
-  }
-  ctx.restore();
-
-  const u = h / 100; // unidad relativa: la miniatura escala con la ventana
-  /* Margen de seguridad ancho: la pantalla del modelo es más apaisada que el
-     viewport, así que al cubrirlo se pierde una franja a cada lado. Todo lo
-     que haya que leer vive dentro de este margen. */
-  const m = x + w * 0.15;
-
-  /* Barra de navegación del sitio. */
   if (logo?.complete && logo.naturalWidth) {
-    const s = u * 7;
-    ctx.drawImage(logo, m, y + u * 4, s, s * (logo.naturalHeight / logo.naturalWidth));
+    const s = u * 6.4;
+    ctx.drawImage(logo, m, y + u * 3.6, s, s * (logo.naturalHeight / logo.naturalWidth));
   }
-  ctx.fillStyle = 'rgba(240, 242, 255, 0.85)';
-  ctx.font = `800 ${u * 3.4}px ui-sans-serif, system-ui, sans-serif`;
-  ctx.fillText('MH ASTRAL', m + u * 9, y + u * 5);
+  ctx.fillStyle = '#151614';
+  ctx.font = `800 ${u * 3.1}px ui-sans-serif, system-ui, sans-serif`;
+  ctx.fillText('MH ASTRAL', m + u * 8.4, y + u * 4.6);
 
-  /* Los enlaces se reparten midiéndolos: a ojo se solapaban entre sí. */
   const links = ['Servicios', 'Trabajo', 'Proceso', 'Contacto'];
-  ctx.font = `600 ${u * 3.2}px ui-sans-serif, system-ui, sans-serif`;
+  ctx.font = `600 ${u * 3}px ui-sans-serif, system-ui, sans-serif`;
   const widths = links.map((t) => ctx.measureText(t).width);
-  const spacing = u * 5;
-  let lx = x + w * 0.52 - (widths.reduce((a, v) => a + v, 0) + spacing * (links.length - 1)) / 2;
+  const gap = u * 5;
+  let lx = x + w * 0.52 - (widths.reduce((a, v) => a + v, 0) + gap * (links.length - 1)) / 2;
   links.forEach((t, i) => {
-    ctx.fillStyle = 'rgba(220, 226, 255, 0.62)';
-    ctx.fillText(t, lx, y + u * 5.6);
-    lx += widths[i] + spacing;
+    ctx.fillStyle = 'rgba(21, 22, 20, 0.66)';
+    ctx.fillText(t, lx, y + u * 5);
+    lx += widths[i] + gap;
   });
 
-  ctx.fillStyle = '#ceff3d';
-  roundRect(ctx, x + w - w * 0.15 - u * 20, y + u * 3.4, u * 20, u * 8, u * 4);
+  /* La pastilla se mide contra su texto y se ancla al margen seguro. */
+  const cta = 'Iniciar proyecto';
+  ctx.font = `700 ${u * 2.6}px ui-sans-serif, system-ui, sans-serif`;
+  const ctaW = ctx.measureText(cta).width + u * 7;
+  const ctaX = x + w - w * 0.15 - ctaW;
+  ctx.fillStyle = '#151614';
+  roundRect(ctx, ctaX, y + u * 3, ctaW, u * 7.4, u * 3.7);
   ctx.fill();
-
-  /* Titular. */
-  ctx.font = `800 ${u * 10}px ui-sans-serif, system-ui, sans-serif`;
-  ctx.fillStyle = '#f4f3fb';
-  ctx.fillText('Diseño lo que', m, y + u * 26);
-  ctx.fillText('tus clientes', m, y + u * 37);
-  ctx.fillStyle = '#ff684f';
-  ctx.fillText('ven.', m, y + u * 48);
-  ctx.fillStyle = '#f4f3fb';
-  ctx.fillText('Construyo lo que', m, y + u * 59);
-  ctx.fillStyle = '#ceff3d';
-  ctx.fillText('necesita.', m, y + u * 70);
-
-  /* La pastilla se mide contra su texto: a ojo se le salía. */
-  const cta = 'Cuéntame tu proyecto';
-  ctx.font = `700 ${u * 3.4}px ui-sans-serif, system-ui, sans-serif`;
-  const ctaW = ctx.measureText(cta).width + u * 8;
-  ctx.fillStyle = '#5227ff';
-  roundRect(ctx, m, y + u * 83, ctaW, u * 9, u * 4.5);
-  ctx.fill();
-  ctx.fillStyle = '#ffffff';
+  ctx.fillStyle = '#f6f3ea';
   ctx.textBaseline = 'middle';
-  ctx.fillText(cta, m + u * 4, y + u * 87.5);
+  ctx.fillText(cta, ctaX + u * 3.5, y + u * 6.7);
   ctx.textBaseline = 'top';
+}
+
+/** Lo que continúa al entrar: el carrusel y el arranque de capacidades. */
+function drawNextPreview(ctx, x, y, w, h, logo) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(x, y, w, h);
+  ctx.clip();
+
+  const u = h / 100;
+  const m = x + w * 0.15;
+  drawPageChrome(ctx, x, y, w, h, u, m, logo);
+
+  /* Carrusel de repositorios. */
+  ctx.fillStyle = 'rgba(21, 22, 20, 0.5)';
+  ctx.font = `800 ${u * 2.3}px ui-monospace, monospace`;
+  ctx.fillText('PROYECTOS · GITHUB', m, y + u * 17);
+  ctx.textAlign = 'right';
+  ctx.fillText('Cada uno abre su repositorio', x + w - w * 0.15, y + u * 17);
+  ctx.textAlign = 'left';
+
+  let cx = m;
+  CAROUSEL_ITEMS.forEach(([name, kind]) => {
+    /* Cada medida con su propia tipografía ya puesta: si se mide el nombre
+       con la fuente de la etiqueta, las dos se montan una encima de la otra. */
+    ctx.font = `700 ${u * 3}px ui-sans-serif, system-ui, sans-serif`;
+    const nw = ctx.measureText(name).width;
+    ctx.font = `800 ${u * 2.1}px ui-monospace, monospace`;
+    const kw = ctx.measureText(kind).width;
+    const pill = nw + kw + u * 12;
+    if (cx + pill > x + w - w * 0.1) return;
+
+    ctx.strokeStyle = 'rgba(21, 22, 20, 0.16)';
+    ctx.lineWidth = 1;
+    roundRect(ctx, cx, y + u * 22, pill, u * 9, u * 4.5);
+    ctx.stroke();
+
+    /* Marca de repositorio. */
+    ctx.fillStyle = 'rgba(21, 22, 20, 0.55)';
+    ctx.beginPath();
+    ctx.arc(cx + u * 4, y + u * 26.5, u * 1.6, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#151614';
+    ctx.font = `700 ${u * 3}px ui-sans-serif, system-ui, sans-serif`;
+    ctx.fillText(name, cx + u * 7, y + u * 25);
+    ctx.fillStyle = 'rgba(21, 22, 20, 0.42)';
+    ctx.font = `800 ${u * 2.1}px ui-monospace, monospace`;
+    ctx.fillText(kind, cx + u * 8 + nw, y + u * 25.8);
+
+    cx += pill + u * 3;
+  });
+
+  /* Capacidades. */
+  ctx.fillStyle = 'rgba(21, 22, 20, 0.5)';
+  ctx.font = `800 ${u * 2.3}px ui-monospace, monospace`;
+  ctx.fillText('01 / CAPACIDADES', m, y + u * 42);
+
+  ctx.fillStyle = '#151614';
+  ctx.font = `800 ${u * 11}px ui-sans-serif, system-ui, sans-serif`;
+  ctx.fillText('Un estudio.', m, y + u * 48);
+  ctx.fillStyle = 'rgba(21, 22, 20, 0.42)';
+  ctx.fillText('Cinco frentes.', m, y + u * 61);
+
+  ctx.fillStyle = 'rgba(21, 22, 20, 0.66)';
+  ctx.font = `400 ${u * 3.1}px ui-sans-serif, system-ui, sans-serif`;
+  ctx.fillText('No vendo una colección de herramientas sueltas.', m, y + u * 78);
+  ctx.fillText('Diseño cómo se conectan para que tu negocio', m, y + u * 83.5);
+  ctx.fillText('se vea mejor y funcione mejor.', m, y + u * 89);
+
+  ctx.restore();
+}
+
+/** De lo que se sale al cerrar: las preguntas. */
+function drawBackPreview(ctx, x, y, w, h, logo) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(x, y, w, h);
+  ctx.clip();
+
+  const u = h / 100;
+  const m = x + w * 0.15;
+  drawPageChrome(ctx, x, y, w, h, u, m, logo);
+
+  ctx.fillStyle = 'rgba(21, 22, 20, 0.5)';
+  ctx.font = `800 ${u * 2.3}px ui-monospace, monospace`;
+  ctx.fillText('06 / PREGUNTAS', m, y + u * 18);
+
+  ctx.fillStyle = '#151614';
+  ctx.font = `800 ${u * 9}px ui-sans-serif, system-ui, sans-serif`;
+  ctx.fillText('Lo que todos', m, y + u * 23);
+  ctx.fillStyle = 'rgba(21, 22, 20, 0.42)';
+  ctx.fillText('preguntan primero.', m, y + u * 34);
+
+  const right = x + w - w * 0.15;
+  FAQ_ITEMS.forEach((q, i) => {
+    const qy = y + u * 50 + i * u * 8;
+    ctx.strokeStyle = 'rgba(21, 22, 20, 0.14)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(m, qy + u * 6.6);
+    ctx.lineTo(right, qy + u * 6.6);
+    ctx.stroke();
+
+    ctx.fillStyle = 'rgba(21, 22, 20, 0.82)';
+    ctx.font = `600 ${u * 3.1}px ui-sans-serif, system-ui, sans-serif`;
+    ctx.fillText(q, m, qy + u * 1.6);
+
+    ctx.fillStyle = 'rgba(21, 22, 20, 0.4)';
+    ctx.font = `600 ${u * 3.4}px ui-sans-serif, system-ui, sans-serif`;
+    ctx.textAlign = 'right';
+    ctx.fillText('+', right, qy + u * 1.4);
+    ctx.textAlign = 'left';
+  });
 
   ctx.restore();
 }
 
 /**
  * Ventana que crece desde la barra de tareas hasta llenar la pantalla.
- * `open` va de 0 (cerrada, en la barra) a 1 (ocupando todo).
+ * `open` va de 0 (cerrada, en la barra) a 1 (ocupando todo) y `variant` dice
+ * qué parte de la web enseña: la que sigue al entrar, la que se deja al salir.
  */
-function drawWindow(ctx, open, logo, time) {
+function drawWindow(ctx, open, logo, variant) {
   if (open <= 0.001) return;
 
   const size = 34;
@@ -357,7 +446,8 @@ function drawWindow(ctx, open, logo, time) {
   ctx.clip();
 
   const chrome = Math.min(36, h * 0.09);
-  drawSitePreview(ctx, x, y + chrome, w, Math.max(1, h - chrome), logo, time);
+  const preview = variant === 'back' ? drawBackPreview : drawNextPreview;
+  preview(ctx, x, y + chrome, w, Math.max(1, h - chrome), logo);
 
   /* Cromo de la ventana. */
   ctx.fillStyle = '#161a24';
@@ -412,8 +502,8 @@ function createRain(cols) {
 function drawTerminal(ctx, open, rain, time, delta) {
   if (open <= 0.001) return;
 
-  const fullW = W * 0.68;
-  const fullH = H * 0.6;
+  const fullW = W * 0.9;
+  const fullH = H * 0.84;
   const cx = W / 2;
   const cy = H * 0.46;
   const w = fullW * open;
@@ -439,7 +529,7 @@ function drawTerminal(ctx, open, rain, time, delta) {
 
   /* Lluvia dentro de la terminal. */
   const cols = Math.ceil(w / COLUMN);
-  ctx.font = '700 14px ui-monospace, monospace';
+  ctx.font = '700 15px ui-monospace, monospace';
   ctx.textBaseline = 'top';
   for (let i = 0; i < cols; i += 1) {
     const col = rain[i % rain.length];
@@ -459,22 +549,26 @@ function drawTerminal(ctx, open, rain, time, delta) {
   });
 
   /* El arranque de la web, por encima de la lluvia. */
-  ctx.fillStyle = 'rgba(2, 6, 10, 0.72)';
-  ctx.fillRect(x, bodyY, w, bodyH);
+  /* Velo suave: la lluvia tiene que seguir mandando detrás del texto. */
+  const shade = ctx.createLinearGradient(x, bodyY, x, bodyY + bodyH * 0.5);
+  shade.addColorStop(0, 'rgba(2, 6, 10, 0.82)');
+  shade.addColorStop(1, 'rgba(2, 6, 10, 0)');
+  ctx.fillStyle = shade;
+  ctx.fillRect(x, bodyY, w, bodyH * 0.5);
 
   const lines = [
     '> mh boot --web',
     '  montando módulos ..... ok',
     '  iniciando web ........',
   ];
-  ctx.font = `600 ${Math.max(9, h * 0.036)}px ui-monospace, monospace`;
+  ctx.font = `700 ${Math.max(10, h * 0.045)}px ui-monospace, monospace`;
   lines.forEach((line, i) => {
     ctx.fillStyle = line.startsWith('>') ? '#ceff3d' : 'rgba(170, 255, 190, 0.85)';
-    ctx.fillText(line, x + 18, bodyY + 20 + i * h * 0.062);
+    ctx.fillText(line, x + 22, bodyY + 22 + i * h * 0.07);
   });
   if (Math.sin(time * 5) > 0) {
     ctx.fillStyle = '#ceff3d';
-    ctx.fillRect(x + 18, bodyY + 20 + 3 * h * 0.062, h * 0.02, h * 0.036);
+    ctx.fillRect(x + 22, bodyY + 22 + 3 * h * 0.07, h * 0.022, h * 0.045);
   }
 
   /* Cromo. */
@@ -517,9 +611,10 @@ export function createBrandOS(logoImage) {
 
   /**
    * @param {number} time   segundos desde que arrancó la escena
-   * @param {number} window 0..1 — cuánto está abierta la ventana del navegador
+   * @param {number} windowOpen 0..1 — cuánto está abierta la ventana
+   * @param {'next'|'back'} variant qué parte de la web enseña la ventana
    */
-  const draw = (time, windowOpen = 0) => {
+  const draw = (time, windowOpen = 0, variant = 'next') => {
     const delta = Math.min(0.06, Math.max(0, time - last));
     last = time;
 
@@ -535,7 +630,7 @@ export function createBrandOS(logoImage) {
     drawTerminal(ctx, terminal, rain, time, delta);
     /* La barra se dibuja antes que la ventana: la ventana sale de ella. */
     drawTaskbar(ctx, time, windowOpen > 0 && windowOpen < 0.12 ? 1 : 0);
-    drawWindow(ctx, windowOpen, logoImage, time);
+    drawWindow(ctx, windowOpen, logoImage, variant);
   };
 
   /** Ajusta la forma del lienzo a la de la pantalla del modelo. */
