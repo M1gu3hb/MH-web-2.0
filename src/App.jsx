@@ -62,10 +62,32 @@ export default function App() {
     return () => document.body.classList.remove('is-booting');
   }, [booting]);
 
+  /* Llegar con un ancla en la dirección. Mientras arranca, el scroll está
+     bloqueado y el salto que hace el navegador se pierde: compartir un enlace
+     a #contacto aterrizaba arriba del todo, como si el ancla no existiera. Se
+     repite el salto al terminar, y con dos fotogramas de espera porque la
+     maquetación todavía se está asentando. */
+  useEffect(() => {
+    if (booting) return undefined;
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    if (!id) return undefined;
+    let frame = requestAnimationFrame(() => {
+      frame = requestAnimationFrame(() => {
+        document.getElementById(id)?.scrollIntoView({ block: 'start' });
+      });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [booting]);
+
   return (
     <>
       <AnimatePresence>{booting && <BootLoader onDone={finishBoot} />}</AnimatePresence>
 
+      {/* Mientras arranca, la página de detrás queda fuera de alcance. El
+          scroll ya estaba bloqueado, pero el tabulador seguía entrando en
+          una web que aún no se ve, y el foco se perdía detrás del velo.
+          El envoltorio no crea caja, así que no cambia la maquetación. */}
+      <div className="app-shell" inert={booting ? '' : undefined}>
       <Motion.div className="scroll-meter" style={{ scaleX: meter }} aria-hidden="true" />
       <div className="paper-grain" aria-hidden="true" />
 
@@ -103,7 +125,9 @@ export default function App() {
       </main>
 
       <Footer />
-      <FloatingCTA />
+        <FloatingCTA />
+      </div>
+
       <ClickSpark color="#5227ff" />
 
       <Analytics />

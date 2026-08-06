@@ -4,6 +4,7 @@ import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { LaptopScreenUI } from './LaptopScreenUI';
 import { setLaptopRect, skipLaptopReady } from './laptopBus';
+import { StageBoundary } from './StageBoundary';
 import { useLaptopChoreography } from './useLaptopChoreography';
 
 const LaptopScene = lazy(() => import('./LaptopScene').then((m) => ({ default: m.LaptopScene })));
@@ -28,9 +29,9 @@ export function LaptopStage({ enabled = true }) {
   const reducedMotion = useReducedMotion();
   const isPhone = useMediaQuery('(max-width: 640px)');
   const coarse = useMediaQuery('(pointer: coarse)');
-  const choreography = useLaptopChoreography();
-
   const [capable, setCapable] = useState(false);
+  const choreography = useLaptopChoreography(enabled && capable);
+
   const [running, setRunning] = useState(true);
   /* Nodo DOM que la escena coloca dentro de la pantalla del modelo. Ahí se
      monta la web de verdad, no una copia. */
@@ -39,6 +40,13 @@ export function LaptopStage({ enabled = true }) {
   /* En una referencia además del estado: el bucle por rAF no se rehace cuando
      llega la pantalla, y necesita leerla sin volver a montarse. */
   const screenRoot = useRef(null);
+  /* Si la escena se cae, la web sigue sin ella: se apaga como en los aparatos
+     que no pueden con la laptop, y el arranque deja de esperarla. */
+  const handleFail = useCallback(() => {
+    skipLaptopReady();
+    setCapable(false);
+  }, []);
+
   const handleScreen = useCallback((next) => {
     screenRoot.current = next?.root ?? null;
     setScreen(next);
@@ -52,6 +60,15 @@ export function LaptopStage({ enabled = true }) {
   /* ¿Tiene sentido montar la escena en este dispositivo? */
   useEffect(() => {
     if (!enabled) return undefined;
+    /* Quien pide menos movimiento no quiere este viaje. Y además con esa
+       preferencia los tramos de scroll se colapsan por CSS, así que la
+       transición se comprimía a cero y la laptop daba un destello seco al
+       pasar. Mejor no montarla: la web se queda plana, que es lo que pide. */
+    if (reducedMotion) {
+      skipLaptopReady();
+      setCapable(false);
+      return undefined;
+    }
     let cancelled = false;
 
     const probe = () => {
@@ -79,7 +96,7 @@ export function LaptopStage({ enabled = true }) {
     return () => {
       cancelled = true;
     };
-  }, [enabled]);
+  }, [enabled, reducedMotion]);
 
   /* Sin escena no hay transición: los tramos negros se colapsan. */
   useEffect(() => {
@@ -144,15 +161,17 @@ export function LaptopStage({ enabled = true }) {
       <div className="stage-inside" ref={inside} aria-hidden="true" />
 
       <div className="laptop-stage" ref={stage} aria-hidden="true">
-        <Suspense fallback={null}>
-          <LaptopScene
-            choreography={choreography}
-            reducedMotion={reducedMotion}
-            quality={isPhone || coarse ? 'low' : 'high'}
-            running={running}
-            onScreenReady={handleScreen}
-          />
-        </Suspense>
+        <StageBoundary onFail={handleFail}>
+          <Suspense fallback={null}>
+            <LaptopScene
+              choreography={choreography}
+              reducedMotion={reducedMotion}
+              quality={isPhone || coarse ? 'low' : 'high'}
+              running={running}
+              onScreenReady={handleScreen}
+            />
+          </Suspense>
+        </StageBoundary>
       </div>
 
       {screen?.root

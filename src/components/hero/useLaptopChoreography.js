@@ -49,7 +49,7 @@ const AWAY = { x: -0.55, y: 0.05, z: -3.2, scale: 0.95, rotY: -0.55, rotX: 0.12 
  * Los dos tramos son elementos reales del documento (#zoom-in y #zoom-out),
  * así que el recorrido es explícito y no depende de adivinar alturas.
  */
-export function useLaptopChoreography() {
+export function useLaptopChoreography(enabled = true) {
   const state = useRef({
     visible: true,
     opacity: 1,
@@ -78,6 +78,10 @@ export function useLaptopChoreography() {
   const pinned = useRef({ stage: null, sticky: false, checked: false, height: 0 });
 
   useEffect(() => {
+    /* Sin escena no hay nada que coreografiar. El efecto se montaba igual y
+       seguía midiendo el documento en cada fotograma de scroll en los mismos
+       aparatos flojos donde se decidió no montar la laptop. */
+    if (!enabled) return undefined;
     let frame = 0;
 
     const measure = () => {
@@ -285,7 +289,7 @@ export function useLaptopChoreography() {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
     };
-  }, []);
+  }, [enabled]);
 
   return state;
 }

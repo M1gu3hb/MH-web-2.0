@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useRef } from 'react';
+import { useCallback, useId, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { ScrollCue } from '../primitives/ScrollCue';
 import { SectionHeading } from '../primitives/SectionHeading';
@@ -61,24 +61,28 @@ export function ProcessSection() {
     knobRef.current?.releasePointerCapture?.(event.pointerId);
   }, []);
 
-  /* Rueda del ratón sobre la perilla: sube y baja de fase. */
-  useEffect(() => {
-    const knob = knobRef.current;
-    if (!knob) return undefined;
-    const onWheel = (event) => {
-      event.preventDefault();
-      const dir = event.deltaY > 0 ? 1 : -1;
-      select(Math.max(0, Math.min(PROCESS.length - 1, index + dir)));
-    };
-    knob.addEventListener('wheel', onWheel, { passive: false });
-    return () => knob.removeEventListener('wheel', onWheel);
-  }, [index, select]);
+  /* La perilla ya no se queda la rueda del ratón. La escuchaba y cancelaba el
+     evento, así que con el cursor encima —y está justo en medio de la
+     sección— la página dejaba de bajar: se movía la rueda y no pasaba nada
+     salvo cambiar de fase, también en el último paso, donde ya no queda fase
+     a la que ir y el visitante se quedaba encallado sin entender por qué.
+     Para eso ya está el propio scroll, que recorre las cuatro fases solo; la
+     perilla se arrastra y se maneja con el teclado. */
 
   const onKnobKey = useCallback(
     (event) => {
       const map = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1 };
-      if (event.key === 'Home') return select(0);
-      if (event.key === 'End') return select(PROCESS.length - 1);
+      /* Inicio y Fin también se cancelan: sin eso el navegador se llevaba la
+         página entera al principio o al final además de cambiar de fase, y
+         quien maneja la perilla con el teclado acababa en otro sitio. */
+      if (event.key === 'Home') {
+        event.preventDefault();
+        return select(0);
+      }
+      if (event.key === 'End') {
+        event.preventDefault();
+        return select(PROCESS.length - 1);
+      }
       const d = map[event.key];
       if (!d) return undefined;
       event.preventDefault();
@@ -132,7 +136,14 @@ export function ProcessSection() {
               </div>
 
               {PROCESS.map((step, i) => (
-                <div className={`process-layer ${i === index ? 'is-active' : i < index ? 'is-past' : 'is-next'}`} key={step.index}>
+                /* Las cuatro fases viven montadas y se funden con opacidad,
+                   así que sin esto un lector de pantalla las leía las cuatro
+                   seguidas como si fueran un solo texto. */
+                <div
+                  className={`process-layer ${i === index ? 'is-active' : i < index ? 'is-past' : 'is-next'}`}
+                  key={step.index}
+                  aria-hidden={i === index ? undefined : 'true'}
+                >
                   <span className="process-console__phase">
                     FASE / {step.index}
                     {step.duration ? <em>{step.duration}</em> : null}

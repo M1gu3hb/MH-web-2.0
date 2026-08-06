@@ -42,6 +42,8 @@ export function LaptopScreenUI({ screen, choreography }) {
   const viewportRef = useRef(null);
   const viewRef = useRef(null);
   const cursorRef = useRef(null);
+  /* Si ya se dejó la ventana apagada, no hace falta volver a hacerlo. */
+  const idle = useRef(false);
 
   /* Las secciones de la página real contra las que se alinea el reflejo. Se
      leen del DOM en cada fotograma y no de un estado: la variante puede
@@ -182,13 +184,24 @@ export function LaptopScreenUI({ screen, choreography }) {
         return current === next ? current : next;
       });
 
-      if (!s.visible && !live) {
+      /* Nada que hacer si no hay contenido montado y tampoco lo va a haber.
+         En el hero la laptop sí se ve, pero su ventana está cerrada y vacía, y
+         aun así este bucle se pasaba el rato midiendo rectángulos y escribiendo
+         estilos a cero, sesenta veces por segundo, al lado de la escena 3D.
+         La ventana se apaga una vez al llegar y en adelante se sale de largo. */
+      if (!live && !wanted) {
         if (mirror.current.size) {
           mirror.current.forEach((entry) => entry.watch?.disconnect());
           mirror.current.clear();
         }
+        if (!idle.current) {
+          idle.current = true;
+          if (windowRef.current) windowRef.current.style.opacity = '0';
+          if (cursorRef.current) cursorRef.current.style.opacity = '0';
+        }
         return;
       }
+      idle.current = false;
 
       const open = s.osWindow ?? 0;
       const vw = window.innerWidth;

@@ -334,3 +334,9 @@ ul {
 body.is-booting {
   overflow: hidden;
 }
+
+/* Envoltorio de la web para poder dejarla fuera de alcance mientras arranca.
+   Sin caja propia: no participa en la maquetación. */
+.app-shell {
+  display: contents;
+}

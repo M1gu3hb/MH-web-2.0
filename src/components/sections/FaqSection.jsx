@@ -57,11 +57,20 @@ export function FaqSection({ embedded = false }) {
   useEffect(() => {
     const el = box.current;
     if (embedded || !el) return undefined;
+    let retry = 0;
     const write = () => {
       /* Durante el viaje no se remide: si el alto cambiara ahí, el pegado
          daría un salto en medio de la animación. Va tapado por el velo, pero
-         el reflejo lo seguiría y la ventana se movería sin motivo. */
-      if (document.body.classList.contains('in-transit')) return;
+         el reflejo lo seguiría y la ventana se movería sin motivo.
+
+         Y no se descarta: se reintenta. El observador solo avisa cuando el
+         tamaño cambia, así que una medida perdida aquí no volvía sola nunca
+         y el pegado se quedaba con un alto viejo hasta el siguiente cambio. */
+      if (document.body.classList.contains('in-transit')) {
+        cancelAnimationFrame(retry);
+        retry = requestAnimationFrame(write);
+        return;
+      }
       document.documentElement.style.setProperty('--faq-h', `${Math.round(el.offsetHeight)}px`);
     };
     write();
@@ -71,7 +80,10 @@ export function FaqSection({ embedded = false }) {
        píxeles más abajo de la cuenta. */
     const ro = new ResizeObserver(write);
     ro.observe(el, { box: 'border-box' });
-    return () => ro.disconnect();
+    return () => {
+      cancelAnimationFrame(retry);
+      ro.disconnect();
+    };
   }, [embedded]);
 
   return (

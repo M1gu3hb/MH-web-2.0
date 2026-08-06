@@ -224,9 +224,11 @@
   transition: border-color var(--d-fast) var(--ease);
 }
 
+/* Sube de 0.34 a 0.52: el ejemplo de qué escribir es la única pista de qué
+   se espera en el campo, y a 0.34 sobre este fondo no llegaba ni a 3:1. */
 .contact-form input::placeholder,
 .contact-form textarea::placeholder {
-  color: rgba(246, 243, 234, 0.34);
+  color: rgba(246, 243, 234, 0.52);
 }
 
 .contact-form input:focus-visible,
