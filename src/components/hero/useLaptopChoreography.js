@@ -67,6 +67,12 @@ export function useLaptopChoreography(enabled = true) {
     osVariant: 'next',
     anchor: 0,
     anchorX: 0,
+    /* Solo teléfono, donde en lugar de la laptop va el monograma en 3D.
+       `turns` cuenta vueltas completas —una unidad son dos vueltas— y no se
+       reinicia entre tramos: sigue subiendo de la entrada a la salida para
+       que nunca gire al revés. `away` es hacia qué lado se marcha al final. */
+    turns: 0,
+    away: 0,
     progress: 0,
     phase: 'hero',
     ...REST_WIDE,
@@ -138,6 +144,11 @@ export function useLaptopChoreography(enabled = true) {
       const exit = span(y, exitFrom, exitTo);
 
       const narrow = window.innerWidth < 900;
+      /* Teléfono no lleva laptop: lleva el monograma. Son miles de vértices y
+         una pantalla con DOM vivo dentro, y ahí no se movía. El corte es el
+         mismo que usa la capa para elegir escena, así que los dos tienen que
+         mirar el mismo número. */
+      const phone = vw <= 640;
       const REST = restFor(window.innerWidth);
 
       /* La laptop se ancla al hueco que el hero le reserva, en los dos ejes y
@@ -172,7 +183,28 @@ export function useLaptopChoreography(enabled = true) {
         s.anchorX = 0;
         Object.assign(s, AWAY);
 
-        if (narrow) {
+        if (phone) {
+          /* Despedida del monograma: la página se va a negro, el logo sale
+             del primer plano en que se quedó al entrar, se aleja girando dos
+             vueltas y al final se marcha por un lado. Es la misma pieza que
+             la entrada leída al revés, salvo el último tramo. */
+          s.veil = Math.min(1, span(exit, 0.02, 0.14)) * (1 - span(y, exitTo, exitTo + vh * 0.8));
+          /* Aparece cuajando, no de golpe: el acercamiento ya está aflojando
+             cuando termina de verse, así que nunca se enseña el logo gigante
+             y deshecho. Es la entrada al revés. */
+          s.opacity = Math.min(span(exit, 0.05, 0.22), 1 - span(exit, 0.88, 1));
+          s.focus = 1 - easeInOut(span(exit, 0.04, 0.3));
+          s.turns = 1 + easeInOut(span(exit, 0.12, 0.55));
+          /* Y se va por la izquierda. El tramo es largo y se solapa con el
+             giro: los tres movimientos encadenados llenan el recorrido. Con
+             cada uno esperando a que acabe el anterior quedaba un buen trecho
+             de logo dando vueltas en el sitio, que no es irse, es esperar. */
+          s.away = -easeInOut(span(exit, 0.48, 0.97));
+          s.power = Math.max(0, 1 - Math.abs(exit - 0.1) / 0.05) * 0.45;
+          s.fill = s.focus;
+          s.osWindow = 0;
+          s.pointer = 0;
+        } else if (narrow) {
           /* Zoom hacia fuera de golpe y ya se ve la laptop entera. */
           s.opacity = Math.min(span(exit, 0, 0.05), 1 - span(exit, 0.9, 1));
           s.veil = exit < 0.88 ? Math.min(1, exit / 0.05) : 1 - span(exit, 0.88, 1);
@@ -217,7 +249,31 @@ export function useLaptopChoreography(enabled = true) {
         /* Al entrar enseña lo que continúa: el carrusel y las capacidades. */
         s.osVariant = 'next';
 
-        if (narrow) {
+        if (phone) {
+          /* Entrada del monograma: la pantalla se va a negro, el logo se
+             suelta del sitio que ocupaba en el hero, da dos vueltas enteras y
+             solo entonces crece hasta comerse la pantalla. Ese primer plano es
+             el relevo: se apaga a la vez que el negro y detrás ya está la
+             página. */
+          s.anchor *= 1 - span(enter, 0, 0.3);
+          s.anchorX = 0;
+          s.away = 0;
+          s.veil = enter < 0.86 ? span(enter, 0, 0.12) : 1 - span(enter, 0.86, 0.97);
+          s.turns = easeInOut(span(enter, 0.08, 0.58));
+          /* El acelerón lo pone la escena, que eleva esto al cuadrado; aquí
+             el recorrido va parejo al scroll para que el dedo lo mande. */
+          s.focus = easeInOut(span(enter, 0.42, 0.88));
+          s.fill = s.focus;
+          /* Se deshace mientras sigue acercándose. Quedarse a mirar el logo a
+             pantalla completa no era una opción: a ese tamaño el original ya
+             solo son manchas. Disolviéndose en el propio acelerón, el salto a
+             la página se lee como haber entrado dentro de la marca. */
+          s.opacity = 1 - span(enter, 0.7, 0.86);
+          s.power = Math.max(0, 1 - Math.abs(enter - 0.82) / 0.05) * 0.45;
+          s.inside = span(enter, 0.92, 1);
+          s.osWindow = 0;
+          s.pointer = 0;
+        } else if (narrow) {
           s.anchor = 0;
           Object.assign(s, SHOW_NARROW);
           s.veil = enter < 0.7 ? span(enter, 0, 0.12) : 1 - span(enter, 0.7, 0.77);
@@ -264,6 +320,8 @@ export function useLaptopChoreography(enabled = true) {
         s.fill = 0;
         s.pointer = 0;
         s.osWindow = 0;
+        s.turns = 0;
+        s.away = 0;
         Object.assign(s, REST);
       }
 

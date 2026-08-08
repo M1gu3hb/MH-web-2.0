@@ -8,6 +8,7 @@ import { StageBoundary } from './StageBoundary';
 import { useLaptopChoreography } from './useLaptopChoreography';
 
 const LaptopScene = lazy(() => import('./LaptopScene').then((m) => ({ default: m.LaptopScene })));
+const LogoScene = lazy(() => import('./LogoScene').then((m) => ({ default: m.LogoScene })));
 
 /**
  * Capa fija donde vive la laptop, más el velo negro y el destello de
@@ -24,6 +25,12 @@ const LaptopScene = lazy(() => import('./LaptopScene').then((m) => ({ default: m
  * 2. El velo y el destello se actualizan por rAF escribiendo el estilo a
  *    mano: pasarlos por el estado de React provocaría un render por
  *    fotograma.
+ *
+ * 3. En teléfono no hay laptop. El modelo son miles de vértices y lleva DOM
+ *    vivo dentro de la pantalla vía CSS3D, y un teléfono no mueve eso: la
+ *    página iba a tirones desde el primer scroll. En su lugar va el monograma
+ *    extruido, que hace el mismo papel —dar paso a la web y despedirla— con
+ *    ochenta triángulos y sin segunda maqueta que reflejar.
  */
 export function LaptopStage({ enabled = true }) {
   const reducedMotion = useReducedMotion();
@@ -122,12 +129,15 @@ export function LaptopStage({ enabled = true }) {
       /* Dónde está la pantalla ahora mismo, para que el clic del hero caiga
          encima de la laptop y no sobre el hueco del layout. Solo en reposo:
          durante el viaje la laptop tapa toda la página y no hay nada que
-         pulsar. */
-      setLaptopRect(
-        s.phase === 'hero' && s.visible && screenRoot.current
-          ? screenRoot.current.getBoundingClientRect()
-          : null,
-      );
+         pulsar. En teléfono lo publica la propia escena del monograma, que no
+         tiene nodo DOM que medir pero sí sabe su sitio. */
+      if (!isPhone) {
+        setLaptopRect(
+          s.phase === 'hero' && s.visible && screenRoot.current
+            ? screenRoot.current.getBoundingClientRect()
+            : null,
+        );
+      }
 
       /* Mientras dura el viaje, la navegación y el botón flotante estorban:
          flotarían sobre la laptop y romperían la ilusión de entrar en ella. */
@@ -151,7 +161,7 @@ export function LaptopStage({ enabled = true }) {
       cancelAnimationFrame(frame);
       document.body.classList.remove('in-transit');
     };
-  }, [capable, choreography, enabled]);
+  }, [capable, choreography, enabled, isPhone]);
 
   if (!enabled || !capable) return null;
 
@@ -163,18 +173,26 @@ export function LaptopStage({ enabled = true }) {
       <div className="laptop-stage" ref={stage} aria-hidden="true">
         <StageBoundary onFail={handleFail}>
           <Suspense fallback={null}>
-            <LaptopScene
-              choreography={choreography}
-              reducedMotion={reducedMotion}
-              quality={isPhone || coarse ? 'low' : 'high'}
-              running={running}
-              onScreenReady={handleScreen}
-            />
+            {isPhone ? (
+              <LogoScene
+                choreography={choreography}
+                reducedMotion={reducedMotion}
+                running={running}
+              />
+            ) : (
+              <LaptopScene
+                choreography={choreography}
+                reducedMotion={reducedMotion}
+                quality={coarse ? 'low' : 'high'}
+                running={running}
+                onScreenReady={handleScreen}
+              />
+            )}
           </Suspense>
         </StageBoundary>
       </div>
 
-      {screen?.root
+      {!isPhone && screen?.root
         ? createPortal(<LaptopScreenUI screen={screen} choreography={choreography} />, screen.root)
         : null}
 

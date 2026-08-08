@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
-import { ArrowDown, ArrowUpRight, MessageCircle, MousePointer2 } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, Hand, MessageCircle, MousePointer2 } from 'lucide-react';
 import { motion as Motion } from 'motion/react';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { Magnet, ScrambleText } from '../reactbits';
 import Scanner from '../reactbits/Scanner';
@@ -10,6 +11,8 @@ import { trackWhatsApp, whatsappUrl } from '../../lib/whatsapp';
 
 export function Hero() {
   const reducedMotion = useReducedMotion();
+  /* En teléfono lo que hay ahí no es una laptop, es el monograma en 3D. */
+  const isPhone = useMediaQuery('(max-width: 640px)');
   const [claimA, claimVen, claimB, claimNec] = HERO.claim;
 
   /* La zona sensible se pega a la pantalla de la laptop, que la coloca la
@@ -162,10 +165,13 @@ export function Hero() {
             sitio en el layout y recoge el clic por ella. */}
         <div className="hero__viewport" id="hero-viewport">
           <button type="button" className="hero__viewport-hit" ref={hit} onClick={pokeLaptop}>
-            <span className="rb-visually-hidden">Encender el modo desarrollador de la laptop</span>
+            <span className="rb-visually-hidden">
+              {isPhone ? 'Tocar el logo' : 'Encender el modo desarrollador de la laptop'}
+            </span>
           </button>
           <p className="hero__viewport-hint" ref={hint} aria-hidden="true">
-            <MousePointer2 size={14} /> Haz clic en la laptop
+            {isPhone ? <Hand size={14} /> : <MousePointer2 size={14} />}
+            {isPhone ? ' Toca el logo' : ' Haz clic en la laptop'}
           </p>
         </div>
       </div>
