@@ -21,6 +21,14 @@ export function useScrollSequence(count, { enabled = true } = {}) {
   /* Cuánto se separó el usuario de ese índice al elegir a mano. */
   const offset = useRef(0);
 
+  /* El avance fino, en un ref y no en el estado.
+     El índice es un número entero y basta para decidir qué tarjeta se enseña,
+     pero para que algo se mueva con el dedo hace falta el decimal. Meterlo en
+     el estado significaría repintar el árbol de React sesenta veces por
+     segundo mientras se scrollea, que es justo lo que no puede pasar; así el
+     que lo quiera lo lee en su propio bucle y escribe en el DOM. */
+  const flow = useRef({ total: 0, paso: 0, dentro: false });
+
   const select = useCallback(
     (next) => {
       const value = clamp(next, 0, count - 1);
@@ -69,6 +77,12 @@ export function useScrollSequence(count, { enabled = true } = {}) {
       const n = Math.min(count - 1, Math.floor(eased * count));
       natural.current = n;
 
+      /* Lo mismo que acaba de calcularse, pero sin redondear: el avance de 0 a
+         1 en todo el recorrido y el avance de 0 a 1 dentro del tramo actual. */
+      flow.current.total = eased;
+      flow.current.paso = eased * count - n;
+      flow.current.dentro = raw > -0.2 && raw < 1.2;
+
       const next = clamp(n + offset.current, 0, count - 1);
       /* En los extremos el desplazamiento se reajusta: si no, seguir
          scrolleando acumularía deuda y al invertir no pasaría nada. */
@@ -95,5 +109,5 @@ export function useScrollSequence(count, { enabled = true } = {}) {
     };
   }, [count, enabled]);
 
-  return { containerRef, index, select };
+  return { containerRef, index, select, flow };
 }

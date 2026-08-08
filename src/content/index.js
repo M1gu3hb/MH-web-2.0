@@ -198,6 +198,11 @@ export const CAPABILITIES = [
     foreground: '#171817',
     tags: ['Dirección UI/UX', 'Desarrollo a medida', 'SEO técnico'],
     screen: 'website',
+    scene: '/servicios/web.webp',
+    /* Punto de luz del render, medido sobre la imagen: el recuadro es casi
+       cuadrado y la imagen apaisada, así que sin esto el recorte se comía el
+       motivo por un lado. */
+    focus: '51% 50%',
   },
   {
     id: 'pos',
@@ -212,6 +217,11 @@ export const CAPABILITIES = [
     foreground: '#10110f',
     tags: ['Caja e inventario', 'Pedidos y cocina', 'Multi-sucursal'],
     screen: 'pos',
+    scene: '/servicios/pos.webp',
+    /* Punto de luz del render, medido sobre la imagen: el recuadro es casi
+       cuadrado y la imagen apaisada, así que sin esto el recorte se comía el
+       motivo por un lado. */
+    focus: '56% 69%',
   },
   {
     id: 'crm',
@@ -226,6 +236,11 @@ export const CAPABILITIES = [
     foreground: '#f8f6ef',
     tags: ['Prospectos', 'Cotizadores', 'Dashboards'],
     screen: 'crm',
+    scene: '/servicios/crm.webp',
+    /* Punto de luz del render, medido sobre la imagen: el recuadro es casi
+       cuadrado y la imagen apaisada, así que sin esto el recorte se comía el
+       motivo por un lado. */
+    focus: '67% 45%',
   },
   {
     id: 'automation',
@@ -240,6 +255,11 @@ export const CAPABILITIES = [
     foreground: '#10110f',
     tags: ['Flujos', 'Documentos', 'Integraciones'],
     screen: 'automation',
+    scene: '/servicios/automation.webp',
+    /* Punto de luz del render, medido sobre la imagen: el recuadro es casi
+       cuadrado y la imagen apaisada, así que sin esto el recorte se comía el
+       motivo por un lado. */
+    focus: '50% 49%',
   },
   {
     id: 'software',
@@ -254,6 +274,11 @@ export const CAPABILITIES = [
     foreground: '#171817',
     tags: ['Apps de escritorio', 'Apps web', 'Funciona sin internet'],
     screen: 'software',
+    scene: '/servicios/software.webp',
+    /* Punto de luz del render, medido sobre la imagen: el recuadro es casi
+       cuadrado y la imagen apaisada, así que sin esto el recorte se comía el
+       motivo por un lado. */
+    focus: '70% 52%',
   },
 ];
 
