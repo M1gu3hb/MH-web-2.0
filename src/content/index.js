@@ -331,7 +331,9 @@ export const PRICING = {
   ],
   terms: [
     ['Precio cerrado', 'Te doy el número antes de empezar y ese es el número.'],
-    ['Sin mensualidades', 'No te amarro a una renta obligatoria.'],
+    /* Antes decía «sin mensualidades». Se cae: hay planes con mensualidad y
+       prometer lo contrario dejaba sin cubrir justo esa mitad del catálogo. */
+    ['Sin letra chica', 'Lo que entra y lo que no, por escrito antes de empezar.'],
     ['Es tuyo', 'El código, el dominio y los accesos quedan a tu nombre.'],
   ],
 };

@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { motion as Motion } from 'motion/react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { laptopReady, skipLaptopReady } from '../hero/laptopBus';
+import { BootRain } from './BootRain';
+import { ASCII_COLS, LOGO_ASCII } from './logoAscii';
 
 const STEPS = [
   ['fuentes', () => document.fonts?.ready ?? Promise.resolve()],
@@ -103,13 +105,20 @@ export function BootLoader({ onDone }) {
       role="status"
       aria-label="Cargando el sitio"
     >
-      <div className="boot__grid" aria-hidden="true" />
+      <BootRain />
 
       <div className="boot__core">
-        <div className="boot__mark">
-          <img src="/mh-logo.png" alt="" width="150" height="134" />
-          <span className="boot__ring" aria-hidden="true" />
-          <span className="boot__ring boot__ring--inner" aria-hidden="true" />
+        {/* El monograma se escribe, no aparece: se corta por el número de
+            caracteres que toca al porcentaje, así que la marca se va formando
+            al ritmo de lo que de verdad se está cargando. El texto completo va
+            debajo en un hueco invisible para que el trazado no cambie de sitio
+            conforme crece. */}
+        <div className="boot__ascii" style={{ '--cols': ASCII_COLS }} aria-hidden="true">
+          <pre className="boot__ascii-ghost">{LOGO_ASCII}</pre>
+          <pre className="boot__ascii-live">
+            {LOGO_ASCII.slice(0, Math.round((LOGO_ASCII.length * progress) / 100))}
+            <i className="boot__caret" />
+          </pre>
         </div>
         <p className="boot__name">MORPHIQ OS</p>
       </div>

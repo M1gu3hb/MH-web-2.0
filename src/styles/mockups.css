@@ -1285,43 +1285,116 @@
 .project-ui--photobooth {
   position: relative;
   display: grid;
-  grid-template-rows: 1fr auto;
-  gap: 14px;
+  /* La tira manda y el estado la acompaña al lado. */
+  grid-template-columns: auto auto;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(18px, 4vw, 40px);
   padding: 20px;
   overflow: hidden;
   background: #16182c;
   color: #eceaff;
 }
 
-.booth-frame {
+/* La tira impresa: margen blanco generoso, cuatro viñetas y el pie con la
+   marca, como sale de la máquina. Ligeramente torcida, que es como cae. */
+.booth-strip {
   display: grid;
-  gap: 8px;
+  gap: 7px;
   align-content: center;
-  padding: 14px;
-  border-radius: 10px;
+  width: 128px;
+  padding: 11px 11px 5px;
+  border-radius: 3px;
   background: #fff;
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.42);
+  transform: rotate(-4deg);
 }
 
-.booth-shot {
-  height: 52px;
-  border-radius: 4px;
-  background: linear-gradient(120deg, #5e63ff, #b9b6ff 60%, #ffd9d0);
+.booth-pic {
+  position: relative;
+  height: 56px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: linear-gradient(160deg, #3b3f7a, #191b34);
 }
-.booth-shot:nth-child(2) { background: linear-gradient(120deg, #ff684f, #ffc0ad); }
-.booth-shot:nth-child(3) { background: linear-gradient(120deg, #36d7d1, #cdf3f1); }
 
-.booth-frame em {
+.booth-pic--0 { background: linear-gradient(160deg, #5e63ff, #2a2d5c); }
+.booth-pic--1 { background: linear-gradient(160deg, #ff684f, #5a2118); }
+.booth-pic--2 { background: linear-gradient(160deg, #36d7d1, #10454a); }
+.booth-pic--3 { background: linear-gradient(160deg, #f5a524, #5c3a06); }
+
+/* Dos siluetas por viñeta: torso con hombros redondeados y la cabeza encima.
+   Con esto la tira se lee como retratos y no como muestras de color. */
+.booth-person {
+  position: absolute;
+  bottom: 0;
+  left: 30%;
+  width: 26px;
+  height: 20px;
+  border-radius: 44% 44% 0 0;
+  background: rgba(10, 10, 24, 0.6);
+  transform: translateX(-50%);
+}
+
+.booth-person::before {
+  content: '';
+  position: absolute;
+  bottom: 17px;
+  left: 50%;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: inherit;
+  transform: translateX(-50%);
+}
+
+.booth-person--two {
+  left: 68%;
+  width: 22px;
+  height: 17px;
+  background: rgba(10, 10, 24, 0.5);
+}
+
+.booth-person--two::before {
+  bottom: 14px;
+  width: 11px;
+  height: 11px;
+}
+
+.booth-strip em {
   color: #16182c;
   font-family: ui-monospace, monospace;
-  font-size: 0.6rem;
+  font-size: 0.42rem;
   font-style: normal;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-align: center;
 }
 
+.booth-side {
+  display: grid;
+  gap: 14px;
+  align-content: center;
+}
+
+/* El aro del flash, encendido al ritmo del destello. */
+.booth-lamp {
+  width: 44px;
+  height: 44px;
+  border: 3px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff, rgba(255, 255, 255, 0.25) 62%, transparent 72%);
+  animation: booth-lamp 5.5s ease-out infinite;
+}
+
+@keyframes booth-lamp {
+  0%, 86%, 100% { opacity: 0.32; box-shadow: none; }
+  90% { opacity: 1; box-shadow: 0 0 26px 8px rgba(255, 255, 255, 0.8); }
+  95% { opacity: 0.32; box-shadow: none; }
+}
+
 .booth-status { display: grid; gap: 6px; }
-.booth-status span { display: inline-flex; align-items: center; gap: 8px; font-size: 0.68rem; font-weight: 700; }
+.booth-status span { display: inline-flex; align-items: center; gap: 8px; font-size: 0.64rem; font-weight: 700; }
 .booth-status i { width: 7px; height: 7px; border-radius: 50%; background: #ff684f; }
 .booth-status span:last-child i { background: #ceff3d; }
 
@@ -1336,7 +1409,7 @@
 
 @keyframes booth-flash {
   0%, 88%, 100% { opacity: 0; }
-  90% { opacity: 0.55; }
+  90% { opacity: 0.62; }
   94% { opacity: 0; }
 }
 

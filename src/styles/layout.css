@@ -488,6 +488,10 @@
 /* ============================================================
    Arranque
    ============================================================ */
+/* ---- Arranque ---------------------------------------------
+   Sobria y con la paleta del hero: el mismo fondo, el mismo azul y el mismo
+   lima. Antes tenía rejilla morada, aros girando y el logo en imagen, y no se
+   parecía a nada de lo que venía después. */
 .boot {
   position: fixed;
   z-index: 1200;
@@ -496,61 +500,81 @@
   grid-template-rows: 1fr auto;
   padding: clamp(24px, 5vw, 56px);
   overflow: hidden;
-  background: #070512;
+  /* El mismo negro violáceo del hero. */
+  background: #080615;
   color: #f3f2f9;
 }
 
-.boot__grid {
+/* La lluvia va detrás de todo y muy apagada: es fondo. */
+.boot__rain {
   position: absolute;
   inset: 0;
-  opacity: 0.5;
-  background-image:
-    linear-gradient(rgba(122, 96, 255, 0.09) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(122, 96, 255, 0.09) 1px, transparent 1px);
-  background-size: 42px 42px;
-  mask-image: radial-gradient(circle at 50% 45%, #000, transparent 72%);
+  width: 100%;
+  height: 100%;
+  opacity: 0.34;
 }
 
 .boot__core {
-  display: grid;
-  place-items: center;
-  align-content: center;
-  gap: 26px;
-}
-
-.boot__mark {
   position: relative;
   display: grid;
   place-items: center;
-  width: clamp(180px, 26vw, 260px);
-  aspect-ratio: 1;
+  align-content: center;
+  gap: clamp(18px, 3vh, 30px);
 }
 
-.boot__mark img {
-  width: 56%;
-  height: auto;
-  filter: drop-shadow(0 12px 40px rgba(82, 39, 255, 0.55));
+/* El monograma escrito en caracteres. Los dos <pre> se superponen: el de
+   abajo reserva el sitio del dibujo completo para que nada se mueva mientras
+   se escribe, y el de arriba enseña lo que va llegando. */
+.boot__ascii {
+  position: relative;
+  /* El ancho lo manda el número de columnas del dibujo, no el contenedor:
+     así el trazado nunca se parte de línea, que lo destrozaría. */
+  font-size: min(3.1vw, 86vw / var(--cols) / 0.601, 18px);
+  line-height: 1;
 }
 
-.boot__ring {
+.boot__ascii pre {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: inherit;
+  font-weight: 600;
+  line-height: 1;
+  white-space: pre;
+}
+
+.boot__ascii-ghost {
+  color: rgba(74, 155, 240, 0.07);
+}
+
+.boot__ascii-live {
   position: absolute;
   inset: 0;
-  border: 1px solid rgba(122, 96, 255, 0.45);
-  border-top-color: var(--accent-pos);
-  border-radius: 50%;
-  animation: boot-spin 2.4s linear infinite;
+  /* Del azul hondo del monograma al filo claro, de abajo arriba. */
+  background: linear-gradient(168deg, #6fb4ff, #2a76d6 46%, #123a7a);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: none;
 }
 
-.boot__ring--inner {
-  inset: 18%;
-  border-color: rgba(255, 104, 79, 0.35);
-  border-bottom-color: #ff684f;
-  animation-duration: 1.6s;
-  animation-direction: reverse;
+/* El cursor de la terminal, justo donde se dejó de escribir. */
+.boot__caret {
+  display: inline-block;
+  width: 0.6em;
+  height: 1em;
+  background: var(--accent-pos);
+  vertical-align: text-bottom;
+  animation: boot-caret 0.9s steps(1) infinite;
+}
+
+@keyframes boot-caret {
+  0%, 55% { opacity: 1; }
+  56%, 100% { opacity: 0; }
 }
 
 .boot__name {
-  color: rgba(243, 242, 249, 0.86);
+  position: relative;
+  color: rgba(243, 242, 249, 0.7);
   font-family: var(--font-display);
   font-size: 0.9rem;
   font-weight: var(--w-label);
@@ -575,7 +599,7 @@
 .boot__track span {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, var(--scanner-1), var(--accent-pos));
+  background: linear-gradient(90deg, #2a76d6, var(--accent-pos));
   transform-origin: 0 50%;
   transition: transform 420ms var(--ease);
 }

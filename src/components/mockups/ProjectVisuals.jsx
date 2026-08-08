@@ -143,19 +143,31 @@ export function GestechVisual() {
   );
 }
 
+/* Una cabina de fotos se reconoce por lo que escupe: la tira impresa. Antes
+   eran tres rectángulos de degradado y no se leía qué producto era esto; ahora
+   es una tira vertical con su margen blanco, recién salida y torcida, con
+   siluetas de gente dentro y el destello del flash encima. */
 export function PhotoBoothVisual() {
   return (
     <div className="project-ui project-ui--photobooth">
-      <div className="booth-frame">
-        <span className="booth-shot" />
-        <span className="booth-shot" />
-        <span className="booth-shot" />
-        <em>FOLIO · MQ-2481</em>
+      <div className="booth-strip">
+        {[0, 1, 2, 3].map((i) => (
+          <span className={`booth-pic booth-pic--${i}`} key={i}>
+            <b className="booth-person" />
+            <b className="booth-person booth-person--two" />
+          </span>
+        ))}
+        <em>MORPHIQ · PHOTO BOOTH</em>
       </div>
-      <div className="booth-status">
-        <span><i /> Sin internet — guardado local</span>
-        <span><i /> 128 fotos en cola</span>
+
+      <div className="booth-side">
+        <span className="booth-lamp" aria-hidden="true" />
+        <div className="booth-status">
+          <span><i /> Sin internet — guardado local</span>
+          <span><i /> 128 fotos en cola</span>
+        </div>
       </div>
+
       <div className="booth-flash" />
     </div>
   );
