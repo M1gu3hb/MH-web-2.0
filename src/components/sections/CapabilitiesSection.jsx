@@ -2,11 +2,25 @@ import { useCallback, useEffect, useId, useRef } from 'react';
 import { ArrowUpRight, Check } from 'lucide-react';
 import { SectionHeading } from '../primitives/SectionHeading';
 import { AutomationScreen, CrmScreen, PosScreen, SoftwareScreen, WebsiteScreen } from '../mockups/ServiceScreens';
-import { ScrambleText } from '../reactbits';
+import { MorphStage, ScrambleText } from '../reactbits';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { ScrollCue } from '../primitives/ScrollCue';
 import { useScrollSequence } from '../../hooks/useScrollSequence';
 import { CAPABILITIES, SECTIONS } from '../../content';
+
+/* Las escenas, en la talla que toca. El hueco es casi cuadrado: servirle a un
+   teléfono el apaisado de escritorio son 40 MB de textura para enseñar un
+   tercio de los píxeles, y con el recorte cuadrado son 11. Se elige una vez,
+   al cargar, porque cambiar de talla a media página obligaría a resubir las
+   cinco texturas. */
+const talla = () => {
+  const w = typeof window === 'undefined' ? 1440 : window.innerWidth;
+  if (w <= 640) return '-sq';
+  if (w <= 1100) return '-1152';
+  return '';
+};
+
+const ESCENAS = CAPABILITIES.map((c) => c.scene.replace('.webp', `${talla()}.webp`));
 
 const SERVICE_SCREENS = {
   website: WebsiteScreen,
@@ -187,6 +201,26 @@ export function CapabilitiesSection({ embedded = false }) {
               {/* Las cinco capas viven montadas y solo cambia su opacidad:
                   así el cambio no tiene ni un fotograma en blanco. */}
               <div className="panel-stage">
+                {/* Una sola tela para las cinco escenas: el relevo entre
+                    servicios se hace en la GPU, fundiendo una imagen en la
+                    siguiente. Vive aquí y no dentro de cada capa porque es una
+                    sola: cinco lienzos serían cinco contextos de WebGL para
+                    enseñar uno cada vez. Cae en la misma celda del grid que el
+                    hueco de la maqueta, así que se coloca sola en cualquier
+                    formato sin repetir el reparto. */}
+                {!embedded ? (
+                  <MorphStage
+                    className="panel-morph"
+                    scenes={ESCENAS}
+                    index={activeIndex}
+                    flow={flow}
+                    transition="melt"
+                    duration={0.85}
+                    intensity={0.5}
+                    aberration={0.4}
+                    drift={0.35}
+                  />
+                ) : null}
                 {CAPABILITIES.map((item, i) => {
                   const Screen = SERVICE_SCREENS[item.screen];
                   const state = i === activeIndex ? 'is-active' : i < activeIndex ? 'is-past' : 'is-next';
@@ -221,30 +255,12 @@ export function CapabilitiesSection({ embedded = false }) {
                         {/* La escena de esa capacidad. El recuadro es casi
                             cuadrado y la imagen apaisada, así que el recorte lo
                             decide el punto de luz medido sobre cada render. */}
-                        {item.scene ? (
-                          /* Tres tallas, y la del teléfono además cuadrada. El
-                             hueco de ahí mide unos 350×326, así que servirle el
-                             apaisado de escritorio significaba decodificar el
-                             triple de píxeles de los que se llegan a ver: cinco
-                             de 1920×1080 son 40 MB de mapa de bits en memoria,
-                             en un aparato que no los tiene. Con el cuadrado son
-                             11 MB. El recorte va centrado en el motivo, por eso
-                             ahí el foco vuelve al medio. */
-                          <picture>
-                            <source media="(max-width: 640px)" srcSet={`${item.scene.replace('.webp', '-sq.webp')}`} />
-                            <source media="(max-width: 1100px)" srcSet={`${item.scene.replace('.webp', '-1152.webp')}`} />
-                            <img
-                              className="panel-scene"
-                              ref={(node) => {
-                                escenas.current[i] = node;
-                              }}
-                              src={item.scene}
-                              alt=""
-                              loading="lazy"
-                              decoding="async"
-                              style={{ '--foco': item.focus }}
-                            />
-                          </picture>
+                        {/* Incrustada dentro de la pantalla del portátil no
+                            hay tela: sería un segundo contexto de WebGL y otro
+                            juego de texturas para un reflejo. Ahí va la escena
+                            quieta, que es lo que se ve desde fuera. */}
+                        {embedded && item.scene ? (
+                          <img className="panel-scene" src={item.scene} alt="" style={{ '--foco': item.focus }} />
                         ) : null}
                         <span className="panel-screen-wrap__screw panel-screen-wrap__screw--tl" />
                         <span className="panel-screen-wrap__screw panel-screen-wrap__screw--tr" />

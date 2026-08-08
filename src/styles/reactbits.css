@@ -283,3 +283,39 @@ h3 .rb-scramble {
 .scramble-line {
   display: block;
 }
+
+/* ---- RippleDistortion --------------------------------------
+   La lámina de agua ocupa el recuadro entero y va por debajo de lo que el
+   recuadro ya dibujaba encima —el marco de puntos, la barrida—, que se quedan
+   como estaban. */
+.ripple-distortion {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  background: #12151a;
+}
+
+.ripple-distortion canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---- MorphStage --------------------------------------------
+   La tela donde se funden las escenas. Ocupa su hueco entero y va debajo de
+   todo lo que la tarjeta pinta encima. */
+.morph-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: #07060f;
+}
+
+.morph-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

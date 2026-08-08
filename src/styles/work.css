@@ -1,5 +1,5 @@
 /* ============================================================
-   Trabajo — tarjetas que se apilan con el scroll
+   Trabajo — tarjetas que desfilan de lado con el scroll
    ============================================================ */
 
 .work {
@@ -30,44 +30,69 @@
 .work::before { top: -1px; clip-path: polygon(0 100%, 100% 0, 100% 100%, 0 100%); }
 .work::after { bottom: -1px; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 0); }
 
-/* ---- La pila ----------------------------------------------- */
-.project-stack {
-  /* Alto exacto del hueco que le queda a una tarjeta cuando está pegada.
-     Es la pieza que faltaba: si la tarjeta es más alta que su hueco nunca
-     llegas a verla entera, y la siguiente empieza a taparla mientras aún
-     estás leyendo la anterior. Se ven las dos cortadas a la vez y parece un
-     error de dibujo, no un mazo de cartas. */
-  --card-slot: max(420px, calc(100svh - var(--stack-top) - var(--stack-deck) - 22px));
+/* ---- El riel ------------------------------------------------
+   Las tarjetas ya no se apilan: desfilan. El scroll sigue siendo vertical
+   —es el que todo el mundo tiene— pero lo que mueve es el riel de lado, de
+   derecha a izquierda, y se para en la última. Ni bucle ni vuelta al
+   principio: se recorre entero y ahí termina.
 
-  width: min(100%, var(--wrap));
-  margin: clamp(52px, 7vw, 96px) auto 0;
+   El alto del recorrido lo escribe JS, porque es exactamente lo que sobra de
+   riel por la derecha, y eso depende del ancho de la pantalla y de cuántos
+   casos haya. Puesto a ojo en CSS, o se acaba el scroll antes que las
+   tarjetas o quedan pantallas muertas al final. */
+.work-rail {
+  position: relative;
+  /* Se sale del respiro de la sección: el riel va a sangre y el aire lo pone
+     la propia pista, para que la primera tarjeta entre desde el borde. */
+  margin: clamp(52px, 7vw, 96px) calc(var(--sp-gutter) * -1) 0;
+}
+
+.work-rail__visor {
+  position: sticky;
+  top: 0;
+  display: grid;
+  align-items: center;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.work-rail__pista {
+  display: flex;
+  gap: clamp(16px, 2.4vw, 40px);
+  align-items: center;
+  width: max-content;
+  padding-inline: var(--sp-gutter);
 }
 
 .project-card {
-  position: sticky;
-  /* `top` y `z-index` los pone el componente: cada tarjeta se detiene
-     un escalón más abajo que la anterior y deja ver su canto. */
+  flex: none;
   display: block;
-  margin-bottom: clamp(28px, 5vh, 52px);
+  width: min(72vw, 1020px);
+  height: min(74svh, 640px);
   min-width: 0;
+  /* Solo se dibuja la que se está viendo. Sin esto, la pista entera se
+     promociona a una sola capa de compositor: siete tarjetas de ancho, más de
+     siete mil píxeles, rasterizadas todas a la vez para enseñar una. El tamaño
+     va declarado para que saltarse el dibujo no mueva nada de sitio. */
+  content-visibility: auto;
+  contain-intrinsic-size: min(72vw, 1020px) min(74svh, 640px);
 }
-
-/* La última no necesita separación: cierra la pila. */
-.project-card:last-child { margin-bottom: 0; }
 
 .project-card__inner {
   --rb-accent: var(--scene-accent);
 
   display: flex;
   flex-direction: column;
-  height: var(--card-slot);
+  height: 100%;
   overflow: hidden;
   padding: clamp(20px, 2.4vw, 30px);
   border: 1px solid var(--line-invert);
   border-radius: var(--r-xl);
-  /* Opaca: es lo que hace que la pila se vea como un mazo. */
   background: #14171a;
-  box-shadow: 0 -1px 0 rgba(246, 243, 234, 0.1), 0 -24px 60px rgba(0, 0, 0, 0.55);
+  /* La corona de 60px separaba una tarjeta de la de abajo cuando se apilaban.
+     Desfilando ya las separa el hueco, y desenfocar mil por seiscientos en
+     cada tarjeta que entra se paga en el fotograma en que entra. */
+  box-shadow: 0 -1px 0 rgba(246, 243, 234, 0.1), 0 18px 40px rgba(0, 0, 0, 0.35);
   transition: border-color var(--d-base) var(--ease);
 }
 
@@ -244,14 +269,15 @@
   }
 }
 
-/* En teléfono se mantiene el mazo —es la misma animación, solo cambia el
-   formato—: la copia arriba y la maqueta debajo, ambas dentro del hueco. */
+/* En vertical las tarjetas siguen desfilando de lado —es la misma animación,
+   solo cambia el formato—: la copia arriba y la maqueta debajo. */
 @media (max-width: 900px) {
-  .project-stack {
-    --card-slot: max(400px, calc(100svh - var(--stack-top) - var(--stack-deck) - 14px));
+  .project-card {
+    width: min(84vw, 560px);
+    height: min(80svh, 700px);
+    contain-intrinsic-size: min(84vw, 560px) min(80svh, 700px);
   }
 
-  .project-card { margin-bottom: clamp(20px, 4vh, 36px); }
   .project-card__inner { padding: 16px; }
   .project-card__meta { padding-bottom: 12px; font-size: 0.55rem; }
   .project-card__layout { gap: 16px; padding-top: 16px; }
@@ -271,6 +297,12 @@
 }
 
 @media (max-width: 640px) {
+  .project-card {
+    width: 86vw;
+    height: min(78svh, 680px);
+    contain-intrinsic-size: 86vw min(78svh, 680px);
+  }
+
   .project-card__inner { border-radius: var(--r-lg); }
   .project-card__visual { min-height: 200px; }
   .project-card__link { width: 100%; justify-content: center; }
@@ -322,5 +354,26 @@
      que iba el resumen: que se vea el trabajo. */
   .project-card--brief .project-card__visual {
     min-height: 300px;
+  }
+}
+
+
+/* Sin animación el riel no puede quedarse quieto enseñando una tarjeta: el
+   alto del recorrido lo escribe JS y ahí no se escribe. Se convierte en lo
+   que ya es por debajo —una tira— y se deja recorrer a mano. */
+@media (prefers-reduced-motion: reduce) {
+  .work-rail__visor {
+    position: static;
+    height: auto;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+
+  .work-rail__pista {
+    will-change: auto;
+  }
+
+  .project-card {
+    scroll-snap-align: center;
   }
 }

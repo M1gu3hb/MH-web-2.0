@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { ArrowUpRight, Mail, MapPin, MessageCircle, Send } from 'lucide-react';
 import { track } from '@vercel/analytics';
-import { Reveal, SplitText, StarBorder } from '../reactbits';
+import { Reveal, RippleDistortion, SplitText, StarBorder } from '../reactbits';
 import { CONTACT, CONTACT_SECTION } from '../../content';
+import { PLACA } from './AboutSection';
 import { trackWhatsApp, whatsappUrl } from '../../lib/whatsapp';
 
 const EMPTY = { nombre: '', negocio: '', necesidad: '' };
@@ -113,7 +114,25 @@ export function ContactSection() {
       <div className="contact__bottom">
         <Reveal className="contact__identity">
           <div className="contact__logo">
-            <img src="/mh-logo-sm.png" alt="Astral Morphiq Systems" width="300" height="268" />
+            <RippleDistortion
+              src={PLACA}
+              brushSize={150}
+              strength={0.16}
+              swirl={1.2}
+              rings={4}
+              spread={5}
+              fade={2.6}
+              spacing={12}
+              dispersion={0.3}
+              glint={0.35}
+              tint="#2a76d6"
+              tintAmount={0.22}
+              grayscale={false}
+              trigger="both"
+              clickStrength={2.4}
+              quality="low"
+            />
+            <span className="rb-visually-hidden">Astral Morphiq Systems</span>
           </div>
           <div className="contact__details">
             <span className="contact__role">{CONTACT.role}</span>

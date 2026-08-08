@@ -40,8 +40,12 @@
     #12151a;
 }
 
+/* El agua va detrás; el marco de puntos se queda encima, enmarcándola. */
+.about__plate > .ripple-distortion { z-index: 0; }
+
 .about__plate::after {
   content: '';
+  z-index: 1;
   position: absolute;
   inset: 14px;
   border: 1px dashed rgba(246, 243, 234, 0.14);

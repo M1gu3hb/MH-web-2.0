@@ -1,5 +1,6 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { ArrowUpRight, ChevronDown, Github, MessageCircle } from 'lucide-react';
+import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { ScrollCue } from '../primitives/ScrollCue';
 import { SectionHeading } from '../primitives/SectionHeading';
@@ -27,9 +28,9 @@ const PROJECT_VISUALS = {
 };
 
 /**
- * Cada caso es una tarjeta pegada al viewport. Al hacer scroll, la siguiente
- * sube y se apila encima de la anterior dejando ver su borde superior, como
- * un mazo de cartas que se va cerrando.
+ * Cada caso es una tarjeta del riel. El scroll sigue siendo vertical —es el
+ * que todo el mundo tiene— pero lo que mueve es el riel de lado: las tarjetas
+ * desfilan de derecha a izquierda y se paran en la última.
  *
  * En teléfono la tarjeta llega resumida. El hueco de una tarjeta pegada es
  * fijo —tiene que caber entera o la siguiente empieza a taparla mientras aún
@@ -53,11 +54,6 @@ function ProjectCard({ project, index, total, compact }) {
       style={{
         '--scene-accent': project.accent,
         '--scene-surface': project.surface,
-        '--stack-index': index,
-        /* Cada tarjeta se pega un poco más abajo que la anterior: así se ve
-           el canto de las que quedaron debajo. */
-        top: `calc(var(--stack-top) + ${index} * var(--stack-step))`,
-        zIndex: index + 1,
       }}
     >
       <SpotlightCard className="project-card__inner" accent={project.accent}>
@@ -132,10 +128,91 @@ function ProjectCard({ project, index, total, compact }) {
   );
 }
 
+/**
+ * El riel: convierte el scroll vertical en desplazamiento lateral.
+ *
+ * El alto del recorrido no se puede escribir en CSS porque depende de cuánto
+ * mide el riel, y eso depende del ancho de la pantalla y del número de casos.
+ * Se mide y se escribe: recorrido = una pantalla (para que el riel se quede
+ * quieto mientras entra) más exactamente lo que sobra de riel por la derecha.
+ * Así la última tarjeta termina alineada con el borde y ni antes ni después.
+ */
+function useRielHorizontal(enabled) {
+  const riel = useRef(null);
+  const pista = useRef(null);
+
+  useEffect(() => {
+    const zonaRiel = riel.current;
+    const zonaPista = pista.current;
+    if (!zonaRiel || !zonaPista) return undefined;
+
+    if (!enabled) {
+      zonaRiel.style.height = '';
+      zonaPista.style.transform = '';
+      return undefined;
+    }
+
+    let frame = 0;
+    let sobra = 0;
+    let recorrido = 0;
+
+    const medir = () => {
+      const visor = zonaPista.parentElement;
+      if (!visor) return;
+      sobra = Math.max(0, zonaPista.scrollWidth - visor.clientWidth);
+      /* El recorrido no es lo que sobra de riel, es lo que sobra o lo que
+         hace falta para poder leer, lo que sea mayor. Atado uno a uno, en
+         teléfono cada tarjeta mide poco más de un tercio de pantalla y pasan
+         todas de un manotazo; así cada una se lleva al menos cuatro quintos
+         de pantalla de rueda, mida lo que mida el riel. */
+      const minimo = zonaPista.children.length * window.innerHeight * 0.8;
+      recorrido = Math.max(sobra, minimo);
+      zonaRiel.style.height = `${visor.clientHeight + recorrido}px`;
+    };
+
+    const pintar = () => {
+      const r = zonaRiel.getBoundingClientRect();
+      const avance = recorrido > 0 ? Math.min(1, Math.max(0, -r.top / recorrido)) : 0;
+      zonaPista.style.transform = `translate3d(${-(avance * sobra).toFixed(2)}px, 0, 0)`;
+    };
+
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        pintar();
+      });
+    };
+
+    const ro = new ResizeObserver(() => {
+      medir();
+      pintar();
+    });
+    ro.observe(zonaPista);
+    medir();
+    pintar();
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      ro.disconnect();
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      zonaRiel.style.height = '';
+      zonaPista.style.transform = '';
+    };
+  }, [enabled]);
+
+  return { riel, pista };
+}
+
 export function WorkSection() {
   /* Se resuelve una vez y baja a las tarjetas: siete suscripciones al mismo
      medio para responder siempre lo mismo no hacen falta. */
   const compact = useMediaQuery('(max-width: 640px)');
+  const reducedMotion = useReducedMotion();
+  const { riel, pista } = useRielHorizontal(!reducedMotion);
 
   return (
     <section className="work section-pad" id="trabajo">
@@ -146,27 +223,23 @@ export function WorkSection() {
         tone="night"
       />
 
-      {/* El escalón del mazo se declara aquí porque el alto útil de cada
-          tarjeta depende de cuántas haya: la última se pega N escalones más
-          abajo y tiene que seguir cabiendo en pantalla. */}
-      <div
-        className="project-stack"
-        style={{
-          '--stack-top': 'clamp(84px, 12vh, 132px)',
-          '--stack-step': 'clamp(9px, 1.4vh, 14px)',
-          '--stack-deck': `calc(${PROJECTS.length - 1} * var(--stack-step))`,
-        }}
-      >
-        <ScrollCue label="Desliza para ver los casos" />
-        {PROJECTS.map((project, index) => (
-          <ProjectCard
-            key={project.client}
-            project={project}
-            index={index}
-            total={PROJECTS.length}
-            compact={compact}
-          />
-        ))}
+      <div className="work-rail" ref={riel}>
+        {/* La pista cuelga del riel y no del bloque pegado: mide el avance con
+            el rectángulo de su padre, y el bloque pegado no se mueve. */}
+        <ScrollCue label="Desliza para recorrer los casos" />
+        <div className="work-rail__visor">
+          <div className="work-rail__pista" ref={pista}>
+            {PROJECTS.map((project, index) => (
+              <ProjectCard
+                key={project.client}
+                project={project}
+                index={index}
+                total={PROJECTS.length}
+                compact={compact}
+              />
+            ))}
+          </div>
+        </div>
       </div>
 
       <BlurText text={SECTIONS.work.truth} className="work__truth" stagger={0.03} />

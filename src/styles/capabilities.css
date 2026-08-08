@@ -186,9 +186,22 @@
 }
 
 /* ---- Capas: todas montadas, solo cambia la opacidad -------- */
+/* El escenario reparte igual que la capa. No es duplicar el reparto por gusto:
+   la tela donde se funden las escenas es UNA y vive aquí, no dentro de las
+   capas, así que necesita una celda propia con la misma geometría que el hueco
+   de la maqueta. Repartiendo igual, cae en su sitio en cualquier formato sin
+   que nadie tenga que medir nada. */
 .panel-stage {
   position: relative;
+  display: grid;
+  grid-template-columns: 0.92fr 1.08fr;
   min-height: min(66vh, 540px);
+}
+
+.panel-morph {
+  position: relative;
+  grid-column: 2;
+  z-index: 0;
 }
 
 .panel-layer {
@@ -301,7 +314,7 @@
   border: 0;
   border-left: 1px solid color-mix(in srgb, var(--layer-ink, var(--panel-ink)) 20%, transparent);
   border-radius: 0;
-  background: #07060f;
+  background: transparent;
   display: grid;
   /* Estirada, no centrada: la maqueta necesita una altura definida. Centrada,
      su alto salía del contenido, y las maquetas que colocan sus piezas en
@@ -352,6 +365,12 @@
     0 30px 70px rgba(4, 3, 12, 0.7),
     0 8px 22px rgba(4, 3, 12, 0.55);
   transform-origin: 50% 50%;
+}
+
+/* La escena quieta: solo la usa la copia que va dentro del portátil, donde no
+   se monta la tela. */
+.panel-scene {
+  z-index: 0;
 }
 
 /* `will-change` solo en la capa que está puesta. Fijo en las cinco eran diez
@@ -433,6 +452,18 @@
     align-items: stretch;
     grid-template-columns: 1fr;
     grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  /* Apilado, la tela pasa de media tarjeta a la banda de abajo. Mismo reparto
+     que la capa, otra vez, para que siga cayendo donde va el hueco. */
+  .panel-stage {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .panel-morph {
+    grid-column: 1;
+    grid-row: 2;
   }
 
   /* Apilada, la escena deja de ser media tarjeta y pasa a ser la banda de
