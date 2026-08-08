@@ -217,7 +217,7 @@ export function ProcessSection() {
 
             <div className="process-console__footer">
               <span><i aria-hidden="true" /> AVANCES REALES</span>
-              <span>MH / METHOD—0{PROCESS.length}</span>
+              <span>MORPHIQ / METHOD—0{PROCESS.length}</span>
             </div>
           </div>
         </div>

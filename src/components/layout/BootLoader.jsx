@@ -111,7 +111,7 @@ export function BootLoader({ onDone }) {
           <span className="boot__ring" aria-hidden="true" />
           <span className="boot__ring boot__ring--inner" aria-hidden="true" />
         </div>
-        <p className="boot__name">MH ASTRAL OS</p>
+        <p className="boot__name">MORPHIQ OS</p>
       </div>
 
       <div className="boot__foot">

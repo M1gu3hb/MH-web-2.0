@@ -112,7 +112,7 @@ export function CapabilitiesSection({ embedded = false }) {
               aria-labelledby={`${baseId}-tab-${active.id}`}
             >
               <div className="panel-chrome">
-                <ScrambleText text="MH / SYSTEM VIEW" />
+                <ScrambleText text="MORPHIQ / SYSTEM VIEW" />
                 <span><i aria-hidden="true" /> {active.index} DE {String(CAPABILITIES.length).padStart(2, '0')}</span>
               </div>
 
@@ -160,7 +160,7 @@ export function CapabilitiesSection({ embedded = false }) {
                 <div className="panel-controls__track" aria-hidden="true">
                   <i style={{ left: `${(activeIndex / (CAPABILITIES.length - 1)) * 100}%` }} />
                 </div>
-                <span>MH—{active.index}</span>
+                <span>MORPHIQ—{active.index}</span>
               </div>
             </div>
           </div>

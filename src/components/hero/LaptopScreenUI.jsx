@@ -352,7 +352,7 @@ export function LaptopScreenUI({ screen, choreography }) {
           <span className="laptop-screen__lights"><i /><i /><i /></span>
           <span className="laptop-screen__url">
             <img src="/mh-logo.png" alt="" width="16" height="14" />
-            mh-astral-systems.com
+            morphiq.com.mx
           </span>
         </div>
 

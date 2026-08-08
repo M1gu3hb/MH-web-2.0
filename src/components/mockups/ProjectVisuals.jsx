@@ -150,7 +150,7 @@ export function PhotoBoothVisual() {
         <span className="booth-shot" />
         <span className="booth-shot" />
         <span className="booth-shot" />
-        <em>FOLIO · MH-2481</em>
+        <em>FOLIO · MQ-2481</em>
       </div>
       <div className="booth-status">
         <span><i /> Sin internet — guardado local</span>

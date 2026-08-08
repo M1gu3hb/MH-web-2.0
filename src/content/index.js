@@ -20,7 +20,7 @@ export const CONTACT = {
   whatsapp: '525523118153',
   email: 'mhastralsystems@gmail.com',
   location: 'Xochimilco · CDMX',
-  site: 'https://www.mh-astral-systems.com',
+  site: 'https://morphiq.com.mx',
 };
 
 /** Mensaje de WhatsApp por origen del clic — permite saber qué CTA convierte. */
@@ -43,7 +43,17 @@ export const NAV_LINKS = [
 
 export const HERO = {
   eyebrow: 'Estudio digital independiente · CDMX',
-  title: ['Diseño lo que tus clientes', 'ven', 'Construyo lo que tu negocio', 'necesita'],
+  /* El titular se compone de tres renglones con voz distinta: los de fuera
+     gritan la promesa en la tipografía de display, y el de en medio la matiza
+     en la de texto, más ligera y en minúscula. El contraste es lo que hace que
+     se lea como una frase y no como tres líneas del mismo tamaño. */
+  title: [
+    { text: 'DIGITALIZAMOS', voice: 'mark' },
+    { text: 'la operación completa', voice: 'soft' },
+    { text: 'DE TU NEGOCIO', voice: 'mark' },
+  ],
+  /* Lo que era el titular pasa a ser la primera frase de apoyo. */
+  claim: ['Diseño lo que tus clientes ', 'ven', '. Construyo lo que tu negocio ', 'necesita.'],
   lead: 'Páginas que convencen. Sistemas que ordenan. Una sola visión para convertir la operación de tu negocio en una ventaja.',
   primaryCta: 'Cuéntame tu proyecto',
   secondaryCta: 'Ver trabajo real',
@@ -52,7 +62,7 @@ export const HERO = {
     { label: 'Diseño + desarrollo', note: 'Las dos disciplinas, una sola persona' },
     { label: 'CDMX', note: 'Voy a verte si hace falta' },
   ],
-  chrome: { id: 'MH / SYSTEM CORE', status: 'EN LÍNEA', hint: 'Mueve el cursor', tech: 'WEBGL / REALTIME' },
+  chrome: { id: 'MORPHIQ / SYSTEM CORE', status: 'EN LÍNEA', hint: 'Mueve el cursor', tech: 'WEBGL / REALTIME' },
 };
 
 /**

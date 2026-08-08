@@ -1,7 +1,7 @@
 /**
  * Componentes de interfaz animados inspirados en los patrones de ReactBits
  * (reactbits.dev), reescritos para esta base de código: sin dependencias
- * extra, con la paleta de MH Astral Systems y respetando en todos los casos
+ * extra, con la paleta de Astral Morphiq Systems y respetando en todos los casos
  * `prefers-reduced-motion`.
  */
 export { BlurText } from './BlurText';

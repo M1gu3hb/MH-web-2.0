@@ -46,11 +46,19 @@ body.no-stage .hero__fade {
 }
 
 /* ---- Layout ------------------------------------------------ */
+/* La columna de texto es el contenedor contra el que se mide el titular. */
+.hero__copy {
+  container-type: inline-size;
+  min-width: 0;
+}
+
 .hero__layout {
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: minmax(0, 1.06fr) minmax(380px, 0.94fr);
+  /* El titular pide más caja que el anterior: la columna de texto se lleva
+     algo más de sitio y la laptop cede lo justo para no encogerse. */
+  grid-template-columns: minmax(0, 1.2fr) minmax(330px, 0.8fr);
   gap: clamp(30px, 4vw, 72px);
   align-items: center;
   width: min(100%, var(--wrap));
@@ -86,19 +94,47 @@ body.no-stage .hero__fade {
 .hero__title {
   display: flex;
   flex-direction: column;
-  max-width: 22ch;
+  max-width: 100%;
   margin: 0;
-  font-family: var(--font-display);
-  font-size: var(--t-display);
-  font-variation-settings: 'wght' 630;
-  font-weight: var(--w-display);
-  letter-spacing: -0.068em;
-  line-height: 0.9;
+  /* El tamaño se mide contra la columna, no contra la ventana. La palabra más
+     larga —DIGITALIZAMOS— es indivisible, así que atarla al ancho del viewport
+     la sacaba de cuadro en teléfono y en tableta apaisada, donde la columna es
+     bastante más estrecha que la pantalla. En unidades de contenedor cabe
+     siempre, sea cual sea el reparto del grid. */
+  font-size: clamp(1.55rem, 7.7cqw, 3.9rem);
+  line-height: 0.92;
   text-shadow: 0 6px 40px rgba(8, 6, 21, 0.65);
 }
 
 .hero__title-line {
   display: block;
+}
+
+/* Los dos renglones que gritan: display, muy pesada y muy apretada. */
+.hero__title-line--mark {
+  font-family: var(--font-display);
+  font-variation-settings: 'wght' 780;
+  font-weight: 800;
+  letter-spacing: -0.055em;
+}
+
+/* Y el de en medio, que baja la voz: la tipografía de texto, ligera, en
+   minúscula y con el aire abierto. El salto de familia, de peso y de caja es
+   lo que convierte tres líneas sueltas en una sola frase con cadencia. Va en
+   lima porque es el complementario del morado del fondo y es lo único que hay
+   que leer sí o sí. */
+.hero__title-line--soft {
+  margin: 0.1em 0 0.06em;
+  color: var(--accent-pos);
+  font-family: var(--font-body);
+  /* Proporcional al titular, pero con suelo: en teléfono el 46% caía a doce
+     píxeles y el renglón que sostiene la frase se perdía. */
+  font-size: max(1rem, 0.46em);
+  font-variation-settings: 'wght' 320;
+  font-weight: 320;
+  letter-spacing: -0.005em;
+  line-height: 1.06;
+  text-shadow: 0 0 38px rgba(206, 255, 61, 0.34);
 }
 
 .hero__accent--coral {
@@ -111,13 +147,36 @@ body.no-stage .hero__fade {
   text-shadow: 0 0 34px rgba(206, 255, 61, 0.42);
 }
 
+/* El punto se dibuja aparte para poder teñirlo sin romper la palabra ni
+   meterlo en la desfragmentación. */
 .hero__title-dot {
+  display: inline-block;
+  width: 0.16em;
+  height: 0.16em;
+  margin-left: 0.05em;
+  border-radius: 50%;
+  background: var(--accent-pos);
+  vertical-align: baseline;
+  transform: translateY(-0.02em);
+}
+
+/* La frase que antes era el titular: ahora abre el apoyo, con más cuerpo que
+   el párrafo que va detrás para que se lea como una declaración. */
+.hero__claim {
+  max-width: 40ch;
+  margin-top: var(--sp-6);
   color: var(--ink-strong);
+  font-family: var(--font-display);
+  font-size: clamp(1.02rem, 1.5vw, 1.32rem);
+  font-variation-settings: 'wght' 600;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.28;
 }
 
 .hero__lead {
   max-width: 54ch;
-  margin-top: var(--sp-6);
+  margin-top: var(--sp-4);
   color: var(--ink-body);
   font-size: var(--t-lead);
   line-height: var(--lh-body);

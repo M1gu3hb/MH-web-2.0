@@ -10,7 +10,7 @@ import { trackWhatsApp, whatsappUrl } from '../../lib/whatsapp';
 
 export function Hero() {
   const reducedMotion = useReducedMotion();
-  const [lineA, accentA, lineB, accentB] = HERO.title;
+  const [claimA, claimVen, claimB, claimNec] = HERO.claim;
 
   /* La zona sensible se pega a la pantalla de la laptop, que la coloca la
      escena en 3D. Estando ligada al hueco del layout el clic caía muy por
@@ -103,21 +103,22 @@ export function Hero() {
           </p>
 
           <h1 className="hero__title">
-            <span className="hero__title-line">
-              <ScrambleText text={lineA} />
-            </span>
-            <span className="hero__title-line">
-              <ScrambleText text={accentA} className="hero__accent hero__accent--coral" />
-              <span className="hero__title-dot">.</span>
-            </span>
-            <span className="hero__title-line">
-              <ScrambleText text={lineB} />
-            </span>
-            <span className="hero__title-line">
-              <ScrambleText text={accentB} className="hero__accent hero__accent--lime" />
-              <span className="hero__title-dot">.</span>
-            </span>
+            {HERO.title.map((line, i) => (
+              <span key={line.text} className={`hero__title-line hero__title-line--${line.voice}`}>
+                <ScrambleText text={line.text} />
+                {/* El punto cierra la frase entera, no cada renglón. */}
+                {i === HERO.title.length - 1 ? <i className="hero__title-dot" aria-hidden="true" /> : null}
+              </span>
+            ))}
           </h1>
+
+          {/* Lo que antes era el titular: ahora abre el texto de apoyo. */}
+          <p className="hero__claim">
+            <ScrambleText text={claimA} />
+            <ScrambleText text={claimVen} className="hero__accent hero__accent--coral" />
+            <ScrambleText text={claimB} />
+            <ScrambleText text={claimNec} className="hero__accent hero__accent--lime" />
+          </p>
 
           <p className="hero__lead">
             <ScrambleText text={HERO.lead} speed={22} />

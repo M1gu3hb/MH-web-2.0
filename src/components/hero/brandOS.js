@@ -1,5 +1,5 @@
 /**
- * MH ASTRAL OS — el sistema operativo que corre dentro de la pantalla de la
+ * MORPHIQ OS — el sistema operativo que corre dentro de la pantalla de la
  * laptop. Se dibuja en un canvas 2D y se mapea como textura.
  *
  * Tres cosas viven aquí:
@@ -38,7 +38,7 @@ const DOCK = [
   { id: 'git', label: 'git', bg: '#c0392b', fg: '#ffffff' },
 ];
 
-const RAIN_CHARS = 'MHASTRAL01アイウエオカキクケコサシスセソタチツテト<>{}[]/\\$#@%&*+=';
+const RAIN_CHARS = 'MORPHIQASTRAL01アイウエオカキクケコサシスセソタチツテト<>{}[]/\\$#@%&*+=';
 
 function roundRect(ctx, x, y, w, h, r) {
   const rr = Math.max(0, Math.min(r, Math.min(w, h) / 2));
@@ -105,7 +105,7 @@ function drawWallpaper(ctx, logo, time) {
   ctx.fillStyle = 'rgba(220, 232, 255, 0.5)';
   ctx.font = '700 13px ui-sans-serif, system-ui, sans-serif';
   ctx.textBaseline = 'top';
-  ctx.fillText('MH ASTRAL OS', 22, 20);
+  ctx.fillText('MORPHIQ OS', 22, 20);
   ctx.fillStyle = 'rgba(206, 255, 61, 0.85)';
   ctx.font = '700 11px ui-monospace, monospace';
   ctx.fillText(`${Math.sin(time * 3) > 0 ? '●' : '○'} EN LÍNEA`, 22, 40);
@@ -353,7 +353,7 @@ function drawTerminal(ctx, open, rain, time, delta) {
   ctx.fillRect(x, bodyY, w, bodyH * 0.5);
 
   const lines = [
-    '> mh boot --web',
+    '> morphiq boot --web',
     '  montando módulos ..... ok',
     '  iniciando web ........',
   ];
@@ -380,7 +380,7 @@ function drawTerminal(ctx, open, rain, time, delta) {
     ctx.fillStyle = 'rgba(200, 255, 210, 0.7)';
     ctx.font = `700 ${Math.max(8, chrome * 0.4)}px ui-monospace, monospace`;
     ctx.textBaseline = 'middle';
-    ctx.fillText('terminal — mh', x + 62, y + chrome / 2);
+    ctx.fillText('terminal — morphiq', x + 62, y + chrome / 2);
     ctx.textBaseline = 'top';
   }
 

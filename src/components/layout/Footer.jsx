@@ -18,7 +18,7 @@ export function Footer() {
         ))}
       </nav>
       <span className="footer__legal">
-        © {new Date().getFullYear()} MH ASTRAL SYSTEMS · {CONTACT.location}
+        © {new Date().getFullYear()} ASTRAL MORPHIQ SYSTEMS · {CONTACT.location}
       </span>
     </footer>
   );

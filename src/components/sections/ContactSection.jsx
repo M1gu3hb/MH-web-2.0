@@ -113,7 +113,7 @@ export function ContactSection() {
       <div className="contact__bottom">
         <Reveal className="contact__identity">
           <div className="contact__logo">
-            <img src="/mh-logo-sm.png" alt="MH Astral Systems" width="300" height="268" />
+            <img src="/mh-logo-sm.png" alt="Astral Morphiq Systems" width="300" height="268" />
           </div>
           <div className="contact__details">
             <span className="contact__role">{CONTACT.role}</span>

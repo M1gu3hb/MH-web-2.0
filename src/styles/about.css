@@ -157,7 +157,7 @@
   }
 }
 
-/* En pantallas estrechas «MH ASTRAL SYSTEMS» con este interletraje no cabe en
+/* En pantallas estrechas «ASTRAL MORPHIQ SYSTEMS» con este interletraje no cabe en
    una línea y estiraba toda la sección: el sello se apila y respira menos. */
 @media (max-width: 520px) {
   .about__stamp {
