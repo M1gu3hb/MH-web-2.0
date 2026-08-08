@@ -350,3 +350,93 @@
 
   .process-console__screen { min-height: 320px; }
 }
+
+/* ============================================================
+   Teléfono: la pantalla manda, los mandos se ponen de lado
+   ============================================================
+
+   Apilado, el bloque de mandos medía 387 píxeles —perilla, pista y cuatro
+   interruptores a renglón por barba—: casi media pantalla para elegir entre
+   cuatro palabras cortas, y la consola entera se salía del alto pegado, así
+   que el pie y el cuarto paso quedaban fuera. Ahora la perilla va a un lado y
+   los cuatro pasos al otro en cuadrícula: unos cien píxeles, y lo que sobra se
+   lo queda la pantalla, que es donde está lo que hay que leer. */
+@media (max-width: 640px) {
+  .process-console {
+    gap: 14px;
+    padding: 14px;
+  }
+
+  .process-console__screen {
+    min-height: min(56svh, 470px);
+    padding: 24px 20px;
+  }
+
+  .process-console__controls {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .process-knob {
+    --knob-size: 78px;
+
+    margin: 0;
+  }
+
+  /* La pista sobra aquí. Explica el arrastre, pero en teléfono el recorrido
+     lo lleva el propio scroll y las fichas de al lado ya se ven pulsables:
+     era una línea de texto ocupando sitio para no decir nada nuevo. */
+  .process-knob__hint { display: none; }
+
+  .process-switches {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .process-switches button {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 6px;
+    padding: 9px 10px;
+    border-radius: var(--r-full);
+  }
+
+  /* La flecha no lleva a ninguna parte y la duración ya está en la pantalla,
+     en el propio rótulo de la fase. */
+  .process-switches button svg,
+  .process-switches button em { display: none; }
+
+  .process-switches button span { font-size: 0.58rem; }
+
+  /* «Construir» es el más largo de los cuatro y va justo en media fila: el
+     cuerpo se ata al ancho de la pantalla para que quepa entero también en un
+     teléfono de 360. El recorte queda de red, no de recurso. */
+  .process-switches button strong {
+    overflow: hidden;
+    font-size: clamp(0.68rem, 3vw, 0.82rem);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .process-console__footer {
+    padding-top: 2px;
+    font-size: 0.54rem;
+  }
+}
+
+/* En los teléfonos estrechos, con la perilla al lado, a media fila le quedan
+   unos cincuenta píxeles de nombre y «Construir» ya no cabe. Antes que recortar
+   los pasos o achicarlos hasta lo ilegible, la perilla se pone encima y la
+   cuadrícula se queda con el ancho entero: cuesta ochenta píxeles, que salen
+   de la pantalla, y los cuatro nombres se leen. */
+@media (max-width: 380px) {
+  .process-console__screen { min-height: min(46svh, 400px); }
+
+  .process-console__controls {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+
+  .process-switches { width: 100%; }
+}
