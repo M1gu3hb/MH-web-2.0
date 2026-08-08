@@ -353,13 +353,134 @@ body.no-stage .hero__fade {
   }
 }
 
+/* ============================================================
+   Teléfono: el hero se rehace, no se encoge
+   ============================================================
+
+   En apaisado el hero es una portada de dos columnas y ahí funciona. En
+   vertical, con las mismas medidas, medía casi pantalla y media larga: el
+   titular quedaba pequeño para el sitio que tiene, el párrafo iba con el
+   interlineado de escritorio y las credenciales solas se llevaban un cuarto
+   del hero. Aquí se reparte de nuevo para vertical. */
 @media (max-width: 640px) {
-  .hero__actions .tactile-button {
-    flex: 1 1 100%;
+  .hero {
+    padding-top: 106px;
+    padding-bottom: 0;
   }
 
+  .hero__layout {
+    gap: 0;
+    min-height: 0;
+  }
+
+  .signal-label {
+    margin-bottom: 20px;
+    padding: 7px 13px 7px 10px;
+    font-size: 0.61rem;
+    letter-spacing: 0.07em;
+  }
+
+  /* El titular manda y ocupa la columna entera. El techo lo pone
+     DIGITALIZAMOS, que es indivisible: llenando los dos márgenes, lo único
+     que queda por ganar es el ajuste de letra, de ahí que aquí vaya más
+     apretado que en escritorio. */
+  .hero__title {
+    font-size: 7.9cqw;
+    line-height: 0.86;
+  }
+
+  .hero__title-line--mark {
+    letter-spacing: -0.068em;
+  }
+
+  /* El punto va detrás del último renglón, y ese renglón llega justo al
+     margen: con el titular a esta escala el punto no cabía y se caía él solo
+     a la línea de abajo, como una viñeta suelta. Sacándolo del flujo cuelga
+     del final de la palabra pase lo que pase. */
+  .hero__title-line--mark:last-child {
+    position: relative;
+  }
+
+  .hero__title-dot {
+    position: absolute;
+    bottom: 0.06em;
+    margin-left: 0.06em;
+  }
+
+  /* El renglón que baja la voz gana aire y una raya que lo presenta. Apilados
+     y pegados, los tres renglones se leían como un bloque; separado así, se
+     oye el cambio de voz, que es de lo que vive la frase. */
+  .hero__title-line--soft {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin: 0.3em 0 0.26em;
+    font-size: max(0.98rem, 0.4em);
+  }
+
+  .hero__title-line--soft::before {
+    flex: none;
+    width: 20px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--accent-pos);
+    box-shadow: 0 0 12px rgba(206, 255, 61, 0.55);
+    content: '';
+  }
+
+  /* La declaración se separa del titular con una guía, como una cita. */
+  .hero__claim {
+    max-width: none;
+    margin-top: 24px;
+    padding-left: 14px;
+    border-left: 2px solid rgba(206, 255, 61, 0.55);
+    font-size: 1.04rem;
+    line-height: 1.32;
+  }
+
+  .hero__lead {
+    max-width: none;
+    margin-top: 18px;
+    font-size: 0.95rem;
+    line-height: 1.58;
+  }
+
+  .hero__actions {
+    gap: 11px;
+    margin-top: 26px;
+  }
+
+  .hero__actions .tactile-button {
+    flex: 1 1 100%;
+    padding-block: 15px;
+    font-size: 0.94rem;
+  }
+
+  /* Las notas caben en un renglón si se las deja: la medida de 24 caracteres
+     es de la maqueta ancha, y aquí solo servía para partirlas en dos y
+     duplicar el alto del bloque. */
+  .hero__credentials {
+    gap: 15px;
+    margin-top: 28px;
+    padding-top: 20px;
+  }
+
+  .hero__credentials dt {
+    font-size: 0.97rem;
+  }
+
+  .hero__credentials dd {
+    max-width: none;
+    margin: 4px 0 0 25px;
+    font-size: 0.76rem;
+    line-height: 1.42;
+  }
+
+  /* El logo cierra el hero, justo encima de la pista de entrar: se lee la
+     promesa, se ve la marca, y de ahí se entra dentro de ella. */
   .hero__viewport {
-    min-height: 40vh;
+    min-height: 42vh;
+    margin-top: 8px;
   }
 
   .hero__scroll-hint {
