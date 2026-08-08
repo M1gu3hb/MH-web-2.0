@@ -185,7 +185,7 @@ export function BootLoader({ onDone }) {
           <span ref={barra} style={{ transform: 'scaleX(0.06)' }} />
         </div>
         <div className="boot__meta">
-          <span>cargando {label}</span>
+          <span>{label === 'listo' ? 'listo' : `cargando ${label}`}</span>
           <strong ref={cifra}>006%</strong>
         </div>
       </div>
