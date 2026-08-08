@@ -68,7 +68,11 @@
 .capability-deck__selector button {
   position: relative;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  /* La columna del nombre tiene que poder encogerse. Con `1fr` a secas su
+     mínimo es el de su contenido, y «Automatización» es una sola palabra: en
+     cuanto el botón se estrechaba, la palabra empujaba y se salía del botón
+     por la derecha. */
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 12px;
   align-items: center;
   padding: 17px 16px;
@@ -310,9 +314,12 @@
     grid-template-columns: 1fr;
   }
 
+  /* Tres por renglón, fijas. Con auto-fit salían cuatro de 184 píxeles y en
+     esa medida no cabe ningún nombre largo; a tres, todos caben y como mucho
+     «Software a la medida» se parte en dos. */
   .capability-deck__selector {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     padding-left: 0;
   }
 
@@ -324,12 +331,33 @@
     opacity: 0.72;
   }
 
+  /* Apilada: el texto arriba y la maqueta llenando lo que quede, recortada
+     dentro de su marco. Sin acotarla, el dibujo pedía su altura de escritorio
+     y la capa —que está en posición absoluta y mide justo el escenario— se
+     desbordaba por abajo encima de la barra de controles. */
   .panel-layer {
+    align-items: stretch;
     grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
   }
 
+  .panel-screen-wrap {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .panel-screen-wrap .demo {
+    min-height: 0;
+    height: 100%;
+    mask-image: linear-gradient(180deg, #000 80%, transparent);
+  }
+
+  /* Atada a la pantalla, no a un número fijo. Con 620px de escenario la baraja
+     medía 976 y en una tableta apaisada —768 de alto— no cabía: el bloque
+     pegado se iba hacia arriba en vez de quedarse, y el recorrido de servicios
+     se recorría sin nada que ver. */
   .panel-stage {
-    min-height: 620px;
+    min-height: min(50svh, 620px);
   }
 }
 
@@ -355,26 +383,172 @@
 
   .panel-stage { min-height: min(52svh, 460px); }
 
+  /* Estirada, no al principio: alineada al principio, el marco de la maqueta
+     crecía hasta lo que pidiera el dibujo y se salía del escenario por abajo.
+     Estirada recibe justo el hueco que queda y recorta dentro. */
   .panel-layer {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto minmax(0, 1fr);
-    align-items: start;
+    align-items: stretch;
     gap: 14px;
     padding: 18px;
   }
 }
 
+/* ============================================================
+   Teléfono: la tarjeta es la protagonista
+   ============================================================
+
+   Con el formato de escritorio, los cinco botones apilados se llevaban unos
+   360 píxeles —casi media pantalla— y a la tarjeta le quedaba menos de lo que
+   necesitaba: la maqueta se salía del escenario y el recorte se comía la
+   ilustración entera. Los cinco títulos siguen estando, pero como fichas: dos
+   por renglón, la última a lo ancho, y la activa pintada del color de su
+   propia tarjeta. De 360 píxeles a 130, y el resto es la tarjeta. */
 @media (max-width: 640px) {
   .capability-deck__panel { border-radius: var(--r-lg); }
-}
 
-@media (max-width: 520px) {
-  /* «Software a la medida» y «Automatización» no caben a dos columnas. */
+  .capability-deck { gap: 14px; }
+
   .capability-deck__selector {
-    grid-template-columns: 1fr;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
   }
 
+  .capability-deck__selector button {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 6px;
+    padding: 10px 12px;
+    border-color: var(--line);
+    border-radius: var(--r-full);
+    background: rgba(255, 255, 255, 0.55);
+    opacity: 0.78;
+  }
+
+  /* «Software a la medida» no cabe en media fila. */
+  .capability-deck__selector button:last-of-type {
+    grid-column: 1 / -1;
+  }
+
+  .capability-deck__selector button svg { display: none; }
+
+  .capability-deck__selector button > span { font-size: 0.6rem; }
+
+  /* Los cinco nombres caben enteros a este cuerpo. El recorte con puntos
+     suspensivos sigue puesto como red, pero si aparece es que algo se movió:
+     un servicio que no se puede leer no es un título, es un botón mudo. */
   .capability-deck__selector button strong {
-    font-size: 0.98rem;
+    overflow: hidden;
+    /* Ata el cuerpo al ancho de la pantalla: media fila de un teléfono de 360
+       no da lo mismo que la de uno de 430, y «Automatización» es justo el que
+       lo nota. */
+    font-size: clamp(0.68rem, 3vw, 0.78rem);
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  /* A este tamaño un borde y una sombra no se ven: la activa se pinta del
+     acento de su tarjeta, que además dice de un vistazo cuál se está
+     mirando. */
+  .capability-deck__selector button.active {
+    border-color: transparent;
+    background: var(--tab-accent);
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--tab-accent) 34%, transparent);
+    color: var(--tab-ink);
+  }
+
+  .capability-deck__selector button.active > span {
+    color: inherit;
+    opacity: 0.72;
+  }
+
+  /* ---- La tarjeta, ya con sitio ---------------------------- */
+  .panel-chrome {
+    padding: 9px 14px;
+    font-size: 0.56rem;
+    letter-spacing: 0.12em;
+  }
+
+  /* La barra de abajo se va. Repetía lo que ya dicen las fichas —cuál está
+     puesta y cuánto queda— y a cambio se llevaba treinta píxeles de los que
+     la maqueta iba justa. */
+  .panel-controls { display: none; }
+
+  .panel-stage { min-height: min(63svh, 560px); }
+
+  /* Vuelve a estirarse. A partir de 900px la capa se alinea al principio, y
+     ahí el marco de la maqueta crecía hasta lo que pidiera el dibujo: como la
+     capa está en posición absoluta y mide justo lo que el escenario, lo que
+     sobraba se pintaba encima de la barra de abajo. Estirado, el marco recibe
+     exactamente el hueco que queda y recorta dentro. */
+  .panel-layer {
+    align-items: stretch;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .panel-copy__eyebrow { font-size: 0.62rem; }
+
+  .panel-copy h3 {
+    margin: 9px 0;
+    font-size: 1.36rem;
+    letter-spacing: -0.042em;
+    line-height: 1.06;
+  }
+
+  .panel-copy__desc {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  .panel-tags {
+    gap: 6px;
+    margin-top: 11px;
+  }
+
+  .panel-tags small {
+    padding: 5px 10px;
+    font-size: 0.64rem;
+  }
+
+  /* La maqueta es un dibujo, así que cede sitio antes que el texto, que es lo
+     que hay que leer. Lo que no cabe se desvanece en vez de cortarse en seco:
+     cortada a media tarjeta parecía un fallo de maquetación; difuminada se lee
+     como una pantalla que sigue más abajo. Los tornillos sobran a este tamaño:
+     cuatro puntos de dos píxeles no adornan nada. */
+  .panel-screen-wrap {
+    min-height: 0;
+    overflow: hidden;
+    padding: 10px;
+  }
+
+  .panel-screen-wrap__screw { display: none; }
+
+  /* Que llene el marco en vez de pedir su altura de escritorio. Las maquetas
+     con piezas en posición absoluta —la de automatización— se quedaban en
+     nada sin una caja que rellenar, y las que llevan su propia parrilla se
+     desbordaban. */
+  .capability-deck__panel .demo {
+    min-height: 0;
+    height: 100%;
+    mask-image: linear-gradient(180deg, #000 72%, transparent);
+  }
+}
+
+/* En los teléfonos más estrechos ni al cuerpo mínimo caben «Punto de venta» y
+   «Automatización» en media fila. Antes que recortarlos, que se partan en dos:
+   la ficha crece catorce píxeles y el nombre se lee entero. «Automatización»
+   es una sola palabra, así que además hay que dejarla partir —con guion donde
+   el navegador sabe hacerlo y por donde caiga donde no—, o el recorte volvía
+   por la puerta de atrás. */
+@media (max-width: 340px) {
+  .capability-deck__selector button strong {
+    hyphens: auto;
+    overflow-wrap: anywhere;
+    white-space: normal;
+    line-height: 1.12;
   }
 }

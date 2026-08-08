@@ -90,7 +90,10 @@ export function CapabilitiesSection({ embedded = false }) {
                     }}
                     className={selected ? 'active' : ''}
                     onClick={() => select(i)}
-                    style={{ '--tab-accent': item.accent }}
+                    /* La tinta legible sobre ese acento va junto al acento:
+                       en teléfono el botón activo se pinta del color de su
+                       tarjeta, y cada acento pide la suya. */
+                    style={{ '--tab-accent': item.accent, '--tab-ink': item.ink }}
                   >
                     <span>{item.index}</span>
                     <strong>{item.label}</strong>
