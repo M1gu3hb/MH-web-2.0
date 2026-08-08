@@ -1,4 +1,6 @@
-import { ArrowUpRight, Github, MessageCircle } from 'lucide-react';
+import { useId, useState } from 'react';
+import { ArrowUpRight, ChevronDown, Github, MessageCircle } from 'lucide-react';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { ScrollCue } from '../primitives/ScrollCue';
 import { SectionHeading } from '../primitives/SectionHeading';
 import {
@@ -28,14 +30,26 @@ const PROJECT_VISUALS = {
  * Cada caso es una tarjeta pegada al viewport. Al hacer scroll, la siguiente
  * sube y se apila encima de la anterior dejando ver su borde superior, como
  * un mazo de cartas que se va cerrando.
+ *
+ * En teléfono la tarjeta llega resumida. El hueco de una tarjeta pegada es
+ * fijo —tiene que caber entera o la siguiente empieza a taparla mientras aún
+ * la estás leyendo—, y ahí dentro no caben a la vez el texto largo, el
+ * resultado, las etiquetas, el enlace y la maqueta: quedaba todo apretado y
+ * la imagen de referencia, que es lo que de verdad enseña el trabajo, se
+ * reducía a una franja. Resumida enseña de quién es, de qué es y la imagen;
+ * el resto está a un toque. Como el alto es fijo, lo que se despliega sale
+ * del sitio que deja la maqueta: la tarjeta no crece ni se desborda.
  */
-function ProjectCard({ project, index, total }) {
+function ProjectCard({ project, index, total, compact }) {
   const Visual = PROJECT_VISUALS[project.visual];
   const isRepo = project.url?.includes('github.com');
+  const baseId = useId();
+  const [open, setOpen] = useState(false);
+  const brief = compact && !open;
 
   return (
     <article
-      className="project-card"
+      className={`project-card ${brief ? 'project-card--brief' : ''}`}
       style={{
         '--scene-accent': project.accent,
         '--scene-surface': project.surface,
@@ -56,18 +70,36 @@ function ProjectCard({ project, index, total }) {
           <div className="project-card__copy">
             <p className="project-card__category">{project.category}</p>
             <h3>{project.client}</h3>
-            <p className="project-card__desc">{project.description}</p>
 
-            <p className="project-card__outcome">
-              <span aria-hidden="true">→</span>
-              {project.outcome}
-            </p>
+            <div className="project-card__detail" id={`${baseId}-detalle`}>
+              <p className="project-card__desc">{project.description}</p>
+
+              <p className="project-card__outcome">
+                <span aria-hidden="true">→</span>
+                {project.outcome}
+              </p>
+            </div>
 
             <div className="project-card__tags">
               {project.tags.map((tag) => (
                 <small key={tag}>{tag}</small>
               ))}
             </div>
+
+            {/* Solo en teléfono: en apaisado cabe todo y un botón para
+                desplegar lo que ya se está viendo sobra. */}
+            {compact ? (
+              <button
+                type="button"
+                className="project-card__more"
+                aria-expanded={open}
+                aria-controls={`${baseId}-detalle`}
+                onClick={() => setOpen((v) => !v)}
+              >
+                {open ? 'Ver menos' : 'Ver más detalles'}
+                <ChevronDown size={16} aria-hidden="true" />
+              </button>
+            ) : null}
 
             {project.invitation ? (
               <a
@@ -101,6 +133,10 @@ function ProjectCard({ project, index, total }) {
 }
 
 export function WorkSection() {
+  /* Se resuelve una vez y baja a las tarjetas: siete suscripciones al mismo
+     medio para responder siempre lo mismo no hacen falta. */
+  const compact = useMediaQuery('(max-width: 640px)');
+
   return (
     <section className="work section-pad" id="trabajo">
       <SectionHeading
@@ -123,7 +159,13 @@ export function WorkSection() {
       >
         <ScrollCue label="Desliza para ver los casos" />
         {PROJECTS.map((project, index) => (
-          <ProjectCard key={project.client} project={project} index={index} total={PROJECTS.length} />
+          <ProjectCard
+            key={project.client}
+            project={project}
+            index={index}
+            total={PROJECTS.length}
+            compact={compact}
+          />
         ))}
       </div>
 

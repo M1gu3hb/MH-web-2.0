@@ -272,6 +272,55 @@
 
 @media (max-width: 640px) {
   .project-card__inner { border-radius: var(--r-lg); }
-  .project-card__visual { min-height: 240px; }
+  .project-card__visual { min-height: 200px; }
   .project-card__link { width: 100%; justify-content: center; }
+}
+
+/* ---- Teléfono: la tarjeta llega resumida -------------------
+   El botón vive solo aquí. En apaisado cabe todo a la vez, y desplegar lo que
+   ya se está viendo no es un gesto, es un estorbo. */
+.project-card__more { display: none; }
+
+@media (max-width: 640px) {
+  .project-card__more {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 14px;
+    padding: 11px 16px;
+    border: 1px solid color-mix(in srgb, var(--scene-accent) 42%, var(--line-invert));
+    border-radius: var(--r-full);
+    background: color-mix(in srgb, var(--scene-accent) 12%, transparent);
+    color: var(--ink-invert);
+    font-family: var(--font-display);
+    font-size: 0.84rem;
+    font-weight: var(--w-bold);
+    letter-spacing: -0.01em;
+  }
+
+  .project-card__more svg {
+    color: var(--scene-accent);
+    transition: transform var(--d-base) var(--ease);
+  }
+
+  .project-card__more[aria-expanded='true'] svg {
+    transform: rotate(180deg);
+  }
+
+  /* Resumida: quién es, de qué es y la imagen. El texto largo, el resultado y
+     el enlace en vivo esperan al toque. Al ocultarse con display quedan
+     además fuera del recorrido del teclado y del lector, que es lo correcto:
+     no están «ahí pero invisibles», no están. */
+  .project-card--brief .project-card__detail,
+  .project-card--brief .project-card__link {
+    display: none;
+  }
+
+  /* Sin el texto, la maqueta se queda con el sitio que sobra, que es de lo
+     que iba el resumen: que se vea el trabajo. */
+  .project-card--brief .project-card__visual {
+    min-height: 300px;
+  }
 }
