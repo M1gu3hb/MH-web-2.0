@@ -542,8 +542,13 @@
   white-space: pre;
 }
 
+/* Invisible, pero presente: lo único que hace es reservar el sitio del dibujo
+   entero para que el trazado no se mueva mientras crece. Cuando se le veía
+   —aunque fuera al siete por ciento— la figura estaba ahí desde el principio y
+   lo que se escribía encima solo la iba rellenando; se pierde la gracia de
+   verla salir de la nada. */
 .boot__ascii-ghost {
-  color: rgba(74, 155, 240, 0.07);
+  color: transparent;
 }
 
 .boot__ascii-live {

@@ -1,55 +1,56 @@
-import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import { markLaptopReady, onLaptopPoke, setLaptopRect } from './laptopBus';
+import { PIEZAS, RELACION } from './logoContorno';
 
 /* El PNG lleva aire alrededor y el monograma no está centrado en él, así que
-   pintarlo tal cual dejaba el logo descolocado sobre la placa. Estas cifras
-   son su recinto real dentro de la imagen —medido sobre el alfa— y se aplican
-   como recorte de la textura, que sale gratis frente a rehacer el archivo. */
+   la textura de las caras se recorta a su recinto real —medido sobre el alfa—,
+   que es el mismo marco al que están normalizados los contornos. */
 const IMG = { w: 512, h: 457, x: 63, y: 18, ancho: 383, alto: 405 };
-const RELACION = IMG.ancho / IMG.alto;
 
-/* La pieza es la insignia de la marca hecha objeto: la placa redondeada que
-   ya lleva el logo en la barra de navegación, pero con canto. Sin placa no
-   había pieza que mirar —seis de cada diez píxeles del monograma son casi
-   negros y sobre el fondo negro del tramo simplemente no estaban—. */
-const RADIO = 0.2;
-const FONDO = 0.15;
-const BISEL = 0.018;
+/* Grosor y chaflán, en unidades del propio logo (alto = 1). El chaflán no es
+   adorno: de frente el canto se ve de perfil y no se ve nada, y con el fondo
+   negro del tramo la pieza se quedaba en una mancha oscura. El chaflán sí se
+   ve de frente, coge luz, y dibuja un filo claro alrededor de cada trazo. */
+const FONDO = 0.1;
+const CHAFLAN = 0.011;
 
-/* Cuánto de la placa ocupa el monograma. También decide el zoom: al final de
-   la entrada la pieza crece hasta que este cuadro desborda la pantalla, y lo
-   que queda cubriéndola es el centro del monograma, que es casi negro. Ese
-   es el relevo con la página: negro contra negro, sin fogonazo. */
-const MARCA = 0.66;
+/* Cuántas pantallas mide el logo cuando el acercamiento está del todo dentro.
+   Se disuelve mientras sigue creciendo, así que nunca se queda quieto y
+   gigante delante: el original mide 383 píxeles y a ese tamaño son manchas. */
+const HONDO = 1.5;
 
-/* Cuántas pantallas mide el monograma cuando el zoom está del todo dentro.
-   Más allá de esto no se gana viaje: el original mide 383 píxeles de ancho y
-   ampliarlo tanto lo deshace en manchas. Por eso la pieza se disuelve mientras
-   sigue creciendo, en vez de quedarse quieta y borrosa delante. */
-const HONDO = 1.6;
-
-const suave = (a, b, v) => {
-  const t = Math.min(1, Math.max(0, (v - a) / (b - a)));
-  return t * t * (3 - 2 * t);
+/* Las caras llevan la textura del logo con sus colores exactos, así que sus UV
+   salen de la posición en el plano, no de la caja que calcula three.js por su
+   cuenta —que va en unidades de mundo y dejaría el dibujo fuera de sitio. */
+const UV = {
+  generateTopUV(geometry, vertices, a, b, c) {
+    return [a, b, c].map((i) => new THREE.Vector2(
+      vertices[i * 3] / RELACION + 0.5,
+      vertices[i * 3 + 1] + 0.5,
+    ));
+  },
+  /* El canto va de un color liso: no necesita mapa. */
+  generateSideWallUV() {
+    return [new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()];
+  },
 };
 
-function placaShape() {
-  const s = new THREE.Shape();
-  const h = 0.5;
-  const r = RADIO;
-  s.moveTo(-h + r, -h);
-  s.lineTo(h - r, -h);
-  s.quadraticCurveTo(h, -h, h, -h + r);
-  s.lineTo(h, h - r);
-  s.quadraticCurveTo(h, h, h - r, h);
-  s.lineTo(-h + r, h);
-  s.quadraticCurveTo(-h, h, -h, h - r);
-  s.lineTo(-h, -h + r);
-  s.quadraticCurveTo(-h, -h, -h + r, -h);
-  return s;
+function trazar(destino, plano) {
+  destino.moveTo(plano[0], plano[1]);
+  for (let i = 2; i < plano.length; i += 2) destino.lineTo(plano[i], plano[i + 1]);
+  destino.closePath();
+  return destino;
+}
+
+function formas() {
+  return PIEZAS.map(({ o, h }) => {
+    const s = trazar(new THREE.Shape(), o);
+    s.holes = h.map((hueco) => trazar(new THREE.Path(), hueco));
+    return s;
+  });
 }
 
 function Monograma({ choreography, reducedMotion }) {
@@ -81,59 +82,49 @@ function Monograma({ choreography, reducedMotion }) {
     salto.current = 0;
   }), []);
 
-  /* Cuerpo de la placa. Extruido con bisel: son unos cientos de triángulos
-     —frente a los miles del modelo de la laptop, que es justo lo que un
-     teléfono no podía mover— y el bisel es lo que hace que al girar se le
-     vea el canto y se lea como una pieza y no como una calcomanía. */
-  const cuerpo = useMemo(() => {
-    const g = new THREE.ExtrudeGeometry(placaShape(), {
-      depth: FONDO,
-      bevelEnabled: true,
-      bevelThickness: BISEL,
-      bevelSize: BISEL,
-      bevelSegments: 2,
-      curveSegments: 10,
-    });
-    g.translate(0, 0, -FONDO / 2);
-    return g;
-  }, []);
+  /* El cuerpo: el trazo del logo extruido de verdad. Seis piezas, unos cientos
+     de triángulos —frente a los miles del modelo de la laptop, que es lo que un
+     teléfono no podía mover— y cada letra con su propio canto. */
+  const cuerpo = useMemo(() => new THREE.ExtrudeGeometry(formas(), {
+    depth: FONDO,
+    bevelEnabled: true,
+    bevelThickness: CHAFLAN,
+    bevelSize: CHAFLAN,
+    bevelSegments: 2,
+    curveSegments: 1,
+    UVGenerator: UV,
+  }).translate(0, 0, -FONDO / 2), []);
 
-  const caraGeo = useMemo(() => new THREE.PlaneGeometry(MARCA * RELACION, MARCA), []);
   const caraMat = useMemo(
     () => new THREE.MeshBasicMaterial({
       map: textura,
-      transparent: true,
-      /* El monograma va con sus colores exactos, sin que la luz de la escena
-         se los tiña: es una impresión sobre la placa, no un volumen. */
+      /* Sin luz: el logo tiene sus colores y no son negociables. El volumen lo
+         pone el canto, que sí está iluminado. */
       toneMapped: false,
-      depthWrite: false,
+      transparent: true,
     }),
     [textura],
   );
 
-  const placaMat = useMemo(
+  const cantoMat = useMemo(
     () => new THREE.MeshStandardMaterial({
-      color: '#eef3ff',
+      color: '#2f7fe0',
+      emissive: '#0e2c66',
+      emissiveIntensity: 0.7,
       roughness: 0.34,
-      metalness: 0.12,
+      metalness: 0.22,
       transparent: true,
     }),
     [],
   );
 
+  const materiales = useMemo(() => [caraMat, cantoMat], [caraMat, cantoMat]);
+
   useEffect(() => () => {
     cuerpo.dispose();
-    caraGeo.dispose();
     caraMat.dispose();
-    placaMat.dispose();
-  }, [cuerpo, caraGeo, caraMat, placaMat]);
-
-  /* La cara de atrás lleva el monograma espejado, que es lo que se ve durante
-     las vueltas. Se coloca una vez. */
-  const trasera = useRef(null);
-  useLayoutEffect(() => {
-    if (trasera.current) trasera.current.rotation.y = Math.PI;
-  }, []);
+    cantoMat.dispose();
+  }, [cuerpo, caraMat, cantoMat]);
 
   useFrame((three, delta) => {
     const g = grupo.current;
@@ -153,13 +144,10 @@ function Monograma({ choreography, reducedMotion }) {
     entrada.current = Math.min(1, entrada.current + paso / (reducedMotion ? 0.001 : 1.1));
     const ease = 1 - (1 - entrada.current) ** 3;
 
-    /* Cuánto mide el lado de la placa. En reposo, la insignia flotando; al
-       final del viaje, tanto que lo que cubre la pantalla es el centro del
-       propio monograma. */
     const f = t.focus ?? 0;
     const v = three.viewport;
-    const reposo = Math.min(v.width, v.height) * 0.46;
-    const lleno = (Math.max(v.width, v.height) / MARCA) * HONDO;
+    const reposo = Math.min(v.width / RELACION, v.height) * 0.62;
+    const lleno = Math.max(v.width / RELACION, v.height) * HONDO;
     /* Al cuadrado: el acercamiento arranca despacio y se dispara al final,
        que es como se lee un zoom de verdad y no un cambio de tamaño. */
     const escala = (reposo + (lleno - reposo) * f * f) * ease;
@@ -197,15 +185,7 @@ function Monograma({ choreography, reducedMotion }) {
 
     const o = t.opacity ?? 1;
     caraMat.opacity = o;
-    /* La placa se retira nada más arrancar el acercamiento, y en un tramo
-       corto. Dos razones: si aguanta hasta el final, lo último que se ve antes
-       de la página es un rectángulo blanco a pantalla completa y el sitio es
-       oscuro —el relevo daba un fogonazo—; y si se va despacio, se queda un
-       buen rato como una losa gris translúcida del tamaño de media pantalla,
-       que no se lee como nada. Yéndose pronto, lo que cubre al final es el
-       monograma sobre negro, que enlaza con lo que hay detrás sin corte. */
-    placaMat.opacity = o * (1 - suave(0.06, 0.24, f));
-    placaMat.visible = placaMat.opacity > 0.004;
+    cantoMat.opacity = o;
 
     /* Dónde ha quedado en píxeles, para que el hero ponga su zona sensible
        encima. El monograma no tiene nodo DOM al que preguntarle, pero su sitio
@@ -214,16 +194,17 @@ function Monograma({ choreography, reducedMotion }) {
        viaje ocupa la pantalla entera y no hay nada que tocar. */
     if (t.phase === 'hero' && t.visible) {
       const px = v.factor;
-      const lado = escalaSuave.current * px;
+      const alto = escalaSuave.current * px;
+      const ancho = alto * RELACION;
       const cx = three.size.width / 2 + g.position.x * px;
       const cy = three.size.height / 2 - g.position.y * px;
       setLaptopRect({
-        left: cx - lado / 2,
-        top: cy - lado / 2,
-        right: cx + lado / 2,
-        bottom: cy + lado / 2,
-        width: lado,
-        height: lado,
+        left: cx - ancho / 2,
+        top: cy - alto / 2,
+        right: cx + ancho / 2,
+        bottom: cy + alto / 2,
+        width: ancho,
+        height: alto,
       });
     } else {
       setLaptopRect(null);
@@ -232,18 +213,7 @@ function Monograma({ choreography, reducedMotion }) {
 
   return (
     <group ref={grupo}>
-      <mesh geometry={cuerpo} material={placaMat} />
-      <mesh
-        geometry={caraGeo}
-        material={caraMat}
-        position={[0, 0, FONDO / 2 + BISEL + 0.002]}
-      />
-      <mesh
-        ref={trasera}
-        geometry={caraGeo}
-        material={caraMat}
-        position={[0, 0, -(FONDO / 2 + BISEL + 0.002)]}
-      />
+      <mesh geometry={cuerpo} material={materiales} />
     </group>
   );
 }
@@ -253,12 +223,16 @@ function Monograma({ choreography, reducedMotion }) {
  *
  * La laptop no cabía aquí: son miles de vértices y una pantalla con DOM vivo
  * dentro vía CSS3D, y en un teléfono eso se arrastra desde el primer scroll.
- * La insignia hace el mismo papel —dar paso a la página y despedirla— con unos
- * cientos de triángulos y sin segunda maqueta que reflejar.
+ * El monograma hace el mismo papel —dar paso a la página y despedirla— con
+ * unos cientos de triángulos y sin segunda maqueta que reflejar.
+ *
+ * Y es el logo, no una foto del logo: el volumen sale de extruir su propio
+ * trazo, así que cada letra tiene canto y al girar se ve por dónde. Las caras
+ * llevan la textura con los colores exactos de la marca y el canto va
+ * iluminado, que es lo que separa la pieza del fondo negro del tramo.
  *
  * Las luces son tres y fijas: una general para que nada quede a oscuras, una
- * dura desde arriba que revela el bisel al girar, y un contraluz azul de la
- * marca que separa la pieza del fondo negro del tramo.
+ * dura desde arriba que revela el chaflán al girar, y un contraluz azul.
  */
 export function LogoScene({ choreography, reducedMotion = false, running = true }) {
   return (
@@ -269,9 +243,9 @@ export function LogoScene({ choreography, reducedMotion = false, running = true 
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       camera={{ position: [0, 0, 4.2], fov: 42 }}
     >
-      <ambientLight intensity={1.15} />
-      <directionalLight position={[2.4, 3.6, 4]} intensity={2.1} />
-      <directionalLight position={[-3, -1.4, -2.5]} intensity={1.5} color="#2a76d6" />
+      <ambientLight intensity={1.1} />
+      <directionalLight position={[2.4, 3.6, 4]} intensity={2.4} />
+      <directionalLight position={[-3, -1.4, -2.5]} intensity={1.6} color="#2a76d6" />
       <Monograma choreography={choreography} reducedMotion={reducedMotion} />
     </Canvas>
   );
