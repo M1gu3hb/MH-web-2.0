@@ -20,7 +20,7 @@ export const CONTACT = {
   whatsapp: '525523118153',
   email: 'mhastralsystems@gmail.com',
   location: 'Xochimilco · CDMX',
-  site: 'https://morphiq.com.mx',
+  site: 'https://www.morphiq.com.mx',
 };
 
 /** Mensaje de WhatsApp por origen del clic — permite saber qué CTA convierte. */

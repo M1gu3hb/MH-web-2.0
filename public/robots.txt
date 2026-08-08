@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://morphiq.com.mx/sitemap.xml
+Sitemap: https://www.morphiq.com.mx/sitemap.xml
