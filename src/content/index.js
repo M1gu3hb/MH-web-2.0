@@ -315,7 +315,7 @@ export const PRICING = {
       name: 'Presencia',
       price: 'A cotizar',
       pitch: 'Para el negocio que necesita verse como lo que ya es.',
-      accent: '#ff684f',
+      accent: '#4f95ff',
       features: [
         'Sitio a medida, no plantilla',
         'Identidad visual aplicada',
@@ -329,7 +329,7 @@ export const PRICING = {
       name: 'Operación',
       price: 'A cotizar',
       pitch: 'Para el negocio que ya vende y necesita dejar de perder tiempo.',
-      accent: '#ceff3d',
+      accent: '#4f95ff',
       featured: true,
       features: [
         'Punto de venta o CRM a la medida',
@@ -344,7 +344,7 @@ export const PRICING = {
       name: 'Sistema completo',
       price: 'A cotizar',
       pitch: 'Para el negocio que quiere que todo hable entre sí.',
-      accent: '#5e63ff',
+      accent: '#4f95ff',
       features: [
         'Web + operación + automatizaciones',
         'Diseñado como una sola pieza',
@@ -389,7 +389,7 @@ export const FAQ = {
     },
     {
       q: '¿Yo puedo editar el contenido después?',
-      a: 'Sí. Todo lo que sea contenido vivo — precios, productos, fotos, textos — queda en un panel que tú manejas. Te capacito antes de entregar y te dejo el video.',
+      a: 'Sí. Todo lo que sea contenido vivo (precios, productos, fotos, textos) queda en un panel que tú manejas. Te capacito antes de entregar y te dejo el video.',
     },
     {
       q: '¿El dominio y el hosting van incluidos?',
@@ -409,7 +409,7 @@ export const FAQ = {
     },
     {
       q: '¿Cómo sé que no vas a desaparecer a medio proyecto?',
-      a: 'Porque el trabajo está en línea y lo puedes ver: los cuatro casos de esta página tienen enlace directo, ábrelos. Y porque parte del pago va contra entrega — si no entrego, no lo cobro.',
+      a: 'Porque el trabajo está en línea y lo puedes ver: los cuatro casos de esta página tienen enlace directo, ábrelos. Y porque parte del pago va contra entrega: si no entrego, no lo cobro.',
     },
   ],
 };

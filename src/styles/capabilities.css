@@ -95,8 +95,8 @@
 }
 
 .capability-deck__selector button.active {
-  border-color: color-mix(in srgb, var(--tab-accent) 45%, var(--line));
-  background: #fff;
+  border-color: color-mix(in srgb, var(--tab-accent) 55%, var(--line));
+  background: color-mix(in srgb, var(--tab-accent) 14%, var(--surface-raised));
   box-shadow: var(--e-1);
   opacity: 1;
 }
@@ -133,7 +133,7 @@
   grid-template-rows: auto 1fr auto;
   min-width: 0;
   overflow: hidden;
-  border: 1px solid rgba(19, 20, 18, 0.28);
+  border: 1px solid rgba(5, 6, 9, 0.6);
   border-radius: var(--r-xl);
   /* El acento se interpola gracias a @property: el cambio de servicio ya no
      salta de color, se funde. */
@@ -440,7 +440,7 @@
 
   .capability-deck__selector button {
     border-color: var(--line);
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(233, 236, 241, 0.06);
     opacity: 0.72;
   }
 
@@ -559,7 +559,7 @@
     padding: 10px 12px;
     border-color: var(--line);
     border-radius: var(--r-full);
-    background: rgba(255, 255, 255, 0.55);
+    background: rgba(233, 236, 241, 0.06);
     opacity: 0.78;
   }
 

@@ -128,7 +128,7 @@ export function Navigation() {
             transition={{ duration: 0.52, ease: [0.76, 0, 0.24, 1] }}
           >
             <div className="mobile-nav__top">
-              <Brand inverted />
+              <Brand />
               <button type="button" aria-label="Cerrar menú" onClick={close}>
                 <X size={22} aria-hidden="true" />
               </button>

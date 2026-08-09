@@ -11,6 +11,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@fontsource-variable/exo-2": "^5.3.0",
     "@fontsource-variable/manrope": "^5.2.8",
     "@fontsource-variable/syne": "^5.3.0",
     "@react-three/drei": "^9.122.0",

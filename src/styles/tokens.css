@@ -1,36 +1,46 @@
 /* ============================================================
    ASTRAL MORPHIQ SYSTEMS — tokens
-   Papel cálido · tinta mineral · acentos eléctricos
+   Gunmetal, plata y azul eléctrico: la paleta de la marca.
+
+   El tema es uno solo y es oscuro, pero no negro ni azulado: la base es el
+   gunmetal del manual (#1B1E23) llevado a superficie, con la plata #C0C5CC
+   como tinta y el azul eléctrico #0A66FF como único acento de interfaz. Los
+   cinco colores de las tarjetas de servicio no son interfaz: son la
+   identidad de cada servicio, y se quedan.
    ============================================================ */
 
 :root {
   /* ---- Superficie ---- */
-  --surface-base: #f2efe6;
-  --surface-raised: #faf8f1;
-  --surface-sunken: #e9e5d9;
-  --surface-night: #0e100e;
-  --surface-night-raised: #171a17;
+  --surface-base: #171a20;
+  --surface-raised: #1e2229;
+  --surface-sunken: #121519;
+  --surface-night: #0d0f13;
+  --surface-night-raised: #171a20;
 
   /* ---- Tinta ---- */
-  --ink-strong: #151614;
-  --ink-body: #33352f;
-  --ink-muted: #5f6059; /* 5.6:1 sobre papel — antes #74756f fallaba AA */
-  --ink-invert: #f6f3ea;
-  --ink-invert-muted: #a6a89e;
+  --ink-strong: #e9ecf1;
+  --ink-body: #b7bcc6;
+  --ink-muted: #8b919d; /* 4.6:1 sobre la base */
+  --ink-invert: #e9ecf1;
+  --ink-invert-muted: #8b919d;
 
   /* ---- Acentos ---- */
-  --accent-brand: #345dff;
-  --accent-brand-deep: #1737b8;
+  --accent-brand: #0a66ff;
+  --accent-brand-deep: #0846c8;
   --accent-web: #ff684f;
-  --accent-pos: #ceff3d;
+  /* Legible como texto pequeño sobre el gunmetal (5,2:1). Los rellenos
+     usan --accent-brand, que es el azul pleno del manual. */
+  --accent-pos: #4f95ff;
   --accent-crm: #5e63ff;
   --accent-auto: #36d7d1;
+  /* La plata de la marca, para la voz secundaria. */
+  --accent-silver: #c0c5cc;
 
   /* ---- Línea ---- */
-  --line-soft: rgba(21, 22, 20, 0.1);
-  --line: rgba(21, 22, 20, 0.16);
-  --line-strong: rgba(21, 22, 20, 0.26);
-  --line-invert: rgba(246, 243, 234, 0.16);
+  --line-soft: rgba(233, 236, 241, 0.08);
+  --line: rgba(233, 236, 241, 0.14);
+  --line-strong: rgba(233, 236, 241, 0.26);
+  --line-invert: rgba(233, 236, 241, 0.14);
 
   /* ---- Espaciado ---- */
   --sp-1: 4px;
@@ -55,13 +65,15 @@
   --r-full: 999px;
 
   /* ---- Elevación ---- */
-  --e-1: 0 1px 2px rgba(21, 22, 20, 0.06), 0 2px 10px rgba(21, 22, 20, 0.05);
-  --e-2: 0 2px 5px rgba(21, 22, 20, 0.07), 0 12px 30px rgba(21, 22, 20, 0.09);
-  --e-3: 0 5px 12px rgba(21, 22, 20, 0.09), 0 24px 60px rgba(21, 22, 20, 0.14);
+  --e-1: 0 1px 2px rgba(5, 6, 9, 0.4), 0 2px 10px rgba(5, 6, 9, 0.3);
+  --e-2: 0 2px 5px rgba(5, 6, 9, 0.42), 0 12px 30px rgba(5, 6, 9, 0.38);
+  --e-3: 0 5px 12px rgba(5, 6, 9, 0.46), 0 24px 60px rgba(5, 6, 9, 0.5);
 
   /* ---- Tipografía ---- */
   --font-display: 'Syne Variable', ui-sans-serif, system-ui, sans-serif;
   --font-body: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+  /* La tipografía del manual de marca: el wordmark, el hero y el arranque. */
+  --font-brand: 'Exo 2 Variable', ui-sans-serif, system-ui, sans-serif;
 
   --w-regular: 400;
   --w-medium: 500;
@@ -98,8 +110,8 @@
   --ink: #151614;
   --ink-soft: #272925;
   --muted: #5f6059;
-  --blue: #345dff;
-  --blue-deep: #1737b8;
+  --blue: #0a66ff;
+  --blue-deep: #0846c8;
   --coral: #ff684f;
   --lime: #ceff3d;
   --aqua: #36d7d1;
@@ -107,7 +119,7 @@
   --display: 'Syne Variable', ui-sans-serif, system-ui, sans-serif;
   --body: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
 
-  color-scheme: light;
+  color-scheme: dark;
   color: var(--ink-strong);
   font-family: var(--font-body);
   font-synthesis: none;

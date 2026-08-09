@@ -94,7 +94,11 @@ export default function App() {
       <Navigation />
       {/* Se monta desde el arranque: la pantalla de carga espera a que
           la laptop esté lista, que para eso está. */}
-      <LaptopStage enabled />
+      {/* La escena 3D queda apagada por ahora, a petición: ni laptop ni
+          monograma. El componente sigue montado con enabled=false porque es
+          él quien pone `no-stage` en el body, que es lo que pliega los
+          tramos negros y despega las preguntas. */}
+      <LaptopStage enabled={false} />
 
       <main id="contenido">
         <Hero />

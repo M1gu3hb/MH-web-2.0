@@ -3,17 +3,17 @@
    ============================================================ */
 
 .hero {
-  --ink-strong: #f3f2f9;
-  --ink-body: #c6c8e4;
-  --ink-muted: #9a9dc4;
-  --line: rgba(243, 242, 249, 0.16);
-  --line-soft: rgba(243, 242, 249, 0.09);
+  --ink-strong: #eef1f5;
+  --ink-body: #b9bfc9;
+  --ink-muted: #8f96a2;
+  --line: rgba(238, 241, 245, 0.16);
+  --line-soft: rgba(238, 241, 245, 0.09);
 
   position: relative;
   min-height: 100svh;
   padding: clamp(120px, 15vh, 172px) var(--sp-gutter) clamp(56px, 8vh, 96px);
   overflow: hidden;
-  background: #080615;
+  background: #06080d;
   color: var(--ink-strong);
 }
 
@@ -37,12 +37,12 @@
   left: 0;
   height: 26vh;
   /* El hero entrega al tramo negro por el que entra la laptop. */
-  background: linear-gradient(180deg, transparent, rgba(8, 6, 21, 0.6) 45%, #000);
+  background: linear-gradient(180deg, transparent, rgba(6, 8, 13, 0.6) 45%, var(--surface-night));
 }
 
 /* Sin transición 3D el hero entrega directamente al carrusel. */
 body.no-stage .hero__fade {
-  background: linear-gradient(180deg, transparent, rgba(8, 6, 21, 0.55) 45%, var(--surface-base));
+  background: linear-gradient(180deg, transparent, rgba(6, 8, 13, 0.55) 45%, var(--surface-base));
 }
 
 /* ---- Layout ------------------------------------------------ */
@@ -110,12 +110,21 @@ body.no-stage .hero__fade {
   display: block;
 }
 
-/* Los dos renglones que gritan: display, muy pesada y muy apretada. */
+/* Los dos renglones que gritan: la tipografía del manual, en plata, con el
+   remate en azul eléctrico. La luz entra desde arriba, como en el wordmark. */
 .hero__title-line--mark {
-  font-family: var(--font-display);
-  font-variation-settings: 'wght' 780;
-  font-weight: 800;
-  letter-spacing: -0.055em;
+  font-family: var(--font-brand);
+  font-variation-settings: 'wght' 700;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  background-image: linear-gradient(178deg, #f2f4f7 12%, #c0c5cc 58%, #99a0aa 98%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.hero__title-line--mark:last-of-type {
+  background-image: linear-gradient(178deg, #5a9bff 8%, #0a66ff 56%, #0846c8 98%);
 }
 
 /* Y el de en medio, que baja la voz: la tipografía de texto, ligera, en
@@ -124,27 +133,25 @@ body.no-stage .hero__fade {
    lima porque es el complementario del morado del fondo y es lo único que hay
    que leer sí o sí. */
 .hero__title-line--soft {
-  margin: 0.1em 0 0.06em;
-  color: var(--accent-pos);
-  font-family: var(--font-body);
+  margin: 0.14em 0 0.1em;
+  color: var(--accent-silver);
+  font-family: var(--font-brand);
   /* Proporcional al titular, pero con suelo: en teléfono el 46% caía a doce
      píxeles y el renglón que sostiene la frase se perdía. */
-  font-size: max(1rem, 0.46em);
-  font-variation-settings: 'wght' 320;
-  font-weight: 320;
-  letter-spacing: -0.005em;
+  font-size: max(1rem, 0.4em);
+  font-variation-settings: 'wght' 300;
+  font-weight: 300;
+  letter-spacing: 0.08em;
   line-height: 1.06;
-  text-shadow: 0 0 38px rgba(206, 255, 61, 0.34);
+  text-transform: uppercase;
 }
 
-.hero__accent--coral {
-  color: #ff7a63;
-  text-shadow: 0 0 34px rgba(255, 104, 79, 0.5);
+.hero__accent--azul {
+  color: #4f95ff;
 }
 
-.hero__accent--lime {
-  color: var(--accent-pos);
-  text-shadow: 0 0 34px rgba(206, 255, 61, 0.42);
+.hero__accent--plata {
+  color: var(--accent-silver);
 }
 
 /* El punto se dibuja aparte para poder teñirlo sin romper la palabra ni
@@ -155,7 +162,7 @@ body.no-stage .hero__fade {
   height: 0.16em;
   margin-left: 0.05em;
   border-radius: 50%;
-  background: var(--accent-pos);
+  background: #0a66ff;
   vertical-align: baseline;
   transform: translateY(-0.02em);
 }
@@ -166,7 +173,7 @@ body.no-stage .hero__fade {
   max-width: 40ch;
   margin-top: var(--sp-6);
   color: var(--ink-strong);
-  font-family: var(--font-display);
+  font-family: var(--font-brand);
   font-size: clamp(1.02rem, 1.5vw, 1.32rem);
   font-variation-settings: 'wght' 600;
   font-weight: 600;
@@ -226,56 +233,31 @@ body.no-stage .hero__fade {
   line-height: 1.5;
 }
 
-/* ---- Hueco de la laptop ------------------------------------ */
+/* ---- El símbolo de la marca -------------------------------- */
 .hero__viewport {
   position: relative;
   display: grid;
+  place-items: center;
   min-height: min(72vh, 620px);
 }
 
-/* Zona sensible que recoge el clic destinado a la laptop, que vive en una
-   capa fija e inerte. Invisible a propósito: lo que se ve es el modelo. */
-.hero__viewport-hit {
-  /* Fija y no absoluta: sus medidas las escribe el hero en cada fotograma a
-     partir de dónde está de verdad la pantalla de la laptop. */
-  position: fixed;
-  display: none;
-  z-index: 6;
-  border: 0;
-  border-radius: var(--r-lg);
-  background: none;
-  cursor: pointer;
-  /* Nada de recuadros al pulsar: cualquier marca de selección o de foco de
-     ratón rompe la ilusión de estar tocando la laptop, no un botón. */
-  outline: none;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
+.hero__simbolo {
+  width: min(78%, 460px);
+  height: auto;
+  filter: drop-shadow(0 30px 70px rgba(4, 8, 16, 0.7));
 }
 
-/* El aro solo aparece llegando por teclado, donde sí hace falta. */
-.hero__viewport-hit:focus-visible {
-  outline: 2px solid var(--ink-strong);
-  outline-offset: 4px;
+/* Un vaivén lento, de pieza suspendida. Nada de girar ni brillar: la marca
+   está presidiendo, no actuando. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero__simbolo {
+    animation: simbolo-flota 7.5s ease-in-out infinite;
+  }
 }
 
-.hero__viewport-hint {
-  /* Igual que la zona sensible: la coloca el hero justo debajo de la laptop. */
-  position: fixed;
-  z-index: 6;
-  display: none;
-  transform: translateX(-50%);
-  white-space: nowrap;
-  pointer-events: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--ink-muted);
-  font-size: 0.62rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+@keyframes simbolo-flota {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
 }
 
 /* ---- Pista de scroll --------------------------------------- */
@@ -614,7 +596,7 @@ body.in-transit .scroll-meter {
   .stage-inside { display: none; }
 
   .hero__fade {
-    background: linear-gradient(180deg, transparent, rgba(8, 6, 21, 0.55) 45%, var(--surface-base));
+    background: linear-gradient(180deg, transparent, rgba(6, 8, 13, 0.55) 45%, var(--surface-base));
   }
 }
 

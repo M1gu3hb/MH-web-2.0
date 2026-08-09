@@ -190,7 +190,7 @@ ul {
   gap: 10px;
   min-height: 50px;
   padding: 0 20px;
-  border: 1px solid rgba(21, 22, 20, 0.12);
+  border: 1px solid rgba(233, 236, 241, 0.12);
   border-radius: var(--r-md);
   font-size: 0.85rem;
   font-weight: 760;
@@ -220,36 +220,38 @@ ul {
   font-size: 0.92rem;
 }
 
+/* Con el tema oscuro, el botón «de tinta» es el azul del manual: era negro
+   sobre papel, y negro sobre gunmetal no es un botón, es un agujero. */
 .tactile-button--ink {
-  border-color: #090a09;
-  background: var(--ink-strong);
+  border-color: rgba(255, 255, 255, 0.14);
+  background: linear-gradient(180deg, #2f7ef2, var(--accent-brand));
   box-shadow:
-    inset 0 1px rgba(255, 255, 255, 0.16),
-    0 5px 0 #050605,
+    inset 0 1px rgba(255, 255, 255, 0.3),
+    0 5px 0 #0846c8,
     var(--e-2);
   color: #fff;
 }
 
 .tactile-button--ink:hover:not(:disabled) {
   box-shadow:
-    inset 0 1px rgba(255, 255, 255, 0.16),
-    0 7px 0 #050605,
+    inset 0 1px rgba(255, 255, 255, 0.3),
+    0 7px 0 #0846c8,
     var(--e-3);
 }
 
 .tactile-button--paper {
-  background: rgba(255, 255, 255, 0.62);
+  background: rgba(233, 236, 241, 0.08);
   box-shadow:
-    inset 0 1px rgba(255, 255, 255, 0.9),
-    0 4px 0 #d3d0c7,
+    inset 0 1px rgba(255, 255, 255, 0.1),
+    0 4px 0 rgba(5, 6, 9, 0.5),
     var(--e-1);
 }
 
 .tactile-button--paper:hover:not(:disabled) {
-  background: #fff;
+  background: rgba(233, 236, 241, 0.14);
   box-shadow:
-    inset 0 1px rgba(255, 255, 255, 0.9),
-    0 6px 0 #d3d0c7,
+    inset 0 1px rgba(255, 255, 255, 0.1),
+    0 6px 0 rgba(5, 6, 9, 0.5),
     var(--e-2);
 }
 
@@ -308,19 +310,19 @@ ul {
 /* ---- Botones sobre fondo oscuro ---------------------------------------- */
 .tactile-button--glow {
   border-color: rgba(255, 255, 255, 0.18);
-  background: linear-gradient(180deg, #6a41ff, var(--scanner-1));
+  background: linear-gradient(180deg, #2f7ef2, var(--accent-brand));
   box-shadow:
     inset 0 1px rgba(255, 255, 255, 0.34),
-    0 5px 0 #2c14a8,
-    0 14px 34px rgba(82, 39, 255, 0.42);
+    0 5px 0 #0846c8,
+    0 14px 34px rgba(10, 102, 255, 0.4);
   color: #fff;
 }
 
 .tactile-button--glow:hover:not(:disabled) {
   box-shadow:
     inset 0 1px rgba(255, 255, 255, 0.34),
-    0 7px 0 #2c14a8,
-    0 22px 44px rgba(82, 39, 255, 0.5);
+    0 7px 0 #0846c8,
+    0 22px 44px rgba(10, 102, 255, 0.48);
 }
 
 .tactile-button--ghost {

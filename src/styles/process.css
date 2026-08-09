@@ -40,7 +40,7 @@
   padding: clamp(18px, 2.6vw, 32px);
   border: 1px solid var(--line);
   border-radius: var(--r-xl);
-  background: linear-gradient(168deg, rgba(255, 255, 255, 0.82), rgba(233, 229, 217, 0.52));
+  background: linear-gradient(168deg, rgba(35, 40, 48, 0.85), rgba(22, 25, 31, 0.6));
   box-shadow: var(--e-2);
 }
 
@@ -52,7 +52,7 @@
   overflow: hidden;
   padding: clamp(28px, 3.6vw, 56px);
   border-radius: var(--r-lg);
-  background: radial-gradient(circle at 28% 18%, #1d2440, #080b13 72%);
+  background: radial-gradient(circle at 28% 18%, #182339, #07090d 72%);
   color: var(--ink-invert);
 }
 
@@ -75,7 +75,7 @@
 
 .process-console__rails i.on {
   background: var(--accent-pos);
-  box-shadow: 0 0 12px rgba(206, 255, 61, 0.55);
+  box-shadow: 0 0 12px rgba(79, 149, 240, 0.5);
 }
 
 .process-console__glow {
@@ -85,7 +85,7 @@
   width: 70%;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(82, 39, 255, 0.4), transparent 66%);
+  background: radial-gradient(circle, rgba(10, 102, 255, 0.34), transparent 66%);
   pointer-events: none;
 }
 
@@ -116,7 +116,7 @@
 
 .process-console__phase em {
   padding: 5px 10px;
-  border: 1px solid rgba(206, 255, 61, 0.34);
+  border: 1px solid rgba(79, 149, 240, 0.36);
   border-radius: var(--r-full);
   font-style: normal;
   font-size: 0.62rem;
@@ -197,8 +197,8 @@
 }
 
 .process-knob__ticks b.on {
-  background: var(--accent-web);
-  box-shadow: 0 0 8px rgba(255, 104, 79, 0.7);
+  background: var(--accent-pos);
+  box-shadow: 0 0 8px rgba(79, 149, 240, 0.7);
 }
 
 .process-knob__dial {
@@ -225,8 +225,8 @@
   width: 4px;
   height: 20px;
   border-radius: 2px;
-  background: var(--accent-web);
-  box-shadow: 0 0 10px rgba(255, 104, 79, 0.8);
+  background: var(--accent-brand);
+  box-shadow: 0 0 10px rgba(10, 102, 255, 0.8);
 }
 
 .process-knob__grip {
@@ -240,7 +240,7 @@
 .process-knob__label {
   position: relative;
   z-index: 2;
-  color: var(--ink-strong);
+  color: #171a20;
   font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: var(--w-label);
@@ -273,17 +273,17 @@
   padding: 14px 15px;
   border: 1px solid var(--line);
   border-radius: var(--r-md);
-  background: rgba(255, 255, 255, 0.58);
+  background: rgba(233, 236, 241, 0.06);
   text-align: left;
   transition: transform var(--d-fast) var(--ease), background var(--d-fast) var(--ease);
 }
 
-.process-switches button:hover { transform: translateX(3px); background: #fff; }
+.process-switches button:hover { transform: translateX(3px); background: rgba(233, 236, 241, 0.12); }
 
 .process-switches button.active {
-  border-color: var(--ink-strong);
-  background: var(--ink-strong);
-  color: var(--ink-invert);
+  border-color: rgba(255, 255, 255, 0.16);
+  background: linear-gradient(180deg, #2f7ef2, var(--accent-brand));
+  color: #fff;
 }
 
 .process-switches button span {

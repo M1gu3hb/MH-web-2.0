@@ -307,6 +307,19 @@ export function RippleDistortion({
       caja = mount.getBoundingClientRect();
     };
 
+    /* Con el scroll solo se mueve la caja, no cambia de tamaño: recolocar es
+       una lectura de rectángulo, no un `resize` entero — aquel realoca el
+       lienzo, y colgado del scroll eran dos realocaciones por evento entre
+       las dos láminas de la página. */
+    let reloc = 0;
+    const recolocar = () => {
+      if (reloc) return;
+      reloc = requestAnimationFrame(() => {
+        reloc = 0;
+        caja = mount.getBoundingClientRect();
+      });
+    };
+
     const ro = new ResizeObserver(resize);
     ro.observe(mount);
     resize();
@@ -357,7 +370,7 @@ export function RippleDistortion({
     mount.addEventListener('pointermove', onMove, { passive: true });
     mount.addEventListener('pointerdown', onDown, { passive: true });
     /* La caja se mueve con el scroll, y el efecto vive en mitad de la página. */
-    window.addEventListener('scroll', resize, { passive: true });
+    window.addEventListener('scroll', recolocar, { passive: true });
 
     let raf = 0;
     let previousTime = 0;
@@ -424,7 +437,8 @@ export function RippleDistortion({
       ojo.disconnect();
       mount.removeEventListener('pointermove', onMove);
       mount.removeEventListener('pointerdown', onDown);
-      window.removeEventListener('scroll', resize);
+      window.removeEventListener('scroll', recolocar);
+      cancelAnimationFrame(reloc);
       uniformsRef.current = null;
       if (canvas.parentNode === mount) mount.removeChild(canvas);
       const ext = gl.getExtension('WEBGL_lose_context');

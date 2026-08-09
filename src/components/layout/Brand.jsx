@@ -1,20 +1,18 @@
-export function Brand({ compact = false, inverted = false }) {
+import { BrandLockup } from './BrandLockup';
+
+/**
+ * La marca de la esquina: el lockup completo del manual, con el simbolo,
+ * Morphiq y Astral Morphiq Systems compuestos en vivo. `inverted` sobra ya:
+ * el wordmark lleva sus propios degradados y el tema es uno solo.
+ */
+export function Brand() {
   return (
     <a
-      className={`brand ${compact ? 'brand--compact' : ''} ${inverted ? 'brand--inverted' : ''}`}
+      className="brand"
       href="#inicio"
-      aria-label="Morphiq · Astral Morphiq Systems — Inicio"
+      aria-label="Morphiq, Astral Morphiq Systems. Volver al inicio"
     >
-      <span className="brand__plate">
-        <img src="/mh-logo-sm.png" alt="" width="44" height="40" />
-      </span>
-      {!compact && (
-        <span className="brand__name">
-          {/* Lo que se recuerda va grande; la marca completa, debajo. */}
-          <strong>MORPHIQ</strong>
-          <small>ASTRAL SYSTEMS</small>
-        </span>
-      )}
+      <BrandLockup layout="horizontal" symbol />
     </a>
   );
 }

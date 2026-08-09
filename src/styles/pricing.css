@@ -32,7 +32,7 @@
   padding: clamp(24px, 2.6vw, 36px);
   border: 1px solid var(--line);
   border-radius: var(--r-xl);
-  background: rgba(255, 255, 255, 0.62);
+  background: var(--surface-raised);
   box-shadow: var(--e-1);
   transition:
     transform var(--d-base) var(--ease),
@@ -45,8 +45,8 @@
 }
 
 .tier--featured {
-  border-color: transparent;
-  background: var(--surface-night);
+  border-color: rgba(10, 102, 255, 0.5);
+  background: linear-gradient(180deg, rgba(10, 102, 255, 0.12), rgba(10, 102, 255, 0.03)), var(--surface-night);
   color: var(--ink-invert);
 }
 
@@ -55,8 +55,8 @@
   margin-bottom: var(--sp-4);
   padding: 6px 12px;
   border-radius: var(--r-full);
-  background: var(--tier-accent);
-  color: #10110f;
+  background: var(--accent-brand);
+  color: #fff;
   font-size: 0.6rem;
   font-weight: var(--w-label);
   letter-spacing: 0.14em;
@@ -101,7 +101,7 @@
 
 .tier--featured .tier__pitch {
   border-bottom-color: var(--line-invert);
-  color: #d7d5cb;
+  color: #b7bcc6;
 }
 
 .tier__features {
@@ -131,16 +131,6 @@
 
 .tier__features + .tier__cta {
   margin-top: var(--sp-7);
-}
-
-.tier--featured .tactile-button--ink {
-  border-color: var(--tier-accent);
-  background: var(--tier-accent);
-  box-shadow:
-    inset 0 1px rgba(255, 255, 255, 0.28),
-    0 5px 0 color-mix(in srgb, var(--tier-accent) 60%, #000),
-    var(--e-2);
-  color: #10110f;
 }
 
 /* ---- Condiciones ------------------------------------------ */

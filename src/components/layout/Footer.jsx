@@ -4,7 +4,7 @@ import { CONTACT, FOOTER } from '../../content';
 export function Footer() {
   return (
     <footer className="footer">
-      <Brand inverted />
+      <Brand />
       <p className="footer__tagline">
         {FOOTER.tagline[0]}
         <br />

@@ -24,7 +24,7 @@
 .nav-shell--condensed {
   padding-block: 11px;
   border-bottom-color: var(--line-soft);
-  background: rgba(242, 239, 230, 0.82);
+  background: rgba(19, 22, 27, 0.82);
   backdrop-filter: blur(14px) saturate(1.3);
 }
 
@@ -32,14 +32,9 @@
    banda clara flotando encima del contenido oscuro. */
 .nav-shell--night.nav-shell--condensed {
   border-bottom-color: var(--line-invert);
-  background: rgba(14, 16, 14, 0.78);
+  background: rgba(13, 15, 19, 0.8);
 }
 
-.nav-shell--night .brand__name strong {
-  color: var(--ink-invert);
-}
-
-.nav-shell--night .brand__name small,
 .nav-shell--night .nav-shell__links a {
   color: var(--ink-invert-muted);
 }
@@ -59,70 +54,19 @@
   color: var(--ink-invert);
 }
 
-.nav-shell--night .nav-shell__cta {
-  border-color: var(--accent-pos);
-  background: var(--accent-pos);
-  box-shadow:
-    inset 0 1px rgba(255, 255, 255, 0.3),
-    0 5px 0 #94bd20,
-    var(--e-2);
-  color: #10110f;
-}
+
 
 /* ---- Marca ------------------------------------------------ */
+/* En la barra el lockup se compone con el tamaño de fuente: 1.5rem de
+   wordmark dan un simbolo de ~2.9rem y una firma que se lee sin lupa. */
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 11px;
+  font-size: 1.42rem;
+  transition: opacity var(--d-fast) var(--ease);
 }
 
-.brand__plate {
-  display: grid;
-  place-items: center;
-  width: 46px;
-  height: 46px;
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  background: linear-gradient(160deg, #fff, #eeeade);
-  box-shadow: var(--e-1);
-  transition: transform var(--d-fast) var(--ease);
-}
-
-.brand:hover .brand__plate {
-  transform: rotate(-4deg) scale(1.04);
-}
-
-.brand__plate img {
-  width: 30px;
-  height: auto;
-}
-
-.brand__name {
-  display: grid;
-  line-height: 1;
-}
-
-.brand__name strong {
-  font-family: var(--font-display);
-  font-size: 0.94rem;
-  font-weight: var(--w-bold);
-  letter-spacing: -0.02em;
-}
-
-.brand__name small {
-  color: var(--ink-muted);
-  font-size: 0.6rem;
-  font-weight: var(--w-label);
-  letter-spacing: 0.28em;
-}
-
-.brand--inverted .brand__name strong {
-  color: var(--ink-invert);
-}
-
-.brand--inverted .brand__name small {
-  color: var(--ink-invert-muted);
-}
+.brand:hover { opacity: 0.85; }
 
 /* ---- Enlaces ---------------------------------------------- */
 .nav-shell__links {
@@ -173,7 +117,8 @@
   height: 46px;
   border: 1px solid var(--line);
   border-radius: var(--r-md);
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(233, 236, 241, 0.06);
+  color: var(--ink-strong);
 }
 
 /* ---- Panel móvil ------------------------------------------ */
@@ -242,8 +187,8 @@
   justify-content: space-between;
   padding: 22px 24px;
   border-radius: var(--r-lg);
-  background: var(--accent-pos);
-  color: #10110f;
+  background: linear-gradient(180deg, #2f7ef2, var(--accent-brand));
+  color: #fff;
   font-size: 1.05rem;
   font-weight: 780;
 }
@@ -500,115 +445,61 @@
   grid-template-rows: 1fr auto;
   padding: clamp(24px, 5vw, 56px);
   overflow: hidden;
-  /* El mismo negro violáceo del hero. */
-  background: #080615;
-  color: #f3f2f9;
-}
-
-/* La lluvia va detrás de todo y muy apagada: es fondo. */
-.boot__rain {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.34;
+  /* El negro profundo del manual, con un aliento azul subiendo desde abajo:
+     es luz de la marca, no un fondo decorado. */
+  background:
+    radial-gradient(90% 55% at 50% 108%, rgba(10, 102, 255, 0.16), transparent 62%),
+    #050505;
+  color: var(--ink-strong);
 }
 
 .boot__core {
-  position: relative;
   display: grid;
   place-items: center;
   align-content: center;
-  gap: clamp(18px, 3vh, 30px);
+  gap: clamp(18px, 3vh, 28px);
 }
 
-/* El monograma escrito en caracteres. Los dos <pre> se superponen: el de
-   abajo reserva el sitio del dibujo completo para que nada se mueva mientras
-   se escribe, y el de arriba enseña lo que va llegando. */
-.boot__ascii {
-  position: relative;
-  /* El ancho lo manda el número de columnas del dibujo, no el contenedor:
-     así el trazado nunca se parte de línea, que lo destrozaría. */
-  font-size: min(3.1vw, 86vw / var(--cols) / 0.601, 18px);
-  line-height: 1;
+.boot__simbolo {
+  width: clamp(120px, 22vh, 200px);
+  height: auto;
+  filter: drop-shadow(0 18px 44px rgba(10, 102, 255, 0.22));
 }
 
-.boot__ascii pre {
-  margin: 0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: inherit;
-  font-weight: 600;
-  line-height: 1;
-  white-space: pre;
+.boot__nombre {
+  font-size: clamp(2.6rem, 9vw, 4.6rem);
 }
 
-/* Invisible, pero presente: lo único que hace es reservar el sitio del dibujo
-   entero para que el trazado no se mueva mientras crece. Cuando se le veía
-   —aunque fuera al siete por ciento— la figura estaba ahí desde el principio y
-   lo que se escribía encima solo la iba rellenando; se pierde la gracia de
-   verla salir de la nada. */
-.boot__ascii-ghost {
-  color: transparent;
-}
-
-.boot__ascii-live {
-  position: absolute;
-  inset: 0;
-  /* Del azul hondo del monograma al filo claro, de abajo arriba. */
-  background: linear-gradient(168deg, #6fb4ff, #2a76d6 46%, #123a7a);
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  text-shadow: none;
-}
-
-/* El cursor de la terminal, justo donde se dejó de escribir. */
-.boot__caret {
-  display: inline-block;
-  width: 0.6em;
-  height: 1em;
-  background: var(--accent-pos);
-  vertical-align: text-bottom;
-  animation: boot-caret 0.9s steps(1) infinite;
-}
-
-@keyframes boot-caret {
-  0%, 55% { opacity: 1; }
-  56%, 100% { opacity: 0; }
-}
-
-.boot__name {
-  position: relative;
-  color: rgba(243, 242, 249, 0.7);
-  font-family: var(--font-display);
-  font-size: 0.9rem;
-  font-weight: var(--w-label);
-  letter-spacing: 0.34em;
+.boot__firma {
+  color: var(--accent-silver);
+  font-family: var(--font-brand);
+  font-size: clamp(0.66rem, 1.9vw, 0.86rem);
+  font-variation-settings: 'wght' 460;
+  font-weight: 460;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
 }
 
 .boot__foot {
   position: relative;
   display: grid;
   gap: 12px;
-  width: min(100%, 620px);
+  width: min(100%, 460px);
   margin-inline: auto;
 }
 
 .boot__track {
-  height: 3px;
+  height: 2px;
   overflow: hidden;
-  border-radius: 3px;
-  background: rgba(243, 242, 249, 0.14);
+  border-radius: 2px;
+  background: rgba(233, 236, 241, 0.14);
 }
 
 .boot__track span {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, #2a76d6, var(--accent-pos));
+  background: linear-gradient(90deg, #0846c8, #0a66ff);
   transform-origin: 0 50%;
-  /* Corta: la barra ya se escribe en cada fotograma, y una transición larga
-     encima solo la hacía llegar al final medio segundo tarde. Lo justo para
-     redondear los saltos que da la carga cuando termina un paso. */
   transition: transform 140ms linear;
 }
 
@@ -616,17 +507,18 @@
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  color: rgba(243, 242, 249, 0.6);
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.16em;
+  color: rgba(233, 236, 241, 0.6);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
 }
 
 .boot__meta strong {
-  color: var(--accent-pos);
-  font-family: var(--font-display);
-  font-size: 1.05rem;
+  color: var(--accent-silver);
+  font-family: var(--font-brand);
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
 }
 
 @keyframes boot-spin {
@@ -639,4 +531,99 @@
   .hero__scroll-hint span {
     animation: none;
   }
+}
+
+/* ============================================================
+   La marca en vivo
+   ============================================================ */
+/* Los degradados del manual: el azul eléctrico y la plata, con la luz
+   entrando desde arriba. Son los mismos dos en todos los tamaños. */
+.marca-nombre {
+  display: inline-flex;
+  align-items: baseline;
+  font-family: var(--font-brand);
+  font-variation-settings: 'wght' 640;
+  font-weight: 640;
+  letter-spacing: 0.005em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.marca-nombre b,
+.marca-nombre > span:not(.rb-visually-hidden) {
+  font-weight: inherit;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.marca-nombre--azul {
+  background-image: linear-gradient(172deg, #4f95ff 8%, #0a66ff 52%, #0846c8 96%);
+}
+
+.marca-nombre--plata {
+  background-image: linear-gradient(172deg, #f2f4f7 8%, #c0c5cc 55%, #969ca6 96%);
+}
+
+/* El punto de la i, encima del asta derecha de la H. */
+.marca-nombre__h {
+  position: relative;
+  margin-right: 0.04em;
+}
+
+.marca-nombre__h i {
+  position: absolute;
+  top: -0.1em;
+  right: 0.045em;
+  width: 0.13em;
+  height: 0.13em;
+  border-radius: 0.02em;
+  background: linear-gradient(172deg, #4f95ff, #0a66ff);
+}
+
+.marca__firma {
+  display: block;
+  color: var(--accent-silver);
+  font-family: var(--font-brand);
+  font-size: 0.34em;
+  font-variation-settings: 'wght' 460;
+  font-weight: 460;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.marca {
+  display: inline-flex;
+  align-items: center;
+}
+
+.marca--horizontal {
+  gap: 0.42em;
+}
+
+.marca--horizontal .marca__simbolo {
+  width: 1.9em;
+  height: auto;
+}
+
+.marca--horizontal .marca__firma {
+  margin-top: 0.14em;
+}
+
+.marca--stacked {
+  flex-direction: column;
+  gap: 0.75em;
+  text-align: center;
+}
+
+.marca--stacked .marca__simbolo {
+  width: 3.6em;
+  height: auto;
+}
+
+.marca--stacked .marca__texto {
+  display: grid;
+  justify-items: center;
+  gap: 0.5em;
 }
