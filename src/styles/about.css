@@ -36,7 +36,7 @@
   border-radius: var(--r-xl);
   background:
     radial-gradient(circle at 32% 26%, rgba(52, 93, 255, 0.3), transparent 58%),
-    radial-gradient(circle at 74% 78%, rgba(255, 104, 79, 0.24), transparent 56%),
+    radial-gradient(circle at 74% 78%, rgba(10, 102, 255, 0.18), transparent 56%),
     #12151a;
 }
 
