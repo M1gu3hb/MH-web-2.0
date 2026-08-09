@@ -151,7 +151,7 @@ export function ContactSection() {
         <Reveal className="contact__action" delay={0.08}>
           <p className="contact__pitch">{CONTACT_SECTION.pitch}</p>
 
-          <StarBorder color="#ceff3d" speed={7} className="contact__wa-frame">
+          <StarBorder color="#4f95ff" speed={7} className="contact__wa-frame">
             <a
               className="contact__wa"
               href={whatsappUrl('contact')}

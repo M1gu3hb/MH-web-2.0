@@ -223,13 +223,24 @@
 .footer {
   position: relative;
   z-index: 1;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: var(--sp-6);
-  align-items: center;
-  padding: var(--sp-7) var(--sp-gutter) var(--sp-5);
+  padding: clamp(44px, 6vw, 76px) var(--sp-gutter) var(--sp-5);
   background: var(--surface-night);
   color: var(--ink-invert);
+}
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr 0.75fr;
+  gap: clamp(28px, 4vw, 72px);
+  align-items: start;
+  width: min(100%, var(--wrap));
+  margin-inline: auto;
+}
+
+.footer__brand {
+  display: grid;
+  gap: var(--sp-5);
+  justify-items: start;
 }
 
 .footer__tagline {
@@ -238,35 +249,84 @@
   font-size: 1.05rem;
   font-weight: var(--w-display);
   letter-spacing: -0.03em;
-  line-height: 1.2;
+  line-height: 1.35;
 }
 
-.footer__links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+.footer__col {
+  display: grid;
+  gap: 13px;
+  justify-items: start;
 }
 
-.footer__links a {
+.footer__col-title {
+  margin-bottom: 4px;
+  color: #4f95ff;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.footer__dato {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
   color: var(--ink-invert-muted);
-  font-size: 0.84rem;
+  font-size: 0.87rem;
   font-weight: 620;
   transition: color var(--d-fast) var(--ease);
 }
 
-.footer__links a:hover {
-  color: var(--accent-pos);
+.footer__dato svg {
+  flex: none;
+  color: rgba(79, 149, 255, 0.75);
+}
+
+a.footer__dato:hover {
+  color: var(--ink-invert);
+}
+
+.footer__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  width: min(100%, var(--wrap));
+  margin: clamp(32px, 4.5vw, 56px) auto 0;
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--line-invert);
 }
 
 .footer__legal {
-  grid-column: 1 / -1;
-  padding-top: var(--sp-5);
-  border-top: 1px solid var(--line-invert);
   /* Texto pequeño: a 0.42 se quedaba en 3.8:1, por debajo del mínimo. */
   color: rgba(246, 243, 234, 0.58);
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.14em;
+}
+
+.footer__arriba {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ink-invert-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  transition: color var(--d-fast) var(--ease);
+}
+
+.footer__arriba:hover {
+  color: #4f95ff;
+}
+
+@media (max-width: 860px) {
+  .footer__grid {
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
 }
 
 /* ---- CTA flotante ----------------------------------------- */
@@ -311,11 +371,6 @@
 
   .nav-shell__menu {
     display: grid;
-  }
-
-  .footer {
-    grid-template-columns: 1fr;
-    gap: var(--sp-5);
   }
 }
 
@@ -448,7 +503,7 @@
   /* El negro profundo del manual, con un aliento azul subiendo desde abajo:
      es luz de la marca, no un fondo decorado. */
   background:
-    radial-gradient(90% 55% at 50% 108%, rgba(10, 102, 255, 0.16), transparent 62%),
+    radial-gradient(94% 58% at 50% 108%, rgba(10, 102, 255, 0.28), transparent 68%),
     #050505;
   color: var(--ink-strong);
 }
@@ -460,10 +515,45 @@
   gap: clamp(18px, 3vh, 28px);
 }
 
-.boot__lockup {
+.boot__arte {
+  position: relative;
   width: min(78vw, 52vh, 430px);
+}
+
+.boot__lockup {
+  display: block;
+  width: 100%;
   height: auto;
   filter: drop-shadow(0 22px 54px rgba(10, 102, 255, 0.22));
+}
+
+/* El reflejo: la franja recorre el arte y descansa; la máscara con el propio
+   lockup hace que la luz solo exista sobre el metal. */
+.boot__brillo {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 42%, rgba(255, 255, 255, 0.85) 50%, transparent 58%);
+  background-repeat: no-repeat;
+  background-size: 260% 100%;
+  opacity: 0;
+  pointer-events: none;
+  mask-image: url('/marca/lockup-apilado.webp');
+  mask-size: 100% 100%;
+  -webkit-mask-image: url('/marca/lockup-apilado.webp');
+  -webkit-mask-size: 100% 100%;
+  animation: boot-brillo 3.2s ease-in-out 1s infinite;
+}
+
+@keyframes boot-brillo {
+  0% { opacity: 1; background-position: -160% 0; }
+  42% { opacity: 1; background-position: 160% 0; }
+  42.1%, 100% { opacity: 0; background-position: 160% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boot__brillo {
+    animation: none;
+  }
 }
 
 .boot__foot {

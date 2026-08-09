@@ -1,8 +1,9 @@
-import { ArrowDown, ArrowUpRight, MessageCircle } from 'lucide-react';
+import { ArrowUpRight, MessageCircle } from 'lucide-react';
 import { motion as Motion } from 'motion/react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { Magnet, ScrambleText } from '../reactbits';
 import Scanner from '../reactbits/Scanner';
+import { Logo3D } from './Logo3D';
 import { HERO } from '../../content';
 import { trackWhatsApp, whatsappUrl } from '../../lib/whatsapp';
 
@@ -52,11 +53,6 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
         >
-          <p className="signal-label">
-            <span className="signal-label__pulse" />
-            <ScrambleText text={HERO.eyebrow} />
-          </p>
-
           <h1 className="hero__title">
             {HERO.title.map((line, i) => (
               <span key={line.text} className={`hero__title-line hero__title-line--${line.voice}`}>
@@ -93,27 +89,28 @@ export function Hero() {
                 <ArrowUpRight size={17} aria-hidden="true" />
               </a>
             </Magnet>
-            <a className="tactile-button tactile-button--ghost tactile-button--large" href="#servicios">
-              {HERO.secondaryCta}
-              <ArrowDown size={17} aria-hidden="true" />
-            </a>
           </div>
 
-          <dl className="hero__credentials">
-            {HERO.credentials.map((item, index) => (
-              <div key={item.label}>
-                <dt>
-                  <i aria-hidden="true">{String(index + 1).padStart(2, '0')}</i>
-                  <ScrambleText text={item.label} />
-                </dt>
-                <dd>{item.note}</dd>
-              </div>
-            ))}
-          </dl>
+          <div className="hero__meta">
+            <dl className="hero__credentials">
+              {HERO.credentials.map((item, index) => (
+                <div key={item.label}>
+                  <dt>
+                    <i aria-hidden="true">{String(index + 1).padStart(2, '0')}</i>
+                    <ScrambleText text={item.label} />
+                  </dt>
+                  <dd>{item.note}</dd>
+                </div>
+              ))}
+            </dl>
+            <span className="firma3d hero__firma3d" translate="no" aria-label="MH97">MH97</span>
+          </div>
         </Motion.div>
 
-        {/* El símbolo de la marca preside el hero. La escena 3D está apagada
-            por ahora; cuando vuelva, este mismo hueco es el suyo. */}
+        {/* El símbolo preside el hero con profundidad por capas: inclina con
+            el cursor y al clic responde con salto, destello, vuelta o la
+            firma. La escena WebGL sigue apagada; este hueco sigue siendo
+            suyo cuando vuelva. */}
         <Motion.div
           className="hero__viewport"
           id="hero-viewport"
@@ -122,14 +119,7 @@ export function Hero() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
         >
-          <img
-            className="hero__simbolo"
-            src="/marca/simbolo-lg.webp"
-            alt=""
-            width="1137"
-            height="1200"
-            fetchPriority="high"
-          />
+          <Logo3D />
         </Motion.div>
       </div>
 

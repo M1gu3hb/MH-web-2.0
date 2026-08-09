@@ -4,7 +4,7 @@ import { ABOUT, CONTACT } from '../../content';
 /* La placa que distorsiona el agua: el mismo fondo y el mismo monograma que
    pintaba el recuadro, pero horneados en una imagen, porque el efecto deforma
    una textura y no un árbol de nodos. */
-export const PLACA = '/placa-marca.webp';
+export const PLACA = '/placa-lockup.webp';
 
 /**
  * Presentación. Es la sección donde el efecto de desfragmentación se dispara
@@ -37,7 +37,7 @@ export function AboutSection() {
             <span className="about__plate-scan" aria-hidden="true" />
           </div>
           <div className="about__stamp">
-            <span>MH97</span>
+            <span className="firma3d" translate="no">MH97</span>
             <small><ScrambleText text={ABOUT.signature} trigger="view" /></small>
           </div>
         </Reveal>

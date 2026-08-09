@@ -169,8 +169,51 @@ ul {
   display: block;
 }
 
+/* El renglón que abre cada título lleva el azul de la marca, con la luz
+   entrando desde arriba como en el wordmark; el que matiza queda en tinta
+   apagada para no competir. */
+.section-heading__line:first-child {
+  background-image: linear-gradient(178deg, #5a9bff 6%, #0a66ff 54%, #0846c8 98%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
 .section-heading__soft {
   color: var(--ink-muted);
+}
+
+/* ---- La firma en tres dimensiones -------------------------- */
+/* MH97 extruido con puras letras: el frente en el azul claro legible y el
+   canto apilado en la escala de azules de la marca. Sin tarjeta ni fondo. */
+.firma3d {
+  display: inline-block;
+  color: #5a9bff;
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 2.6vw, 2.4rem);
+  font-weight: var(--w-bold);
+  letter-spacing: 0.01em;
+  line-height: 1;
+  text-shadow:
+    0 1px 0 #1668e2,
+    0 2px 0 #0f57c4,
+    0 3px 0 #0a49a8,
+    0 4px 0 #073c8d,
+    0 5px 0 #052f70,
+    0 12px 26px rgba(4, 10, 24, 0.65);
+  transform: perspective(640px) rotateX(16deg);
+  transition: transform 0.45s var(--ease);
+}
+
+.firma3d:hover {
+  transform: perspective(640px) rotateX(28deg) translateY(-5px) scale(1.05);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .firma3d,
+  .firma3d:hover {
+    transform: none;
+  }
 }
 
 .section-heading__lead {

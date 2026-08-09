@@ -425,11 +425,13 @@ export const CONTACT_SECTION = {
 export const FOOTER = {
   tagline: ['Diseño que vende.', 'Sistemas que ordenan.'],
   links: [
-    ['Trabajo', '#trabajo'],
     ['Servicios', '#servicios'],
+    ['Trabajo', '#trabajo'],
+    ['Proceso', '#proceso'],
     ['Inversión', '#inversion'],
+    ['Sobre mí', '#sobre-mi'],
     ['Preguntas', '#preguntas'],
-    ['Volver arriba', '#inicio'],
+    ['Contacto', '#contacto'],
   ],
 };
 

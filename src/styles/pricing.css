@@ -25,28 +25,40 @@
   border-radius: var(--r-xl);
 }
 
+/* Vidrio sobre lo que venga detrás: el fondo translúcido con desenfoque
+   deja pasar la escena que se ponga bajo la sección, y el color de marca no
+   vive fijo en una tarjeta sino en la que el cursor elige. */
 .tier {
   display: flex;
   flex-direction: column;
   height: 100%;
   padding: clamp(24px, 2.6vw, 36px);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(233, 236, 241, 0.12);
   border-radius: var(--r-xl);
-  background: var(--surface-raised);
-  box-shadow: var(--e-1);
+  background: rgba(30, 34, 41, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--e-1), inset 0 1px rgba(255, 255, 255, 0.06);
   transition:
     transform var(--d-base) var(--ease),
-    box-shadow var(--d-base) var(--ease);
+    box-shadow var(--d-base) var(--ease),
+    border-color var(--d-base) var(--ease),
+    background-color var(--d-base) var(--ease);
 }
 
 .tier:hover {
   transform: translateY(-5px);
-  box-shadow: var(--e-3);
+  border-color: rgba(10, 102, 255, 0.55);
+  background-color: rgba(10, 40, 92, 0.42);
+  box-shadow:
+    var(--e-3),
+    inset 0 1px rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(10, 102, 255, 0.18),
+    0 18px 50px rgba(10, 102, 255, 0.16);
 }
 
 .tier--featured {
-  border-color: rgba(10, 102, 255, 0.5);
-  background: linear-gradient(180deg, rgba(10, 102, 255, 0.12), rgba(10, 102, 255, 0.03)), var(--surface-night);
+  border-color: rgba(10, 102, 255, 0.34);
   color: var(--ink-invert);
 }
 

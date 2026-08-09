@@ -58,22 +58,13 @@
   filter: drop-shadow(0 16px 30px rgba(0, 0, 0, 0.55));
 }
 
+/* La firma va en letras extruidas al aire, sin tarjeta ni caja: el 3D es el
+   que la separa del fondo. */
 .about__stamp {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 18px 22px;
-  border: 1px solid var(--line-invert);
-  border-radius: var(--r-lg);
-}
-
-/* Hijo directo: el <small> de al lado contiene un ScrambleText, que también
-   son <span>, y heredaba el tamaño del monograma. */
-.about__stamp > span {
-  font-family: var(--font-display);
-  font-size: 1.7rem;
-  font-weight: var(--w-label);
-  letter-spacing: -0.06em;
+  gap: 18px;
+  padding: 14px 6px;
 }
 
 .about__stamp small {
@@ -93,6 +84,15 @@
   font-weight: var(--w-bold);
   letter-spacing: var(--tr-display);
   line-height: var(--lh-display);
+}
+
+/* El primer renglón del título en el azul de la marca, como en el resto de
+   los encabezados. */
+.about__title-line:first-child {
+  background-image: linear-gradient(178deg, #5a9bff 6%, #0a66ff 54%, #0846c8 98%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
 .about__statement {
@@ -171,7 +171,7 @@
   }
 
   .about__stamp > span {
-    font-size: 1.45rem;
+    font-size: 1.5rem;
   }
 
   .about__stamp small {

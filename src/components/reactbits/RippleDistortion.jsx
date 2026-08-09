@@ -365,10 +365,13 @@ export function RippleDistortion({
       setNewWave(point[0], point[1], Math.max(1, cfg.clickStrength));
     };
 
-    /* En el propio elemento: así el navegador no nos llama estando el puntero
-       en la otra punta de la página, y en táctil responde al arrastre. */
-    mount.addEventListener('pointermove', onMove, { passive: true });
-    mount.addEventListener('pointerdown', onDown, { passive: true });
+    /* En el contenedor de la placa, no en el lienzo: los marcos y barridos
+       decorativos que las placas ponen encima capturaban el puntero y el agua
+       dejaba de responder según qué adorno tuviera cada una. Escuchando al
+       padre, cualquier hijo por encima deja pasar el gesto igual. */
+    const zona = mount.parentElement ?? mount;
+    zona.addEventListener('pointermove', onMove, { passive: true });
+    zona.addEventListener('pointerdown', onDown, { passive: true });
     /* La caja se mueve con el scroll, y el efecto vive en mitad de la página. */
     window.addEventListener('scroll', recolocar, { passive: true });
 
@@ -435,8 +438,8 @@ export function RippleDistortion({
       cancelAnimationFrame(raf);
       ro.disconnect();
       ojo.disconnect();
-      mount.removeEventListener('pointermove', onMove);
-      mount.removeEventListener('pointerdown', onDown);
+      zona.removeEventListener('pointermove', onMove);
+      zona.removeEventListener('pointerdown', onDown);
       window.removeEventListener('scroll', recolocar);
       cancelAnimationFrame(reloc);
       uniformsRef.current = null;

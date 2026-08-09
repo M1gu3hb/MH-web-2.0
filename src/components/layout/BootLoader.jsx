@@ -119,15 +119,22 @@ export function BootLoader({ onDone }) {
       aria-label="Cargando el sitio"
     >
       <div className="boot__core">
-        <Motion.img
-          className="boot__lockup"
-          src="/marca/lockup-apilado.webp"
-          alt=""
-          width="960"
-          height="1049"
+        <Motion.div
+          className="boot__arte"
           {...paso}
           transition={{ duration: 1.05, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-        />
+        >
+          <img
+            className="boot__lockup"
+            src="/marca/lockup-apilado.webp"
+            alt=""
+            width="960"
+            height="1049"
+          />
+          {/* El reflejo del metal: una franja de luz cruza el lockup de
+              izquierda a derecha, recortada a su silueta con la máscara. */}
+          <span className="boot__brillo" aria-hidden="true" />
+        </Motion.div>
       </div>
 
       <div className="boot__foot">
