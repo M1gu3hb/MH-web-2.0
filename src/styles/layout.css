@@ -434,14 +434,16 @@ a.footer__dato:hover {
   padding-right: 10px;
 }
 
+/* Las píldoras venían del tema claro: blancas sobre el gunmetal. Ahora son
+   de la casa, con el contorno azul eléctrico de la marca. */
 .carousel__group a {
   display: inline-flex;
   align-items: center;
   gap: 10px;
   padding: 11px 18px 11px 13px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(10, 102, 255, 0.45);
   border-radius: var(--r-full);
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(30, 34, 41, 0.85);
   white-space: nowrap;
   transition:
     transform var(--d-fast) var(--ease),
@@ -451,9 +453,9 @@ a.footer__dato:hover {
 
 .carousel__group a:hover {
   transform: translateY(-3px);
-  border-color: var(--accent-brand);
-  background: #fff;
-  box-shadow: var(--e-2);
+  border-color: var(--accent-pos);
+  background: rgba(10, 45, 105, 0.55);
+  box-shadow: var(--e-2), 0 0 0 1px rgba(10, 102, 255, 0.2);
 }
 
 .carousel__icon {
@@ -462,8 +464,8 @@ a.footer__dato:hover {
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: var(--ink-strong);
-  color: var(--surface-base);
+  background: var(--accent-brand);
+  color: #fff;
 }
 
 .carousel__name {
