@@ -35,9 +35,9 @@
   background: var(--coral);
 }
 
-.demo-browser > span i:nth-child(2) { background: #ffc455; }
+.demo-browser > span i:nth-child(2) { background: #c0c5cc; }
 .demo-browser > span i:nth-child(3) { background: var(--lime); }
-.demo-browser b { justify-self: end; color: #1c9d79; }
+.demo-browser b { justify-self: end; color: #1f6ae0; }
 .demo-browser em { font-style: normal; }
 
 .website-canvas {
@@ -96,7 +96,7 @@
   border-radius: 42% 58% 62% 38%;
   background:
     radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.7), transparent 18%),
-    linear-gradient(145deg, var(--coral), #ffaf94 45%, var(--lime));
+    linear-gradient(145deg, var(--coral), #9cbcf0 45%, var(--lime));
   box-shadow:
     inset -16px -18px 26px rgba(134, 42, 27, 0.24),
     0 24px 40px rgba(178, 71, 46, 0.2);
@@ -216,7 +216,7 @@
   grid-column: 1 / -1;
   border-radius: 9px;
   background: var(--lime);
-  box-shadow: 0 4px 0 #778f1d;
+  box-shadow: 0 4px 0 #2f5fb8;
   color: var(--ink);
   font-size: 0.64rem;
   font-weight: 820;
@@ -252,7 +252,7 @@
   height: 8px;
   border-radius: 50%;
   background: var(--violet);
-  box-shadow: 0 0 0 5px rgba(94, 99, 255, 0.14);
+  box-shadow: 0 0 0 5px rgba(10, 102, 255, 0.14);
 }
 
 .crm-board {
@@ -306,7 +306,7 @@
 }
 
 .crm-board > div:nth-child(2) > span i { background: var(--coral); }
-.crm-board > div:nth-child(3) > span i { background: #1fb892; }
+.crm-board > div:nth-child(3) > span i { background: #2f7ef2; }
 
 .crm-board > div > span b {
   overflow: hidden;
@@ -361,9 +361,9 @@
 }
 
 .flow-node--start { top: 48px; left: 38px; }
-.flow-node--decision { top: 142px; left: 37%; background: #214f4b; }
+.flow-node--decision { top: 142px; left: 37%; background: #16305c; }
 .flow-node--doc { right: 34px; bottom: 78px; background: #243260; }
-.flow-node--end { bottom: 31px; left: 44px; background: #365219; }
+.flow-node--end { bottom: 31px; left: 44px; background: #1c3a75; }
 
 .flow-node--start i,
 .flow-node--end i {
@@ -394,7 +394,7 @@
   height: 2px;
   transform-origin: 0 50%;
   background: linear-gradient(90deg, var(--aqua), var(--lime));
-  box-shadow: 0 0 10px rgba(54, 215, 209, 0.45);
+  box-shadow: 0 0 10px rgba(79, 149, 255, 0.45);
 }
 
 .flow-line--one { top: 91px; left: 150px; width: 135px; transform: rotate(27deg); }
@@ -459,8 +459,8 @@
   background: var(--coral);
 }
 
-.project-browser-bar i:nth-child(2) { background: #ffc85d; }
-.project-browser-bar i:nth-child(3) { background: #54ce87; }
+.project-browser-bar i:nth-child(2) { background: #b9c8e6; }
+.project-browser-bar i:nth-child(3) { background: #4f95ff; }
 
 .project-browser-bar span {
   margin-left: auto;
@@ -582,13 +582,13 @@
   flex: 1;
   min-width: 6px;
   border-radius: 5px 5px 0 0;
-  background: linear-gradient(var(--coral), #ffb09f);
+  background: linear-gradient(var(--coral), #a8c4f2);
 }
 
 .project-ui--hipico {
   padding: 30px;
   background:
-    radial-gradient(circle at 90% 10%, rgba(206, 255, 61, 0.75), transparent 28%),
+    radial-gradient(circle at 90% 10%, rgba(90, 155, 255, 0.75), transparent 28%),
     #171917;
   color: white;
 }
@@ -677,7 +677,7 @@
   padding: 13px 15px;
   border-radius: 8px;
   background: var(--lime);
-  box-shadow: 0 4px 0 #718b18;
+  box-shadow: 0 4px 0 #2a55a8;
   font-size: 0.56rem;
   font-weight: 820;
 }
@@ -700,7 +700,7 @@
   border-radius: 50%;
   background:
     repeating-radial-gradient(circle, #191925 0 7px, #101017 8px 13px);
-  box-shadow: 0 0 60px rgba(94, 99, 255, 0.3);
+  box-shadow: 0 0 60px rgba(10, 102, 255, 0.3);
   animation: disc-spin 14s linear infinite;
 }
 
@@ -711,7 +711,7 @@
   place-items: center;
   border-radius: 50%;
   background: var(--violet);
-  box-shadow: 0 0 0 15px rgba(94, 99, 255, 0.18);
+  box-shadow: 0 0 0 15px rgba(10, 102, 255, 0.18);
   font-family: var(--display);
   font-size: 1.3rem;
   font-weight: 760;
@@ -878,7 +878,7 @@
   margin-left: auto;
   border-radius: 50%;
   background: var(--aqua);
-  box-shadow: 0 4px 0 #167873;
+  box-shadow: 0 4px 0 #1655b8;
   color: var(--ink);
   font-size: 1.1rem;
 }
@@ -912,7 +912,7 @@
   margin-top: 32px;
   border-radius: 9px;
   background: var(--aqua);
-  box-shadow: 0 5px 0 #197b76;
+  box-shadow: 0 5px 0 #1a5cc9;
   font-weight: 800;
 }
 
@@ -1066,11 +1066,11 @@
 }
 
 .software-bar > span { display: inline-flex; gap: 5px; }
-.software-bar > span i { width: 9px; height: 9px; border-radius: 50%; background: #ff684f; }
-.software-bar > span i:nth-child(2) { background: #f5a524; }
-.software-bar > span i:nth-child(3) { background: #ceff3d; }
+.software-bar > span i { width: 9px; height: 9px; border-radius: 50%; background: #4f95ff; }
+.software-bar > span i:nth-child(2) { background: #c0c5cc; }
+.software-bar > span i:nth-child(3) { background: #5a9bff; }
 .software-bar em { color: rgba(231, 236, 255, 0.6); font-style: normal; }
-.software-bar b { color: #ceff3d; }
+.software-bar b { color: #5a9bff; }
 
 .software-body {
   display: grid;
@@ -1094,7 +1094,7 @@
   font-size: 0.68rem;
 }
 
-.software-files span.active { background: rgba(245, 165, 36, 0.16); color: #f5a524; }
+.software-files span.active { background: rgba(192, 197, 204, 0.16); color: #c0c5cc; }
 
 .software-code {
   position: relative;
@@ -1114,8 +1114,8 @@
   bottom: 14px;
   padding: 6px 12px;
   border-radius: 999px;
-  background: rgba(206, 255, 61, 0.16);
-  color: #ceff3d;
+  background: rgba(90, 155, 255, 0.16);
+  color: #5a9bff;
   font-size: 0.62rem;
   font-weight: 800;
 }
@@ -1131,7 +1131,7 @@
 }
 
 .software-foot span { display: inline-flex; align-items: center; gap: 6px; color: rgba(231, 236, 255, 0.6); }
-.software-foot i { width: 6px; height: 6px; border-radius: 50%; background: #ceff3d; }
+.software-foot i { width: 6px; height: 6px; border-radius: 50%; background: #5a9bff; }
 
 /* ---- GESTECH: control de Windows por gestos ----------------- */
 .project-ui--gestech {
@@ -1147,10 +1147,10 @@
   position: relative;
   min-width: 0;
   overflow: hidden;
-  border: 1px solid rgba(245, 165, 36, 0.28);
+  border: 1px solid rgba(192, 197, 204, 0.28);
   border-radius: 10px;
   background:
-    radial-gradient(120% 90% at 50% 100%, rgba(245, 165, 36, 0.14), transparent 65%),
+    radial-gradient(120% 90% at 50% 100%, rgba(192, 197, 204, 0.14), transparent 65%),
     repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 4px),
     #080b11;
 }
@@ -1158,13 +1158,13 @@
 .gestech-cam svg { display: block; width: 100%; height: 100%; }
 .gestech-cam polyline {
   fill: none;
-  stroke: rgba(245, 165, 36, 0.75);
+  stroke: rgba(192, 197, 204, 0.75);
   stroke-width: 1.4;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 .gestech-cam circle {
-  fill: #ceff3d;
+  fill: #5a9bff;
   animation: gestech-node 2.4s ease-in-out infinite;
 }
 
@@ -1194,7 +1194,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #ff5a4f;
+  background: #5a9bff;
   animation: gestech-node 1.6s ease-in-out infinite;
 }
 
@@ -1203,8 +1203,8 @@
   bottom: 10px;
   padding: 4px 7px;
   border-radius: 5px;
-  background: rgba(245, 165, 36, 0.18);
-  color: #f5a524;
+  background: rgba(192, 197, 204, 0.18);
+  color: #c0c5cc;
 }
 
 .gestech-cursor {
@@ -1213,9 +1213,9 @@
   left: 30%;
   width: 12px;
   height: 12px;
-  border: 2px solid #ceff3d;
+  border: 2px solid #5a9bff;
   border-radius: 50%;
-  box-shadow: 0 0 0 4px rgba(206, 255, 61, 0.16);
+  box-shadow: 0 0 0 4px rgba(90, 155, 255, 0.16);
   animation: gestech-cursor 5s ease-in-out infinite;
 }
 
@@ -1248,9 +1248,9 @@
   color: rgba(233, 237, 247, 0.45);
 }
 .gestech-state b.on {
-  border-color: #ceff3d;
-  background: rgba(206, 255, 61, 0.14);
-  color: #ceff3d;
+  border-color: #5a9bff;
+  background: rgba(90, 155, 255, 0.14);
+  color: #5a9bff;
 }
 .gestech-state em { color: rgba(233, 237, 247, 0.35); font-style: normal; }
 
@@ -1269,7 +1269,7 @@
 }
 .gestech-map i { font-style: normal; font-size: 0.8rem; }
 .gestech-map span {
-  color: #f5a524;
+  color: #c0c5cc;
   font-family: ui-monospace, monospace;
   font-size: 0.52rem;
   letter-spacing: 0.08em;
@@ -1318,10 +1318,10 @@
   background: linear-gradient(160deg, #3b3f7a, #191b34);
 }
 
-.booth-pic--0 { background: linear-gradient(160deg, #5e63ff, #2a2d5c); }
-.booth-pic--1 { background: linear-gradient(160deg, #ff684f, #5a2118); }
-.booth-pic--2 { background: linear-gradient(160deg, #36d7d1, #10454a); }
-.booth-pic--3 { background: linear-gradient(160deg, #f5a524, #5c3a06); }
+.booth-pic--0 { background: linear-gradient(160deg, #0a66ff, #16305c); }
+.booth-pic--1 { background: linear-gradient(160deg, #4f95ff, #0c2a55); }
+.booth-pic--2 { background: linear-gradient(160deg, #4f95ff, #0d2c52); }
+.booth-pic--3 { background: linear-gradient(160deg, #c0c5cc, #26314a); }
 
 /* Dos siluetas por viñeta: torso con hombros redondeados y la cabeza encima.
    Con esto la tira se lee como retratos y no como muestras de color. */
@@ -1395,8 +1395,8 @@
 
 .booth-status { display: grid; gap: 6px; }
 .booth-status span { display: inline-flex; align-items: center; gap: 8px; font-size: 0.64rem; font-weight: 700; }
-.booth-status i { width: 7px; height: 7px; border-radius: 50%; background: #ff684f; }
-.booth-status span:last-child i { background: #ceff3d; }
+.booth-status i { width: 7px; height: 7px; border-radius: 50%; background: #4f95ff; }
+.booth-status span:last-child i { background: #5a9bff; }
 
 .booth-flash {
   position: absolute;
@@ -1422,7 +1422,7 @@
   padding: 24px;
   overflow: hidden;
   background: #101408;
-  color: #eef7d6;
+  color: #e3ecfa;
 }
 
 .imagination-grid {
@@ -1436,7 +1436,7 @@
 }
 
 .imagination-grid i {
-  border: 1px solid rgba(206, 255, 61, 0.28);
+  border: 1px solid rgba(90, 155, 255, 0.28);
   border-radius: 4px;
   animation: imagination-pulse 3.4s ease-in-out infinite;
 }
@@ -1447,9 +1447,9 @@
   place-items: center;
   width: 92px;
   height: 92px;
-  border: 2px dashed #ceff3d;
+  border: 2px dashed #5a9bff;
   border-radius: 50%;
-  background: rgba(206, 255, 61, 0.1);
+  background: rgba(90, 155, 255, 0.1);
   animation: imagination-spin 14s linear infinite;
 }
 
@@ -1457,7 +1457,7 @@
   font-family: var(--display);
   font-size: 2.6rem;
   font-weight: 820;
-  color: #ceff3d;
+  color: #5a9bff;
   animation: imagination-spin 14s linear infinite reverse;
 }
 

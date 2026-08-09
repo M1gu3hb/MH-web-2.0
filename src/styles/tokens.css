@@ -112,10 +112,13 @@
   --muted: #5f6059;
   --blue: #0a66ff;
   --blue-deep: #0846c8;
-  --coral: #ff684f;
-  --lime: #ceff3d;
-  --aqua: #36d7d1;
-  --violet: #5e63ff;
+  /* Los nombres se conservan por compatibilidad con las maquetas, pero todos
+     apuntan ya a la familia azul de la marca: el carrusel no habla otra
+     paleta que la del manual. */
+  --coral: #2f7ef2;
+  --lime: #5a9bff;
+  --aqua: #4f95ff;
+  --violet: #0a66ff;
   --display: 'Syne Variable', ui-sans-serif, system-ui, sans-serif;
   --body: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
 

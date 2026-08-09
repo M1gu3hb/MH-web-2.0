@@ -76,7 +76,7 @@ body.no-stage .hero__fade {
      la sacaba de cuadro en teléfono y en tableta apaisada, donde la columna es
      bastante más estrecha que la pantalla. En unidades de contenedor cabe
      siempre, sea cual sea el reparto del grid. */
-  font-size: clamp(1.9rem, 9.2cqw, 5.2rem);
+  font-size: clamp(2.1rem, 12.6cqw, 6.6rem);
   line-height: 0.92;
   text-shadow: 0 6px 40px rgba(8, 6, 21, 0.65);
 }
@@ -143,16 +143,12 @@ body.no-stage .hero__fade {
 }
 
 /* La frase que antes era el titular acompaña ahora al párrafo de apoyo con
-   su mismo cuerpo: el protagonismo es todo del titular. */
+   su mismo cuerpo y su misma voz: el protagonismo es todo del titular. */
 .hero__claim {
-  max-width: 50ch;
+  max-width: 54ch;
   margin-top: var(--sp-6);
-  color: var(--ink-strong);
-  font-family: var(--font-brand);
+  color: var(--ink-body);
   font-size: var(--t-lead);
-  font-variation-settings: 'wght' 560;
-  font-weight: 560;
-  letter-spacing: -0.015em;
   line-height: var(--lh-body);
 }
 
@@ -456,8 +452,10 @@ body.no-stage .hero__fade {
      DIGITALIZAMOS, que es indivisible: llenando los dos márgenes, lo único
      que queda por ganar es el ajuste de letra, de ahí que aquí vaya más
      apretado que en escritorio. */
+  /* A todo el ancho: DIGITALIZAMOS llena la columna de margen a margen y el
+     titular se lleva todo el protagonismo del teléfono. */
   .hero__title {
-    font-size: 7.9cqw;
+    font-size: 14.6cqw;
     line-height: 0.86;
   }
 
@@ -506,8 +504,8 @@ body.no-stage .hero__fade {
     margin-top: 24px;
     padding-left: 14px;
     border-left: 2px solid rgba(10, 102, 255, 0.65);
-    font-size: 1.04rem;
-    line-height: 1.32;
+    font-size: 0.95rem;
+    line-height: 1.58;
   }
 
   .hero__lead {

@@ -145,7 +145,12 @@ export function ScrambleText({
       node,
       word: node.dataset.word,
     }));
-    freeze();
+    /* Solo el modo `view` necesita llegar congelado y en glifos. En reposo
+       con `hover` el texto se queda sin anchos fijos: congelarlo al montar
+       lo dejaba clavado a una medida tomada en plena carga de la fuente y,
+       si salía corta, el titular aparecía recortado a nada hasta que un
+       hover lo soltaba. La congelación del hover ya la hace churn(). */
+    if (trigger === 'view') freeze();
 
     /* Con la fuente definitiva ya cargada, el ancho cambia: hay que rehacer
        la medida o las últimas letras se quedan fuera del recorte. */
@@ -153,9 +158,11 @@ export function ScrambleText({
     document.fonts?.ready.then(() => {
       if (cancelled) return;
       if (phase.current === 'done') release();
-      else {
+      else if (trigger === 'view') {
         freeze();
-        if (phase.current === 'idle' && trigger === 'view') paint(0);
+        if (phase.current === 'idle') paint(0);
+      } else if (phase.current === 'idle') {
+        release();
       }
     });
 

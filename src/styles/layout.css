@@ -541,13 +541,15 @@ a.footer__dato:hover {
   mask-size: 100% 100%;
   -webkit-mask-image: url('/marca/lockup-apilado.webp');
   -webkit-mask-size: 100% 100%;
-  animation: boot-brillo 3.2s ease-in-out 1s infinite;
+  animation: boot-brillo 4.4s ease-in-out 0.9s infinite;
 }
 
+/* La pasada dura unos dos segundos: da tiempo a ver la luz recorrer el
+   metal antes del descanso. */
 @keyframes boot-brillo {
   0% { opacity: 1; background-position: -160% 0; }
-  42% { opacity: 1; background-position: 160% 0; }
-  42.1%, 100% { opacity: 0; background-position: 160% 0; }
+  46% { opacity: 1; background-position: 160% 0; }
+  46.1%, 100% { opacity: 0; background-position: 160% 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
