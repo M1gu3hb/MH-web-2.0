@@ -460,24 +460,10 @@
   gap: clamp(18px, 3vh, 28px);
 }
 
-.boot__simbolo {
-  width: clamp(120px, 22vh, 200px);
+.boot__lockup {
+  width: min(78vw, 52vh, 430px);
   height: auto;
-  filter: drop-shadow(0 18px 44px rgba(10, 102, 255, 0.22));
-}
-
-.boot__nombre {
-  font-size: clamp(2.6rem, 9vw, 4.6rem);
-}
-
-.boot__firma {
-  color: var(--accent-silver);
-  font-family: var(--font-brand);
-  font-size: clamp(0.66rem, 1.9vw, 0.86rem);
-  font-variation-settings: 'wght' 460;
-  font-weight: 460;
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
+  filter: drop-shadow(0 22px 54px rgba(10, 102, 255, 0.22));
 }
 
 .boot__foot {
@@ -534,96 +520,28 @@
 }
 
 /* ============================================================
-   La marca en vivo
+   La marca
    ============================================================ */
-/* Los degradados del manual: el azul eléctrico y la plata, con la luz
-   entrando desde arriba. Son los mismos dos en todos los tamaños. */
-.marca-nombre {
-  display: inline-flex;
-  align-items: baseline;
-  font-family: var(--font-brand);
-  font-variation-settings: 'wght' 640;
-  font-weight: 640;
-  letter-spacing: 0.005em;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.marca-nombre b,
-.marca-nombre > span:not(.rb-visually-hidden) {
-  font-weight: inherit;
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-}
-
-.marca-nombre--azul {
-  background-image: linear-gradient(172deg, #4f95ff 8%, #0a66ff 52%, #0846c8 96%);
-}
-
-.marca-nombre--plata {
-  background-image: linear-gradient(172deg, #f2f4f7 8%, #c0c5cc 55%, #969ca6 96%);
-}
-
-/* El punto de la i, encima del asta derecha de la H. */
-.marca-nombre__h {
-  position: relative;
-  margin-right: 0.04em;
-}
-
-.marca-nombre__h i {
-  position: absolute;
-  top: -0.1em;
-  right: 0.045em;
-  width: 0.13em;
-  height: 0.13em;
-  border-radius: 0.02em;
-  background: linear-gradient(172deg, #4f95ff, #0a66ff);
-}
-
-.marca__firma {
-  display: block;
-  color: var(--accent-silver);
-  font-family: var(--font-brand);
-  font-size: 0.34em;
-  font-variation-settings: 'wght' 460;
-  font-weight: 460;
-  letter-spacing: 0.34em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
+/* El arte oficial del logo servido como imagen con transparencia. El alto
+   lo pone cada contexto; el ancho sale solo de la proporción del arte. */
 .marca {
   display: inline-flex;
   align-items: center;
 }
 
-.marca--horizontal {
-  gap: 0.42em;
+.marca__lockup {
+  display: block;
+  width: auto;
+  height: 100%;
 }
 
-.marca--horizontal .marca__simbolo {
-  width: 1.9em;
-  height: auto;
+/* La esquina del nav: el lockup horizontal completo, legible sin comerse
+   la barra. */
+.brand .marca--horizontal .marca__lockup {
+  height: clamp(42px, 4.6vw, 54px);
 }
 
-.marca--horizontal .marca__firma {
-  margin-top: 0.14em;
-}
-
-.marca--stacked {
-  flex-direction: column;
-  gap: 0.75em;
-  text-align: center;
-}
-
-.marca--stacked .marca__simbolo {
-  width: 3.6em;
-  height: auto;
-}
-
-.marca--stacked .marca__texto {
-  display: grid;
-  justify-items: center;
-  gap: 0.5em;
+/* El pie lleva el nombre solo: la firma ya la dice la línea legal. */
+.brand--pie .marca__lockup {
+  height: clamp(34px, 3.6vw, 44px);
 }

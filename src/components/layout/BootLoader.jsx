@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion as Motion } from 'motion/react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
-import { BrandWordmark } from './BrandLockup';
 
 const STEPS = [
   ['tipografías', () => document.fonts?.ready ?? Promise.resolve()],
-  ['identidad', () => preloadImage('/marca/simbolo-md.webp')],
+  ['identidad', () => preloadImage('/marca/lockup-apilado.webp')],
   ['interfaz', () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))],
 ];
 
@@ -121,25 +120,14 @@ export function BootLoader({ onDone }) {
     >
       <div className="boot__core">
         <Motion.img
-          className="boot__simbolo"
-          src="/marca/simbolo-md.webp"
+          className="boot__lockup"
+          src="/marca/lockup-apilado.webp"
           alt=""
-          width="606"
-          height="640"
+          width="960"
+          height="1049"
           {...paso}
-          transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 1.05, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
         />
-        <Motion.div {...paso} transition={{ duration: 0.8, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}>
-          <BrandWordmark className="boot__nombre" />
-        </Motion.div>
-        <Motion.p
-          className="boot__firma"
-          translate="no"
-          {...paso}
-          transition={{ duration: 0.8, delay: 0.95, ease: [0.22, 1, 0.36, 1] }}
-        >
-          Astral Morphiq Systems
-        </Motion.p>
       </div>
 
       <div className="boot__foot">

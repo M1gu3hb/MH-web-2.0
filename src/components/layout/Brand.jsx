@@ -12,7 +12,7 @@ export function Brand() {
       href="#inicio"
       aria-label="Morphiq, Astral Morphiq Systems. Volver al inicio"
     >
-      <BrandLockup layout="horizontal" symbol />
+      <BrandLockup layout="horizontal" />
     </a>
   );
 }

@@ -1,10 +1,12 @@
-import { Brand } from './Brand';
+import { BrandWordmark } from './BrandLockup';
 import { CONTACT, FOOTER } from '../../content';
 
 export function Footer() {
   return (
     <footer className="footer">
-      <Brand />
+      <a className="brand brand--pie" href="#inicio" aria-label="Morphiq. Volver al inicio">
+        <BrandWordmark />
+      </a>
       <p className="footer__tagline">
         {FOOTER.tagline[0]}
         <br />
