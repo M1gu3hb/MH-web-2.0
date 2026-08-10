@@ -56,6 +56,22 @@
   overflow: hidden;
 }
 
+/* Liberado por el gesto: scroll horizontal nativo con inercia, arrastrable
+   con el ratón, y la página sigue de largo con normalidad. */
+.work-rail__visor--libre {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(10, 102, 255, 0.55) transparent;
+  cursor: grab;
+}
+
+.work-rail__visor--libre.is-grabbing {
+  cursor: grabbing;
+  user-select: none;
+}
+
 .work-rail__pista {
   display: flex;
   gap: clamp(16px, 2.4vw, 40px);

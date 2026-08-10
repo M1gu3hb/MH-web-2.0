@@ -454,6 +454,17 @@
     grid-template-rows: auto minmax(0, 1fr);
   }
 
+  /* El mismo recuadro macizo que en escritorio, ahora arriba: la tela del
+     morph llena el escenario entero cuando la baraja se apila (sus filas no
+     saben cuánto mide el texto, que vive en una capa absoluta), así que el
+     bloque de texto se trae su propio fondo del color de la tarjeta. Sin
+     esto, el titular se leía directo sobre la escena. */
+  .panel-copy {
+    position: relative;
+    z-index: 1;
+    background: var(--layer-accent, var(--accent));
+  }
+
   /* Apilado, la tela pasa de media tarjeta a la banda de abajo. Mismo reparto
      que la capa, otra vez, para que siga cayendo donde va el hueco. */
   .panel-stage {

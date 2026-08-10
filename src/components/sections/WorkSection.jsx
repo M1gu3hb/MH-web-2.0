@@ -144,7 +144,8 @@ function useRielHorizontal(enabled) {
   useEffect(() => {
     const zonaRiel = riel.current;
     const zonaPista = pista.current;
-    if (!zonaRiel || !zonaPista) return undefined;
+    const visor = zonaPista?.parentElement;
+    if (!zonaRiel || !zonaPista || !visor) return undefined;
 
     if (!enabled) {
       zonaRiel.style.height = '';
@@ -155,36 +156,108 @@ function useRielHorizontal(enabled) {
     let frame = 0;
     let sobra = 0;
     let recorrido = 0;
+    /* El desfile va con inercia: el scroll fija el objetivo y un bucle corto
+       persigue ese objetivo suavizando cada golpe de rueda. Directo al
+       transform, cada muesca de la rueda era un tirón. */
+    let objetivo = 0;
+    let actual = 0;
+    let animando = 0;
+    let libre = false;
 
     const medir = () => {
-      const visor = zonaPista.parentElement;
-      if (!visor) return;
       sobra = Math.max(0, zonaPista.scrollWidth - visor.clientWidth);
-      /* El recorrido no es lo que sobra de riel, es lo que sobra o lo que
-         hace falta para poder leer, lo que sea mayor. Atado uno a uno, en
-         teléfono cada tarjeta mide poco más de un tercio de pantalla y pasan
-         todas de un manotazo; así cada una se lleva al menos cuatro quintos
-         de pantalla de rueda, mida lo que mida el riel. */
-      const minimo = zonaPista.children.length * window.innerHeight * 0.8;
+      /* Cada tarjeta se lleva al menos dos tercios de pantalla de rueda:
+         menos que antes, que con cuatro quintos el recorrido se hacía largo
+         y la sección se sentía atascada. */
+      const minimo = zonaPista.children.length * window.innerHeight * 0.66;
       recorrido = Math.max(sobra, minimo);
       zonaRiel.style.height = `${visor.clientHeight + recorrido}px`;
+    };
+
+    const paso = () => {
+      actual += (objetivo - actual) * 0.16;
+      if (Math.abs(objetivo - actual) < 0.4) {
+        actual = objetivo;
+        animando = 0;
+      } else {
+        animando = requestAnimationFrame(paso);
+      }
+      zonaPista.style.transform = `translate3d(${-actual.toFixed(2)}px, 0, 0)`;
     };
 
     const pintar = () => {
       const r = zonaRiel.getBoundingClientRect();
       const avance = recorrido > 0 ? Math.min(1, Math.max(0, -r.top / recorrido)) : 0;
-      zonaPista.style.transform = `translate3d(${-(avance * sobra).toFixed(2)}px, 0, 0)`;
+      objetivo = avance * sobra;
+      if (!animando) animando = requestAnimationFrame(paso);
     };
 
     const onScroll = () => {
-      if (frame) return;
+      if (libre || frame) return;
       frame = requestAnimationFrame(() => {
         frame = 0;
         pintar();
       });
     };
 
+    /* La salida de emergencia: en cuanto alguien mueve el riel de lado por
+       su cuenta —rueda horizontal o arrastre— la animación de scroll se
+       apaga. El recorrido colapsa a una pantalla, la pista pasa a scroll
+       nativo en el punto exacto donde iba, y la página sigue de largo sin
+       obligar a nadie a terminar los siete casos. */
+    const liberar = () => {
+      if (libre) return;
+      libre = true;
+      cancelAnimationFrame(frame);
+      cancelAnimationFrame(animando);
+      frame = 0;
+      animando = 0;
+      const arriba = zonaRiel.getBoundingClientRect().top + window.scrollY;
+      zonaRiel.style.height = '';
+      visor.classList.add('work-rail__visor--libre');
+      zonaPista.style.transform = '';
+      visor.scrollLeft = actual;
+      window.scrollTo(0, arriba);
+    };
+
+    let toque = null;
+    let agarre = null;
+
+    const onWheel = (event) => {
+      if (libre) return;
+      if (Math.abs(event.deltaX) > 8 && Math.abs(event.deltaX) > Math.abs(event.deltaY) * 1.2) liberar();
+    };
+
+    const onDown = (event) => {
+      if (libre) {
+        if (event.pointerType === 'mouse') {
+          agarre = [event.clientX, visor.scrollLeft];
+          visor.classList.add('is-grabbing');
+        }
+        return;
+      }
+      toque = [event.clientX, event.clientY];
+    };
+
+    const onMove = (event) => {
+      if (libre) {
+        if (agarre) visor.scrollLeft = agarre[1] - (event.clientX - agarre[0]);
+        return;
+      }
+      if (!toque) return;
+      const dx = event.clientX - toque[0];
+      const dy = event.clientY - toque[1];
+      if (Math.abs(dx) > 26 && Math.abs(dx) > Math.abs(dy) * 1.4) liberar();
+    };
+
+    const onUp = () => {
+      toque = null;
+      agarre = null;
+      visor.classList.remove('is-grabbing');
+    };
+
     const ro = new ResizeObserver(() => {
+      if (libre) return;
       medir();
       pintar();
     });
@@ -194,11 +267,23 @@ function useRielHorizontal(enabled) {
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);
+    visor.addEventListener('wheel', onWheel, { passive: true });
+    visor.addEventListener('pointerdown', onDown, { passive: true });
+    visor.addEventListener('pointermove', onMove, { passive: true });
+    visor.addEventListener('pointerup', onUp, { passive: true });
+    visor.addEventListener('pointercancel', onUp, { passive: true });
     return () => {
       cancelAnimationFrame(frame);
+      cancelAnimationFrame(animando);
       ro.disconnect();
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
+      visor.removeEventListener('wheel', onWheel);
+      visor.removeEventListener('pointerdown', onDown);
+      visor.removeEventListener('pointermove', onMove);
+      visor.removeEventListener('pointerup', onUp);
+      visor.removeEventListener('pointercancel', onUp);
+      visor.classList.remove('work-rail__visor--libre', 'is-grabbing');
       zonaRiel.style.height = '';
       zonaPista.style.transform = '';
     };

@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 
-/* Capas del arte apiladas en Z: las traseras, oscurecidas, hacen de canto y
-   el PNG original queda al frente intacto. Es profundidad real de composición
-   sin WebGL: nueve copias del mismo bitmap que el navegador decodifica una
-   sola vez. */
-const CAPAS = 9;
-const PASO_Z = 4.2;
+/* Capas del arte apiladas en Z: las traseras hacen de canto con una versión
+   del logo en colores sólidos (los mismos azul, oscuro y plata, pero sin los
+   reflejos del frente), y el PNG original queda delante intacto. Es
+   profundidad real de composición sin WebGL: el navegador decodifica dos
+   bitmaps y compone el resto. */
+const CAPAS = 14;
+const PASO_Z = 6.5;
 
 /* Al clic no reacciona igual dos veces seguidas: salto, destello metálico,
    una vuelta completa y la firma revelándose debajo, en turno. */
@@ -106,8 +107,17 @@ export function Logo3D() {
             <img
               key={i}
               className={`logo3d__capa ${i === 0 ? 'logo3d__capa--frente' : ''}`.trim()}
-              style={{ transform: `translateZ(${(-i * PASO_Z).toFixed(1)}px)` }}
-              src="/marca/simbolo-v2-md.webp"
+              style={
+                i === 0
+                  ? { transform: 'translateZ(0px)' }
+                  : {
+                      transform: `translateZ(${(-i * PASO_Z).toFixed(1)}px)`,
+                      /* El canto se apaga hacia el fondo: es lo que dibuja el
+                         grosor cuando la pieza gira. */
+                      filter: `brightness(${(0.92 - i * 0.045).toFixed(3)})`,
+                    }
+              }
+              src={i === 0 ? '/marca/simbolo-v2-md.webp' : '/marca/simbolo-solido.webp'}
               alt=""
               width="600"
               height="607"
