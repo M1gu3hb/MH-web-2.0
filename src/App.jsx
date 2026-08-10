@@ -7,6 +7,7 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Navigation } from './components/layout/Navigation';
 import { Footer } from './components/layout/Footer';
 import { FloatingCTA } from './components/layout/FloatingCTA';
+import { FrenoScroll } from './components/primitives/FrenoScroll';
 import { ProjectCarousel } from './components/layout/ProjectCarousel';
 import { BootLoader } from './components/layout/BootLoader';
 import { Hero } from './components/hero/Hero';
@@ -90,6 +91,8 @@ export default function App() {
       <div className="app-shell" inert={booting ? '' : undefined}>
       <Motion.div className="scroll-meter" style={{ scaleX: meter }} aria-hidden="true" />
       <div className="paper-grain" aria-hidden="true" />
+      {/* Frena los saltos que se comerían las animaciones de scroll. */}
+      <FrenoScroll />
 
       <Navigation />
       {/* Se monta desde el arranque: la pantalla de carga espera a que

@@ -157,9 +157,12 @@ function useRielHorizontal(enabled) {
     let frame = 0;
     let sobra = 0;
     let recorrido = 0;
-    /* El desfile va con inercia: el scroll fija el objetivo y un bucle corto
-       persigue ese objetivo suavizando cada golpe de rueda. Directo al
-       transform, cada muesca de la rueda era un tirón. */
+    /* Con rueda el desfile lleva inercia —cada muesca es un salto discreto y
+       sin suavizar se siente a tirones—, pero con el dedo NO: el scroll táctil
+       ya trae su propia inercia y suavizar encima añade un retraso que se
+       siente como que la página va pesada y despegada del dedo. En táctil el
+       transform sigue al scroll uno a uno. */
+    const conDedo = window.matchMedia?.('(hover: none)').matches ?? false;
     let objetivo = 0;
     let actual = 0;
     let animando = 0;
@@ -190,6 +193,11 @@ function useRielHorizontal(enabled) {
       const r = zonaRiel.getBoundingClientRect();
       const avance = recorrido > 0 ? Math.min(1, Math.max(0, -r.top / recorrido)) : 0;
       objetivo = avance * sobra;
+      if (conDedo) {
+        actual = objetivo;
+        zonaPista.style.transform = `translate3d(${-actual.toFixed(2)}px, 0, 0)`;
+        return;
+      }
       if (!animando) animando = requestAnimationFrame(paso);
     };
 
@@ -213,15 +221,20 @@ function useRielHorizontal(enabled) {
       cancelAnimationFrame(animando);
       frame = 0;
       animando = 0;
+      /* Sin tocar el scroll de la página: la sección se recorta justo por
+         debajo de donde estamos, así que el punto en el que está el visitante
+         sigue siendo válido y nada se mueve bajo sus pies.
+
+         Antes se devolvía la altura a su valor natural y se recolocaba con
+         scrollTo: al encoger la sección seis mil píxeles, la posición actual
+         quedaba fuera de ella, el navegador la corregía a la fuerza y eso era
+         el salto que se veía en el vídeo. */
       const arriba = zonaRiel.getBoundingClientRect().top + window.scrollY;
-      zonaRiel.style.height = '';
+      const alto = Math.max(visor.clientHeight, window.scrollY - arriba + visor.clientHeight);
+      zonaRiel.style.height = `${alto}px`;
       visor.classList.add('work-rail__visor--libre');
       zonaPista.style.transform = '';
       visor.scrollLeft = actual;
-      /* Instantáneo a la fuerza: la página lleva scroll-behavior smooth y
-         recolocar animando se veía como un salto que además peleaba con el
-         gesto en curso. */
-      window.scrollTo({ top: arriba, behavior: 'instant' });
     };
 
     let toque = null;
@@ -321,6 +334,7 @@ export function WorkSection() {
         tone="night"
       />
 
+      <span className="freno-scroll" aria-hidden="true" />
       <div className="work-rail" ref={riel}>
         {/* La pista cuelga del riel y no del bloque pegado: mide el avance con
             el rectángulo de su padre, y el bloque pegado no se mueve. */}

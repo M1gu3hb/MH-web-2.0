@@ -2,16 +2,34 @@ import { useEffect, useRef, useState } from 'react';
 import { motion as Motion } from 'motion/react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 
+/* Lo que el hero necesita el primer fotograma. Se descarga Y se descodifica
+   aquí, mientras la marca se presenta: si solo se descargara, el navegador
+   pagaría la descodificación —que en un teléfono son decenas de milisegundos
+   por imagen— justo al entrar, y es lo que hacía que la página apareciera a
+   trompicones. Para eso está una pantalla de carga. */
+const ESENCIALES = [
+  '/marca/lockup-apilado.webp',
+  '/marca/simbolo-v2-md.webp',
+  '/marca/simbolo-solido.webp',
+  '/marca/lockup-horizontal.webp',
+  '/marca/nombre.webp',
+];
+
 const STEPS = [
   ['tipografías', () => document.fonts?.ready ?? Promise.resolve()],
-  ['identidad', () => preloadImage('/marca/lockup-apilado.webp')],
+  ['identidad', () => Promise.all(ESENCIALES.map(preloadImage))],
   ['interfaz', () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))],
 ];
 
 function preloadImage(src) {
   return new Promise((resolve) => {
     const img = new Image();
-    img.onload = resolve;
+    img.onload = () => {
+      /* `decode` deja el bitmap listo para pintar. Si no existe o falla, se
+         sigue igual: nunca puede impedir entrar. */
+      if (img.decode) img.decode().then(resolve, resolve);
+      else resolve();
+    };
     img.onerror = resolve;
     img.src = src;
   });

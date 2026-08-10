@@ -470,35 +470,18 @@ body.is-booting {
    Freno en las secciones con animación de scroll
    ============================================================
 
-   Servicios, trabajo y proceso duran varias pantallas de rueda. Con un
-   deslizamiento fuerte —muy normal en teléfono— la inercia se los pasaba
-   enteros y el visitante aterrizaba al otro lado sin haber visto nada.
+   Servicios, trabajo y proceso duran varias pantallas. Con un deslizamiento
+   fuerte —muy normal en teléfono— la inercia se los pasaba enteros.
 
-   El navegador ya sabe frenar: `scroll-snap-stop: always` obliga a parar en
-   el punto de anclaje aunque el impulso diera para mucho más. Con `proximity`
-   solo tira cuando estás cerca, así que el scroll normal no se siente
-   imantado; lo único que cambia es que un impulso largo se detiene al
-   principio de cada animación en vez de saltársela. Volver a deslizar sigue
-   de largo, y a la siguiente animación vuelve a frenar. */
-html {
-  scroll-snap-type: y proximity;
-}
-
-.capabilities__scroller,
-.work-rail,
-.process__scroller {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-}
-
-/* Liberado a mano, el riel ya no manda en el scroll vertical: si siguiera
-   anclado, salir de él costaría un tirón. */
-.work-rail:has(.work-rail__visor--libre) {
-  scroll-snap-align: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-snap-type: none;
-  }
+   El anclaje de CSS no sirve aquí: un área más alta que la ventana se ignora,
+   y aun poniendo un centinela de un píxel, `scroll-snap-stop` no retiene un
+   impulso de varios miles de píxeles (medido: se lo saltaba igual). Así que el
+   freno lo pone el guardia de FrenoScroll, que vigila estos centinelas y
+   detiene el salto justo encima. Aquí solo queda la marca en el documento. */
+.freno-scroll {
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin-bottom: -1px;
+  pointer-events: none;
 }

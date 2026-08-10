@@ -1,6 +1,7 @@
 import { ArrowUpRight, MessageCircle } from 'lucide-react';
 import { motion as Motion } from 'motion/react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { Magnet, ScrambleText } from '../reactbits';
 import Scanner from '../reactbits/Scanner';
 import { Logo3D } from './Logo3D';
@@ -9,11 +10,18 @@ import { trackWhatsApp, whatsappUrl } from '../../lib/whatsapp';
 
 export function Hero() {
   const reducedMotion = useReducedMotion();
+  /* En teléfono el fondo no monta el shader. Es una tela a pantalla completa
+     repintándose sin parar mientras entra la página, justo cuando el
+     navegador está montando todo lo demás: es lo que hacía que el arranque se
+     sintiera trabado. En su lugar va el mismo aliento de color, pintado una
+     sola vez con degradados. */
+  const conShader = useMediaQuery('(min-width: 641px)');
   const [claimA, claimVen, claimB, claimNec] = HERO.claim;
 
   return (
     <section className="hero" id="inicio">
-      <div className="hero__backdrop" aria-hidden="true">
+      <div className={`hero__backdrop ${conShader ? '' : 'hero__backdrop--liso'}`} aria-hidden="true">
+        {conShader ? (
         <Scanner
           color1="#0a66ff"
           color2="#0846c8"
@@ -43,6 +51,7 @@ export function Hero() {
           mouseStrength={0.5}
           maxDpr={1.25}
         />
+        ) : null}
         <span className="hero__fade" />
       </div>
 

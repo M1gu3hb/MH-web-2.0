@@ -24,6 +24,17 @@
   pointer-events: none;
 }
 
+/* El fondo del hero sin shader: los mismos barridos de luz azul, pintados
+   una sola vez. No cuesta un solo fotograma y en teléfono es la diferencia
+   entre entrar de golpe o entrar a trompicones. */
+.hero__backdrop--liso {
+  background:
+    radial-gradient(120% 70% at 78% 34%, rgba(10, 102, 255, 0.28), transparent 62%),
+    radial-gradient(90% 60% at 8% 12%, rgba(47, 126, 242, 0.16), transparent 58%),
+    radial-gradient(140% 90% at 50% 108%, rgba(8, 70, 200, 0.24), transparent 68%),
+    #06080d;
+}
+
 .rb-scanner {
   width: 100%;
   height: 100%;

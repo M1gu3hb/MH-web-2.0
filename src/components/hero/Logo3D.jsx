@@ -6,8 +6,14 @@ import { useReducedMotion } from '../../hooks/useReducedMotion';
    reflejos del frente), y el PNG original queda delante intacto. Es
    profundidad real de composición sin WebGL: el navegador decodifica dos
    bitmaps y compone el resto. */
-const CAPAS = 14;
-const PASO_Z = 6.5;
+/* Catorce capas dan un canto precioso en escritorio, pero en teléfono son
+   catorce copias del mismo bitmap compuestas en cada fotograma del vaivén:
+   se paga en el arranque, que es justo cuando menos sobra. Con siete a doble
+   separación el grosor se ve igual y cuesta la mitad. */
+const CAPAS_ESCRITORIO = 14;
+const CAPAS_TACTIL = 7;
+const PASO_ESCRITORIO = 6.5;
+const PASO_TACTIL = 13;
 
 /* Al clic no reacciona igual dos veces seguidas: salto, destello metálico,
    una vuelta completa y la firma revelándose debajo, en turno. */
@@ -88,8 +94,13 @@ export function Logo3D() {
     timer.current = window.setTimeout(() => setAccion(''), cual === 'giro' ? 1600 : 1050);
   };
 
+  const fino = typeof window !== 'undefined' && window.matchMedia?.('(pointer: fine)').matches;
+  const total = fino ? CAPAS_ESCRITORIO : CAPAS_TACTIL;
+  const PASO_Z = fino ? PASO_ESCRITORIO : PASO_TACTIL;
+  const merma = fino ? 0.045 : 0.09;
+
   const capas = [];
-  for (let i = CAPAS - 1; i >= 0; i -= 1) capas.push(i);
+  for (let i = total - 1; i >= 0; i -= 1) capas.push(i);
 
   return (
     <div
@@ -114,7 +125,7 @@ export function Logo3D() {
                       transform: `translateZ(${(-i * PASO_Z).toFixed(1)}px)`,
                       /* El canto se apaga hacia el fondo: es lo que dibuja el
                          grosor cuando la pieza gira. */
-                      filter: `brightness(${(0.92 - i * 0.045).toFixed(3)})`,
+                      filter: `brightness(${(0.92 - i * merma).toFixed(3)})`,
                     }
               }
               src={i === 0 ? '/marca/simbolo-v2-md.webp' : '/marca/simbolo-solido.webp'}

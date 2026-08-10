@@ -140,6 +140,7 @@ export function CapabilitiesSection({ embedded = false }) {
         />
       </div>
 
+      <span className="freno-scroll" aria-hidden="true" />
       <div className="capabilities__scroller" ref={containerRef}>
         <ScrollCue label="Desliza para recorrer" />
         <div className="capabilities__sticky section-pad">

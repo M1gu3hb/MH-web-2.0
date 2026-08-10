@@ -118,6 +118,7 @@ export function ProcessSection() {
         />
       </div>
 
+      <span className="freno-scroll" aria-hidden="true" />
       <div className="process__scroller" ref={containerRef}>
         <ScrollCue label="Desliza para avanzar" />
         <div className="process__sticky section-pad">
