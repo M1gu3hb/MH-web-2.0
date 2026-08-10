@@ -151,6 +151,56 @@
   text-transform: uppercase;
 }
 
+.about__correo {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 2px;
+  color: var(--ink-body);
+  font-size: 0.86rem;
+  font-weight: 640;
+  transition: color var(--d-fast) var(--ease);
+}
+
+.about__correo:hover {
+  color: #4f95ff;
+}
+
+.about__correo svg {
+  color: rgba(79, 149, 255, 0.8);
+}
+
+/* El enlace al GitHub: una píldora de la casa, con el contorno azul. */
+.about__enlaces {
+  margin-top: var(--sp-5);
+}
+
+.about__github {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 18px;
+  border: 1px solid rgba(10, 102, 255, 0.45);
+  border-radius: var(--r-full);
+  background: rgba(30, 34, 41, 0.85);
+  font-size: 0.88rem;
+  font-weight: 720;
+  transition:
+    transform var(--d-fast) var(--ease),
+    border-color var(--d-fast) var(--ease),
+    background var(--d-fast) var(--ease);
+}
+
+.about__github:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent-pos);
+  background: rgba(10, 45, 105, 0.55);
+}
+
+.about__github svg:first-child {
+  color: #4f95ff;
+}
+
 @media (max-width: 940px) {
   .about__grid {
     grid-template-columns: 1fr;

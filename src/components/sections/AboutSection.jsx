@@ -1,5 +1,7 @@
+import { ArrowUpRight, Github, Mail } from 'lucide-react';
 import { Reveal, RippleDistortion, ScrambleText } from '../reactbits';
 import { ABOUT, CONTACT } from '../../content';
+import { gmailUrl } from '../../lib/correo';
 
 /* La placa que distorsiona el agua: el mismo fondo y el mismo monograma que
    pintaba el recuadro, pero horneados en una imagen, porque el efecto deforma
@@ -8,7 +10,8 @@ export const PLACA = '/placa-lockup.webp';
 
 /**
  * Presentación. Es la sección donde el efecto de desfragmentación se dispara
- * por scroll: al llegar, todo el bloque está desordenado y se recompone.
+ * por scroll: al llegar, todo el bloque está desordenado y se recompone. El
+ * título y la declaración además vuelven a desordenarse bajo el cursor.
  */
 export function AboutSection() {
   return (
@@ -54,7 +57,7 @@ export function AboutSection() {
               <span key={line} className="about__title-line">
                 <ScrambleText
                   text={line}
-                  trigger="view"
+                  trigger="both"
                   className={index ? 'section-heading__soft' : ''}
                   speed={30}
                   duration={2200}
@@ -64,7 +67,10 @@ export function AboutSection() {
           </h2>
 
           <p className="about__statement">
-            Diseño la <em>cara visible</em> y construyo la <strong>máquina detrás.</strong>
+            <ScrambleText text="Hago páginas que " trigger="both" duration={1600} />
+            <em><ScrambleText text="venden" trigger="both" duration={1600} /></em>
+            <ScrambleText text=" y sistemas que " trigger="both" duration={1600} />
+            <strong><ScrambleText text="ordenan." trigger="both" duration={1600} /></strong>
           </p>
 
           {ABOUT.paragraphs.map((paragraph, index) => (
@@ -78,9 +84,26 @@ export function AboutSection() {
             </p>
           ))}
 
+          <Reveal className="about__enlaces" delay={0.1}>
+            <a className="about__github" href={ABOUT.github} target="_blank" rel="noreferrer">
+              <Github size={16} aria-hidden="true" />
+              Revisa mis proyectos en GitHub
+              <ArrowUpRight size={15} aria-hidden="true" />
+            </a>
+          </Reveal>
+
           <Reveal className="about__signature" delay={0.14}>
             <strong>{CONTACT.owner}</strong>
             <span>{CONTACT.role}</span>
+            <a
+              className="about__correo"
+              href={gmailUrl(CONTACT.emailPersonal)}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Mail size={14} aria-hidden="true" />
+              {CONTACT.emailPersonal}
+            </a>
           </Reveal>
         </div>
       </div>

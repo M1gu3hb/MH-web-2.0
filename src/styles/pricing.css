@@ -74,33 +74,36 @@
   letter-spacing: 0.14em;
 }
 
+/* El medallón del paquete: su dibujito, respirando despacio. */
+.tier__icono {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: var(--sp-4);
+  border: 1px solid rgba(10, 102, 255, 0.4);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(10, 102, 255, 0.22), rgba(10, 102, 255, 0.08));
+  color: #5a9bff;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tier__icono {
+    animation: tier-late 4.2s ease-in-out infinite;
+  }
+}
+
+@keyframes tier-late {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(10, 102, 255, 0.25); }
+  50% { transform: scale(1.05); box-shadow: 0 0 0 9px rgba(10, 102, 255, 0); }
+}
+
 .tier__name {
   color: var(--tier-accent);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-
-.tier__price {
-  margin-top: var(--sp-3);
   font-family: var(--font-display);
-  font-size: clamp(1.9rem, 3vw, 2.7rem);
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
   font-weight: var(--w-bold);
-  letter-spacing: -0.05em;
-  line-height: 1;
-}
-
-.tier__time {
-  margin-top: 10px;
-  color: var(--ink-muted);
-  font-size: 0.76rem;
-  font-weight: 720;
-  letter-spacing: 0.06em;
-}
-
-.tier--featured .tier__time {
-  color: var(--ink-invert-muted);
+  letter-spacing: -0.03em;
 }
 
 .tier__pitch {
@@ -143,6 +146,43 @@
 
 .tier__features + .tier__cta {
   margin-top: var(--sp-7);
+}
+
+/* ---- El paquete a la medida, a lo ancho -------------------- */
+.tier--custom {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: clamp(18px, 3vw, 40px);
+  align-items: center;
+  width: min(100%, var(--wrap));
+  margin: clamp(16px, 2.2vw, 26px) auto 0;
+}
+
+.tier--custom .tier__icono {
+  margin-bottom: 0;
+}
+
+.tier--custom__texto {
+  display: grid;
+  gap: 8px;
+}
+
+.tier--custom .tier__pitch {
+  max-width: 60ch;
+  margin-top: 0;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.tier--custom .tier__cta {
+  margin-top: 0;
+}
+
+@media (max-width: 980px) {
+  .tier--custom {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
 }
 
 /* ---- Condiciones ------------------------------------------ */

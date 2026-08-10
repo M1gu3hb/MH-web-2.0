@@ -19,6 +19,7 @@ export const CONTACT = {
   phone: '55 2311 8153',
   whatsapp: '525523118153',
   email: 'contacto@morphiq.com.mx',
+  emailPersonal: 'miguel@morphiq.com.mx',
   location: 'Xochimilco · CDMX',
   site: 'https://www.morphiq.com.mx',
 };
@@ -59,7 +60,7 @@ export const HERO = {
   secondaryCta: 'Ver trabajo real',
   credentials: [
     { label: 'Atención directa', note: 'Tratas conmigo, no con una cuenta' },
-    { label: 'Diseño + desarrollo', note: 'Las dos disciplinas, una sola persona' },
+    { label: 'Diseño + desarrollo', note: 'Del diseño al código, todo lo hago yo' },
     { label: 'CDMX', note: 'Voy a verte si hace falta' },
   ],
   chrome: { id: 'MORPHIQ / SYSTEM CORE', status: 'EN LÍNEA', hint: 'Mueve el cursor', tech: 'WEBGL / REALTIME' },
@@ -308,7 +309,7 @@ export const PROCESS = [
 export const PRICING = {
   eyebrow: '04 / PAQUETES',
   title: ['Paquetes claros.', 'Sin sorpresas a medio proyecto.'],
-  lead: 'Tres alcances, de la página que vende al sistema que lo conecta todo. Cada paquete se cotiza cerrado: te digo el número antes de empezar y ese es el número.',
+  lead: 'Estos son los paquetes que manejo, y si ninguno te queda armamos uno personalizado. El precio depende de lo que tu negocio necesite: siempre cerrado y dicho antes de empezar.',
   tiers: [
     {
       id: 'sitio',
@@ -365,13 +366,14 @@ export const PRICING = {
 
 export const ABOUT = {
   eyebrow: '05 / QUIÉN LO HACE',
-  title: ['Dos disciplinas.', 'Una sola persona.'],
-  statement: 'Diseño la <em>cara visible</em> y construyo la <strong>máquina detrás.</strong>',
+  title: ['Hola, soy Miguel.', 'Yo construyo todo esto.'],
   paragraphs: [
-    'Soy Miguel. Llevo cuatro años haciendo páginas y sistemas para negocios de la Ciudad de México: pastelerías, salones de eventos, talleres de electrónica, DJs.',
-    'La mayoría de los estudios te diseñan bonito y te dejan solo con la operación. La mayoría de los programadores te resuelven la operación y te dejan un sistema que da pena enseñar. Yo hago las dos cosas porque son la misma cosa.',
+    'Me llamo Miguel Huerta. Creo y desarrollo software: páginas web, puntos de venta, CRM y automatizaciones a la medida. Full stack, con especialidad en front end y back end.',
+    'Tengo varios negocios operando con mis sistemas y varios proyectos ya construidos y publicados. Si quieres revisarlos a fondo, están en mi GitHub.',
+    'La mayoría de los estudios te diseñan bonito y te dejan solo con la operación. La mayoría de los programadores te resuelven la operación con un sistema que da pena enseñar. Yo hago las dos cosas bien: el diseño que se ve y el sistema que trabaja detrás.',
     'Trabajo directo contigo. No hay cuenta, ni junior, ni cadena de correos. Si me escribes un martes a las nueve de la noche, te contesto yo.',
   ],
+  github: 'https://github.com/M1gu3hb',
   signature: 'MH97 · DESIGN × SYSTEMS · CDMX',
 };
 
@@ -444,7 +446,7 @@ export const SECTIONS = {
   },
   capabilities: {
     eyebrow: '01 / CAPACIDADES',
-    title: ['Un estudio.', 'Cinco frentes.'],
+    title: ['Mis servicios.', 'Esto es lo que puedo construir para ti.'],
     lead: 'No vendo una colección de herramientas sueltas. Diseño cómo se conectan para que tu negocio se vea mejor y funcione mejor.',
   },
   process: {

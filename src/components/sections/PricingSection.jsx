@@ -1,10 +1,18 @@
-import { ArrowUpRight, Check, MessageCircle } from 'lucide-react';
+import { ArrowUpRight, Check, Globe, MessageCircle, Store, Workflow, Wrench } from 'lucide-react';
 import { SectionHeading } from '../primitives/SectionHeading';
-import { Magnet, Reveal, SpotlightCard, StarBorder } from '../reactbits';
+import { Reveal, SpotlightCard, StarBorder } from '../reactbits';
 import { PRICING } from '../../content';
 import { trackWhatsApp, whatsappUrl } from '../../lib/whatsapp';
 
+/* El dibujito de cada paquete: un medallón con su icono, que respira. */
+const TIER_ICONS = {
+  sitio: Globe,
+  operacion: Store,
+  sistema: Workflow,
+};
+
 function Tier({ tier, index }) {
+  const Icon = TIER_ICONS[tier.id] ?? Globe;
   const card = (
     <SpotlightCard
       className={`tier ${tier.featured ? 'tier--featured' : ''}`}
@@ -13,9 +21,10 @@ function Tier({ tier, index }) {
     >
       {tier.featured && <span className="tier__badge">MÁS PEDIDO</span>}
 
+      <span className="tier__icono" aria-hidden="true">
+        <Icon size={22} />
+      </span>
       <p className="tier__name">{tier.name}</p>
-      <p className="tier__price">{tier.price}</p>
-      {tier.time && <p className="tier__time">{tier.time}</p>}
       <p className="tier__pitch">{tier.pitch}</p>
 
       <ul className="tier__features">
@@ -65,6 +74,33 @@ export function PricingSection() {
         ))}
       </div>
 
+      {/* El cuarto paquete, a lo ancho: el que no viene en catálogo. */}
+      <Reveal delay={0.1}>
+        <SpotlightCard className="tier tier--custom" accent="#4f95ff">
+          <span className="tier__icono" aria-hidden="true">
+            <Wrench size={22} />
+          </span>
+          <div className="tier--custom__texto">
+            <p className="tier__name">Personalizado</p>
+            <p className="tier__pitch">
+              ¿Ninguno te queda? Cuéntame qué necesita tu negocio y armamos un paquete a tu medida,
+              con las piezas exactas que te hagan falta.
+            </p>
+          </div>
+          <a
+            className="tier__cta tactile-button tactile-button--paper"
+            href={whatsappUrl('pricing')}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => trackWhatsApp('pricing')}
+          >
+            <MessageCircle size={17} aria-hidden="true" />
+            Cotizar a la medida
+            <ArrowUpRight size={16} aria-hidden="true" />
+          </a>
+        </SpotlightCard>
+      </Reveal>
+
       <Reveal className="pricing__terms" delay={0.1}>
         {PRICING.terms.map(([title, text]) => (
           <div key={title}>
@@ -72,14 +108,6 @@ export function PricingSection() {
             <p>{text}</p>
           </div>
         ))}
-      </Reveal>
-
-      <Reveal as="p" className="pricing__note" delay={0.16}>
-        <Magnet strength={0.18}>
-          <span>
-            ¿Tu proyecto no cabe en ninguno? Escríbeme y lo armamos a la medida.
-          </span>
-        </Magnet>
       </Reveal>
     </section>
   );

@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { ArrowUpRight, Mail, MapPin, MessageCircle, Send } from 'lucide-react';
 import { track } from '@vercel/analytics';
-import { Reveal, RippleDistortion, SplitText, StarBorder } from '../reactbits';
+import { Reveal, RippleDistortion, ScrambleText, StarBorder } from '../reactbits';
 import { CONTACT, CONTACT_SECTION } from '../../content';
 import { PLACA } from './AboutSection';
+import { gmailUrl } from '../../lib/correo';
 import { trackWhatsApp, whatsappUrl } from '../../lib/whatsapp';
 
 const EMPTY = { nombre: '', negocio: '', necesidad: '' };
@@ -40,8 +41,13 @@ function ContactForm() {
     } catch {
       /* la analítica nunca bloquea el envío */
     }
-    const subject = encodeURIComponent(`Proyecto nuevo — ${form.negocio || form.nombre}`);
-    window.location.href = `mailto:${CONTACT.email}?subject=${subject}&body=${encodeURIComponent(message)}`;
+    /* Al redactor de Gmail, no a mailto: casi nadie tiene cliente de correo
+       configurado y el mailto moría sin decir nada. */
+    window.open(
+      gmailUrl(CONTACT.email, `Proyecto nuevo — ${form.negocio || form.nombre}`, message),
+      '_blank',
+      'noopener',
+    );
   };
 
   return (
@@ -106,7 +112,13 @@ export function ContactSection() {
       <h2 className="contact__title">
         {CONTACT_SECTION.title.map((line, index) => (
           <span key={line} className="contact__title-line">
-            <SplitText text={line} as="span" delay={index * 0.1} className={index ? 'contact__title-accent' : ''} />
+            <ScrambleText
+              text={line}
+              trigger="both"
+              speed={30 + index * 5}
+              duration={2000}
+              className={index ? 'contact__title-accent' : ''}
+            />
           </span>
         ))}
       </h2>
@@ -137,7 +149,7 @@ export function ContactSection() {
           <div className="contact__details">
             <span className="contact__role">{CONTACT.role}</span>
             <strong>{CONTACT.owner}</strong>
-            <a href={`mailto:${CONTACT.email}`}>
+            <a href={gmailUrl(CONTACT.email)} target="_blank" rel="noreferrer">
               <Mail size={15} aria-hidden="true" />
               {CONTACT.email}
             </a>

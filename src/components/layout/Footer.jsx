@@ -38,7 +38,12 @@ export function Footer() {
             <Phone size={15} aria-hidden="true" />
             <span>Llamar · {CONTACT.phone}</span>
           </a>
-          <a className="footer__dato" href={`mailto:${CONTACT.email}`}>
+          <a
+            className="footer__dato"
+            href={`https://mail.google.com/mail/?view=cm&fs=1&to=${CONTACT.email}`}
+            target="_blank"
+            rel="noreferrer"
+          >
             <Mail size={15} aria-hidden="true" />
             <span>{CONTACT.email}</span>
           </a>

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useId, useRef } from 'react';
 import { ArrowUpRight, Check } from 'lucide-react';
 import { SectionHeading } from '../primitives/SectionHeading';
+import { AvisoDesliza } from '../primitives/AvisoDesliza';
 import { AutomationScreen, CrmScreen, PosScreen, SoftwareScreen, WebsiteScreen } from '../mockups/ServiceScreens';
 import { MorphStage, ScrambleText } from '../reactbits';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
@@ -142,6 +143,7 @@ export function CapabilitiesSection({ embedded = false }) {
       <div className="capabilities__scroller" ref={containerRef}>
         <ScrollCue label="Desliza para recorrer" />
         <div className="capabilities__sticky section-pad">
+          {!embedded ? <AvisoDesliza zona={containerRef} /> : null}
           <div
             className="capability-deck"
             style={{ '--accent': active.accent, '--panel-ink': active.ink }}

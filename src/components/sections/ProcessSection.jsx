@@ -2,6 +2,7 @@ import { useCallback, useId, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { ScrollCue } from '../primitives/ScrollCue';
 import { SectionHeading } from '../primitives/SectionHeading';
+import { AvisoDesliza } from '../primitives/AvisoDesliza';
 import { ScrambleText } from '../reactbits';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { useScrollSequence } from '../../hooks/useScrollSequence';
@@ -120,6 +121,7 @@ export function ProcessSection() {
       <div className="process__scroller" ref={containerRef}>
         <ScrollCue label="Desliza para avanzar" />
         <div className="process__sticky section-pad">
+          <AvisoDesliza zona={containerRef} />
           <div className="process-console" style={{ '--phase': index }}>
             {/* ---- Pantalla ---- */}
             <div

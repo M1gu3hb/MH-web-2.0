@@ -4,6 +4,7 @@ import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { ScrollCue } from '../primitives/ScrollCue';
 import { SectionHeading } from '../primitives/SectionHeading';
+import { AvisoDesliza } from '../primitives/AvisoDesliza';
 import {
   BerlinVisual,
   ConfettiVisual,
@@ -217,7 +218,10 @@ function useRielHorizontal(enabled) {
       visor.classList.add('work-rail__visor--libre');
       zonaPista.style.transform = '';
       visor.scrollLeft = actual;
-      window.scrollTo(0, arriba);
+      /* Instantáneo a la fuerza: la página lleva scroll-behavior smooth y
+         recolocar animando se veía como un salto que además peleaba con el
+         gesto en curso. */
+      window.scrollTo({ top: arriba, behavior: 'instant' });
     };
 
     let toque = null;
@@ -225,7 +229,10 @@ function useRielHorizontal(enabled) {
 
     const onWheel = (event) => {
       if (libre) return;
-      if (Math.abs(event.deltaX) > 8 && Math.abs(event.deltaX) > Math.abs(event.deltaY) * 1.2) liberar();
+      /* Umbral alto a propósito: el scroll diagonal de un trackpad trae
+         siempre algo de deltaX y con un umbral corto la sección se liberaba
+         sola a media rueda. */
+      if (Math.abs(event.deltaX) > 16 && Math.abs(event.deltaX) > Math.abs(event.deltaY) * 1.8) liberar();
     };
 
     const onDown = (event) => {
@@ -247,7 +254,9 @@ function useRielHorizontal(enabled) {
       if (!toque) return;
       const dx = event.clientX - toque[0];
       const dy = event.clientY - toque[1];
-      if (Math.abs(dx) > 26 && Math.abs(dx) > Math.abs(dy) * 1.4) liberar();
+      /* Claramente horizontal o nada: un arrastre en diagonal es scroll
+         vertical con mala puntería, no una intención de navegar de lado. */
+      if (Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy) * 2) liberar();
     };
 
     const onUp = () => {
@@ -313,6 +322,7 @@ export function WorkSection() {
             el rectángulo de su padre, y el bloque pegado no se mueve. */}
         <ScrollCue label="Desliza para recorrer los casos" />
         <div className="work-rail__visor">
+          <AvisoDesliza zona={riel} />
           <div className="work-rail__pista" ref={pista}>
             {PROJECTS.map((project, index) => (
               <ProjectCard

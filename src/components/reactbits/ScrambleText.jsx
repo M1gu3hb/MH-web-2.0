@@ -6,6 +6,8 @@ import { useReducedMotion } from '../../hooks/useReducedMotion';
  *
  *   trigger="hover"  se desordena mientras el cursor está encima
  *   trigger="view"   llega desfragmentado y se recompone al entrar en pantalla
+ *   trigger="both"   las dos cosas: se recompone al llegar y vuelve a
+ *                    desordenarse con el cursor encima
  *
  * Dos decisiones que importan:
  *
@@ -145,12 +147,14 @@ export function ScrambleText({
       node,
       word: node.dataset.word,
     }));
-    /* Solo el modo `view` necesita llegar congelado y en glifos. En reposo
-       con `hover` el texto se queda sin anchos fijos: congelarlo al montar
-       lo dejaba clavado a una medida tomada en plena carga de la fuente y,
-       si salía corta, el titular aparecía recortado a nada hasta que un
-       hover lo soltaba. La congelación del hover ya la hace churn(). */
-    if (trigger === 'view') freeze();
+    const conVista = trigger === 'view' || trigger === 'both';
+
+    /* Solo los modos con vista necesitan llegar congelados y en glifos. En
+       reposo con `hover` el texto se queda sin anchos fijos: congelarlo al
+       montar lo dejaba clavado a una medida tomada en plena carga de la
+       fuente y, si salía corta, el titular aparecía recortado a nada hasta
+       que un hover lo soltaba. La congelación del hover ya la hace churn(). */
+    if (conVista) freeze();
 
     /* Con la fuente definitiva ya cargada, el ancho cambia: hay que rehacer
        la medida o las últimas letras se quedan fuera del recorte. */
@@ -158,7 +162,7 @@ export function ScrambleText({
     document.fonts?.ready.then(() => {
       if (cancelled) return;
       if (phase.current === 'done') release();
-      else if (trigger === 'view') {
+      else if (conVista) {
         freeze();
         if (phase.current === 'idle') paint(0);
       } else if (phase.current === 'idle') {
@@ -166,7 +170,7 @@ export function ScrambleText({
       }
     });
 
-    if (trigger !== 'view') {
+    if (!conVista) {
       return () => {
         cancelled = true;
       };
@@ -197,7 +201,7 @@ export function ScrambleText({
      entregaría el evento como duración. */
   const settle = () => resolve(exitDuration);
   const hoverProps =
-    trigger === 'hover'
+    trigger === 'hover' || trigger === 'both'
       ? { onMouseEnter: churn, onMouseLeave: settle, onFocus: churn, onBlur: settle }
       : {};
 
