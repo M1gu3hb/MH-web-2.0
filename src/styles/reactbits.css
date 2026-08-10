@@ -260,18 +260,26 @@
   cursor: default;
 }
 
-.rb-scramble > span[aria-hidden] {
-  white-space: pre-wrap;
-}
-
-/* Cada palabra tiene su ancho congelado con el texto real, así que al
-   desfragmentar los glifos cambian pero la maquetación no se mueve. */
+/* La palabra real sostiene la maquetación —siempre está, con su ancho de
+   verdad— y los glifos se pintan encima sin ocupar sitio. Nada se mide y
+   nada se recorta: es imposible que un titular acabe mutilado. */
 .rb-scramble__word {
+  position: relative;
   display: inline-block;
-  overflow: hidden;
   white-space: nowrap;
   text-align: left;
   vertical-align: baseline;
+}
+
+.rb-scramble__fx {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  white-space: nowrap;
+  pointer-events: none;
 }
 
 h1 .rb-scramble,

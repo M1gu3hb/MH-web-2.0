@@ -243,7 +243,7 @@ function useRielHorizontal(enabled) {
         }
         return;
       }
-      toque = [event.clientX, event.clientY];
+      toque = [event.clientX, event.clientY, event.pointerType];
     };
 
     const onMove = (event) => {
@@ -255,8 +255,12 @@ function useRielHorizontal(enabled) {
       const dx = event.clientX - toque[0];
       const dy = event.clientY - toque[1];
       /* Claramente horizontal o nada: un arrastre en diagonal es scroll
-         vertical con mala puntería, no una intención de navegar de lado. */
-      if (Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy) * 2) liberar();
+         vertical con mala puntería, no una intención de navegar de lado. El
+         dedo pide menos recorrido que el ratón: con `touch-action: pan-y` el
+         navegador ya nos cede el eje, así que un empujón corto basta y no
+         hay que insistir. */
+      const minimo = toque[2] === 'mouse' ? 36 : 18;
+      if (Math.abs(dx) > minimo && Math.abs(dx) > Math.abs(dy) * 1.3) liberar();
     };
 
     const onUp = () => {

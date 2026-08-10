@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 
 /**
@@ -6,22 +6,20 @@ import { useReducedMotion } from '../../hooks/useReducedMotion';
  *
  *   trigger="hover"  se desordena mientras el cursor está encima
  *   trigger="view"   llega desfragmentado y se recompone al entrar en pantalla
- *   trigger="both"   las dos cosas: se recompone al llegar y vuelve a
- *                    desordenarse con el cursor encima
+ *   trigger="both"   las dos cosas
  *
- * Dos decisiones que importan:
+ * El texto real NUNCA se toca: se queda en el flujo, con su ancho de verdad,
+ * y solo se le apaga la visibilidad mientras dura la animación. Los glifos
+ * aleatorios se pintan en una capa absoluta encima de cada palabra.
  *
- * 1. Cada palabra se mide y se le fija el ancho mientras dura la animación.
- *    Los glifos aleatorios no miden lo mismo que las letras, así que sin esto
- *    el texto se reacomoda entero en cada fotograma y parece que salta por
- *    todos lados. Se vuelve a medir cuando terminan de cargar las tipografías
- *    (si no, el ancho se congela con la fuente de reserva y luego la real,
- *    más ancha, se corta) y el ancho se suelta al acabar, para que el texto
- *    definitivo nunca quede recortado.
- *
- * 2. La animación escribe directamente en el DOM, no en el estado de React.
- *    Repintar un párrafo entero 30 veces por segundo con setState traba la
- *    página; mutar `textContent` no.
+ * Antes se medía cada palabra y se le fijaba el ancho para que los glifos
+ * —que no miden lo mismo que las letras— no movieran la maquetación. Esa
+ * medida era el problema: si caía mientras la tipografía todavía estaba
+ * cambiando, dentro de una capa aún oculta o bajo un ancestro escalado, el
+ * ancho salía corto y, como la palabra recorta lo que sobra, el titular se
+ * quedaba mutilado para siempre. Sin medir no hay nada que pueda salir mal:
+ * la maquetación la sostiene el propio texto y la capa de glifos flota sin
+ * ocupar sitio.
  */
 
 const GLYPHS = '#$%&*+-<>=?@[]{}/\\|~^01';
@@ -52,56 +50,57 @@ export function ScrambleText({
     timer.current = 0;
   }, []);
 
-  /** Restaura el texto real, mide y congela el ancho de cada palabra. */
-  const freeze = useCallback(() => {
-    words.current.forEach(({ node, word }) => {
-      node.style.width = '';
-      node.textContent = word;
-    });
-    /* El rectángulo que devuelve el navegador viene ya con la escala de los
-       ancestros. Dentro de la pantalla de la laptop el documento va escalado,
-       así que hay que dividir por esa escala o las palabras se congelan a un
-       tamaño que no es el suyo y el texto rompe por otro sitio. */
-    const host = words.current[0]?.node.offsetParent ?? words.current[0]?.node.parentElement;
-    const layout = host?.offsetWidth ?? 0;
-    const drawn = host ? host.getBoundingClientRect().width : 0;
-    const k = layout > 4 && drawn > 0 ? drawn / layout : 1;
-    const unscale = Math.abs(k - 1) < 0.01 ? 1 : k;
-
-    /* Se leen todos los anchos y luego se escriben: intercalarlos obligaría
-       al navegador a recalcular el layout una vez por palabra. */
-    const widths = words.current.map(({ node }) => node.getBoundingClientRect().width / unscale);
-    words.current.forEach(({ node }, i) => {
-      node.style.width = `${widths[i]}px`;
-    });
+  /** Recoge las parejas palabra real / capa de glifos. */
+  const recoger = useCallback(() => {
+    const element = host.current;
+    words.current = element
+      ? Array.from(element.querySelectorAll('[data-word]')).map((node) => ({
+          real: node.querySelector('[data-real]'),
+          fx: node.querySelector('[data-fx]'),
+          word: node.dataset.word,
+        }))
+      : [];
   }, []);
 
-  /** Suelta el ancho: el texto definitivo se muestra entero, pase lo que pase. */
-  const release = useCallback(() => {
-    words.current.forEach(({ node, word }) => {
-      node.style.width = '';
-      node.textContent = word;
+  /** Enseña el texto de verdad y apaga la capa de glifos. */
+  const mostrar = useCallback(() => {
+    words.current.forEach(({ real, fx }) => {
+      if (real) real.style.visibility = '';
+      if (fx) fx.textContent = '';
     });
   }, []);
 
   /** Escribe el estado actual: `revealed` letras reales, el resto en glifos. */
   const paint = useCallback((revealed) => {
     let index = 0;
-    words.current.forEach(({ node, word }) => {
+    words.current.forEach(({ real, fx, word }) => {
       let out = '';
+      let intactas = 0;
       for (let i = 0; i < word.length; i += 1, index += 1) {
-        out += index < revealed ? word[i] : randomGlyph();
+        if (index < revealed) {
+          out += word[i];
+          intactas += 1;
+        } else {
+          out += randomGlyph();
+        }
       }
-      node.textContent = out;
       index += 1; // el espacio entre palabras también cuenta
+      /* Palabra ya resuelta: se enseña la de verdad, que es la que mide bien
+         y la que leen los buscadores. */
+      if (intactas === word.length) {
+        if (real) real.style.visibility = '';
+        if (fx) fx.textContent = '';
+      } else {
+        if (real) real.style.visibility = 'hidden';
+        if (fx) fx.textContent = out;
+      }
     });
   }, []);
 
   const total = source.length;
 
-  /* El avance se mide con el reloj, no contando fotogramas: con la escena 3D
-     en marcha los temporizadores se retrasan y un párrafo largo tardaba
-     medio minuto en recomponerse. Así siempre acaba en `duration`. */
+  /* El avance se mide con el reloj, no contando fotogramas: si el navegador
+     se retrasa, la animación sigue acabando en `duration`. */
   const resolve = useCallback((ms = duration) => {
     stop();
     phase.current = 'running';
@@ -111,19 +110,18 @@ export function ScrambleText({
       if (t >= 1) {
         timer.current = 0;
         phase.current = 'done';
-        release();
+        mostrar();
         return;
       }
       paint(Math.floor(t * total));
       timer.current = requestAnimationFrame(step);
     };
     timer.current = requestAnimationFrame(step);
-  }, [duration, paint, release, stop, total]);
+  }, [duration, mostrar, paint, stop, total]);
 
   const churn = useCallback(() => {
     stop();
     phase.current = 'running';
-    freeze();
     paint(0);
     let last = 0;
     const step = (now) => {
@@ -134,46 +132,20 @@ export function ScrambleText({
       timer.current = requestAnimationFrame(step);
     };
     timer.current = requestAnimationFrame(step);
-  }, [freeze, paint, speed, stop]);
+  }, [paint, speed, stop]);
 
-  /* Medición y bloqueo de anchos, antes del primer pintado. */
   useLayoutEffect(() => {
     if (reduced) return undefined;
     const element = host.current;
     if (!element) return undefined;
 
+    recoger();
     phase.current = 'idle';
-    words.current = Array.from(element.querySelectorAll('[data-word]')).map((node) => ({
-      node,
-      word: node.dataset.word,
-    }));
+
     const conVista = trigger === 'view' || trigger === 'both';
-
-    /* Solo los modos con vista necesitan llegar congelados y en glifos. En
-       reposo con `hover` el texto se queda sin anchos fijos: congelarlo al
-       montar lo dejaba clavado a una medida tomada en plena carga de la
-       fuente y, si salía corta, el titular aparecía recortado a nada hasta
-       que un hover lo soltaba. La congelación del hover ya la hace churn(). */
-    if (conVista) freeze();
-
-    /* Con la fuente definitiva ya cargada, el ancho cambia: hay que rehacer
-       la medida o las últimas letras se quedan fuera del recorte. */
-    let cancelled = false;
-    document.fonts?.ready.then(() => {
-      if (cancelled) return;
-      if (phase.current === 'done') release();
-      else if (conVista) {
-        freeze();
-        if (phase.current === 'idle') paint(0);
-      } else if (phase.current === 'idle') {
-        release();
-      }
-    });
-
     if (!conVista) {
-      return () => {
-        cancelled = true;
-      };
+      mostrar();
+      return undefined;
     }
 
     paint(0);
@@ -186,11 +158,19 @@ export function ScrambleText({
       { threshold: 0.3 },
     );
     observer.observe(element);
-    return () => {
-      cancelled = true;
-      observer.disconnect();
-    };
-  }, [freeze, paint, reduced, release, resolve, source, trigger]);
+    return () => observer.disconnect();
+  }, [mostrar, paint, recoger, reduced, resolve, source, trigger]);
+
+  /* Red de seguridad: pase lo que pase con la animación —una capa que se
+     desmonta a medias, una pestaña que vuelve del fondo— a los seis segundos
+     el texto de verdad está a la vista. Nunca se queda a medio componer. */
+  useEffect(() => {
+    if (reduced) return undefined;
+    const t = window.setTimeout(() => {
+      if (phase.current !== 'running') mostrar();
+    }, 6000);
+    return () => window.clearTimeout(t);
+  }, [mostrar, reduced, source]);
 
   useLayoutEffect(() => stop, [stop]);
 
@@ -207,17 +187,15 @@ export function ScrambleText({
 
   return (
     <Tag ref={host} className={`rb-scramble ${className}`} {...hoverProps}>
-      <span aria-hidden="true">
-        {pieces.map((word, index) => (
-          <span key={`${word}-${index}`}>
-            <span className="rb-scramble__word" data-word={word}>
-              {word}
-            </span>
-            {index < pieces.length - 1 ? ' ' : ''}
+      {pieces.map((word, index) => (
+        <span key={`${word}-${index}`}>
+          <span className="rb-scramble__word" data-word={word}>
+            <span data-real>{word}</span>
+            <span className="rb-scramble__fx" data-fx aria-hidden="true" />
           </span>
-        ))}
-      </span>
-      <span className="rb-visually-hidden">{source}</span>
+          {index < pieces.length - 1 ? ' ' : ''}
+        </span>
+      ))}
     </Tag>
   );
 }

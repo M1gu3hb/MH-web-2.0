@@ -54,6 +54,11 @@
   align-items: center;
   height: 100svh;
   overflow: hidden;
+  /* El navegador se queda el gesto vertical —que es el que mueve la página—
+     y nos deja el horizontal: sin esto, en teléfono el dedo que iba de lado
+     se lo tragaba el scroll y había que insistir varias veces para que el
+     riel se diera por enterado. */
+  touch-action: pan-y;
 }
 
 /* Liberado por el gesto: scroll horizontal nativo con inercia, arrastrable
@@ -62,9 +67,16 @@
   overflow-x: auto;
   overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
+  /* Ya libre manda el scroll nativo en los dos ejes. */
+  touch-action: auto;
+  scroll-snap-type: x proximity;
   scrollbar-width: thin;
   scrollbar-color: rgba(10, 102, 255, 0.55) transparent;
   cursor: grab;
+}
+
+.work-rail__visor--libre .project-card {
+  scroll-snap-align: center;
 }
 
 .work-rail__visor--libre.is-grabbing {
@@ -321,6 +333,15 @@
 
   .project-card__inner { border-radius: var(--r-lg); }
   .project-card__visual { min-height: 200px; }
+
+  /* En teléfono se dibujan todas. Saltarse el dibujo de las que no se ven
+     ahorra poco —la tarjeta mide 86vw— y dentro de una pista transformada
+     hay motores móviles que se quedan con el hueco en blanco para siempre.
+     Antes que perseguir ese fallo por navegador, se apaga. */
+  .project-card {
+    content-visibility: visible;
+    contain-intrinsic-size: auto;
+  }
   .project-card__link { width: 100%; justify-content: center; }
 }
 

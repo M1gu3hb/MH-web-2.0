@@ -223,103 +223,200 @@
 }
 
 .demo--crm {
-  padding: 20px;
-  background: #eeece4;
-}
-
-.crm-head {
   display: grid;
-  grid-template-columns: 1fr auto 10px;
-  align-items: center;
-  gap: 14px;
-  padding: 0 0 17px;
-  border-bottom: 1px solid rgba(21, 22, 20, 0.15);
+  grid-template-rows: auto minmax(0, 1fr);
+  padding: 16px;
+  gap: 12px;
+  background: #eef0f4;
 }
 
-.crm-head span {
-  font-size: 0.48rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-}
-
-.crm-head strong {
-  font-family: var(--display);
-  font-size: 0.82rem;
-}
-
-.crm-head i {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--violet);
-  box-shadow: 0 0 0 5px rgba(94, 99, 255, 0.14);
-}
-
-.crm-board {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  padding-top: 18px;
-}
-
-.crm-board > div {
-  min-width: 0;
-}
-
-.crm-board > div > small {
+.crm-barra {
   display: flex;
+  align-items: baseline;
   justify-content: space-between;
-  padding: 0 4px 10px;
-  font-size: 0.47rem;
+  font-size: 0.5rem;
   font-weight: 820;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.13em;
 }
 
-.crm-board > div > small em {
+.crm-barra em {
+  opacity: 0.5;
   font-style: normal;
 }
 
-.crm-board > div > span {
+.crm-ficha {
   display: grid;
-  grid-template-columns: 26px 1fr;
-  gap: 8px;
+  align-content: start;
+  gap: 12px;
+  min-height: 0;
+  padding: 14px;
+  border: 1px solid rgba(21, 22, 20, 0.1);
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: 0 6px 0 rgba(21, 22, 20, 0.06);
+}
+
+.crm-ficha__quien {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  gap: 10px;
   align-items: center;
-  margin-bottom: 9px;
-  padding: 12px 9px;
-  border: 1px solid rgba(21, 22, 20, 0.12);
-  border-radius: 8px;
-  background: #faf8f1;
-  box-shadow: 0 3px 0 rgba(21, 22, 20, 0.12);
 }
 
-.crm-board > div > span i {
+.crm-ficha__quien > i {
   display: grid;
-  width: 26px;
-  height: 26px;
+  width: 34px;
+  height: 34px;
   place-items: center;
-  border-radius: 7px;
-  background: var(--violet);
-  color: white;
-  font-size: 0.42rem;
+  border-radius: 10px;
+  background: var(--blue);
+  color: #fff;
+  font-size: 0.56rem;
   font-style: normal;
-  font-weight: 800;
+  font-weight: 820;
 }
 
-.crm-board > div:nth-child(2) > span i { background: var(--coral); }
-.crm-board > div:nth-child(3) > span i { background: #1fb892; }
+.crm-ficha__quien b {
+  display: block;
+  font-family: var(--display);
+  font-size: 0.78rem;
+  letter-spacing: -0.02em;
+}
 
-.crm-board > div > span b {
-  overflow: hidden;
-  font-size: 0.52rem;
-  text-overflow: ellipsis;
+.crm-ficha__quien small {
+  display: block;
+  margin-top: 2px;
+  opacity: 0.55;
+  font-size: 0.46rem;
+  font-weight: 700;
+}
+
+.crm-chip {
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: rgba(10, 102, 255, 0.12);
+  color: #0846c8;
+  font-size: 0.42rem;
+  font-weight: 820;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
-.crm-board > div > span em {
-  grid-column: 2;
-  color: var(--muted);
-  font-size: 0.45rem;
+.crm-datos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.crm-datos > span {
+  padding: 8px 9px;
+  border-radius: 9px;
+  background: rgba(21, 22, 20, 0.05);
+}
+
+.crm-datos small {
+  display: block;
+  opacity: 0.5;
+  font-size: 0.4rem;
+  font-weight: 780;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.crm-datos b {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--display);
+  font-size: 0.72rem;
+  letter-spacing: -0.02em;
+}
+
+.crm-historial {
+  display: grid;
+  gap: 7px;
+  min-height: 0;
+}
+
+.crm-historial > small {
+  opacity: 0.5;
+  font-size: 0.42rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Cada hito con su punto en la línea de tiempo. */
+.crm-historial > span {
+  position: relative;
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.48rem;
+  font-weight: 640;
+}
+
+.crm-historial > span > i {
+  width: 8px;
+  height: 8px;
+  margin-left: 3px;
+  border: 2px solid rgba(10, 102, 255, 0.35);
+  border-radius: 50%;
+  background: #fff;
+}
+
+.crm-historial > span.es-ultimo > i {
+  border-color: var(--blue);
+  background: var(--blue);
+}
+
+/* El hilo que une los hitos. */
+.crm-historial > span:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  top: 60%;
+  left: 6px;
+  width: 2px;
+  height: 100%;
+  background: rgba(10, 102, 255, 0.2);
+}
+
+.crm-historial em {
+  opacity: 0.45;
+  font-size: 0.44rem;
   font-style: normal;
+  font-weight: 780;
+}
+
+.crm-tarea {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr) auto;
+  gap: 9px;
+  align-items: center;
+  padding: 10px 11px;
+  border: 1px dashed rgba(10, 102, 255, 0.45);
+  border-radius: 10px;
+  background: rgba(10, 102, 255, 0.07);
+  font-size: 0.5rem;
+  font-weight: 760;
+}
+
+.crm-tarea > i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 0 0 4px rgba(10, 102, 255, 0.15);
+}
+
+.crm-tarea em {
+  color: #0846c8;
+  font-size: 0.44rem;
+  font-style: normal;
+  font-weight: 820;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 /* ---- Flujo de automatización, al estilo n8n ---- */
@@ -474,8 +571,18 @@
   position: relative;
   z-index: 2;
   min-height: 0;
-  height: 100%;
+  /* Estirada por el grid, no por un porcentaje. `height: 100%` cuelga de que
+     el padre tenga una altura resuelta, y en varios navegadores de teléfono
+     —donde el alto del hueco sale de un min-height— eso da cero: la maqueta
+     desaparecía y quedaba el recuadro vacío. Con el estirado del grid el alto
+     lo pone la pista, sin depender de ninguna cadena de porcentajes. */
+  align-self: stretch;
+  justify-self: stretch;
+  height: auto;
   overflow: hidden;
+  /* La tinta de las maquetas es oscura: son papel. Sin fijarla heredaban la
+     tinta clara del tema y los titulares se leían casi blancos sobre crema. */
+  color: var(--ink);
   border: 1px solid rgba(21, 22, 20, 0.32);
   border-radius: 19px;
   background: var(--paper);

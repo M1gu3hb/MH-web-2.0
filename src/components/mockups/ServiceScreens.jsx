@@ -84,32 +84,54 @@ export function PosScreen() {
 }
 
 export function CrmScreen() {
-  const columns = [
-    ['NUEVO', 'Confetti', 'Berlín'],
-    ['PROPUESTA', 'Club Hípico'],
-    ['LISTO', "Fiesta DJ's"],
+  /* Una ficha de cliente, que es como se usa un CRM de verdad: quién es, en
+     qué va, qué se hizo y qué toca hacer. El tablero de columnas anterior
+     era abstracto: sin conocer la herramienta no se entendía qué miraba. */
+  const historial = [
+    ['Cotización enviada', '12 jul'],
+    ['Llamada de seguimiento', '15 jul'],
+    ['Anticipo recibido', '18 jul'],
   ];
 
   return (
     <div className="demo demo--crm">
-      <div className="crm-head">
-        <span>PIPELINE / JULIO</span>
-        <strong>Todo visible</strong>
-        <i />
+      <div className="crm-barra">
+        <span>CLIENTES</span>
+        <em>3 de 48</em>
       </div>
-      <div className="crm-board">
-        {columns.map(([title, ...items], index) => (
-          <div key={title}>
-            <small>{title}<em>0{items.length}</em></small>
-            {items.map((item) => (
-              <span key={item}>
-                <i>{item.slice(0, 2).toUpperCase()}</i>
-                <b>{item}</b>
-                <em>{index === 2 ? '100%' : index === 1 ? '68%' : '24%'}</em>
-              </span>
-            ))}
+
+      <div className="crm-ficha">
+        <div className="crm-ficha__quien">
+          <i>PC</i>
+          <div>
+            <b>Pastelería Confetti</b>
+            <small>Alta el 4 de julio &middot; Tres sucursales</small>
           </div>
-        ))}
+          <span className="crm-chip">Cliente activo</span>
+        </div>
+
+        <div className="crm-datos">
+          <span><small>Contacto</small><b>55 •• •• 41</b></span>
+          <span><small>Último pedido</small><b>$ 8,400</b></span>
+          <span><small>Total del año</small><b>$ 96,200</b></span>
+        </div>
+
+        <div className="crm-historial">
+          <small>Historial</small>
+          {historial.map(([que, cuando], i) => (
+            <span key={que} className={i === historial.length - 1 ? 'es-ultimo' : ''}>
+              <i />
+              <b>{que}</b>
+              <em>{cuando}</em>
+            </span>
+          ))}
+        </div>
+
+        <div className="crm-tarea">
+          <i />
+          <b>Siguiente: confirmar entrega del viernes</b>
+          <em>Hoy</em>
+        </div>
       </div>
     </div>
   );
