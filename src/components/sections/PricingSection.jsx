@@ -24,7 +24,7 @@ function Tier({ tier, index }) {
       <span className="tier__icono" aria-hidden="true">
         <Icon size={22} />
       </span>
-      <p className="tier__name">{tier.name}</p>
+      <h3 className="tier__name">{tier.name}</h3>
       <p className="tier__pitch">{tier.pitch}</p>
 
       <ul className="tier__features">
@@ -81,7 +81,7 @@ export function PricingSection() {
             <Wrench size={22} />
           </span>
           <div className="tier--custom__texto">
-            <p className="tier__name">Personalizado</p>
+            <h3 className="tier__name">Personalizado</h3>
             <p className="tier__pitch">
               ¿Ninguno te queda? Cuéntame qué necesita tu negocio y armamos un paquete a tu medida,
               con las piezas exactas que te hagan falta.

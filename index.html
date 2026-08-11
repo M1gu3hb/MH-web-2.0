@@ -1,13 +1,21 @@
 <!doctype html>
-<html lang="es">
+<html lang="es-MX">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#171a20" />
     <meta name="color-scheme" content="dark" />
+
+    <!-- Indexable y rastreable sin restricciones. `max-image-preview:large`
+         permite que Google use la imagen grande en resultados y Discover;
+         los otros dos quitan el recorte del fragmento de texto. -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+    <title>Morphiq — Páginas web, punto de venta y CRM para negocios en CDMX</title>
     <meta
       name="description"
-      content="Morphiq digitaliza la operación completa de tu negocio: páginas web, puntos de venta, CRM, automatizaciones y software a la medida en CDMX. Trabajo real, precios claros y atención directa."
+      content="Diseño y desarrollo páginas web, puntos de venta, CRM y automatizaciones a la medida para negocios de la Ciudad de México. Precio cerrado antes de empezar y atención directa conmigo."
     />
     <meta name="author" content="Miguel Huerta Bautista" />
     <link rel="canonical" href="https://www.morphiq.com.mx/" />
@@ -22,69 +30,361 @@
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Astral Morphiq Systems" />
     <meta property="og:locale" content="es_MX" />
-    <meta property="og:title" content="Morphiq — Digitalizamos la operación completa de tu negocio." />
+    <meta property="og:title" content="Morphiq — Páginas web, punto de venta y CRM para negocios en CDMX" />
     <meta
       property="og:description"
       content="Páginas web, software y sistemas completos para convertir la operación de tu negocio en una ventaja."
     />
-    <meta property="og:image" content="https://www.morphiq.com.mx/mh-logo.png" />
-    <meta property="og:image:width" content="640" />
-    <meta property="og:image:height" content="571" />
-    <meta property="og:image:alt" content="Monograma de Morphiq" />
+    <meta property="og:image" content="https://www.morphiq.com.mx/og-morphiq.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Morphiq — Digitalizamos la operación de tu negocio" />
     <meta property="og:url" content="https://www.morphiq.com.mx/" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Morphiq — Digitalizamos la operación completa de tu negocio." />
+    <meta name="twitter:title" content="Morphiq — Páginas web, punto de venta y CRM para negocios en CDMX" />
     <meta
       name="twitter:description"
       content="Páginas web, software y sistemas completos para negocios en CDMX."
     />
-    <meta name="twitter:image" content="https://www.morphiq.com.mx/mh-logo.png" />
+    <meta name="twitter:image" content="https://www.morphiq.com.mx/og-morphiq.jpg" />
+    <meta name="twitter:image:alt" content="Morphiq — Digitalizamos la operación de tu negocio" />
 
     <link rel="icon" type="image/png" href="/mh-logo-sm.png" />
-    <title>Morphiq — Digitalizamos la operación completa de tu negocio | CDMX</title>
+    <link rel="apple-touch-icon" href="/mh-logo.png" />
 
+    <!-- ============================================================
+         Datos estructurados
+         ============================================================
+
+         Un solo grafo con @id enlazados en vez de bloques sueltos: así Google
+         entiende que la organización, la página y los servicios son la misma
+         entidad y no cinco cosas que coinciden de nombre.
+
+         Todo lo que va aquí sale de la propia página. No hay valoraciones
+         inventadas, ni precios que no publico, ni horarios que no tengo. -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "ProfessionalService",
-        "name": "Astral Morphiq Systems",
-        "alternateName": ["Astral Morphiq", "Morphiq"],
-        "description": "Estudio independiente de diseño web y software a la medida para negocios: páginas, puntos de venta, CRM y automatizaciones.",
-        "founder": {
-          "@type": "Person",
-          "name": "Miguel Huerta Bautista",
-          "jobTitle": "Director, diseñador y desarrollador"
-        },
-        "email": "mhastralsystems@gmail.com",
-        "telephone": "+52 55 2311 8153",
-        "priceRange": "$$",
-        "currenciesAccepted": "MXN",
-        "image": "https://www.morphiq.com.mx/mh-logo.png",
-        "logo": "https://www.morphiq.com.mx/mh-logo-sm.png",
-        "url": "https://www.morphiq.com.mx",
-        "areaServed": {
-          "@type": "City",
-          "name": "Ciudad de México"
-        },
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Xochimilco",
-          "addressRegion": "Ciudad de México",
-          "addressCountry": "MX"
-        },
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": 19.2647,
-          "longitude": -99.1031
-        },
-        "knowsLanguage": "es-MX",
-        "serviceType": [
-          "Diseño y desarrollo web",
-          "Sistemas de punto de venta",
-          "CRM a la medida",
-          "Automatización de procesos"
-        ],
-        "sameAs": ["https://github.com/M1gu3hb"]
+        "@graph": [
+          {
+            "@type": ["ProfessionalService", "Organization"],
+            "@id": "https://www.morphiq.com.mx/#organizacion",
+            "name": "Astral Morphiq Systems",
+            "alternateName": ["Morphiq", "Astral Morphiq"],
+            "description": "Estudio independiente de diseño web y software a la medida para negocios: páginas, puntos de venta, CRM y automatizaciones.",
+            "url": "https://www.morphiq.com.mx/",
+            "email": "contacto@morphiq.com.mx",
+            "telephone": "+525523118153",
+            "priceRange": "$$",
+            "currenciesAccepted": "MXN",
+            "paymentAccepted": "Transferencia, efectivo",
+            "knowsLanguage": "es-MX",
+            "logo": {
+              "@type": "ImageObject",
+              "@id": "https://www.morphiq.com.mx/#logo",
+              "url": "https://www.morphiq.com.mx/marca/lockup-apilado.webp",
+              "contentUrl": "https://www.morphiq.com.mx/marca/lockup-apilado.webp",
+              "width": 720,
+              "height": 787,
+              "caption": "Astral Morphiq Systems"
+            },
+            "image": "https://www.morphiq.com.mx/og-morphiq.jpg",
+            "founder": { "@id": "https://www.morphiq.com.mx/#miguel" },
+            "employee": { "@id": "https://www.morphiq.com.mx/#miguel" },
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Xochimilco",
+              "addressRegion": "Ciudad de México",
+              "addressCountry": "MX"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": 19.2647,
+              "longitude": -99.1031
+            },
+            "areaServed": [
+              { "@type": "City", "name": "Ciudad de México" },
+              { "@type": "Country", "name": "México" }
+            ],
+            "contactPoint": [
+              {
+                "@type": "ContactPoint",
+                "contactType": "customer service",
+                "telephone": "+525523118153",
+                "email": "contacto@morphiq.com.mx",
+                "availableLanguage": ["es-MX"],
+                "areaServed": "MX"
+              }
+            ],
+            "sameAs": ["https://github.com/M1gu3hb"],
+            "hasOfferCatalog": { "@id": "https://www.morphiq.com.mx/#paquetes" }
+          },
+          {
+            "@type": "Person",
+            "@id": "https://www.morphiq.com.mx/#miguel",
+            "name": "Miguel Huerta Bautista",
+            "jobTitle": "Director, diseñador y desarrollador",
+            "email": "miguel@morphiq.com.mx",
+            "worksFor": { "@id": "https://www.morphiq.com.mx/#organizacion" },
+            "knowsAbout": [
+              "Diseño y desarrollo web",
+              "Sistemas de punto de venta",
+              "CRM",
+              "Automatización de procesos",
+              "Desarrollo de software a la medida"
+            ],
+            "sameAs": ["https://github.com/M1gu3hb"]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://www.morphiq.com.mx/#sitio",
+            "url": "https://www.morphiq.com.mx/",
+            "name": "Morphiq",
+            "description": "Páginas web, puntos de venta, CRM y automatizaciones a la medida para negocios en la Ciudad de México.",
+            "inLanguage": "es-MX",
+            "publisher": { "@id": "https://www.morphiq.com.mx/#organizacion" }
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://www.morphiq.com.mx/#pagina",
+            "url": "https://www.morphiq.com.mx/",
+            "name": "Morphiq — Páginas web, punto de venta y CRM para negocios en CDMX",
+            "description": "Diseño y desarrollo páginas web, puntos de venta, CRM y automatizaciones a la medida para negocios de la Ciudad de México.",
+            "inLanguage": "es-MX",
+            "isPartOf": { "@id": "https://www.morphiq.com.mx/#sitio" },
+            "about": { "@id": "https://www.morphiq.com.mx/#organizacion" },
+            "primaryImageOfPage": { "@id": "https://www.morphiq.com.mx/#logo" },
+            "significantLink": [
+              "https://www.morphiq.com.mx/#servicios",
+              "https://www.morphiq.com.mx/#trabajo",
+              "https://www.morphiq.com.mx/#proceso",
+              "https://www.morphiq.com.mx/#inversion",
+              "https://www.morphiq.com.mx/#contacto"
+            ],
+            "hasPart": [
+              {
+                "@type": "WebPageElement",
+                "name": "Servicios",
+                "url": "https://www.morphiq.com.mx/#servicios",
+                "description": "Los cinco frentes de trabajo: web, punto de venta, CRM, automatizaciones y software a la medida."
+              },
+              {
+                "@type": "WebPageElement",
+                "name": "Trabajo real",
+                "url": "https://www.morphiq.com.mx/#trabajo",
+                "description": "Casos construidos y publicados, cada uno con enlace a su sitio o repositorio."
+              },
+              {
+                "@type": "WebPageElement",
+                "name": "Proceso",
+                "url": "https://www.morphiq.com.mx/#proceso",
+                "description": "Las cuatro fases del método: entender, dirigir, construir y lanzar."
+              },
+              {
+                "@type": "WebPageElement",
+                "name": "Paquetes",
+                "url": "https://www.morphiq.com.mx/#inversion",
+                "description": "Sitio web, Operación y Flujo completo, más un paquete personalizado."
+              },
+              {
+                "@type": "WebPageElement",
+                "name": "Sobre mí",
+                "url": "https://www.morphiq.com.mx/#sobre-mi",
+                "description": "Quién construye los proyectos."
+              },
+              {
+                "@type": "WebPageElement",
+                "name": "Preguntas frecuentes",
+                "url": "https://www.morphiq.com.mx/#preguntas"
+              },
+              {
+                "@type": "WebPageElement",
+                "name": "Contacto",
+                "url": "https://www.morphiq.com.mx/#contacto"
+              }
+            ]
+          },
+          {
+            "@type": "Service",
+            "@id": "https://www.morphiq.com.mx/#servicio-web",
+            "name": "Diseño y desarrollo web",
+            "serviceType": "Diseño y desarrollo de sitios web",
+            "description": "Dirección visual, experiencia, desarrollo y panel de control en una misma pieza. Desde una landing hasta un catálogo que tu equipo puede actualizar.",
+            "url": "https://www.morphiq.com.mx/#servicios",
+            "provider": { "@id": "https://www.morphiq.com.mx/#organizacion" },
+            "areaServed": { "@type": "City", "name": "Ciudad de México" },
+            "availableChannel": {
+              "@type": "ServiceChannel",
+              "serviceUrl": "https://www.morphiq.com.mx/#contacto"
+            }
+          },
+          {
+            "@type": "Service",
+            "@id": "https://www.morphiq.com.mx/#servicio-pos",
+            "name": "Sistemas de punto de venta",
+            "serviceType": "Punto de venta e inventario",
+            "description": "Caja, inventario, cortes y reportes pensados alrededor de la operación real del negocio, sin duplicar trabajo.",
+            "url": "https://www.morphiq.com.mx/#servicios",
+            "provider": { "@id": "https://www.morphiq.com.mx/#organizacion" },
+            "areaServed": { "@type": "City", "name": "Ciudad de México" },
+            "availableChannel": {
+              "@type": "ServiceChannel",
+              "serviceUrl": "https://www.morphiq.com.mx/#contacto"
+            }
+          },
+          {
+            "@type": "Service",
+            "@id": "https://www.morphiq.com.mx/#servicio-crm",
+            "name": "CRM y control de datos",
+            "serviceType": "CRM a la medida",
+            "description": "Seguimiento comercial, cotizaciones, contratos y tableros que convierten conversaciones dispersas en un proceso visible.",
+            "url": "https://www.morphiq.com.mx/#servicios",
+            "provider": { "@id": "https://www.morphiq.com.mx/#organizacion" },
+            "areaServed": { "@type": "City", "name": "Ciudad de México" },
+            "availableChannel": {
+              "@type": "ServiceChannel",
+              "serviceUrl": "https://www.morphiq.com.mx/#contacto"
+            }
+          },
+          {
+            "@type": "Service",
+            "@id": "https://www.morphiq.com.mx/#servicio-automatizacion",
+            "name": "Automatización de procesos",
+            "serviceType": "Automatización e integraciones",
+            "description": "Avisos, documentos, actualizaciones e integraciones que reaccionan cuando deben y dejan a tu equipo enfocarse en el negocio.",
+            "url": "https://www.morphiq.com.mx/#servicios",
+            "provider": { "@id": "https://www.morphiq.com.mx/#organizacion" },
+            "areaServed": { "@type": "City", "name": "Ciudad de México" },
+            "availableChannel": {
+              "@type": "ServiceChannel",
+              "serviceUrl": "https://www.morphiq.com.mx/#contacto"
+            }
+          },
+          {
+            "@type": "Service",
+            "@id": "https://www.morphiq.com.mx/#servicio-software",
+            "name": "Software a la medida",
+            "serviceType": "Desarrollo de aplicaciones",
+            "description": "Aplicaciones de escritorio, web y móviles hechas desde cero para un problema concreto.",
+            "url": "https://www.morphiq.com.mx/#servicios",
+            "provider": { "@id": "https://www.morphiq.com.mx/#organizacion" },
+            "areaServed": { "@type": "City", "name": "Ciudad de México" },
+            "availableChannel": {
+              "@type": "ServiceChannel",
+              "serviceUrl": "https://www.morphiq.com.mx/#contacto"
+            }
+          },
+          {
+            "@type": "OfferCatalog",
+            "@id": "https://www.morphiq.com.mx/#paquetes",
+            "name": "Paquetes de trabajo",
+            "url": "https://www.morphiq.com.mx/#inversion",
+            "description": "Tres alcances cerrados y uno personalizado. El precio depende de lo que el negocio necesite y se acuerda antes de empezar.",
+            "itemListElement": [
+              {
+                "@type": "Offer",
+                "name": "Sitio web",
+                "description": "La página que vende por ti: sencilla de editar y lista para recibir pedidos.",
+                "url": "https://www.morphiq.com.mx/#inversion",
+                "itemOffered": { "@id": "https://www.morphiq.com.mx/#servicio-web" },
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock"
+              },
+              {
+                "@type": "Offer",
+                "name": "Operación",
+                "description": "La administración completa por dentro: punto de venta, CRM y tu equipo en un solo sistema.",
+                "url": "https://www.morphiq.com.mx/#inversion",
+                "itemOffered": { "@id": "https://www.morphiq.com.mx/#servicio-pos" },
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock"
+              },
+              {
+                "@type": "Offer",
+                "name": "Flujo completo",
+                "description": "Todo conectado: la página, el punto de venta, el CRM y las automatizaciones hablando entre sí.",
+                "url": "https://www.morphiq.com.mx/#inversion",
+                "itemOffered": { "@id": "https://www.morphiq.com.mx/#servicio-automatizacion" },
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock"
+              }
+            ]
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://www.morphiq.com.mx/#preguntas-frecuentes",
+            "url": "https://www.morphiq.com.mx/#preguntas",
+            "isPartOf": { "@id": "https://www.morphiq.com.mx/#pagina" },
+            "inLanguage": "es-MX",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "¿Cuánto cuesta una página web?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Depende de cuántas pantallas y cuánta lógica necesites: no es lo mismo una página de presentación que un sistema de caja con inventario. Cuéntame qué haces y te doy un número cerrado antes de empezar, no una tarifa por hora que no puedas prever."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "¿Cuánto tiempo tarda?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Depende del alcance, y te doy una fecha antes de arrancar. Lo que no cambia es el ritmo: cada semana ves producto real funcionando, no reportes de avance ni presentaciones."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "¿Yo puedo editar el contenido después?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Sí. Todo lo que sea contenido vivo (precios, productos, fotos, textos) queda en un panel que tú manejas. Te capacito antes de entregar y te dejo el video."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "¿El dominio y el hosting van incluidos?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "La publicación y el dominio los dejo resueltos como parte del proyecto, y el hosting de una página así normalmente no cuesta nada. Lo importante: todo queda registrado a tu nombre, no al mío."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "¿Qué pasa si necesito cambios después de entregar?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Los ajustes que salen justo después de entregar van incluidos; lo acordamos por escrito al cerrar. Más adelante trabajamos por bloque o por proyecto nuevo, lo que te salga mejor. No hay contrato de permanencia."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "¿Trabajas con negocios fuera de CDMX?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Sí. La mayoría de mis clientes son de la ciudad porque me gusta ir a verlos, pero el proceso funciona igual a distancia: videollamadas, avances en línea y entrega remota."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "¿Puedo empezar solo con la página y agregar el sistema después?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Es lo que recomiendo si estás empezando. Construyo la página pensando en que el sistema llegará, así que después se conecta en lugar de rehacerse."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "¿Cómo sé que no vas a desaparecer a medio proyecto?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Porque el trabajo está en línea y lo puedes ver: los casos de esta página tienen enlace directo, ábrelos. Y porque parte del pago va contra entrega: si no entrego, no lo cobro."
+                }
+              }
+            ]
+          }
+        ]
       }
     </script>
   </head>
