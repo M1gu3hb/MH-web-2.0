@@ -48,10 +48,9 @@
 }
 
 .contact__title-accent {
-  background-image: linear-gradient(178deg, #5a9bff 6%, #0a66ff 54%, #0846c8 98%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
+  --degradado: linear-gradient(178deg, #5a9bff 6%, #0a66ff 54%, #0846c8 98%);
+
+  color: #4f95ff;
 }
 
 .contact__bottom {

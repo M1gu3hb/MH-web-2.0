@@ -150,55 +150,36 @@ function useRielHorizontal(enabled) {
 
     if (!enabled) {
       zonaRiel.style.height = '';
-      zonaPista.style.transform = '';
       return undefined;
     }
 
     let frame = 0;
     let sobra = 0;
     let recorrido = 0;
-    /* Con rueda el desfile lleva inercia —cada muesca es un salto discreto y
-       sin suavizar se siente a tirones—, pero con el dedo NO: el scroll táctil
-       ya trae su propia inercia y suavizar encima añade un retraso que se
-       siente como que la página va pesada y despegada del dedo. En táctil el
-       transform sigue al scroll uno a uno. */
-    const conDedo = window.matchMedia?.('(hover: none)').matches ?? false;
-    let objetivo = 0;
-    let actual = 0;
-    let animando = 0;
+    let escrito = -1;
     let libre = false;
 
     const medir = () => {
       sobra = Math.max(0, zonaPista.scrollWidth - visor.clientWidth);
-      /* Cada tarjeta se lleva al menos dos tercios de pantalla de rueda:
-         menos que antes, que con cuatro quintos el recorrido se hacía largo
-         y la sección se sentía atascada. */
+      /* Cada tarjeta se lleva dos tercios de pantalla de rueda. */
       const minimo = zonaPista.children.length * window.innerHeight * 0.66;
       recorrido = Math.max(sobra, minimo);
       zonaRiel.style.height = `${visor.clientHeight + recorrido}px`;
     };
 
-    const paso = () => {
-      actual += (objetivo - actual) * 0.16;
-      if (Math.abs(objetivo - actual) < 0.4) {
-        actual = objetivo;
-        animando = 0;
-      } else {
-        animando = requestAnimationFrame(paso);
-      }
-      zonaPista.style.transform = `translate3d(${-actual.toFixed(2)}px, 0, 0)`;
-    };
-
+    /* El desfile se escribe en el scroll del propio visor, no en un transform.
+       La diferencia no es de estilo: transformar la pista entera obliga al
+       navegador a rasterizar las siete tarjetas como una sola capa de varios
+       miles de píxeles y, con la densidad de un teléfono, eso se pasa del
+       tamaño de textura que muchas GPU aceptan. Lo que sobra no se dibuja: es
+       lo que dejaba las maquetas en blanco. Moviendo el scroll nativo el
+       navegador pinta solo lo que se ve, va más suave, y de regalo el gesto de
+       lado funciona desde el primer momento sin que haya que interpretarlo. */
     const pintar = () => {
       const r = zonaRiel.getBoundingClientRect();
       const avance = recorrido > 0 ? Math.min(1, Math.max(0, -r.top / recorrido)) : 0;
-      objetivo = avance * sobra;
-      if (conDedo) {
-        actual = objetivo;
-        zonaPista.style.transform = `translate3d(${-actual.toFixed(2)}px, 0, 0)`;
-        return;
-      }
-      if (!animando) animando = requestAnimationFrame(paso);
+      escrito = Math.round(avance * sobra);
+      visor.scrollLeft = escrito;
     };
 
     const onScroll = () => {
@@ -209,77 +190,56 @@ function useRielHorizontal(enabled) {
       });
     };
 
-    /* La salida de emergencia: en cuanto alguien mueve el riel de lado por
-       su cuenta —rueda horizontal o arrastre— la animación de scroll se
-       apaga. El recorrido colapsa a una pantalla, la pista pasa a scroll
-       nativo en el punto exacto donde iba, y la página sigue de largo sin
-       obligar a nadie a terminar los siete casos. */
-    const liberar = () => {
+    /* Si el visor se mueve de lado y no fuimos nosotros, es que el visitante
+       lo está recorriendo a mano: la animación se aparta. La sección se
+       recorta justo por debajo de donde está, así que su posición sigue
+       siendo válida y nada salta bajo sus pies. */
+    const onVisorScroll = () => {
       if (libre) return;
+      if (Math.abs(visor.scrollLeft - escrito) < 6) return;
       libre = true;
       cancelAnimationFrame(frame);
-      cancelAnimationFrame(animando);
       frame = 0;
-      animando = 0;
-      /* Sin tocar el scroll de la página: la sección se recorta justo por
-         debajo de donde estamos, así que el punto en el que está el visitante
-         sigue siendo válido y nada se mueve bajo sus pies.
-
-         Antes se devolvía la altura a su valor natural y se recolocaba con
-         scrollTo: al encoger la sección seis mil píxeles, la posición actual
-         quedaba fuera de ella, el navegador la corregía a la fuerza y eso era
-         el salto que se veía en el vídeo. */
       const arriba = zonaRiel.getBoundingClientRect().top + window.scrollY;
       const alto = Math.max(visor.clientHeight, window.scrollY - arriba + visor.clientHeight);
       zonaRiel.style.height = `${alto}px`;
       visor.classList.add('work-rail__visor--libre');
-      zonaPista.style.transform = '';
-      visor.scrollLeft = actual;
     };
 
-    let toque = null;
+    /* Al salir de la sección por arriba, el riel vuelve a estar como al
+       principio: si se regresa, la animación está otra vez ahí. Sin esto, la
+       sección quedaba muerta para siempre tras el primer gesto y volver a
+       entrar se sentía roto. */
+    const recuperar = () => {
+      if (!libre) return;
+      if (zonaRiel.getBoundingClientRect().top < window.innerHeight * 0.9) return;
+      libre = false;
+      visor.classList.remove('work-rail__visor--libre');
+      visor.scrollLeft = 0;
+      escrito = 0;
+      medir();
+    };
+
+    /* Arrastre con el ratón: en escritorio no hay dedo, y una barra de scroll
+       fina no invita. Con el botón pulsado el riel se lleva de la mano. */
     let agarre = null;
-
-    const onWheel = (event) => {
-      if (libre) return;
-      /* Umbral alto a propósito: el scroll diagonal de un trackpad trae
-         siempre algo de deltaX y con un umbral corto la sección se liberaba
-         sola a media rueda. */
-      if (Math.abs(event.deltaX) > 16 && Math.abs(event.deltaX) > Math.abs(event.deltaY) * 1.8) liberar();
-    };
-
     const onDown = (event) => {
-      if (libre) {
-        if (event.pointerType === 'mouse') {
-          agarre = [event.clientX, visor.scrollLeft];
-          visor.classList.add('is-grabbing');
-        }
-        return;
-      }
-      toque = [event.clientX, event.clientY, event.pointerType];
+      if (!libre || event.pointerType !== 'mouse') return;
+      agarre = [event.clientX, visor.scrollLeft];
+      visor.classList.add('is-grabbing');
     };
-
     const onMove = (event) => {
-      if (libre) {
-        if (agarre) visor.scrollLeft = agarre[1] - (event.clientX - agarre[0]);
-        return;
-      }
-      if (!toque) return;
-      const dx = event.clientX - toque[0];
-      const dy = event.clientY - toque[1];
-      /* Claramente horizontal o nada: un arrastre en diagonal es scroll
-         vertical con mala puntería, no una intención de navegar de lado. El
-         dedo pide menos recorrido que el ratón: con `touch-action: pan-y` el
-         navegador ya nos cede el eje, así que un empujón corto basta y no
-         hay que insistir. */
-      const minimo = toque[2] === 'mouse' ? 36 : 18;
-      if (Math.abs(dx) > minimo && Math.abs(dx) > Math.abs(dy) * 1.3) liberar();
+      if (!agarre) return;
+      visor.scrollLeft = agarre[1] - (event.clientX - agarre[0]);
     };
-
     const onUp = () => {
-      toque = null;
       agarre = null;
       visor.classList.remove('is-grabbing');
+    };
+
+    const onPagina = () => {
+      recuperar();
+      onScroll();
     };
 
     const ro = new ResizeObserver(() => {
@@ -291,27 +251,25 @@ function useRielHorizontal(enabled) {
     medir();
     pintar();
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    visor.addEventListener('wheel', onWheel, { passive: true });
+    window.addEventListener('scroll', onPagina, { passive: true });
+    window.addEventListener('resize', onPagina);
+    visor.addEventListener('scroll', onVisorScroll, { passive: true });
     visor.addEventListener('pointerdown', onDown, { passive: true });
     visor.addEventListener('pointermove', onMove, { passive: true });
     visor.addEventListener('pointerup', onUp, { passive: true });
     visor.addEventListener('pointercancel', onUp, { passive: true });
     return () => {
       cancelAnimationFrame(frame);
-      cancelAnimationFrame(animando);
       ro.disconnect();
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-      visor.removeEventListener('wheel', onWheel);
+      window.removeEventListener('scroll', onPagina);
+      window.removeEventListener('resize', onPagina);
+      visor.removeEventListener('scroll', onVisorScroll);
       visor.removeEventListener('pointerdown', onDown);
       visor.removeEventListener('pointermove', onMove);
       visor.removeEventListener('pointerup', onUp);
       visor.removeEventListener('pointercancel', onUp);
       visor.classList.remove('work-rail__visor--libre', 'is-grabbing');
       zonaRiel.style.height = '';
-      zonaPista.style.transform = '';
     };
   }, [enabled]);
 

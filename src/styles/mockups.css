@@ -590,7 +590,10 @@
     inset 0 1px rgba(255, 255, 255, 0.7),
     0 9px 0 rgba(21, 22, 20, 0.25),
     0 24px 46px rgba(21, 22, 20, 0.2);
-  transform: perspective(1200px) rotateY(-5deg) rotateX(2deg);
+  /* Sin inclinación 3D: una capa tridimensional dentro del riel es justo el
+     tipo de anidamiento que algunas GPU de teléfono no rasterizan y deja el
+     hueco en blanco. El dibujo se sostiene igual de pie. */
+  transform: none;
 }
 
 .project-browser-bar {

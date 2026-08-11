@@ -99,18 +99,22 @@ body.no-stage .hero__fade {
 /* Los dos renglones que gritan: la tipografía del manual, en plata, con el
    remate en azul eléctrico. La luz entra desde arriba, como en el wordmark. */
 .hero__title-line--mark {
+  --degradado: linear-gradient(178deg, #f2f4f7 12%, #c0c5cc 58%, #99a0aa 98%);
+
   font-family: var(--font-brand);
   font-variation-settings: 'wght' 700;
   font-weight: 700;
   letter-spacing: -0.015em;
-  background-image: linear-gradient(178deg, #f2f4f7 12%, #c0c5cc 58%, #99a0aa 98%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
+  /* El color va siempre puesto: es lo que se ve si el recorte del degradado
+     no llega a aplicarse. Un titular en plata plana es un titular; un
+     titular transparente no existe. */
+  color: #dfe3ea;
 }
 
 .hero__title-line--mark:last-of-type {
-  background-image: linear-gradient(178deg, #5a9bff 8%, #0a66ff 56%, #0846c8 98%);
+  --degradado: linear-gradient(178deg, #5a9bff 8%, #0a66ff 56%, #0846c8 98%);
+
+  color: #4f95ff;
 }
 
 /* Y el de en medio, que baja la voz: la tipografía de texto, ligera, en

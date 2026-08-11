@@ -173,10 +173,9 @@ ul {
    entrando desde arriba como en el wordmark; el que matiza queda en tinta
    apagada para no competir. */
 .section-heading__line:first-child {
-  background-image: linear-gradient(178deg, #5a9bff 6%, #0a66ff 54%, #0846c8 98%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
+  --degradado: linear-gradient(178deg, #5a9bff 6%, #0a66ff 54%, #0846c8 98%);
+
+  color: #4f95ff;
 }
 
 .section-heading__soft {
@@ -484,4 +483,51 @@ body.is-booting {
   height: 1px;
   margin-bottom: -1px;
   pointer-events: none;
+}
+
+/* ============================================================
+   Degradados recortados al texto, sin riesgo de texto invisible
+   ============================================================
+
+   `background-clip: text` con `color: transparent` recorta el fondo del
+   elemento a sus letras. La trampa: solo pinta lo que va en su misma capa. En
+   cuanto un descendiente crea la suya —basta un `position: relative`— ese
+   trozo se dibuja aparte, sin fondo detrás, y el texto sale transparente. Es
+   decir: invisible. Al rehacer la desfragmentación cada palabra pasó a estar
+   posicionada, y en varios navegadores de teléfono los titulares se
+   esfumaron. En el mío no, que es justo lo peligroso de este fallo.
+
+   Aquí el recorte se aplica en el nodo que solo contiene texto —la palabra—,
+   nunca en un ancestro con hijos posicionados. Y el elemento de arriba
+   conserva siempre un color sólido de marca: si algún navegador vuelve a
+   fallar con el recorte, lo peor que puede pasar es que el titular se vea de
+   un color plano. Nunca que desaparezca. */
+[style*='--degradado'] .rb-scramble__word > [data-real],
+.hero__title-line--mark .rb-scramble__word > [data-real],
+.section-heading__line:first-child .rb-scramble__word > [data-real],
+.about__title-line:first-child .rb-scramble__word > [data-real],
+.contact__title-accent .rb-scramble__word > [data-real] {
+  background-image: var(--degradado);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Los glifos de la desfragmentación van en color plano: son ruido de paso. */
+.rb-scramble__fx {
+  color: currentColor;
+}
+
+/* En teléfono ni se intenta: el degradado en un titular no compensa el riesgo
+   de que un motor concreto lo deje en blanco. Color sólido y a leer. */
+@media (max-width: 640px) {
+  .hero__title-line--mark .rb-scramble__word > [data-real],
+  .section-heading__line:first-child .rb-scramble__word > [data-real],
+  .about__title-line:first-child .rb-scramble__word > [data-real],
+  .contact__title-accent .rb-scramble__word > [data-real] {
+    background-image: none;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+    color: inherit;
+  }
 }

@@ -47,31 +47,27 @@
   margin: clamp(52px, 7vw, 96px) calc(var(--sp-gutter) * -1) 0;
 }
 
+/* El visor lleva scroll horizontal nativo siempre: es lo que mueve el
+   desfile —escribiendo su scrollLeft, no transformando la pista— y también lo
+   que permite recorrerlo a mano desde el primer gesto. La barra se esconde,
+   que aquí sobra. */
 .work-rail__visor {
   position: sticky;
   top: 0;
   display: grid;
   align-items: center;
   height: 100svh;
-  overflow: hidden;
-  /* El navegador se queda el gesto vertical —que es el que mueve la página—
-     y nos deja el horizontal: sin esto, en teléfono el dedo que iba de lado
-     se lo tragaba el scroll y había que insistir varias veces para que el
-     riel se diera por enterado. */
-  touch-action: pan-y;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
 }
 
-/* Liberado por el gesto: scroll horizontal nativo con inercia, arrastrable
-   con el ratón, y la página sigue de largo con normalidad. */
+.work-rail__visor::-webkit-scrollbar { display: none; }
+
+/* Ya recorrido a mano: se ancla por tarjeta y se puede arrastrar. */
 .work-rail__visor--libre {
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  -webkit-overflow-scrolling: touch;
-  /* Ya libre manda el scroll nativo en los dos ejes. */
-  touch-action: auto;
   scroll-snap-type: x proximity;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(10, 102, 255, 0.55) transparent;
   cursor: grab;
 }
 
@@ -98,12 +94,11 @@
   width: min(72vw, 1020px);
   height: min(74svh, 640px);
   min-width: 0;
-  /* Solo se dibuja la que se está viendo. Sin esto, la pista entera se
-     promociona a una sola capa de compositor: siete tarjetas de ancho, más de
-     siete mil píxeles, rasterizadas todas a la vez para enseñar una. El tamaño
-     va declarado para que saltarse el dibujo no mueva nada de sitio. */
-  content-visibility: auto;
-  contain-intrinsic-size: min(72vw, 1020px) min(74svh, 640px);
+  /* Sin transform en la pista, el visor es un contenedor de scroll normal y
+     el navegador ya solo rasteriza lo que asoma: no hace falta saltarse el
+     dibujo a mano, que es lo que dejaba huecos en blanco en algunos motores
+     cuando la pista iba transformada. */
+  contain: layout paint;
 }
 
 .project-card__inner {
@@ -333,15 +328,6 @@
 
   .project-card__inner { border-radius: var(--r-lg); }
   .project-card__visual { min-height: 200px; }
-
-  /* En teléfono se dibujan todas. Saltarse el dibujo de las que no se ven
-     ahorra poco —la tarjeta mide 86vw— y dentro de una pista transformada
-     hay motores móviles que se quedan con el hueco en blanco para siempre.
-     Antes que perseguir ese fallo por navegador, se apaga. */
-  .project-card {
-    content-visibility: visible;
-    contain-intrinsic-size: auto;
-  }
   .project-card__link { width: 100%; justify-content: center; }
 }
 

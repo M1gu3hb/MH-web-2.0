@@ -5,6 +5,7 @@ import { AvisoDesliza } from '../primitives/AvisoDesliza';
 import { AutomationScreen, CrmScreen, PosScreen, SoftwareScreen, WebsiteScreen } from '../mockups/ServiceScreens';
 import { MorphStage, ScrambleText } from '../reactbits';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { ScrollCue } from '../primitives/ScrollCue';
 import { useScrollSequence } from '../../hooks/useScrollSequence';
 import { CAPABILITIES, SECTIONS } from '../../content';
@@ -35,6 +36,8 @@ export function CapabilitiesSection({ embedded = false }) {
   const baseId = useId();
   const tabsRef = useRef([]);
   const reducedMotion = useReducedMotion();
+  /* El morph en la GPU se queda en pantallas grandes. */
+  const conMorph = useMediaQuery('(min-width: 641px)');
 
   /* El scroll pegado también en teléfono: es la animación de la sección. */
   const { containerRef, index: activeIndex, select, flow } = useScrollSequence(CAPABILITIES.length, {
@@ -211,7 +214,7 @@ export function CapabilitiesSection({ embedded = false }) {
                     enseñar uno cada vez. Cae en la misma celda del grid que el
                     hueco de la maqueta, así que se coloca sola en cualquier
                     formato sin repetir el reparto. */}
-                {!embedded ? (
+                {!embedded && conMorph ? (
                   <MorphStage
                     className="panel-morph"
                     scenes={ESCENAS}
@@ -223,6 +226,25 @@ export function CapabilitiesSection({ embedded = false }) {
                     aberration={0.4}
                     drift={0.35}
                   />
+                ) : null}
+                {/* En teléfono el relevo entre escenas es un fundido normal.
+                    El morph en la GPU está precioso, pero en un teléfono de
+                    gama media cuesta dos texturas grandes y ruido por píxel en
+                    cada fotograma: medido, la sección bajaba a quince cuadros
+                    por segundo. El fundido se ve casi igual y no cuesta nada. */}
+                {!embedded && !conMorph ? (
+                  <div className="panel-morph panel-morph--liso" aria-hidden="true">
+                    {ESCENAS.map((src, i) => (
+                      <img
+                        key={src}
+                        src={src}
+                        alt=""
+                        className={i === activeIndex ? 'es-activa' : ''}
+                        loading={i < 2 ? 'eager' : 'lazy'}
+                        decoding="async"
+                      />
+                    ))}
+                  </div>
                 ) : null}
                 {CAPABILITIES.map((item, i) => {
                   const Screen = SERVICE_SCREENS[item.screen];
