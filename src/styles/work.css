@@ -313,10 +313,22 @@
   .project-card__index { display: none; }
 }
 
-/* Muy justo de alto: la maqueta cede su sitio antes que el texto. */
+/* Muy justo de alto —teléfonos de 640 o 715 puntos, y cualquiera con la barra
+   del navegador a la vista—: la maqueta encoge, pero NO se va.
+
+   Antes aquí ponía `display: none`, y era el fallo que dejaba un rectángulo
+   negro donde debía estar el dibujo del negocio. No se veía probando en un
+   iPhone de 844 de alto, que es donde yo miraba; en un teléfono de gama media
+   la tarjeta se quedaba con el texto y un hueco vacío. Que el dibujo salga
+   pequeño es un problema de diseño; que no salga es un error. */
 @media (max-width: 900px) and (max-height: 720px) {
-  .project-card__visual { display: none; }
-  .project-card__layout { grid-template-rows: minmax(0, 1fr); }
+  .project-card__visual {
+    min-height: 130px;
+    padding: 10px;
+  }
+
+  .project-card__desc { display: none; }
+  .project-card__layout { gap: 10px; padding-top: 10px; }
 }
 
 @media (max-width: 640px) {
