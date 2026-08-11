@@ -119,8 +119,26 @@ function ProjectCard({ project, index, total, compact }) {
             )}
           </div>
 
+          {/* En teléfono la maqueta va horneada en una imagen. El dibujo es el
+              mismo —se genera desde este mismo CSS—, pero un <img> lo pinta
+              cualquier motor sin discutir: compuesto en vivo son decenas de
+              nodos con sombras y degradados dentro de un contenedor con
+              scroll, y hay teléfonos donde eso se quedaba en blanco. De paso
+              cuesta una textura en lugar de un árbol entero. */}
           <div className="project-card__visual" aria-hidden="true">
-            <Visual />
+            {compact ? (
+              <img
+                className="project-card__horneada"
+                src={`/casos/${project.visual}.webp`}
+                alt=""
+                width="760"
+                height="753"
+                loading={index < 2 ? 'eager' : 'lazy'}
+                decoding="async"
+              />
+            ) : (
+              <Visual />
+            )}
             <span className="project-card__index">{project.index}</span>
           </div>
         </div>

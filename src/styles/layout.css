@@ -539,9 +539,12 @@ a.footer__dato:hover {
   background-size: 260% 100%;
   opacity: 0;
   pointer-events: none;
-  mask-image: url('/marca/lockup-apilado.webp');
+  /* Silueta aparte y ligera: pedir aquí la imagen grande hacía que el
+     navegador la descargara otra vez —y por partida doble, una por cada
+     variante de la propiedad—. Para recortar la luz solo hace falta la forma. */
+  mask-image: url('/marca/mask-lockup.webp');
   mask-size: 100% 100%;
-  -webkit-mask-image: url('/marca/lockup-apilado.webp');
+  -webkit-mask-image: url('/marca/mask-lockup.webp');
   -webkit-mask-size: 100% 100%;
   animation: boot-brillo 4.4s ease-in-out 0.9s infinite;
 }

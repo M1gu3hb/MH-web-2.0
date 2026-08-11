@@ -12,6 +12,13 @@
     <meta name="author" content="Miguel Huerta Bautista" />
     <link rel="canonical" href="https://www.morphiq.com.mx/" />
 
+    <!-- El lockup de la pantalla de carga es lo primero que se ve: pedido aquí
+         empieza a bajar con el HTML, en paralelo con el JS, en vez de esperar a
+         que React monte. Es la diferencia entre entrar viendo la marca y entrar
+         viendo una pantalla vacía con la barra corriendo. -->
+    <link rel="preload" as="image" href="/marca/lockup-apilado.webp" type="image/webp" fetchpriority="high" />
+    <link rel="preload" as="image" href="/marca/lockup-horizontal.webp" type="image/webp" />
+
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Astral Morphiq Systems" />
     <meta property="og:locale" content="es_MX" />

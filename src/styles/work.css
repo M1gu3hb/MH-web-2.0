@@ -400,3 +400,20 @@
     scroll-snap-align: center;
   }
 }
+
+/* La maqueta horneada llena su hueco como lo haría el dibujo en vivo. */
+.project-card__horneada {
+  width: 100%;
+  height: 100%;
+  border-radius: 19px;
+  object-fit: cover;
+  object-position: 50% 0;
+}
+
+/* Un solo aviso a la vez: el de «desliza para continuar» aparece cuando hace
+   falta y decía lo mismo que la pista fija, encima superpuesto. */
+@media (max-width: 640px) {
+  .work-rail .scroll-cue {
+    display: none;
+  }
+}

@@ -290,9 +290,9 @@ body.no-stage .hero__fade {
   opacity: 0;
   transform: translateZ(3px);
   pointer-events: none;
-  mask-image: url('/marca/simbolo-v2-md.webp');
+  mask-image: url('/marca/mask-simbolo.webp');
   mask-size: 100% 100%;
-  -webkit-mask-image: url('/marca/simbolo-v2-md.webp');
+  -webkit-mask-image: url('/marca/mask-simbolo.webp');
   -webkit-mask-size: 100% 100%;
 }
 
