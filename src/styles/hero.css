@@ -28,39 +28,11 @@
    una sola vez. No cuesta un solo fotograma y en teléfono es la diferencia
    entre entrar de golpe o entrar a trompicones. */
 .hero__backdrop--liso {
-  overflow: hidden;
   background:
     radial-gradient(120% 70% at 78% 34%, rgba(10, 102, 255, 0.28), transparent 62%),
     radial-gradient(90% 60% at 8% 12%, rgba(47, 126, 242, 0.16), transparent 58%),
     radial-gradient(140% 90% at 50% 108%, rgba(8, 70, 200, 0.24), transparent 68%),
     #06080d;
-}
-
-/* La ola. En escritorio la dibuja el shader; aquí son tres arcos de luz
-   dentro de un mosaico que se repite cada 520px, y la capa entera baja
-   exactamente 520px antes de volver a empezar, así el ciclo no tiene
-   costura. Al ser un translate no repinta nada: el compositor mueve una
-   textura que ya existe, que es justo lo que el shader no podía hacer.
-   Va en ::before para que el degradado de salida siga pintando encima. */
-.hero__backdrop--liso::before {
-  content: '';
-  position: absolute;
-  top: -520px;
-  right: 0;
-  left: 0;
-  height: calc(100% + 520px);
-  background-image:
-    radial-gradient(150% 22% at 50% 8%, rgba(74, 150, 255, 0.17), transparent 70%),
-    radial-gradient(130% 16% at 28% 42%, rgba(126, 188, 255, 0.1), transparent 72%),
-    radial-gradient(170% 20% at 72% 76%, rgba(10, 102, 255, 0.14), transparent 74%);
-  background-repeat: repeat-y;
-  background-size: 100% 520px;
-  animation: hero-ola 15s linear infinite;
-}
-
-@keyframes hero-ola {
-  from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(0, 520px, 0); }
 }
 
 .rb-scanner {
@@ -732,9 +704,6 @@ body.in-transit .scroll-meter {
   .hero__fade {
     background: linear-gradient(180deg, transparent, rgba(6, 8, 13, 0.55) 45%, var(--surface-base));
   }
-
-  /* La ola se queda quieta: los arcos siguen ahí, sin recorrido. */
-  .hero__backdrop--liso::before { animation: none; }
 }
 
 /* ---- Indicador de scroll ------------------------------------------------
