@@ -402,6 +402,56 @@
   </head>
   <body>
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+    <!-- El sitio es una aplicación de React: hasta que no se ejecuta el JS, el
+         HTML no tiene ni un titular ni un enlace. Google sabe ejecutarlo y lo
+         hace bien —está medido—, pero no todos los rastreadores renderizan, y
+         si el render falla o se retrasa lo único que queda por leer es una
+         página vacía. Esto es esa red de seguridad: el mismo mensaje y los
+         mismos enlaces de la página, en texto plano. No se ve nunca mientras
+         haya JavaScript, así que no cambia nada de lo que ve una persona. -->
+    <noscript>
+      <h1>Digitalizamos la operación completa de tu negocio</h1>
+      <p>
+        Morphiq (Astral Morphiq Systems) es un estudio de soluciones digitales para negocios en
+        la Ciudad de México. Diseño lo que tus clientes ven y construyo lo que tu negocio
+        necesita.
+      </p>
+
+      <h2>Servicios</h2>
+      <ul>
+        <li><strong>Diseño y desarrollo web.</strong> Sitios que se sienten propios, no rentados.</li>
+        <li><strong>Punto de venta.</strong> La caja, el inventario y los pedidos hablando entre sí.</li>
+        <li><strong>CRM y datos.</strong> Cada prospecto, documento y decisión en el mismo mapa.</li>
+        <li><strong>Automatizaciones.</strong> Menos pendientes persiguiéndote, más trabajo sucediendo solo.</li>
+        <li><strong>Software a la medida.</strong> Si no existe la herramienta que necesitas, la construyo.</li>
+      </ul>
+
+      <h2>Paquetes</h2>
+      <p>
+        Sitio web, Operación y Flujo completo, más uno personalizado. El alcance y el precio se
+        cierran antes de empezar.
+      </p>
+
+      <h2>Contacto</h2>
+      <ul>
+        <li>Correo: <a href="mailto:contacto@morphiq.com.mx">contacto@morphiq.com.mx</a></li>
+        <li>WhatsApp y teléfono: <a href="https://wa.me/525523118153">+52 55 2311 8153</a></li>
+        <li>GitHub: <a href="https://github.com/M1gu3hb">github.com/M1gu3hb</a></li>
+      </ul>
+
+      <h2>Secciones</h2>
+      <ul>
+        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="#trabajo">Trabajo real</a></li>
+        <li><a href="#proceso">Proceso</a></li>
+        <li><a href="#inversion">Paquetes</a></li>
+        <li><a href="#sobre-mi">Sobre mí</a></li>
+        <li><a href="#preguntas">Preguntas frecuentes</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </noscript>
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
