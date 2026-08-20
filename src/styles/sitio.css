@@ -214,74 +214,141 @@
 }
 
 /* ------------------------------------------------------------
-   Portada (home)
+   Portada (home) — el hero de marca
+   ------------------------------------------------------------
+   La tipografía y el reparto los pone hero.css, que es el de producción y
+   sigue importado. Aquí solo va lo que cambia por ser un sitio multipágina.
    ------------------------------------------------------------ */
 
 .portada {
   position: relative;
-  padding-block: clamp(120px, 15vh, 180px) var(--sp-9);
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding-block: clamp(118px, 14vh, 172px) clamp(72px, 10vh, 128px);
   overflow: hidden;
-  background: var(--surface-base);
+  background: #06080d;
+  color: var(--ink-strong);
+
+  /* Las variables de tinta del hero de producción, para que el titular a
+     tres voces se pinte exactamente igual que allí. */
+  --ink-strong: #eef1f5;
+  --ink-body: #b9bfc9;
+  --ink-muted: #8f96a2;
+  --line: rgba(238, 241, 245, 0.16);
+  --line-soft: rgba(238, 241, 245, 0.09);
 }
 
 .portada__fondo {
   position: absolute;
   inset: 0;
   pointer-events: none;
+}
+
+.portada__fondo .rb-scanner {
+  width: 100%;
+  height: 100%;
+}
+
+/* ---- Sin shader: la ola en CSS ----
+   Tres arcos de luz dentro de un mosaico que se repite cada 520px; la capa
+   baja exactamente esos 520px antes de reiniciar, así el bucle cierra sin
+   costura. Al ser un translate el compositor mueve una textura que ya
+   existe y no repinta: en un teléfono cuesta prácticamente nada, mientras
+   que el shader a pantalla completa sí se notaba. */
+.portada__fondo--liso {
   background:
-    radial-gradient(120% 70% at 78% 30%, rgba(10, 102, 255, 0.26), transparent 62%),
-    radial-gradient(90% 60% at 6% 8%, rgba(47, 126, 242, 0.14), transparent 58%),
-    radial-gradient(140% 90% at 50% 110%, rgba(8, 70, 200, 0.2), transparent 68%);
+    radial-gradient(120% 70% at 78% 32%, rgba(10, 102, 255, 0.3), transparent 62%),
+    radial-gradient(90% 60% at 6% 10%, rgba(47, 126, 242, 0.17), transparent 58%),
+    radial-gradient(140% 90% at 50% 108%, rgba(8, 70, 200, 0.24), transparent 68%),
+    #06080d;
+}
+
+.portada__fondo--liso::before {
+  content: '';
+  position: absolute;
+  top: -520px;
+  right: 0;
+  left: 0;
+  height: calc(100% + 520px);
+  background-image:
+    radial-gradient(150% 22% at 50% 8%, rgba(74, 150, 255, 0.19), transparent 70%),
+    radial-gradient(130% 16% at 28% 42%, rgba(126, 188, 255, 0.11), transparent 72%),
+    radial-gradient(170% 20% at 72% 76%, rgba(10, 102, 255, 0.15), transparent 74%);
+  background-repeat: repeat-y;
+  background-size: 100% 520px;
+  animation: portada-ola 15s linear infinite;
+}
+
+@keyframes portada-ola {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(0, 520px, 0); }
+}
+
+.portada__fondo--quieto::before {
+  animation: none;
+}
+
+/* La entrega al resto de la página, para que el corte no se vea. */
+.portada__velo {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 24vh;
+  background: linear-gradient(180deg, transparent, rgba(6, 8, 13, 0.55) 44%, var(--surface-base));
 }
 
 .portada__reparto {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-  gap: clamp(32px, 5vw, 72px);
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  gap: clamp(28px, 4.5vw, 68px);
   align-items: center;
 }
 
-@media (max-width: 960px) {
-  .portada__reparto {
-    grid-template-columns: 1fr;
-  }
-  /* En teléfono el símbolo va DESPUÉS del texto: lo primero que se lee
-     tiene que ser qué hace Morphiq, no el logo otra vez. */
-  .portada__marca {
-    order: 2;
-    max-width: 360px;
-    margin-inline: auto;
-  }
-  .portada__texto {
-    order: 1;
-  }
+.portada__texto {
+  container-type: inline-size;
+  min-width: 0;
 }
 
-.portada__titulo {
-  max-width: 17ch;
-  color: var(--ink-strong);
-  font-family: var(--font-brand);
-  font-size: clamp(2.4rem, 6.4vw, 5.1rem);
-  font-variation-settings: 'wght' 700;
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  line-height: 0.98;
-  text-wrap: balance;
+/* El titular se mide contra su columna, no contra la ventana: DIGITALIZAMOS
+   es indivisible y atado al viewport se salía de cuadro en tableta apaisada,
+   donde la columna es mucho más estrecha que la pantalla. */
+.portada__titular {
+  font-size: clamp(2rem, 12.4cqw, 5.6rem);
 }
 
-.portada__titulo em {
-  color: var(--accent-pos);
-  font-style: normal;
+.portada__claim {
+  max-width: 50ch;
 }
 
-.portada__entrada {
+.portada__frentes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-3);
   margin-top: var(--sp-5);
-  max-width: 52ch;
+  color: var(--ink-muted);
+  font-size: max(0.86rem, 12.5px);
+}
+
+.portada__frentes a {
   color: var(--ink-body);
-  font-size: clamp(1.05rem, 1.4vw, 1.28rem);
-  line-height: 1.6;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.18s, border-color 0.18s;
+}
+
+.portada__frentes a:hover,
+.portada__frentes a:focus-visible {
+  color: var(--accent-pos);
+  border-bottom-color: currentColor;
+}
+
+.portada__frentes span {
+  color: var(--line);
 }
 
 .portada__acciones {
@@ -294,7 +361,7 @@
 .portada__ancla {
   margin-top: var(--sp-5);
   color: var(--ink-muted);
-  font-size: var(--t-small);
+  font-size: max(0.86rem, 12.5px);
 }
 
 .portada__ancla strong {
@@ -306,27 +373,83 @@
   text-underline-offset: 3px;
 }
 
-.portada__credenciales {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-3) var(--sp-5);
-  margin: var(--sp-6) 0 0;
-  padding: var(--sp-5) 0 0;
-  border-top: 1px solid var(--line-soft);
-  list-style: none;
+.portada__meta {
+  margin-top: var(--sp-7);
 }
 
-.portada__credenciales li {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-  color: var(--ink-muted);
-  font-size: var(--t-small);
+.portada__marca {
+  display: grid;
+  place-items: center;
+  min-height: min(64vh, 540px);
 }
 
-.portada__credenciales svg {
-  flex: none;
-  color: var(--accent-pos);
+/* ---- Indicador de scroll ---- */
+.portada__pista {
+  position: absolute;
+  bottom: clamp(18px, 3vh, 34px);
+  left: 50%;
+  z-index: 2;
+  translate: -50% 0;
+  width: 24px;
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-full);
+}
+
+.portada__pista span {
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  width: 3px;
+  height: 7px;
+  translate: -50% 0;
+  border-radius: var(--r-full);
+  background: var(--accent-pos);
+  animation: portada-pista 1.9s ease-in-out infinite;
+}
+
+@keyframes portada-pista {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  60% { transform: translateY(14px); opacity: 0.15; }
+}
+
+/* ---- Tableta y teléfono ---- */
+@media (max-width: 960px) {
+  .portada__reparto {
+    grid-template-columns: 1fr;
+    gap: var(--sp-6);
+  }
+  /* El símbolo va DESPUÉS del texto: lo primero que se lee tiene que ser
+     qué hace Morphiq, no el logo otra vez. */
+  .portada__texto { order: 1; }
+  .portada__marca {
+    order: 2;
+    min-height: 0;
+    max-width: 340px;
+    margin-inline: auto;
+  }
+  .portada__titular {
+    font-size: clamp(2rem, 13.5cqw, 4.2rem);
+  }
+}
+
+@media (max-width: 640px) {
+  .portada {
+    min-height: auto;
+  }
+  .portada__marca {
+    max-width: 260px;
+  }
+  .portada__pista {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portada__fondo--liso::before,
+  .portada__pista span {
+    animation: none;
+  }
 }
 
 /* ------------------------------------------------------------
@@ -2154,4 +2277,303 @@ iframe {
 .tarjeta-proyecto__industria,
 .caso-cabecera__industria {
   color: color-mix(in srgb, var(--acento) 58%, #eef1f6);
+}
+
+/* ---- Ajuste de la portada para que quepa en una ventana ----
+   Con las credenciales partidas en dos filas el hero medía 1012px en una
+   ventana de 900 y la firma quedaba fuera. La columna de texto gana algo de
+   sitio, las notas se acortan y el bloque de credenciales aprieta: tres en
+   una fila, que es como estaba pensado. */
+@media (min-width: 961px) {
+  .portada__reparto {
+    grid-template-columns: minmax(0, 1.26fr) minmax(290px, 0.74fr);
+  }
+  .portada__meta {
+    margin-top: var(--sp-6);
+    padding-top: var(--sp-4);
+  }
+  .portada__meta .hero__credentials {
+    flex-wrap: nowrap;
+    gap: clamp(16px, 2vw, 32px);
+  }
+  .portada__meta .hero__credentials dd {
+    max-width: 21ch;
+    margin-top: 5px;
+  }
+  .portada__acciones {
+    margin-top: var(--sp-6);
+  }
+}
+
+/* Por debajo de 1100px de alto el hero deja de intentar llenar la ventana:
+   forzar 100svh en un portátil de 768px de alto solo consigue que el
+   contenido se salga por abajo. */
+@media (max-height: 820px) and (min-width: 961px) {
+  .portada {
+    min-height: auto;
+    padding-block: clamp(104px, 13vh, 150px) var(--sp-8);
+  }
+  .portada__marca {
+    min-height: min(52vh, 420px);
+  }
+}
+
+/* ============================================================
+   TARJETA DE SOLUCIÓN — la maqueta real dentro de la tarjeta
+   ============================================================ */
+
+.rejilla-soluciones {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: var(--sp-5);
+}
+
+/* La primera manda: es el servicio con el que empieza casi todo el mundo,
+   así que ocupa el doble de ancho cuando hay sitio y su maqueta se ve
+   grande. Una retícula de cinco iguales no jerarquiza nada. */
+@media (min-width: 1100px) {
+  .rejilla-soluciones {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  .rejilla-soluciones > *:nth-child(1) { grid-column: span 3; }
+  .rejilla-soluciones > *:nth-child(2) { grid-column: span 3; }
+  .rejilla-soluciones > *:nth-child(3),
+  .rejilla-soluciones > *:nth-child(4),
+  .rejilla-soluciones > *:nth-child(5) { grid-column: span 2; }
+}
+
+.solucion {
+  position: relative;
+  height: 100%;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-xl);
+  background: linear-gradient(180deg, var(--surface-raised), var(--surface-sunken));
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.solucion.is-viva {
+  border-color: color-mix(in srgb, var(--acento) 55%, transparent);
+  box-shadow:
+    0 18px 50px -20px color-mix(in srgb, var(--acento) 45%, transparent),
+    var(--e-2);
+  /* Inclinación mínima y hacia el cursor: lo justo para que la tarjeta
+     acuse el gesto sin convertirse en un juguete. */
+  transform: perspective(1100px)
+    rotateX(calc(var(--gy, 0) * -2.4deg))
+    rotateY(calc(var(--gx, 0) * 3deg))
+    translateY(-4px);
+}
+
+.solucion__enlace {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* El halo que sigue al cursor. */
+.solucion__halo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    460px circle at var(--luz-x, 50%) var(--luz-y, 0%),
+    color-mix(in srgb, var(--acento) 26%, transparent),
+    transparent 62%
+  );
+  transition: opacity 0.35s;
+}
+
+.solucion.is-viva .solucion__halo {
+  opacity: 1;
+}
+
+/* ---- El marco de la maqueta ---- */
+.solucion__marco {
+  position: relative;
+  z-index: 1;
+  display: block;
+  aspect-ratio: 16 / 10;
+  margin: var(--sp-4) var(--sp-4) 0;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--surface-sunken);
+  /* Aísla el repintado de la maqueta del resto de la página: dentro hay
+     bastante DOM y no debe costar nada mientras no cambie. */
+  contain: paint;
+}
+
+/* La maqueta se pinta a su tamaño natural y se ESCALA. Encogerla con
+   width reflowaría todo su contenido y sus textos de 0.6rem se romperían;
+   escalada, el navegador la trata como una textura. */
+.solucion__lienzo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: calc(100% / var(--escala));
+  height: calc(100% / var(--escala));
+  transform: scale(var(--escala));
+  transform-origin: top left;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.solucion.is-viva .solucion__lienzo {
+  transform: scale(calc(var(--escala) * 1.035));
+}
+
+.solucion__lienzo .demo {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border-radius: 0;
+}
+
+/* Un barrido de luz que cruza el marco al acercarse: el mismo gesto de
+   metal reflejado que usa la marca. */
+.solucion__brillo {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.16) 48%,
+    transparent 58%
+  );
+  translate: -35% 0;
+  transition: opacity 0.3s;
+}
+
+.solucion.is-viva .solucion__brillo {
+  opacity: 1;
+  animation: solucion-barrido 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes solucion-barrido {
+  from { translate: -60% 0; }
+  to { translate: 60% 0; }
+}
+
+/* ---- El texto ---- */
+.solucion__cuerpo {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-5);
+}
+
+.solucion__indice {
+  color: var(--acento);
+  font-family: var(--font-display);
+  font-size: max(0.68rem, 12.5px);
+  font-weight: var(--w-label);
+  letter-spacing: 0.16em;
+}
+
+.solucion__nombre {
+  color: var(--ink-strong);
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2vw, 1.6rem);
+  font-weight: var(--w-bold);
+  letter-spacing: -0.03em;
+}
+
+.solucion__promesa {
+  color: var(--acento);
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.solucion__para {
+  margin-top: 2px;
+  color: var(--ink-muted);
+  font-size: max(0.86rem, 12.5px);
+  line-height: 1.55;
+}
+
+.solucion__puntos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: var(--sp-3);
+}
+
+.solucion__puntos span {
+  padding: 4px 10px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-full);
+  color: var(--ink-muted);
+  font-size: max(0.72rem, 12.5px);
+}
+
+.solucion__ver {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: var(--sp-4);
+  color: var(--acento);
+  font-size: max(0.86rem, 12.5px);
+  font-weight: var(--w-medium);
+}
+
+.solucion__ver svg {
+  transition: translate 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.solucion.is-viva .solucion__ver svg {
+  translate: 3px -3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .solucion,
+  .solucion__lienzo,
+  .solucion__ver svg {
+    transition: none;
+  }
+  .solucion.is-viva {
+    transform: none;
+  }
+  .solucion.is-viva .solucion__brillo {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* Dentro de la tarjeta las maquetas tienen que llenar su marco: si no,
+   queda un vacío que parece un error de carga. */
+.solucion__lienzo .demo--website .website-canvas,
+.solucion__lienzo .demo--pos .pos-body,
+.solucion__lienzo .demo--n8n,
+.solucion__lienzo .demo--resto {
+  height: 100%;
+}
+
+.solucion__lienzo .demo--website .website-canvas {
+  display: grid;
+  align-content: center;
+  /* `align-content: center` centra el bloque, pero sin esto los hijos se
+     estiran a lo ancho y el botón «Explorar» se convertía en una barra. */
+  justify-items: start;
+}
+
+/* El cuerpo del punto de venta reparte su alto entre ticket y teclado en vez
+   de dejar medio marco en negro. */
+.solucion__lienzo .demo--pos .pos-body {
+  align-content: stretch;
+}
+
+.solucion__lienzo .demo--pos .pos-ticket {
+  align-content: start;
 }

@@ -214,3 +214,60 @@ export function SoftwareScreen() {
     </div>
   );
 }
+
+/**
+ * La única maqueta que faltaba: la del restaurante.
+ *
+ * Es lo que el dueño reconoce de un vistazo: el teléfono del cliente con el
+ * menú abierto por el QR, y a su lado la comanda entrando a cocina. Las
+ * otras cinco maquetas ya existían; esta se construye con las mismas
+ * convenciones para que la familia se mantenga.
+ */
+export function RestauranteScreen() {
+  const platillos = [
+    ['Tacos de suadero', '$95', true],
+    ['Quesadilla de flor', '$78', false],
+    ['Agua de horchata', '$45', false],
+  ];
+  return (
+    <div className="demo demo--resto">
+      <div className="resto-menu">
+        <div className="resto-menu__barra">
+          <span className="resto-qr" aria-hidden="true">
+            {Array.from({ length: 9 }, (_, i) => (
+              <i key={i} />
+            ))}
+          </span>
+          <em>Menú · mesa 7</em>
+        </div>
+        <strong className="resto-menu__titulo">Hoy en la cocina</strong>
+        <ul className="resto-menu__lista">
+          {platillos.map(([nombre, precio, activo]) => (
+            <li key={nombre} className={activo ? 'is-activo' : ''}>
+              <span>{nombre}</span>
+              <b>{precio}</b>
+            </li>
+          ))}
+        </ul>
+        <span className="resto-menu__cta">Pedir a la mesa</span>
+      </div>
+
+      <div className="resto-cocina">
+        <div className="resto-cocina__cabeza">
+          <span><i /> COCINA</span>
+          <b>3 en curso</b>
+        </div>
+        <div className="resto-comanda">
+          <small>MESA 7 · 19:42</small>
+          <span>2 × Tacos de suadero</span>
+          <span>1 × Agua de horchata</span>
+          <em className="resto-comanda__estado">Preparando</em>
+        </div>
+        <div className="resto-cocina__pie">
+          <span>Ticket</span>
+          <b>$235</b>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1639,3 +1639,235 @@
   .imagination-core,
   .imagination-core span { animation: none; }
 }
+
+/* ============================================================
+   Restaurante — menú por QR + comanda en cocina
+   ============================================================ */
+
+.demo--resto {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: 10px;
+  padding: 12px;
+  overflow: hidden;
+  background: #0e1117;
+  color: #e9eef7;
+}
+
+/* ---- El teléfono del cliente ---- */
+.resto-menu {
+  display: grid;
+  align-content: start;
+  gap: 9px;
+  padding: 12px;
+  border: 1px solid rgba(160, 190, 255, 0.18);
+  border-radius: 14px;
+  background: #f7f3e9;
+  color: #17181a;
+}
+
+.resto-menu__barra {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(23, 24, 26, 0.12);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.62;
+}
+
+.resto-qr {
+  display: grid;
+  grid-template-columns: repeat(3, 4px);
+  gap: 2px;
+  flex: none;
+}
+
+.resto-qr i {
+  width: 4px;
+  height: 4px;
+  background: #17181a;
+  border-radius: 1px;
+}
+
+.resto-qr i:nth-child(2),
+.resto-qr i:nth-child(4),
+.resto-qr i:nth-child(9) {
+  background: transparent;
+}
+
+.resto-menu__titulo {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 720;
+  letter-spacing: -0.02em;
+}
+
+.resto-menu__lista {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.resto-menu__lista li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(23, 24, 26, 0.05);
+  font-size: 0.68rem;
+}
+
+.resto-menu__lista li.is-activo {
+  background: rgba(54, 215, 209, 0.22);
+  box-shadow: inset 0 0 0 1px rgba(20, 120, 116, 0.35);
+}
+
+.resto-menu__lista b {
+  font-weight: 720;
+}
+
+.resto-menu__cta {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #17181a;
+  color: #f7f3e9;
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+/* ---- La pantalla de cocina ---- */
+.resto-cocina {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 9px;
+  padding: 12px;
+  border: 1px solid rgba(160, 190, 255, 0.16);
+  border-radius: 14px;
+  background: #12161f;
+}
+
+.resto-cocina__cabeza {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+}
+
+.resto-cocina__cabeza span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #9fb0cc;
+}
+
+.resto-cocina__cabeza i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #36d7d1;
+  box-shadow: 0 0 0 3px rgba(54, 215, 209, 0.2);
+}
+
+.resto-cocina__cabeza b {
+  color: #36d7d1;
+}
+
+.resto-comanda {
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  padding: 10px;
+  border-left: 2px solid #36d7d1;
+  border-radius: 0 10px 10px 0;
+  background: rgba(54, 215, 209, 0.08);
+  font-size: 0.68rem;
+}
+
+.resto-comanda small {
+  color: #7f90ab;
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+}
+
+.resto-comanda__estado {
+  justify-self: start;
+  margin-top: 3px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(54, 215, 209, 0.2);
+  color: #36d7d1;
+  font-size: 0.58rem;
+  font-style: normal;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.resto-cocina__pie {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-top: 9px;
+  border-top: 1px solid rgba(160, 190, 255, 0.14);
+  color: #9fb0cc;
+  font-size: 0.62rem;
+}
+
+.resto-cocina__pie b {
+  color: #e9eef7;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 560px) {
+  .demo--resto {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   Arreglos de las maquetas al llevarlas a las tarjetas
+   ============================================================ */
+
+/* El botón de cobrar del punto de venta nunca tuvo estilo: era un <span>
+   suelto que se leía como texto perdido debajo del teclado. Es el elemento
+   más importante de esa pantalla, así que se pinta como lo que es. */
+.pos-pad__action {
+  grid-column: 1 / -1;
+  display: grid;
+  place-items: center;
+  min-height: 44px;
+  margin-top: 4px;
+  border-radius: 10px;
+  background: var(--lime, #ceff3d);
+  color: #10110f;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 720;
+  letter-spacing: 0.02em;
+}
+
+/* La pantalla de web no repartía su alto: el lienzo se quedaba a su altura
+   natural y debajo sobraba crema. */
+.demo--website {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.demo--pos {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.demo--pos .pos-body {
+  align-content: start;
+}

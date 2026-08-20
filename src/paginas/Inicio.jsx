@@ -22,11 +22,11 @@ import {
   Precio,
   Seccion,
   TarjetaProyecto,
-  TarjetaServicio,
   TituloSeccion,
 } from '../components/ui';
 import { Reveal } from '../components/reactbits';
-import { Logo3D } from '../components/hero/Logo3D';
+import { TarjetaSolucion } from '../components/ui/TarjetaSolucion';
+import { PortadaHero } from '../components/hero/PortadaHero';
 import { Seo, nodoPagina, nodoPreguntas } from '../lib/seo';
 import { SERVICIOS } from '../content/servicios';
 import { PROYECTOS_DESTACADOS, rutaProyecto } from '../content/proyectos';
@@ -83,55 +83,7 @@ export default function Inicio() {
     <>
       <Seo title={TITLE} description={DESC} path={RUTAS.inicio} grafo={grafo} />
 
-      {/* ============ HERO ============ */}
-      <header className="portada">
-        <div className="portada__fondo" aria-hidden="true" />
-        <Contenedor>
-          <div className="portada__reparto">
-            <div className="portada__texto">
-              <h1 className="portada__titulo">
-                Páginas web, sistemas y automatización <em>para negocios</em>.
-              </h1>
-              <p className="portada__entrada">
-                Diseño y construyo las herramientas con las que tu negocio vende, se organiza y deja de hacer a
-                mano lo que puede hacerse solo.
-              </p>
-
-              <div className="portada__acciones">
-                <BotonPrincipal to={RUTAS.servicios} grande>
-                  Ver soluciones
-                </BotonPrincipal>
-                <BotonSecundario to={RUTAS.proyectos} grande>
-                  Ver proyectos
-                </BotonSecundario>
-              </div>
-
-              <p className="portada__ancla">
-                Páginas web desde <strong>$2,000 MXN</strong> · <Link to={RUTAS.precios}>ver todos los precios</Link>
-              </p>
-
-              <ul className="portada__credenciales">
-                <li>
-                  <Check size={15} aria-hidden="true" />
-                  Precio cerrado antes de empezar
-                </li>
-                <li>
-                  <Check size={15} aria-hidden="true" />
-                  Tratas conmigo, no con una cuenta
-                </li>
-                <li>
-                  <Check size={15} aria-hidden="true" />
-                  {CONTACT.location}
-                </li>
-              </ul>
-            </div>
-
-            <div className="portada__marca" aria-hidden="true">
-              <Logo3D />
-            </div>
-          </div>
-        </Contenedor>
-      </header>
+      <PortadaHero />
 
       {/* ============ ¿QUÉ NECESITAS? ============ */}
       <Seccion tono="elevado" id="que-necesitas">
@@ -142,10 +94,10 @@ export default function Inicio() {
             entrada="Elige lo que más se parezca a tu situación. Cada camino lleva a una explicación completa, con precios."
             centrado
           />
-          <div className="rejilla-servicios">
+          <div className="rejilla-soluciones">
             {SERVICIOS.map((s, i) => (
               <Reveal key={s.id} delay={i * 0.06}>
-                <TarjetaServicio servicio={s} />
+                <TarjetaSolucion servicio={s} indice={i} />
               </Reveal>
             ))}
           </div>
