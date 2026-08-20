@@ -14,7 +14,8 @@
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Check, ChevronDown, MessageCircle } from 'lucide-react';
 import { useId, useState } from 'react';
-import { GlareHover, Reveal, ScrambleText, SpotlightCard, StarBorder } from '../reactbits';
+import { BordeElectrico, CampoPuntos, GlareHover, Reveal, ScrambleText, SpotlightCard, StarBorder } from '../reactbits';
+import { Cortina, Titular } from '../motion';
 import { RUTAS, contactoCon } from '../../config/rutas';
 import { precioDe } from '../../config/pricing';
 import { trackWhatsApp, whatsappUrl } from '../../lib/whatsapp';
@@ -40,25 +41,127 @@ export function Seccion({ children, tono = 'base', className = '', id, ...resto 
  * para que la jerarquía del documento sea correcta y no dependa del tamaño
  * visual que le apetezca al diseño.
  */
-export function TituloSeccion({ eyebrow, titulo, entrada, nivel: Nivel = 'h2', centrado = false, className = '' }) {
+export function TituloSeccion({
+  eyebrow,
+  titulo,
+  entrada,
+  nivel: Nivel = 'h2',
+  centrado = false,
+  className = '',
+  /* `editorial` reparte el encabezado en dos columnas: el titular grande a
+     la izquierda y la entrada abajo a la derecha. Es lo que evita el
+     problema de la iteración anterior —un título pequeño arriba a la
+     izquierda y el 65 % del monitor sin hacer nada—, porque el encabezado
+     pasa a ocupar el ancho de la sección en vez de una columna de 46ch.
+     Por debajo de 1000 px vuelve a una sola columna, que es lo correcto:
+     dos columnas en una tableta no son composición, son estrechez. */
+  variante = 'editorial',
+  /* Contenido opcional para la columna derecha cuando la entrada no basta:
+     un dato, un enlace, una cifra. */
+  aparte,
+}) {
+  const modo = centrado ? 'centro' : variante;
+
   return (
-    <Reveal>
-      <header className={`titulo-seccion ${centrado ? 'titulo-seccion--centro' : ''} ${className}`}>
+    <header className={`titulo-seccion titulo-seccion--${modo} ${className}`}>
+      <div className="titulo-seccion__principal">
         {eyebrow && (
-          <p className="titulo-seccion__eyebrow">
-            <ScrambleText text={eyebrow} trigger="view" />
-          </p>
+          <Reveal>
+            <p className="titulo-seccion__eyebrow">
+              <ScrambleText text={eyebrow} trigger="view" />
+            </p>
+          </Reveal>
         )}
         {/* El texto se desfragmenta al entrar en pantalla y al pasar el
             cursor. Es la firma del sitio de producción y lo que hace que un
             título se lea como una señal y no como una etiqueta. El texto
             real permanece en el DOM: el efecto pinta encima. */}
-        <Nivel className="titulo-seccion__titulo">
-          <ScrambleText text={titulo} trigger="both" />
-        </Nivel>
-        {entrada && <p className="titulo-seccion__entrada">{entrada}</p>}
-      </header>
-    </Reveal>
+        <Cortina>
+          <Nivel className="titulo-seccion__titulo">
+            <ScrambleText text={titulo} trigger="both" />
+          </Nivel>
+        </Cortina>
+      </div>
+
+      {(entrada || aparte) && (
+        <Reveal delay={0.12} className="titulo-seccion__aparte">
+          {entrada && <p className="titulo-seccion__entrada">{entrada}</p>}
+          {aparte}
+        </Reveal>
+      )}
+    </header>
+  );
+}
+
+/* ------------------------------------------------------------
+   Statement — el nivel A de la escala
+   ------------------------------------------------------------
+   Reservado para los mensajes que pueden dominar una pantalla: el cierre de
+   la home, la cabecera de contacto, la frase que abre el proceso. No es un
+   `TituloSeccion` más grande: es otra cosa. Ocupa el ancho amplio, se
+   alinea a la izquierda, va sin caja y sus líneas entran una a una tras su
+   propia máscara.
+
+   El azul entra por `resalte`: una palabra del titular, no el titular
+   entero. Es el gesto del cierre de producción —el mensaje en plata y una
+   parte en azul eléctrico— y la razón de que ese bloque se lea como un
+   final y no como otra sección más.
+   ------------------------------------------------------------ */
+
+export function Statement({
+  lineas,
+  eyebrow,
+  kicker,
+  /* Un fragmento del titular que se pinta en azul. Es el único uso del
+     acento a este tamaño: una palabra, no un párrafo. Si el fragmento no
+     aparece literalmente en el texto, la línea se pinta entera en plata y
+     no pasa nada —nunca se recorta ni se inventa texto. */
+  resalte,
+  nivel = 'h2',
+  className = '',
+  children,
+  regla = true,
+}) {
+  const partes = Array.isArray(lineas) ? lineas : [lineas];
+
+  return (
+    <div className={`statement ${className}`}>
+      {(eyebrow || kicker) && (
+        <div className={`statement__cinta ${regla ? 'statement__cinta--regla' : ''}`}>
+          {eyebrow && (
+            <span className="statement__eyebrow">
+              <ScrambleText text={eyebrow} trigger="view" />
+            </span>
+          )}
+          {kicker && <span className="statement__kicker">{kicker}</span>}
+        </div>
+      )}
+
+      <Titular
+        as={nivel}
+        className="statement__titulo"
+        lineas={partes.map((linea, i) => (
+          <span key={i} className="statement__voz">
+            {conResalte(linea, resalte)}
+          </span>
+        ))}
+      />
+
+      {children && <div className="statement__pie">{children}</div>}
+    </div>
+  );
+}
+
+function conResalte(linea, resalte) {
+  if (!resalte || typeof linea !== 'string') return linea;
+  const i = linea.indexOf(resalte);
+  if (i === -1) return linea;
+  return (
+    <>
+      {linea.slice(0, i)}
+      <em className="statement__acento">{resalte}</em>
+      {linea.slice(i + resalte.length)}
+    </>
   );
 }
 
@@ -327,28 +430,62 @@ export function Acordeon({ items }) {
    Cierre de página
    ------------------------------------------------------------ */
 
-export function CierreCTA({ titulo, cuerpo, servicio, etiqueta = 'Cuéntame tu proyecto' }) {
+export function CierreCTA({
+  titulo,
+  cuerpo,
+  servicio,
+  etiqueta = 'Cuéntame tu proyecto',
+  /* El cierre acepta el titular como dos líneas para poder pintar la segunda
+     en azul, que es el gesto del cierre de producción. Si llega una cadena
+     suelta se parte por el último signo de puntuación, y si no hay por
+     dónde partir se queda en una línea: nunca se corta una frase a mitad. */
+  lineas,
+  kicker = '¿Tienes una idea?',
+  eyebrow = 'Contacto directo',
+}) {
+  const partes = lineas ?? partirCierre(titulo);
+
   return (
     <Seccion tono="acento" className="cierre">
-      <Contenedor ancho="estrecho">
-        <Reveal>
-          <div className="cierre__caja">
-            <h2 className="cierre__titulo">{titulo}</h2>
+      {/* La retícula de puntos vive solo en escritorio con puntero fino y se
+          para al salir de pantalla. En cualquier otro caso el bloque se
+          queda con su degradado, que ya funciona solo. */}
+      <CampoPuntos className="cierre__campo" />
+
+      <div className="contenedor contenedor--amplio">
+        <Statement
+          lineas={partes}
+          eyebrow={eyebrow}
+          kicker={kicker}
+          className="cierre__statement"
+        >
+          <div className="cierre__reparto">
             <p className="cierre__cuerpo">{cuerpo}</p>
             <div className="cierre__acciones">
-              <BotonPrincipal to={contactoCon(servicio)} grande>
-                {etiqueta}
-              </BotonPrincipal>
+              <BordeElectrico radio={999} className="cierre__chispa">
+                <BotonPrincipal to={contactoCon(servicio)} grande>
+                  {etiqueta}
+                </BotonPrincipal>
+              </BordeElectrico>
               <BotonWhatsApp origen="contact" grande />
             </div>
-            <p className="cierre__nota">
-              Respondo yo, no un formulario automático. Si prefieres verme la cara, también hago videollamada.
-            </p>
           </div>
-        </Reveal>
-      </Contenedor>
+          <p className="cierre__nota">
+            Respondo yo, no un formulario automático. Si prefieres verme la cara, también hago videollamada.
+          </p>
+        </Statement>
+      </div>
     </Seccion>
   );
+}
+
+/* Parte «¿Empezamos? Hablemos.» en sus dos frases para que la segunda pueda
+   ir en azul. Sin puntuación intermedia devuelve la frase entera: partir por
+   número de palabras produciría cortes absurdos. */
+function partirCierre(texto) {
+  const corte = texto.search(/(?<=[.?!¿¡])\s+(?=\S)/);
+  if (corte === -1) return [texto];
+  return [texto.slice(0, corte + 1).trim(), texto.slice(corte + 1).trim()];
 }
 
 /* ------------------------------------------------------------

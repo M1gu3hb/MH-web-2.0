@@ -21,10 +21,12 @@ import {
   Contenedor,
   Precio,
   Seccion,
+  Statement,
   TarjetaProyecto,
   TituloSeccion,
 } from '../components/ui';
-import { Reveal } from '../components/reactbits';
+import { BordeElectrico, CampoPuntos, MarcoExpansivo, Reveal } from '../components/reactbits';
+import { Cascada, Cortina, Escala, Lateral, Secuencia } from '../components/motion';
 import { TarjetaSolucion } from '../components/ui/TarjetaSolucion';
 import { PortadaHero } from '../components/hero/PortadaHero';
 import { Seo, nodoPagina, nodoPreguntas } from '../lib/seo';
@@ -87,62 +89,81 @@ export default function Inicio() {
 
       {/* ============ ¿QUÉ NECESITAS? ============ */}
       <Seccion tono="elevado" id="que-necesitas">
-        <Contenedor>
+        <div className="contenedor contenedor--amplio">
+          {/* El encabezado deja de estar centrado en una columna estrecha:
+              el titular ocupa siete columnas y la entrada se va abajo a la
+              derecha. */}
           <TituloSeccion
             eyebrow="Empieza por aquí"
             titulo="¿Qué necesita tu negocio?"
             entrada="Elige lo que más se parezca a tu situación. Cada camino lleva a una explicación completa, con precios."
-            centrado
           />
-          <div className="rejilla-soluciones">
+          {/* Rejilla asimétrica: las dos primeras soluciones —las que más se
+              piden— ocupan más ancho que las tres siguientes. Cinco tarjetas
+              iguales en una rejilla automática dejaban un hueco impar y se
+              leían como una lista; así se leen como una portada. */}
+          <Cascada className="rejilla-soluciones" paso={0.07} y={30}>
             {SERVICIOS.map((s, i) => (
-              <Reveal key={s.id} delay={i * 0.06}>
-                <TarjetaSolucion servicio={s} indice={i} />
-              </Reveal>
+              <TarjetaSolucion key={s.id} servicio={s} indice={i} />
             ))}
-          </div>
+          </Cascada>
           <Reveal>
             <p className="rejilla-servicios__pie">
               ¿No sabes cuál? <Link to={RUTAS.contacto}>Cuéntame qué te está costando trabajo</Link> y yo te digo.
             </p>
           </Reveal>
-        </Contenedor>
+        </div>
       </Seccion>
 
       {/* ============ PROYECTOS ============ */}
-      <Seccion>
-        <Contenedor>
+      <Seccion className="seccion--portafolio">
+        <div className="contenedor contenedor--amplio">
           <TituloSeccion
             eyebrow="Trabajo real"
             titulo="Negocios que ya funcionan con esto."
             entrada="No son maquetas de portafolio. Están en línea y los puedes abrir."
+            aparte={
+              <p className="titulo-seccion__dato">
+                <strong>{PROYECTOS_DESTACADOS.length}</strong> de <strong>6</strong> proyectos publicados
+              </p>
+            }
           />
-          <div className="rejilla-proyectos rejilla-proyectos--destacados">
-            {PROYECTOS_DESTACADOS.map((p, i) => (
-              <Reveal key={p.slug} delay={i * 0.07}>
-                <TarjetaProyecto proyecto={p} ruta={rutaProyecto(p.slug)} />
-              </Reveal>
-            ))}
-          </div>
+          {/* El bloque de proyectos se ensancha mientras pasa por la
+              pantalla. No fija nada ni toca la rueda: si bajas rápido lo ves
+              ya abierto. */}
+          <MarcoExpansivo desde={0.92}>
+            <div className="rejilla-proyectos rejilla-proyectos--destacados">
+              {PROYECTOS_DESTACADOS.map((p, i) => (
+                <Escala key={p.slug} delay={i * 0.08} desde={0.95}>
+                  <TarjetaProyecto proyecto={p} ruta={rutaProyecto(p.slug)} />
+                </Escala>
+              ))}
+            </div>
+          </MarcoExpansivo>
           <Reveal>
             <div className="seccion__pie">
               <BotonSecundario to={RUTAS.proyectos}>Ver todos los proyectos</BotonSecundario>
             </div>
           </Reveal>
-        </Contenedor>
+        </div>
       </Seccion>
 
       {/* ============ PRECIOS COMO ANCLA ============ */}
       <Seccion tono="elevado" id="precios">
-        <Contenedor>
+        <div className="contenedor contenedor--amplio">
           <TituloSeccion
             eyebrow="Precios"
             titulo="Hay una opción dentro de tu presupuesto."
             entrada="Estos son los puntos de partida reales. El precio final se cierra antes de empezar, nunca a mitad del proyecto."
+            aparte={
+              <p className="titulo-seccion__dato">
+                Desde <strong>$2,000</strong> MXN
+              </p>
+            }
           />
           <div className="anclas">
             {ANCLAS_HOME.map((plan, i) => (
-              <Reveal key={plan.id} delay={i * 0.06}>
+              <Lateral key={plan.id} desde={i % 2 ? 'derecha' : 'izquierda'} delay={i * 0.05} distancia={4}>
                 <Link to={RUTAS.precios} className="ancla">
                   <h3 className="ancla__nombre">{plan.nombre}</h3>
                   <Precio plan={plan} tamano="compacto" />
@@ -152,7 +173,7 @@ export default function Inicio() {
                     <ArrowUpRight size={15} aria-hidden="true" />
                   </span>
                 </Link>
-              </Reveal>
+              </Lateral>
             ))}
           </div>
           <Reveal>
@@ -160,35 +181,45 @@ export default function Inicio() {
               <BotonSecundario to={RUTAS.precios}>Ver todos los precios</BotonSecundario>
             </div>
           </Reveal>
-        </Contenedor>
+        </div>
       </Seccion>
 
-      {/* ============ CÓMO TRABAJO ============ */}
-      <Seccion>
-        <Contenedor>
-          <TituloSeccion
+      {/* ============ CÓMO TRABAJO ============
+          El caso más claro de lo que había que arreglar: un lienzo enorme
+          con un bloque pequeño dentro. Ahora la frase es un statement de
+          nivel A que ocupa su propia pantalla, y los cuatro pasos se
+          encienden uno a uno conforme bajas. No se fija nada ni se secuestra
+          la rueda: quien baja rápido ve la lista completa y sigue. */}
+      <Seccion className="seccion--proceso">
+        <div className="contenedor contenedor--amplio">
+          <Statement
+            lineas={['No entregas dinero', 'y esperas tres semanas.']}
             eyebrow="Cómo trabajo"
-            titulo="No entregas dinero y esperas tres semanas."
-            entrada="Vas viendo el proyecto y vas opinando mientras todavía es barato cambiar de idea."
-          />
-          <ol className="proceso-corto">
+            kicker="Cuatro pasos"
+            resalte="tres semanas"
+            className="proceso-statement"
+          >
+            <p className="proceso-statement__entrada">
+              Vas viendo el proyecto y vas opinando mientras todavía es barato cambiar de idea.
+            </p>
+          </Statement>
+
+          <Secuencia as="ol" className="proceso-corto" paso={0.06}>
             {PROCESO_CORTO.map((paso, i) => (
-              <Reveal key={paso.titulo} delay={i * 0.06}>
-                <li>
-                  <span aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-                  <h3>{paso.titulo}</h3>
-                  <p>{paso.cuerpo}</p>
-                </li>
-              </Reveal>
+              <li key={paso.titulo}>
+                <span aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <h3>{paso.titulo}</h3>
+                <p>{paso.cuerpo}</p>
+              </li>
             ))}
-          </ol>
-        </Contenedor>
+          </Secuencia>
+        </div>
       </Seccion>
 
       {/* ============ QUIÉN ESTÁ DETRÁS ============ */}
       <Seccion tono="acento">
-        <Contenedor ancho="estrecho">
-          <Reveal>
+        <Contenedor ancho="medio">
+          <Cortina>
             <div className="quien">
               <p className="quien__eyebrow">Quién está detrás</p>
               <h2 className="quien__titulo">Soy Miguel. Diseño, programo y contesto yo.</h2>
@@ -201,39 +232,52 @@ export default function Inicio() {
                 <BotonSecundario to={RUTAS.sobre}>Conocer más</BotonSecundario>
               </div>
             </div>
-          </Reveal>
+          </Cortina>
         </Contenedor>
       </Seccion>
 
       {/* ============ DUDAS ============ */}
       <Seccion>
-        <Contenedor ancho="estrecho">
-          <TituloSeccion titulo="Lo que todos preguntan primero." />
+        <Contenedor ancho="medio">
+          {/* Aquí sí conviene el modo simple: un acordeón se lee mejor en
+              una columna, y meterle una segunda columna de entrada sería
+              composición por composición. */}
+          <TituloSeccion titulo="Lo que todos preguntan primero." variante="simple" />
           <Acordeon items={PREGUNTAS} />
         </Contenedor>
       </Seccion>
 
-      {/* ============ CIERRE ============ */}
+      {/* ============ CIERRE ============
+          Antes era una caja de 350 px centrada en medio de un monitor de
+          1920. Ahora es lo que era en producción: el mensaje ocupa la
+          pantalla y el resto de la página trabaja a su favor. */}
       <Seccion tono="elevado" className="cierre">
-        <Contenedor ancho="estrecho">
-          <Reveal>
-            <div className="cierre__caja">
-              <h2 className="cierre__titulo">¿Empezamos?</h2>
+        <CampoPuntos className="cierre__campo" />
+        <div className="contenedor contenedor--amplio">
+          <Statement
+            lineas={['¿Empezamos?']}
+            eyebrow="Contacto directo"
+            kicker="¿Tienes una idea?"
+            className="cierre__statement"
+          >
+            <div className="cierre__reparto">
               <p className="cierre__cuerpo">
                 Cuéntame qué hace tu negocio y qué te está costando trabajo. Con eso ya puedo decirte por dónde
                 empezar y cuánto costaría, aunque acabemos en la opción más barata.
               </p>
               <div className="cierre__acciones">
-                <BotonPrincipal to={RUTAS.contacto} grande>
-                  Cuéntame tu proyecto
-                </BotonPrincipal>
+                <BordeElectrico radio={999} className="cierre__chispa">
+                  <BotonPrincipal to={RUTAS.contacto} grande>
+                    Cuéntame tu proyecto
+                  </BotonPrincipal>
+                </BordeElectrico>
                 <BotonSecundario to={RUTAS.precios} grande>
                   Ver precios primero
                 </BotonSecundario>
               </div>
             </div>
-          </Reveal>
-        </Contenedor>
+          </Statement>
+        </div>
       </Seccion>
     </>
   );

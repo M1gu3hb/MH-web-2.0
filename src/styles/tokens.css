@@ -56,6 +56,10 @@
   --sp-section: clamp(88px, 11vw, 168px);
   --sp-gutter: clamp(20px, 5vw, 82px);
   --wrap: 1440px;
+  /* Para composiciones editoriales —statements, rejillas de proyectos, el
+     cierre—: en un monitor de 1920 un ancho de 1440 deja 240 px muertos a
+     cada lado. Este llega a 1720 y respira contra el canalón. */
+  --wrap-amplio: 1720px;
 
   /* ---- Radio ---- */
   --r-sm: 8px;
@@ -88,6 +92,33 @@
   --t-body: 1rem;
   --t-small: 0.875rem;
   --t-label: 0.7rem;
+
+  /* ---- Escala editorial ----
+     Cuatro niveles, y la diferencia entre ellos es de intención, no de
+     capricho: cada uno responde a cuánto espacio MERECE ese mensaje.
+
+       A · statement  un mensaje que puede llenar una pantalla
+       B · sección    el encabezado de un bloque grande
+       C · cabecera   el H1 de una página interior
+       D · tarjeta    títulos dentro de una rejilla
+
+     Los máximos están calibrados contra el sitio de producción, medidos a
+     1920: allí el H1 pinta a 103 px y los H2 de sección a 90 px. La primera
+     iteración de esta rama los dejó en 90 y 53, o sea el 59 % del tamaño, y
+     ese es el motivo real de que las composiciones se vieran pequeñas.
+     No es que faltara relleno: es que el texto no ocupaba lo que le tocaba. */
+  --t-statement: clamp(2.9rem, 8.2vw, 9.4rem);
+  --t-seccion: clamp(2.3rem, 5.4vw, 5.7rem);
+  --t-cabecera: clamp(2.5rem, 6.2vw, 6.6rem);
+  --t-tarjeta: clamp(1.25rem, 1.7vw, 1.75rem);
+
+  /* Interlineado y prosa para cada nivel. Cuanto más grande el cuerpo, más
+     apretado va: a 150 px un interlineado de 1.1 abre un agujero entre
+     líneas que rompe el bloque en dos. */
+  --lh-statement: 0.86;
+  --lh-seccion: 0.94;
+  --tr-statement: -0.062em;
+  --tr-seccion: -0.045em;
 
   --tr-display: -0.055em;
   --tr-label: 0.15em;

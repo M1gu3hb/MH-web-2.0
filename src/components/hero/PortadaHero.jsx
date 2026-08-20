@@ -94,87 +94,54 @@ export function PortadaHero() {
         <span className="portada__velo" />
       </div>
 
-      <div className="contenedor">
-        <div className="portada__reparto">
-          <Motion.div
-            className="portada__texto"
-            initial={entrada}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
-          >
-            {/* El titular de marca, a tres voces: las dos de fuera gritan en
-                la tipografía de display y la de en medio matiza en la de
-                texto. Ese contraste es lo que lo hace una frase y no tres
-                líneas del mismo tamaño. */}
-            <h1 className="hero__title portada__titular">
-              {HERO.title.map((linea, i) => (
-                <span key={linea.text} className={`hero__title-line hero__title-line--${linea.voice}`}>
-                  <ScrambleText text={linea.text} />
-                  {i === HERO.title.length - 1 ? <i className="hero__title-dot" aria-hidden="true" /> : null}
-                </span>
-              ))}
-            </h1>
+      <div className="contenedor contenedor--amplio">
+        {/* Un solo contenedor con las siete piezas como hijos directos y el
+            reparto resuelto con `grid-template-areas`. Es lo que permite que
+            escritorio y teléfono sean DOS COMPOSICIONES, no una y su versión
+            estrujada: en teléfono el símbolo 3D sube al centro, justo
+            después del botón, en vez de caer al final porque ya no cupo.
+            El orden visual del teléfono es titular → explicación → acción →
+            señal de marca → precio → frentes → credenciales. */}
+        <Motion.div
+          className="portada__reparto"
+          initial={entrada}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {/* El titular de marca, a tres voces: las dos de fuera gritan en
+              la tipografía de display y la de en medio matiza en la de
+              texto. Ese contraste es lo que lo hace una frase y no tres
+              líneas del mismo tamaño. */}
+          <h1 className="hero__title portada__titular">
+            {HERO.title.map((linea, i) => (
+              <span key={linea.text} className={`hero__title-line hero__title-line--${linea.voice}`}>
+                <ScrambleText text={linea.text} />
+                {i === HERO.title.length - 1 ? <i className="hero__title-dot" aria-hidden="true" /> : null}
+              </span>
+            ))}
+          </h1>
 
-            <p className="hero__claim portada__claim">
-              <ScrambleText text={claimA} />
-              <ScrambleText text={claimVen} className="hero__accent hero__accent--azul" />
-              <ScrambleText text={claimB} />
-              <ScrambleText text={claimNec} className="hero__accent hero__accent--plata" />
-            </p>
+          <p className="hero__claim portada__claim">
+            <ScrambleText text={claimA} />
+            <ScrambleText text={claimVen} className="hero__accent hero__accent--azul" />
+            <ScrambleText text={claimB} />
+            <ScrambleText text={claimNec} className="hero__accent hero__accent--plata" />
+          </p>
 
-            {/* Lo que la home multipágina añade: qué hay detrás de la frase,
-                dicho en cinco palabras y con enlace a cada camino. */}
-            <p className="portada__frentes">
-              <Link to={RUTAS.paginasWeb}>Páginas web</Link>
-              <span aria-hidden="true">·</span>
-              <Link to={RUTAS.sistemas}>Sistemas</Link>
-              <span aria-hidden="true">·</span>
-              <Link to={RUTAS.crmAutomatizacion}>CRM</Link>
-              <span aria-hidden="true">·</span>
-              <Link to={RUTAS.crmAutomatizacion}>Automatización</Link>
-              <span aria-hidden="true">·</span>
-              <Link to={RUTAS.softwareAMedida}>Software a medida</Link>
-            </p>
-
-            <div className="portada__acciones">
-              {/* Magnet ya se desactiva solo con reduced-motion y en
-                  dispositivos sin hover, así que no hace falta condicionarlo. */}
-              <Magnet strength={0.3} radius={120}>
-                <Link className="tactile-button tactile-button--glow tactile-button--large" to={RUTAS.servicios}>
-                  Ver soluciones
-                  <ArrowUpRight size={17} aria-hidden="true" />
-                </Link>
-              </Magnet>
-              <Link className="tactile-button tactile-button--paper tactile-button--large" to={RUTAS.proyectos}>
-                Ver proyectos
+          <div className="portada__acciones">
+            {/* Magnet ya se desactiva solo con reduced-motion y en
+                dispositivos sin hover, así que no hace falta condicionarlo. */}
+            <Magnet strength={0.3} radius={120}>
+              <Link className="tactile-button tactile-button--glow tactile-button--large" to={RUTAS.servicios}>
+                Ver soluciones
                 <ArrowUpRight size={17} aria-hidden="true" />
               </Link>
-            </div>
-
-            <p className="portada__ancla">
-              Páginas web desde <strong>{formatoMXN(PLANES.webEsencial.desde)}</strong> ·{' '}
-              <Link to={RUTAS.precios}>ver todos los precios</Link>
-            </p>
-
-            <div className="hero__meta portada__meta">
-              <dl className="hero__credentials">
-                {HERO.credentials.map((item, i) => (
-                  <div key={item.label}>
-                    <dt>
-                      <i aria-hidden="true">{String(i + 1).padStart(2, '0')}</i>
-                      <ScrambleText text={item.label} />
-                    </dt>
-                    <dd>{item.note}</dd>
-                  </div>
-                ))}
-              </dl>
-              <span className="firma3d hero__firma3d" translate="no" aria-label="MH97">
-                MH97
-              </span>
-            </div>
-
-            <p className="rb-visually-hidden">{CONTACT.location}</p>
-          </Motion.div>
+            </Magnet>
+            <Link className="tactile-button tactile-button--paper tactile-button--large" to={RUTAS.proyectos}>
+              Ver proyectos
+              <ArrowUpRight size={17} aria-hidden="true" />
+            </Link>
+          </div>
 
           <Motion.div
             className="portada__marca"
@@ -185,7 +152,45 @@ export function PortadaHero() {
           >
             <Logo3D />
           </Motion.div>
-        </div>
+
+          <p className="portada__ancla">
+            Páginas web desde <strong>{formatoMXN(PLANES.webEsencial.desde)}</strong> ·{' '}
+            <Link to={RUTAS.precios}>ver todos los precios</Link>
+          </p>
+
+          {/* Lo que la home multipágina añade: qué hay detrás de la frase,
+              dicho en cinco palabras y con enlace a cada camino. */}
+          <p className="portada__frentes">
+            <Link to={RUTAS.paginasWeb}>Páginas web</Link>
+            <span aria-hidden="true">·</span>
+            <Link to={RUTAS.sistemas}>Sistemas</Link>
+            <span aria-hidden="true">·</span>
+            <Link to={RUTAS.crmAutomatizacion}>CRM</Link>
+            <span aria-hidden="true">·</span>
+            <Link to={RUTAS.crmAutomatizacion}>Automatización</Link>
+            <span aria-hidden="true">·</span>
+            <Link to={RUTAS.softwareAMedida}>Software a medida</Link>
+          </p>
+
+          <div className="hero__meta portada__meta">
+            <dl className="hero__credentials">
+              {HERO.credentials.map((item, i) => (
+                <div key={item.label}>
+                  <dt>
+                    <i aria-hidden="true">{String(i + 1).padStart(2, '0')}</i>
+                    <ScrambleText text={item.label} />
+                  </dt>
+                  <dd>{item.note}</dd>
+                </div>
+              ))}
+            </dl>
+            <span className="firma3d hero__firma3d" translate="no" aria-label="MH97">
+              MH97
+            </span>
+          </div>
+
+          <p className="rb-visually-hidden">{CONTACT.location}</p>
+        </Motion.div>
       </div>
 
       <div className="portada__pista" aria-hidden="true">
