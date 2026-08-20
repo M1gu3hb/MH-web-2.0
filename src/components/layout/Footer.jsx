@@ -1,29 +1,69 @@
-import { ArrowUp, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
+/**
+ * El pie del sitio multipágina.
+ *
+ * El pie anterior enlazaba a anclas del sitio de una sola página
+ * (#servicios, #trabajo, #inversion…). En un sitio con rutas de verdad esos
+ * enlaces estaban rotos en todas las páginas menos una: llevaban a un ancla
+ * que no existe en el documento, así que no hacían nada.
+ *
+ * Ahora enlaza a las rutas reales y funciona además como mapa del sitio:
+ * para Google es una fuente de enlaces internos hacia todas las páginas
+ * desde cualquier página, que es exactamente lo que ayuda a que se rastree
+ * entero.
+ */
+
+import { Link } from 'react-router-dom';
+import { ArrowUp, Github, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { BrandLockup } from './BrandLockup';
-import { CONTACT, FOOTER } from '../../content';
+import { CONTACT } from '../../content';
+import { MENU, RUTAS } from '../../config/rutas';
+import { PLANES, precioEnLinea } from '../../config/pricing';
+import { gmailUrl } from '../../lib/correo';
 import { trackWhatsApp, whatsappUrl } from '../../lib/whatsapp';
 
-/**
- * El pie como cierre útil: la marca con su lockup, todas las vías de
- * contacto reales y el acceso rápido a cada sección, no solo una firma.
- */
+const SERVICIOS = MENU.find((e) => e.hijos)?.hijos ?? [];
+const PAGINAS = MENU.filter((e) => !e.hijos && e.href !== RUTAS.inicio);
+
 export function Footer() {
+  const alInicio = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
   return (
     <footer className="footer">
       <div className="footer__grid">
         <div className="footer__brand">
-          <a className="brand brand--pie" href="#inicio" aria-label="Morphiq. Volver al inicio">
+          <Link className="brand brand--pie" to={RUTAS.inicio} aria-label="Morphiq. Ir al inicio">
             <BrandLockup layout="horizontal" />
-          </a>
+          </Link>
           <p className="footer__tagline">
-            {FOOTER.tagline[0]}
+            Diseño que vende.
             <br />
-            {FOOTER.tagline[1]}
+            Sistemas que ordenan.
+          </p>
+          <p className="footer__desde">
+            Páginas web {precioEnLinea(PLANES.webEsencial).toLowerCase()}
           </p>
         </div>
 
+        <nav className="footer__col" aria-label="Servicios">
+          <h2 className="footer__col-title">Servicios</h2>
+          {SERVICIOS.map((s) => (
+            <Link key={s.href} className="footer__dato" to={s.href}>
+              <span>{s.etiqueta}</span>
+            </Link>
+          ))}
+        </nav>
+
+        <nav className="footer__col" aria-label="Páginas">
+          <h2 className="footer__col-title">El sitio</h2>
+          {PAGINAS.map((p) => (
+            <Link key={p.href} className="footer__dato" to={p.href}>
+              <span>{p.etiqueta}</span>
+            </Link>
+          ))}
+        </nav>
+
         <div className="footer__col">
-          <span className="footer__col-title">Contacto</span>
+          <h2 className="footer__col-title">Contacto</h2>
           <a
             className="footer__dato"
             href={whatsappUrl('footer')}
@@ -38,39 +78,29 @@ export function Footer() {
             <Phone size={15} aria-hidden="true" />
             <span>Llamar · {CONTACT.phone}</span>
           </a>
-          <a
-            className="footer__dato"
-            href={`https://mail.google.com/mail/?view=cm&fs=1&to=${CONTACT.email}`}
-            target="_blank"
-            rel="noreferrer"
-          >
+          <a className="footer__dato" href={gmailUrl(CONTACT.email)} target="_blank" rel="noreferrer">
             <Mail size={15} aria-hidden="true" />
             <span>{CONTACT.email}</span>
           </a>
-          <p className="footer__dato">
+          <a className="footer__dato" href="https://github.com/M1gu3hb" target="_blank" rel="noreferrer">
+            <Github size={15} aria-hidden="true" />
+            <span>github.com/M1gu3hb</span>
+          </a>
+          <p className="footer__dato footer__dato--plano">
             <MapPin size={15} aria-hidden="true" />
             <span>{CONTACT.location}</span>
           </p>
         </div>
-
-        <nav className="footer__col" aria-label="Enlaces del pie">
-          <span className="footer__col-title">Secciones</span>
-          {FOOTER.links.map(([label, href]) => (
-            <a className="footer__dato" key={href} href={href}>
-              {label}
-            </a>
-          ))}
-        </nav>
       </div>
 
-      <div className="footer__bar">
-        <span className="footer__legal">
-          © {new Date().getFullYear()} ASTRAL MORPHIQ SYSTEMS · {CONTACT.location}
-        </span>
-        <a className="footer__arriba" href="#inicio">
+      <div className="footer__base">
+        <p className="footer__legal">
+          © {new Date().getFullYear()} Astral Morphiq Systems · Morphiq · {CONTACT.owner}
+        </p>
+        <button type="button" className="footer__arriba" onClick={alInicio}>
           Volver arriba
           <ArrowUp size={14} aria-hidden="true" />
-        </a>
+        </button>
       </div>
     </footer>
   );

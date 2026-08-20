@@ -33,6 +33,13 @@ export const PREFIJO_DESDE = 'Desde';
 
 export const MONEDA = 'MXN';
 
+/**
+ * En México el IVA cambia el número final un 16%, así que decirlo es la
+ * diferencia entre un precio y una sorpresa. Se declara una vez aquí y la
+ * página de precios lo pinta donde el visitante lo va a leer.
+ */
+export const AVISO_IVA = 'Todos los precios están en pesos mexicanos y no incluyen IVA. Si necesitas factura, dímelo al cotizar y lo contemplo desde el principio.';
+
 /* ============================================================
    PLANES
    ============================================================ */
@@ -59,7 +66,14 @@ export const PLANES = {
       'Dominio propio',
       'Mantenimiento mensual',
     ],
+    subeSi: [
+      'Necesitas más de una vista o varias páginas',
+      'Hay que redactar los textos desde cero',
+      'Quieres poder editar el contenido tú mismo',
+      'Necesitas catálogo, carrito o cobros en línea',
+    ],
     nota: 'El dominio y el mantenimiento se pueden añadir aparte. Te digo cuánto antes de empezar.',
+    salida: 'El sitio y el dominio quedan a tu nombre. No hay permanencia: si mañana te lo llevas con otra persona, te lo llevas.',
     cta: 'Cotizar Web Esencial',
     destacado: false,
   },
@@ -88,7 +102,15 @@ export const PLANES = {
       'Integraciones con las herramientas que ya usas',
       'Correo empresarial con tu dominio',
     ],
+    subeSi: [
+      'Son muchas páginas o un catálogo grande',
+      'Hay que migrar contenido de un sitio anterior',
+      'Necesitas cobros en línea o reservas',
+      'Se conecta con tu punto de venta o tu CRM',
+      'Hace falta sesión de fotos o redacción completa',
+    ],
     nota: 'La propuesta final define exactamente qué lleva tu proyecto. No pagas por una lista de botones: pagas por resolver lo que tu negocio necesita.',
+    salida: 'Dominio, código y contenido quedan a tu nombre. A partir del año 2 el dominio se renueva a precio de registro; te digo cuánto es antes de empezar.',
     cta: 'Cotizar Web Profesional',
     destacado: true,
   },
@@ -109,7 +131,13 @@ export const PLANES = {
       'Soporte cuando lo necesites',
       'Ajustes pequeños de contenido',
     ],
+    subeSi: [
+      'El sitio tiene panel y catálogo que mantener',
+      'Quieres cambios de contenido cada mes',
+      'Hay integraciones que vigilar',
+    ],
     nota: 'Es opcional. Si prefieres quedarte solo con tu proyecto entregado, no pasa nada: es tuyo.',
+    salida: 'Se cancela cuando quieras, sin permanencia y sin penalización. Tu sitio sigue siendo tuyo y sigue funcionando.',
     cta: 'Preguntar por mantenimiento',
     destacado: false,
   },
@@ -137,7 +165,14 @@ export const PLANES = {
       'Tableros a la medida de tu operación',
       'Conexión con tu sitio web y tu punto de venta',
     ],
-    nota: 'La implementación inicial se cotiza aparte y depende del tamaño de tu operación y de cuánta información haya que migrar.',
+    subeSi: [
+      'Son muchos usuarios o varios equipos',
+      'Hay que migrar mucha información previa',
+      'Necesitas automatizaciones o tableros a medida',
+      'Se conecta con tu web o tu punto de venta',
+    ],
+    nota: 'La puesta en marcha se cotiza aparte, una sola vez, y cubre carga de datos, alta de usuarios, migración y capacitación. Depende del tamaño de tu operación.',
+    salida: 'Sin permanencia: se cancela cuando quieras. Tus datos son tuyos y te los entrego exportados si te vas.',
     cta: 'Cotizar CRM',
     destacado: false,
   },
@@ -166,7 +201,14 @@ export const PLANES = {
       'Tableros para el dueño',
       'Conexión con tu sitio web y tu CRM',
     ],
-    nota: 'La implementación inicial se cotiza aparte: depende de cuántos productos, sucursales y usuarios haya que dejar listos.',
+    subeSi: [
+      'Tienes varias sucursales',
+      'El catálogo es grande o hay que capturarlo',
+      'Necesitas pantalla de cocina o pedidos',
+      'Hace falta hardware (lector, impresora, cajón)',
+    ],
+    nota: 'La puesta en marcha se cotiza aparte, una sola vez, y cubre carga de catálogo, alta de sucursales y usuarios, y capacitación. Depende del tamaño de tu operación.',
+    salida: 'Sin permanencia: se cancela cuando quieras. Tus datos son tuyos y te los entrego exportados si te vas.',
     cta: 'Cotizar Punto de Venta',
     destacado: false,
   },
@@ -189,6 +231,7 @@ export const PLANES = {
       'Tableros con la información de todo el negocio',
     ],
     nota: 'En los ecosistemas la página web va dentro del paquete: no es un regalo, está contemplada en el precio del proyecto.',
+    salida: 'Sin permanencia. Dominio, código y datos quedan a tu nombre.',
     cta: 'Hablemos de tu ecosistema',
     destacado: false,
   },
@@ -212,6 +255,7 @@ export const PLANES = {
       'Tableros de venta',
     ],
     nota: 'La facturación automática está disponible según el alcance y la integración fiscal de cada caso. Lo revisamos antes de prometerlo.',
+    salida: 'Sin permanencia. El menú, el contenido y los datos son tuyos.',
     cta: 'Ver soluciones para restaurantes',
     destacado: false,
   },

@@ -228,7 +228,24 @@ export function TarjetaPlan({ plan, detallada = false, servicio }) {
         </div>
       )}
 
+      {/* Qué mueve el precio, al mismo nivel que lo que incluye y no
+          escondido en una nota. Un «desde» sin esto es un anzuelo: el
+          visitante se entera de lo que encarece su proyecto en la llamada,
+          que es justo cuando peor sienta. */}
+      {detallada && plan.subeSi && (
+        <div className="plan__grupo plan__grupo--sube">
+          <p className="plan__grupo-titulo">Sube de precio si</p>
+          <ul className="plan__lista plan__lista--sube">
+            {plan.subeSi.map((i) => (
+              <li key={i}>{i}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {plan.nota && <p className="plan__nota">{plan.nota}</p>}
+
+      {detallada && plan.salida && <p className="plan__salida">{plan.salida}</p>}
 
       <BotonPrincipal to={contactoCon(servicio ?? servicioPorFamilia(plan))} className="plan__cta">
         {plan.cta}

@@ -27,7 +27,7 @@ import { useReducedMotion } from '../../hooks/useReducedMotion';
 
 const CLAVE_ARRANQUE = 'morphiq:arrancado';
 
-function usarScrollSuave(activo) {
+function useScrollSuave(activo) {
   useEffect(() => {
     if (!activo) return undefined;
     const lenis = new Lenis({ duration: 1.05, smoothWheel: true, syncTouch: false, wheelMultiplier: 0.9 });
@@ -44,6 +44,16 @@ function usarScrollSuave(activo) {
   }, [activo]);
 }
 
+/** Lee la preferencia de movimiento antes del primer render, para no montar
+ *  la pantalla de arranque y quitarla acto seguido. */
+function sinMovimientoInicial() {
+  try {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch {
+    return false;
+  }
+}
+
 /** Lee si ya se mostró el arranque en esta pestaña. Tolera almacenamiento bloqueado. */
 function yaArranco() {
   try {
@@ -55,10 +65,19 @@ function yaArranco() {
 
 export function Layout() {
   const sinMovimiento = useReducedMotion();
-  const [arrancando, setArrancando] = useState(() => !yaArranco());
+  const { pathname } = useLocation();
+
+  /* La pantalla de arranque es SOLO de la home, y solo la primera vez de la
+     sesión. Quien llega desde Google a /precios o a una página de servicio
+     viene a leer algo concreto: meterle un velo a pantalla completa antes
+     del contenido lo retrasa y, además, convierte ese velo en el elemento
+     más grande que se pinta, o sea en el LCP de una página que se supone
+     que vende. También se salta con prefers-reduced-motion. */
+  const [arrancando, setArrancando] = useState(
+    () => pathname === '/' && !sinMovimientoInicial() && !yaArranco()
+  );
   const { scrollYProgress } = useScroll();
   const medidor = useSpring(scrollYProgress, { stiffness: 140, damping: 26, mass: 0.3 });
-  const { pathname } = useLocation();
 
   const terminarArranque = useCallback(() => {
     try {
@@ -69,7 +88,10 @@ export function Layout() {
     setArrancando(false);
   }, []);
 
-  usarScrollSuave(!sinMovimiento && !arrancando);
+  /* El scroll suave mantiene vivo un requestAnimationFrame compitiendo por
+     el hilo principal. En la home acompaña a la coreografía; en las páginas
+     que venden no aporta nada y sí cuesta respuesta a la interacción. */
+  useScrollSuave(pathname === '/' && !sinMovimiento && !arrancando);
 
   useEffect(() => {
     document.body.classList.toggle('is-booting', arrancando);

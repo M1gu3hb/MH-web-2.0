@@ -72,9 +72,17 @@ function cabecera({ dominio, path, title, description, image, grafo }) {
     .join('\n    ');
 }
 
-/** Sustituye en el HTML base las etiquetas que cambian por ruta. */
-function aplicar(base, head, noscript) {
+/**
+ * Sustituye en el HTML base las etiquetas que cambian por ruta.
+ * `robots` solo se pasa en el 404: cuando llega, las directivas del HTML
+ * base se eliminan antes, porque dos meta robots contradictorias en la
+ * misma página son una ambigüedad que no hay razón para dejar ahí.
+ */
+function aplicar(base, head, noscript, robots) {
   let html = base;
+  if (robots) {
+    html = html.replace(/\s*<meta name="(robots|googlebot)"[^>]*\/>/g, '');
+  }
   html = html.replace(/<title>[\s\S]*?<\/title>/, '@@TITLE@@');
   html = html.replace(/\s*<meta\s+name="description"[\s\S]*?\/>/, '');
   html = html.replace(/\s*<link rel="canonical"[^>]*\/>/, '');
@@ -331,6 +339,28 @@ async function main() {
       enlacesPrincipales
     ),
   });
+
+  /* El 404 con marca. Vercel sirve dist/404.html para cualquier URL que no
+     exista, y con estado 404 de verdad: así el visitante ve una página del
+     sitio desde la que seguir, y Google recibe el código correcto en vez de
+     un soft-404 que le haría creer que la URL es válida. */
+  const html404 = aplicar(
+    base,
+    cabecera({
+      dominio: DOMINIO,
+      path: '/404',
+      title: 'Página no encontrada | Morphiq',
+      description: 'La página que buscas no existe o cambió de dirección.',
+      grafo: null,
+    }) + '\n    <meta name="robots" content="noindex, follow" />',
+    bloqueNoscript(
+      'Esta página no existe',
+      'O cambió de sitio. Desde aquí puedes seguir a donde ibas.',
+      enlacesPrincipales
+    ),
+    true
+  );
+  writeFileSync(join(DIST, '404.html'), html404);
 
   /* ---- Escritura ---- */
   let escritas = 0;

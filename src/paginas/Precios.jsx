@@ -24,7 +24,7 @@ import {
 } from '../components/ui';
 import { Reveal } from '../components/reactbits';
 import { Seo, nodoMigas, nodoOferta, nodoPagina, nodoPreguntas } from '../lib/seo';
-import { PLANES, PLANES_SISTEMAS, PLANES_WEB } from '../config/pricing';
+import { AVISO_IVA, PLANES, PLANES_SISTEMAS, PLANES_WEB } from '../config/pricing';
 import { DOMINIO, RUTAS } from '../config/rutas';
 
 const MIGAS = [
@@ -164,8 +164,11 @@ export default function Precios() {
               <Info size={18} aria-hidden="true" />
               <p>
                 <strong>Lo que «desde» significa aquí:</strong> es el precio real del alcance más sencillo de ese
-                plan, no un gancho. Si tu proyecto cabe ahí, ese es tu precio. Si necesita más, te digo cuánto y
-                por qué antes de que decidas.
+                plan, no un gancho. Si tu proyecto cabe ahí, ese es tu precio. Cada tarjeta te dice además qué
+                encarece el proyecto, para que lo sepas antes de escribirme y no en la llamada.
+                <br />
+                <br />
+                {AVISO_IVA}
               </p>
             </aside>
           </Reveal>

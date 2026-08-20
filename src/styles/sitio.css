@@ -1921,3 +1921,218 @@
     transform: none;
   }
 }
+
+/* ============================================================
+   SUELOS DE ACCESIBILIDAD
+   ============================================================
+   Estas reglas van al final a propósito: son un suelo que ninguna regla
+   anterior debe poder perforar.
+   ============================================================ */
+
+/* ---- Tipografía: nada por debajo de 12px ----
+   Varios tamaños del sistema (0.72rem, 0.76rem, 0.8rem) caen por debajo de
+   12px, que es donde el texto deja de ser cómodo en un teléfono pequeño.
+   En lugar de recalcular treinta reglas se pone un suelo con max(): el
+   diseño mantiene su proporción y ningún texto baja de ahí. */
+.tarjeta-servicio__puntos li,
+.tarjeta-proyecto__etiquetas li,
+.tarjeta-proyecto__industria,
+.titulo-seccion__eyebrow,
+.cabecera-pagina__eyebrow,
+.caso-cabecera__industria,
+.quien__eyebrow,
+.caso-resultado__etiqueta,
+.nav-panel__titulo,
+.nav-panel__seccion,
+.plan__grupo-titulo,
+.plan__sello,
+.acordeon__indice,
+.paso__numero,
+.proceso-corto li > span,
+.tabla-decision__cabeza,
+.campo__pista,
+.formulario__nota,
+.contacto-esperar p,
+.nav-menu span,
+.nav-panel__servicios span,
+.ancla__resumen,
+.precio__prefijo,
+.precio__periodo,
+.precio__extra,
+.caso-piezas li,
+.caso-tecnologias li,
+.plan__nota {
+  font-size: max(0.78rem, 12.5px);
+}
+
+/* ---- Objetivos táctiles ----
+   48x48 reales en cualquier puntero grueso. Es el número que repite toda la
+   documentación de Google y, en tráfico de PyME mexicana —que es casi todo
+   móvil—, es la diferencia entre un botón que se pulsa y uno que se falla.
+   Se aplica por tipo de puntero, no por ancho de pantalla: hay tablets
+   anchas que se tocan y portátiles estrechos que no. */
+@media (any-pointer: coarse) {
+  .nav-panel__principal a,
+  .nav-panel__servicios a,
+  .nav-menu a,
+  .tactile-button,
+  .filtro,
+  .selector-familia__opcion,
+  .acordeon__titulo button,
+  .campo input,
+  .campo select,
+  .campo textarea,
+  .formulario__acciones button {
+    min-height: 48px;
+  }
+
+  /* Estos NO son enlaces dentro de una frase: son listas de destinos, así
+     que la excepción de WCAG 2.5.8 no aplica y tienen que alcanzar el
+     tamaño completo. Se consigue con altura mínima, no con relleno, para
+     que el resultado no dependa del tamaño de letra heredado. */
+  .migas a,
+  .migas [aria-current='page'],
+  .bio__enlaces a,
+  .contacto-directo a,
+  .nav-enlace {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .tarjeta-servicio__ver,
+  .tarjeta-proyecto__ver,
+  .ancla__ver {
+    min-height: 32px;
+  }
+
+  .cierre__acciones,
+  .portada__acciones,
+  .cabecera-pagina__acciones,
+  .formulario__acciones {
+    gap: var(--sp-3);
+  }
+}
+
+/* ---- Hueco de ruta ----
+   Reserva altura mientras llega el trozo de la página. Sin esto la barra
+   quedaría flotando sobre el vacío y el contenido saltaría al entrar. */
+.cargando-ruta {
+  min-height: 70svh;
+}
+
+/* ---- Imágenes ----
+   El seguro contra la causa número uno de desplazamiento de diseño. */
+img,
+video,
+iframe {
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+/* ---- 320px ----
+   El ancho más estrecho que hay que soportar. Aquí el problema no es que
+   falten columnas: es que los rellenos generosos se comen el contenido. */
+@media (max-width: 360px) {
+  .explicador,
+  .formulario,
+  .cierre__caja {
+    padding: var(--sp-5);
+  }
+  .plan {
+    padding: var(--sp-5);
+  }
+  .portada__credenciales {
+    gap: var(--sp-3);
+  }
+  .portada__acciones .tactile-button,
+  .cabecera-pagina__acciones .tactile-button,
+  .cierre__acciones .tactile-button,
+  .formulario__acciones button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ---- «Sube de precio si» y condiciones de salida ----
+   El bloque va con el mismo peso visual que las inclusiones, no en gris
+   pequeño: si esconderlo cambiara la decisión del cliente, esconderlo es
+   un engaño. El acento ámbar lo distingue sin convertirlo en alarma. */
+.plan__grupo--sube .plan__grupo-titulo {
+  color: var(--accent-web);
+}
+
+.plan__lista--sube li {
+  position: relative;
+  padding-left: var(--sp-4);
+  color: var(--ink-body);
+}
+
+.plan__lista--sube li::before {
+  content: '↑';
+  position: absolute;
+  left: 0;
+  color: var(--accent-web);
+}
+
+.plan__salida {
+  margin-top: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-md);
+  background: color-mix(in oklab, var(--accent-pos) 8%, transparent);
+  color: var(--ink-muted);
+  font-size: max(0.8rem, 12.5px);
+  line-height: 1.55;
+}
+
+/* ---- Pie multipágina ----
+   Cuatro columnas de enlaces reales. El pie es, además, el mapa del sitio:
+   desde cualquier página se llega a todas, que es lo que hace que Google
+   rastree el sitio entero en vez de quedarse en la home. */
+.footer__grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+}
+
+.footer__col-title {
+  display: block;
+  margin-bottom: var(--sp-3);
+  color: var(--ink-muted);
+  font-family: var(--font-display);
+  font-size: max(0.72rem, 12.5px);
+  font-weight: var(--w-label);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.footer__desde {
+  margin-top: var(--sp-4);
+  color: var(--accent-pos);
+  font-size: max(0.82rem, 12.5px);
+}
+
+.footer__legal {
+  font-size: max(0.72rem, 12.5px);
+}
+
+.footer__dato--plano {
+  cursor: default;
+}
+
+/* Los enlaces del pie son de los más pulsados desde el teléfono y estaban a
+   19px de alto: imposibles de acertar. */
+@media (any-pointer: coarse) {
+  .footer__dato,
+  .footer__arriba,
+  .brand--pie {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
+/* La etiqueta de la pantalla de arranque estaba en 10.5px. Es texto que se
+   ve un segundo, pero no hay razón para que sea el único del sitio por
+   debajo del suelo de legibilidad. */
+.boot__meta {
+  font-size: max(0.66rem, 12.5px);
+}
