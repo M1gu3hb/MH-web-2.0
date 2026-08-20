@@ -1,0 +1,330 @@
+/* ============================================================
+   NAVEGACIÓN MULTIPÁGINA
+   ============================================================
+   Dos navegaciones distintas, no una comprimida. El corte está en 1080px
+   porque es donde seis entradas más el botón dejan de caber sin apretarse.
+   ============================================================ */
+
+.nav-shell {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-5);
+  padding: var(--sp-4) var(--sp-gutter);
+  transition: background 0.28s, border-color 0.28s, padding 0.28s;
+  border-bottom: 1px solid transparent;
+}
+
+.nav-shell--condensed {
+  padding-block: var(--sp-3);
+  border-bottom-color: var(--line-soft);
+  background: color-mix(in oklab, var(--surface-base) 88%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* Si el navegador no puede desenfocar, el fondo va sólido: un menú
+   semitransparente sobre texto es ilegible. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .nav-shell--condensed {
+    background: var(--surface-base);
+  }
+}
+
+.nav-shell__links {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.nav-enlace {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 9px 13px;
+  border: 0;
+  border-radius: var(--r-full);
+  background: transparent;
+  color: var(--ink-body);
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.18s, background 0.18s;
+}
+
+.nav-enlace:hover,
+.nav-enlace:focus-visible {
+  color: var(--ink-strong);
+  background: color-mix(in oklab, var(--ink-strong) 7%, transparent);
+}
+
+.nav-enlace.is-activo {
+  color: var(--accent-pos);
+}
+
+.nav-enlace svg {
+  transition: transform 0.2s;
+}
+
+.nav-enlace svg.is-girado {
+  transform: rotate(180deg);
+}
+
+/* ---- Desplegable ---- */
+
+.nav-desplegable {
+  position: relative;
+}
+
+.nav-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  translate: -50% 0;
+  z-index: 5;
+  width: min(94vw, 420px);
+  padding: var(--sp-3);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface-raised);
+  box-shadow: var(--e-3);
+}
+
+.nav-menu__todos {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px var(--sp-4);
+  margin-bottom: var(--sp-2);
+  border-radius: var(--r-md);
+  background: color-mix(in oklab, var(--accent-brand) 14%, transparent);
+  color: var(--accent-pos);
+  font-size: 0.86rem;
+  font-weight: var(--w-medium);
+  text-decoration: none;
+}
+
+.nav-menu ul {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-menu a:not(.nav-menu__todos) {
+  display: grid;
+  gap: 3px;
+  padding: 10px var(--sp-4);
+  border-radius: var(--r-md);
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.16s;
+}
+
+.nav-menu a:not(.nav-menu__todos):hover,
+.nav-menu a:not(.nav-menu__todos):focus-visible {
+  background: var(--surface-sunken);
+}
+
+.nav-menu strong {
+  color: var(--ink-strong);
+  font-family: var(--font-display);
+  font-size: 0.96rem;
+  font-weight: var(--w-bold);
+}
+
+.nav-menu span {
+  color: var(--ink-muted);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+/* ---- Acciones ---- */
+
+.nav-shell__acciones {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.nav-cta {
+  font-size: 0.9rem;
+}
+
+.nav-hamburguesa {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface-raised);
+  color: var(--ink-strong);
+  cursor: pointer;
+}
+
+/* ---- Corte a navegación de teléfono ---- */
+
+@media (max-width: 1080px) {
+  .nav-shell__links {
+    display: none;
+  }
+  .nav-hamburguesa {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 560px) {
+  /* El botón de cotizar vive dentro del panel: en 360px compite con el
+     logo y lo deja sin sitio. */
+  .nav-cta {
+    display: none;
+  }
+}
+
+/* ---- Panel de teléfono ---- */
+
+.nav-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-base);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.nav-panel__barra {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-4) var(--sp-gutter);
+  border-bottom: 1px solid var(--line-soft);
+  background: var(--surface-base);
+}
+
+.nav-panel__titulo {
+  color: var(--ink-muted);
+  font-family: var(--font-display);
+  font-size: var(--t-label);
+  font-weight: var(--w-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.nav-panel__cerrar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--ink-strong);
+  cursor: pointer;
+}
+
+.nav-panel__cuerpo {
+  flex: 1;
+  padding: var(--sp-6) var(--sp-gutter);
+}
+
+.nav-panel__principal {
+  display: grid;
+  margin: 0 0 var(--sp-7);
+  padding: 0;
+  list-style: none;
+}
+
+.nav-panel__principal a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 60px;
+  padding: var(--sp-4) 0;
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--ink-strong);
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: var(--w-bold);
+  letter-spacing: -0.03em;
+  text-decoration: none;
+}
+
+.nav-panel__principal a.is-activo {
+  color: var(--accent-pos);
+}
+
+.nav-panel__principal svg {
+  color: var(--ink-muted);
+}
+
+.nav-panel__seccion {
+  margin-bottom: var(--sp-4);
+  color: var(--accent-pos);
+  font-family: var(--font-display);
+  font-size: var(--t-label);
+  font-weight: var(--w-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.nav-panel__servicios ul {
+  display: grid;
+  gap: var(--sp-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-panel__servicios a {
+  display: grid;
+  gap: 3px;
+  min-height: 60px;
+  padding: var(--sp-4);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-md);
+  color: inherit;
+  text-decoration: none;
+}
+
+.nav-panel__servicios a.is-activo {
+  border-color: var(--accent-brand);
+}
+
+.nav-panel__servicios strong {
+  color: var(--ink-strong);
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  font-weight: var(--w-bold);
+}
+
+.nav-panel__servicios span {
+  color: var(--ink-muted);
+  font-size: 0.83rem;
+  line-height: 1.45;
+}
+
+.nav-panel__pie {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-6) var(--sp-gutter) calc(var(--sp-7) + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line-soft);
+  background: var(--surface-sunken);
+}
+
+.nav-panel__pie .tactile-button {
+  justify-content: center;
+}

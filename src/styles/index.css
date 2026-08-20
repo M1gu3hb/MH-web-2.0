@@ -13,3 +13,9 @@
 @import './faq.css';
 @import './contact.css';
 @import './mockups.css';
+
+/* Capa del sitio multipágina. Va al final para poder ajustar lo anterior
+   sin tocarlo: los estilos del sitio de una sola página siguen sirviendo a
+   los componentes que se reutilizan. */
+@import './navegacion.css';
+@import './sitio.css';
