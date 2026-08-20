@@ -107,9 +107,9 @@
      iteración de esta rama los dejó en 90 y 53, o sea el 59 % del tamaño, y
      ese es el motivo real de que las composiciones se vieran pequeñas.
      No es que faltara relleno: es que el texto no ocupaba lo que le tocaba. */
-  --t-statement: clamp(2.9rem, 8.2vw, 9.4rem);
-  --t-seccion: clamp(2.3rem, 5.4vw, 5.7rem);
-  --t-cabecera: clamp(2.5rem, 6.2vw, 6.6rem);
+  --t-statement: clamp(2.3rem, 8.2vw, 9.4rem);
+  --t-seccion: clamp(1.95rem, 5.4vw, 5.7rem);
+  --t-cabecera: clamp(2.05rem, 6.2vw, 6.6rem);
   --t-tarjeta: clamp(1.25rem, 1.7vw, 1.75rem);
 
   /* Interlineado y prosa para cada nivel. Cuanto más grande el cuerpo, más

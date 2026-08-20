@@ -17,6 +17,7 @@ import {
   TituloSeccion,
 } from '../components/ui';
 import { Reveal } from '../components/reactbits';
+import { Cascada, Cortina } from '../components/motion';
 import { Seo, nodoMigas, nodoPagina, nodoServicio } from '../lib/seo';
 import { SERVICIOS, PAGINAS_SERVICIO } from '../content/servicios';
 import { PLANES, precioEnLinea } from '../config/pricing';
@@ -104,12 +105,16 @@ export default function Servicios() {
 
       {/* ---- La tabla de decisión ---- */}
       <Seccion tono="elevado">
-        <Contenedor>
+        <div className="contenedor contenedor--amplio">
           <TituloSeccion
             titulo="Empieza por tu situación, no por la categoría."
             entrada="Nadie se levanta pensando «necesito un CRM». Se levanta pensando «otra vez se me pasó marcarle»."
           />
-          <Reveal>
+          {/* CORTINA sobre la tabla entera, no `Secuencia` fila a fila: las
+              filas de un `role="table"` tienen que seguir siendo hijas
+              directas de la tabla, y envolver cada una rompería tanto la
+              retícula como lo que anuncia un lector de pantalla. */}
+          <Cortina>
             <div className="tabla-decision" role="table" aria-label="Qué servicio corresponde a cada situación">
               <div className="tabla-decision__cabeza" role="row">
                 <span role="columnheader">Si te pasa esto…</span>
@@ -130,22 +135,27 @@ export default function Servicios() {
                 </Link>
               ))}
             </div>
-          </Reveal>
-        </Contenedor>
+          </Cortina>
+        </div>
       </Seccion>
 
       {/* ---- Las cinco fichas ---- */}
       <Seccion>
-        <Contenedor>
-          <TituloSeccion titulo="Los cinco frentes, en detalle." />
-          <div className="rejilla-servicios">
-            {SERVICIOS.map((s, i) => (
-              <Reveal key={s.id} delay={i * 0.06}>
-                <TarjetaServicio servicio={s} />
-              </Reveal>
+        <div className="contenedor contenedor--amplio">
+          <TituloSeccion
+            titulo="Los cinco frentes, en detalle."
+            aparte={
+              <p className="titulo-seccion__dato">
+                <strong>5</strong> frentes · un precio de partida cada uno
+              </p>
+            }
+          />
+          <Cascada className="rejilla-servicios" paso={0.06}>
+            {SERVICIOS.map((s) => (
+              <TarjetaServicio key={s.id} servicio={s} />
             ))}
-          </div>
-        </Contenedor>
+          </Cascada>
+        </div>
       </Seccion>
 
       {/* ---- Juntos ---- */}

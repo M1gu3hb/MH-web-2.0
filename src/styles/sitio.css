@@ -43,6 +43,12 @@
 
 .seccion {
   padding-block: var(--sp-section);
+  /* `clip` y no `hidden`: recorta lo que se sale sin convertir la sección en
+     un contenedor de scroll ni romper `position: sticky`. Lo que se sale a
+     propósito —el lienzo del borde eléctrico, que se extiende 60 px a cada
+     lado para que quepan los picos del arco— dejaba 9 px de scroll
+     horizontal en la página a 1024 px. */
+  overflow-x: clip;
 }
 
 .seccion--elevado {
@@ -123,6 +129,7 @@
    diferencia —el 59 % del tamaño— era la causa real de que las secciones se
    vieran pequeñas dentro de la pantalla. */
 .titulo-seccion__titulo {
+  overflow-wrap: break-word;
   color: var(--ink-strong);
   font-family: var(--font-display);
   font-size: var(--t-seccion);
@@ -189,6 +196,8 @@
 
 .statement__titulo {
   margin: 0;
+  overflow-wrap: break-word;
+  hyphens: auto;
   color: var(--ink-strong);
   font-family: var(--font-display);
   font-size: var(--t-statement);
@@ -290,6 +299,15 @@
   gap: var(--sp-7);
 }
 
+/* Una pista `1fr` es `minmax(auto, 1fr)`, y ese `auto` toma como mínimo el
+   contenido más ancho que no se pueda partir. A 320 px eso hacía que la
+   columna de texto midiera 326 px dentro de una pista de 280 y la cabecera
+   la recortara: sin barra de scroll, pero con texto cortado, que es peor.
+   `min-width: 0` es lo que le permite a la pista encogerse de verdad. */
+.cabecera-pagina__reparto > * {
+  min-width: 0;
+}
+
 .cabecera-pagina__reparto--con-imagen {
   grid-template-columns: minmax(0, 1.28fr) minmax(0, 0.72fr);
   align-items: center;
@@ -323,6 +341,11 @@
   letter-spacing: -0.045em;
   line-height: 0.96;
   text-wrap: pretty;
+  /* A 320 px, «Herramientas» o «automatización» a 40 px miden más que la
+     columna y se salían del cuadro. La cabecera recorta con overflow, así
+     que no había barra de scroll pero sí texto cortado, que es peor. */
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .cabecera-pagina__entrada {
@@ -2411,7 +2434,12 @@
 .precio__extra,
 .caso-piezas li,
 .caso-tecnologias li,
-.plan__nota {
+.plan__nota,
+.statement__eyebrow,
+.statement__kicker,
+.contacto-linea__etiqueta,
+.hero__credentials dd,
+.portada__meta dd {
   font-size: max(0.78rem, 12.5px);
 }
 
@@ -2652,17 +2680,32 @@ iframe {
   gap: clamp(var(--sp-5), 1.6vw, var(--sp-6));
 }
 
-/* Los envoltorios de las familias de entrada son los hijos reales de la
-   rejilla, así que tienen que estirarse o las tarjetas de una misma fila
-   quedarían de alturas distintas. */
+/* Los envoltorios de las familias de entrada (Cascada, Escala, Lateral)
+   pasan a ser los hijos reales de la rejilla, así que tienen que estirarse
+   igual que se estiraría la tarjeta: si no, las piezas de una misma fila
+   quedan de alturas distintas y la rejilla se rompe visualmente. */
 .rejilla-soluciones > *,
-.rejilla-proyectos > * {
+.rejilla-proyectos > *,
+.rejilla-servicios > *,
+.beneficios > *,
+.principios > *,
+.capacidades > *,
+.piezas > *,
+.planes > *,
+.anclas > * {
   display: flex;
   min-width: 0;
 }
 
 .rejilla-soluciones > * > *,
-.rejilla-proyectos > * > * {
+.rejilla-proyectos > * > *,
+.rejilla-servicios > * > *,
+.beneficios > * > *,
+.principios > * > *,
+.capacidades > * > *,
+.piezas > * > *,
+.planes > * > *,
+.anclas > * > * {
   width: 100%;
 }
 
