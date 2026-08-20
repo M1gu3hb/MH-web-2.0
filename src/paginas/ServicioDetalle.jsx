@@ -24,7 +24,8 @@ import {
   TituloSeccion,
   contactoCon,
 } from '../components/ui';
-import { Reveal } from '../components/reactbits';
+import { BordeElectrico, Reveal } from '../components/reactbits';
+import { Cascada, Cortina, Escala, Lateral, Secuencia } from '../components/motion';
 import {
   AutomationScreen,
   CrmScreen,
@@ -110,14 +111,17 @@ export default function ServicioDetalle() {
       {/* ---- ¿Qué es? Solo donde la palabra asusta ---- */}
       {pagina.quees && (
         <Seccion tono="elevado">
-          <Contenedor ancho="estrecho">
-            <Reveal>
+          <Contenedor ancho="medio">
+            {/* CORTINA. El explicador se descubre tras una máscara: es el
+                primer bloque después de la cabecera y conviene que se lea
+                como que se abre, no como que llega deslizándose. */}
+            <Cortina>
               <div className="explicador">
                 <h2 className="explicador__titulo">{pagina.quees.titulo}</h2>
                 <p className="explicador__cuerpo">{pagina.quees.cuerpo}</p>
                 <p className="explicador__remate">{pagina.quees.remate}</p>
               </div>
-            </Reveal>
+            </Cortina>
           </Contenedor>
         </Seccion>
       )}
@@ -127,16 +131,17 @@ export default function ServicioDetalle() {
         <Seccion>
           <Contenedor>
             <TituloSeccion titulo={pagina.problemas.titulo} />
-            <ul className="problemas">
-              {pagina.problemas.lista.map((p, i) => (
-                <Reveal key={p} delay={i * 0.05}>
-                  <li className="problemas__item">
-                    <ArrowRight size={16} aria-hidden="true" />
-                    <span>{p}</span>
-                  </li>
-                </Reveal>
+            {/* SECUENCIA. «¿Esto te suena?» funciona si los problemas van
+                cayendo uno a uno mientras bajas: cada línea es un golpe, y
+                verlos aparecer de golpe los convierte en una lista. */}
+            <Secuencia as="ul" className="problemas" paso={0.045}>
+              {pagina.problemas.lista.map((p) => (
+                <li key={p} className="problemas__item">
+                  <ArrowRight size={16} aria-hidden="true" />
+                  <span>{p}</span>
+                </li>
               ))}
-            </ul>
+            </Secuencia>
             {pagina.problemas.nota && (
               <Reveal>
                 <p className="problemas__nota">{pagina.problemas.nota}</p>
@@ -151,16 +156,15 @@ export default function ServicioDetalle() {
         <Seccion tono="elevado">
           <Contenedor>
             <TituloSeccion titulo={pagina.beneficios.titulo} />
-            <div className="beneficios">
-              {pagina.beneficios.lista.map((b, i) => (
-                <Reveal key={b.titulo} delay={i * 0.06}>
-                  <article className="beneficio">
-                    <h3>{b.titulo}</h3>
-                    <p>{b.cuerpo}</p>
-                  </article>
-                </Reveal>
+            {/* CASCADA. Bloques hermanos del mismo peso: escalonado corto. */}
+            <Cascada className="beneficios" paso={0.055}>
+              {pagina.beneficios.lista.map((b) => (
+                <article key={b.titulo} className="beneficio">
+                  <h3>{b.titulo}</h3>
+                  <p>{b.cuerpo}</p>
+                </article>
               ))}
-            </div>
+            </Cascada>
           </Contenedor>
         </Seccion>
       )}
@@ -170,14 +174,16 @@ export default function ServicioDetalle() {
         <Seccion tono="elevado">
           <Contenedor>
             <TituloSeccion titulo={pagina.ecosistema.titulo} entrada={pagina.ecosistema.entrada} />
+            {/* ESCALA. Las piezas del ecosistema son objetos: llegan desde
+                el fondo, no desde abajo. */}
             <div className="piezas">
               {pagina.ecosistema.piezas.map((pieza, i) => (
-                <Reveal key={pieza.nombre} delay={i * 0.05}>
+                <Escala key={pieza.nombre} delay={i * 0.05} desde={0.95}>
                   <article className="pieza">
                     <h3>{pieza.nombre}</h3>
                     <p>{pieza.cuerpo}</p>
                   </article>
-                </Reveal>
+                </Escala>
               ))}
             </div>
           </Contenedor>
@@ -189,9 +195,12 @@ export default function ServicioDetalle() {
         <Seccion>
           <Contenedor>
             <TituloSeccion titulo={pagina.capacidades.titulo} entrada={pagina.capacidades.entrada} />
+            {/* LATERAL ALTERNO. Los grupos entran desde lados opuestos:
+                es lo que rompe la monotonía de una página larga sin que
+                ninguna sección tenga que ser distinta de las demás. */}
             <div className="capacidades">
               {pagina.capacidades.grupos.map((grupo, i) => (
-                <Reveal key={grupo.nombre} delay={i * 0.06}>
+                <Lateral key={grupo.nombre} desde={i % 2 ? 'derecha' : 'izquierda'} delay={i * 0.04} distancia={5}>
                   <article className="capacidad">
                     <h3 className="capacidad__nombre">{grupo.nombre}</h3>
                     <ul>
@@ -203,7 +212,7 @@ export default function ServicioDetalle() {
                       ))}
                     </ul>
                   </article>
-                </Reveal>
+                </Lateral>
               ))}
             </div>
             {pagina.capacidades.nota && (
@@ -220,13 +229,14 @@ export default function ServicioDetalle() {
         <Seccion tono="elevado">
           <Contenedor>
             <TituloSeccion titulo={pagina.automatizacion.titulo} entrada={pagina.automatizacion.entrada} />
-            <ul className="ejemplos">
-              {pagina.automatizacion.ejemplos.map((e, i) => (
-                <Reveal key={e} delay={i * 0.04}>
-                  <li className="ejemplos__item">{e}</li>
-                </Reveal>
+            {/* SECUENCIA otra vez, y aquí es lo correcto: son reglas de
+                automatización, o sea pasos, y verlas encenderse una tras
+                otra es literalmente lo que hace el sistema del que hablan. */}
+            <Secuencia as="ul" className="ejemplos" paso={0.04}>
+              {pagina.automatizacion.ejemplos.map((e) => (
+                <li key={e} className="ejemplos__item">{e}</li>
               ))}
-            </ul>
+            </Secuencia>
           </Contenedor>
         </Seccion>
       )}
@@ -234,14 +244,14 @@ export default function ServicioDetalle() {
       {/* ---- Páginas editables (web) ---- */}
       {pagina.editable && (
         <Seccion tono="elevado">
-          <Contenedor ancho="estrecho">
-            <Reveal>
+          <Contenedor ancho="medio">
+            <Cortina>
               <div className="explicador">
                 <h2 className="explicador__titulo">{pagina.editable.titulo}</h2>
                 <p className="explicador__cuerpo">{pagina.editable.cuerpo}</p>
                 <p className="explicador__remate">{pagina.editable.remate}</p>
               </div>
-            </Reveal>
+            </Cortina>
           </Contenedor>
         </Seccion>
       )}
@@ -251,19 +261,17 @@ export default function ServicioDetalle() {
         <Seccion>
           <Contenedor>
             <TituloSeccion titulo={pagina.proceso.titulo} />
-            <ol className="pasos">
+            <Secuencia as="ol" className="pasos" paso={0.05}>
               {pagina.proceso.pasos.map((paso, i) => (
-                <Reveal key={paso.titulo} delay={i * 0.06}>
-                  <li className="paso">
-                    <span className="paso__numero" aria-hidden="true">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <h3>{paso.titulo}</h3>
-                    <p>{paso.cuerpo}</p>
-                  </li>
-                </Reveal>
+                <li key={paso.titulo} className="paso">
+                  <span className="paso__numero" aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <h3>{paso.titulo}</h3>
+                  <p>{paso.cuerpo}</p>
+                </li>
               ))}
-            </ol>
+            </Secuencia>
           </Contenedor>
         </Seccion>
       )}
@@ -291,11 +299,24 @@ export default function ServicioDetalle() {
           <Contenedor>
             <TituloSeccion titulo={pagina.niveles.titulo} entrada={pagina.niveles.entrada} />
             <div className={`planes planes--${pagina.niveles.planes.length}`}>
-              {pagina.niveles.planes.map((clave, i) => (
-                <Reveal key={clave} delay={i * 0.07}>
-                  <TarjetaPlan plan={PLANES[clave]} detallada servicio={pagina.hero.servicio} />
-                </Reveal>
-              ))}
+              {pagina.niveles.planes.map((clave, i) => {
+                const plan = PLANES[clave];
+                const tarjeta = <TarjetaPlan plan={plan} detallada servicio={pagina.hero.servicio} />;
+                return (
+                  <Escala key={clave} delay={i * 0.07} desde={0.96}>
+                    {/* El plan recomendado lleva borde eléctrico. Es la única
+                        pieza de la página con arco vivo, así que señala sin
+                        que haga falta una etiqueta más. */}
+                    {plan.destacado ? (
+                      <BordeElectrico radio={20} caos={0.085}>
+                        {tarjeta}
+                      </BordeElectrico>
+                    ) : (
+                      tarjeta
+                    )}
+                  </Escala>
+                );
+              })}
             </div>
             <Reveal>
               <p className="planes__pie">
@@ -318,9 +339,9 @@ export default function ServicioDetalle() {
             />
             <div className="rejilla-proyectos">
               {proyectos.map((p, i) => (
-                <Reveal key={p.slug} delay={i * 0.07}>
+                <Escala key={p.slug} delay={i * 0.07} desde={0.95}>
                   <TarjetaProyecto proyecto={p} ruta={rutaProyecto(p.slug)} />
-                </Reveal>
+                </Escala>
               ))}
             </div>
             <Reveal>
@@ -335,8 +356,8 @@ export default function ServicioDetalle() {
       {/* ---- Dudas ---- */}
       {pagina.faq && (
         <Seccion tono="elevado">
-          <Contenedor ancho="estrecho">
-            <TituloSeccion titulo="Lo que suelen preguntarme" />
+          <Contenedor ancho="medio">
+            <TituloSeccion titulo="Lo que suelen preguntarme" variante="simple" />
             <Acordeon items={pagina.faq} />
           </Contenedor>
         </Seccion>

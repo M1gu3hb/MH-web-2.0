@@ -23,7 +23,8 @@ import {
   TarjetaPlan,
   TituloSeccion,
 } from '../components/ui';
-import { Reveal } from '../components/reactbits';
+import { BordeElectrico, Reveal } from '../components/reactbits';
+import { Escala } from '../components/motion';
 import { Seo, nodoMigas, nodoOferta, nodoPagina, nodoPreguntas } from '../lib/seo';
 import { AVISO_IVA, PLANES, PLANES_SISTEMAS, PLANES_WEB } from '../config/pricing';
 import { DOMINIO, RUTAS } from '../config/rutas';
@@ -161,12 +162,21 @@ export default function Precios() {
 
       {/* ---- Paso 2: los planes de esa familia ---- */}
       <Seccion>
-        <Contenedor>
+        <div className="contenedor contenedor--amplio">
           <div className={`planes planes--${activa.planes.length}`}>
             {activa.planes.map((plan, i) => (
-              <Reveal key={plan.id} delay={i * 0.07}>
-                <TarjetaPlan plan={plan} detallada />
-              </Reveal>
+              <Escala key={plan.id} delay={i * 0.07} desde={0.96}>
+                {/* El plan recomendado lleva el borde eléctrico: es la única
+                    pieza con arco vivo de toda la página, así que la señal se
+                    lee sin necesidad de otra etiqueta. */}
+                {plan.destacado ? (
+                  <BordeElectrico radio={20} caos={0.085}>
+                    <TarjetaPlan plan={plan} detallada />
+                  </BordeElectrico>
+                ) : (
+                  <TarjetaPlan plan={plan} detallada />
+                )}
+              </Escala>
             ))}
           </div>
 
@@ -183,7 +193,7 @@ export default function Precios() {
               </p>
             </aside>
           </Reveal>
-        </Contenedor>
+        </div>
       </Seccion>
 
       {/* ---- Los que no caben en la elección ---- */}

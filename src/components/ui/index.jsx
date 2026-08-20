@@ -575,7 +575,7 @@ export function CabeceraPagina({ migas, eyebrow, titulo, entrada, acciones, acen
         <span className="cabecera-pagina__retic" />
         <span className="cabecera-pagina__barrido" />
       </span>
-      <Contenedor>
+      <div className="contenedor contenedor--amplio">
         {migas && <Migas ruta={migas} />}
         <div className={`cabecera-pagina__reparto ${imagen || maqueta || aparte ? 'cabecera-pagina__reparto--con-imagen' : ''}`}>
           <div className="cabecera-pagina__texto">
@@ -584,9 +584,14 @@ export function CabeceraPagina({ migas, eyebrow, titulo, entrada, acciones, acen
                 <ScrambleText text={eyebrow} trigger="view" />
               </p>
             )}
-            <h1 className="cabecera-pagina__titulo">
-              <ScrambleText text={titulo} trigger="both" />
-            </h1>
+            {/* El H1 entra tras su máscara, no con un desplazamiento: a este
+                cuerpo, mover el bloque entero se lee como que la página
+                todavía se está colocando. */}
+            <Cortina amount={0.1}>
+              <h1 className="cabecera-pagina__titulo">
+                <ScrambleText text={titulo} trigger="both" />
+              </h1>
+            </Cortina>
             {entrada && <p className="cabecera-pagina__entrada">{entrada}</p>}
             {acciones && <div className="cabecera-pagina__acciones">{acciones}</div>}
           </div>
@@ -607,7 +612,7 @@ export function CabeceraPagina({ migas, eyebrow, titulo, entrada, acciones, acen
             </div>
           )}
         </div>
-      </Contenedor>
+      </div>
     </header>
   );
 }

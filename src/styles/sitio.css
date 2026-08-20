@@ -291,7 +291,7 @@
 }
 
 .cabecera-pagina__reparto--con-imagen {
-  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
+  grid-template-columns: minmax(0, 1.28fr) minmax(0, 0.72fr);
   align-items: center;
 }
 
@@ -311,20 +311,23 @@
   text-transform: uppercase;
 }
 
+/* NIVEL C. Era clamp(2.2rem, 5.4vw, 4.4rem) —70 px a 1920—, y con los H2 de
+   sección ya a 91 px el H1 de una página interior quedaba por debajo de sus
+   propias secciones. Ahora llega a ~106 px y la jerarquía vuelve a leerse. */
 .cabecera-pagina__titulo {
-  max-width: 20ch;
+  max-width: 15ch;
   color: var(--ink-strong);
   font-family: var(--font-display);
-  font-size: clamp(2.2rem, 5.4vw, 4.4rem);
+  font-size: var(--t-cabecera);
   font-weight: var(--w-bold);
-  letter-spacing: -0.04em;
-  line-height: 1;
-  text-wrap: balance;
+  letter-spacing: -0.045em;
+  line-height: 0.96;
+  text-wrap: pretty;
 }
 
 .cabecera-pagina__entrada {
-  margin-top: var(--sp-5);
-  max-width: 56ch;
+  margin-top: var(--sp-6);
+  max-width: 48ch;
   color: var(--ink-body);
   font-size: var(--t-lead);
   line-height: 1.62;
@@ -2162,10 +2165,21 @@
 .formulario {
   display: grid;
   gap: var(--sp-5);
-  padding: var(--sp-7);
-  border: 1px solid var(--line-soft);
-  border-radius: var(--r-xl);
-  background: var(--surface-raised);
+  /* El formulario deja de ser una tarjeta flotando en medio de la página.
+     Se apoya en una regla superior y en el borde izquierdo, como un
+     documento, y respira sobre el propio fondo. Un cuadro dentro de otro
+     cuadro es lo que hacía que /contacto se leyera como un panel de
+     administración y no como una composición. */
+  padding: clamp(var(--sp-5), 3vw, var(--sp-7)) 0 0;
+  border-top: 2px solid var(--line);
+  background: transparent;
+}
+
+@media (min-width: 941px) {
+  .formulario {
+    padding-right: clamp(var(--sp-6), 4vw, var(--sp-8));
+    border-right: 1px solid var(--line-soft);
+  }
 }
 
 .formulario__ayuda {
@@ -3289,4 +3303,88 @@ iframe {
 
 .seccion--portafolio {
   overflow: hidden;
+}
+
+
+/* ------------------------------------------------------------
+   Línea directa — el número en la cabecera
+   ------------------------------------------------------------
+   Lo que alguien que abre /contacto está buscando de verdad. Antes vivía en
+   una lista de enlaces pequeños al costado del formulario; ahora ocupa el
+   hueco de la cabecera, que estaba vacío.
+   ------------------------------------------------------------ */
+
+.contacto-linea {
+  display: grid;
+  gap: var(--sp-4);
+  justify-items: start;
+}
+
+.contacto-linea__etiqueta {
+  color: var(--ink-muted);
+  font-family: var(--font-display);
+  font-size: var(--t-label);
+  font-weight: var(--w-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.contacto-linea__marco {
+  width: 100%;
+}
+
+.contacto-linea__wa {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    'icono numero'
+    'icono canal';
+  align-items: center;
+  gap: 0 var(--sp-4);
+  width: 100%;
+  padding: var(--sp-5) var(--sp-6);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--surface-raised) 86%, transparent);
+  color: var(--ink-strong);
+  text-decoration: none;
+  transition: border-color 0.22s var(--ease), transform 0.22s var(--ease);
+}
+
+.contacto-linea__wa svg {
+  grid-area: icono;
+  color: var(--accent-pos);
+}
+
+.contacto-linea__wa strong {
+  grid-area: numero;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.1vw, 2.15rem);
+  font-weight: var(--w-bold);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.contacto-linea__wa span {
+  grid-area: canal;
+  color: var(--ink-muted);
+  font-size: var(--t-small);
+}
+
+.contacto-linea__wa:hover,
+.contacto-linea__wa:focus-visible {
+  border-color: var(--accent-brand);
+  transform: translateY(-2px);
+}
+
+.contacto-linea__nota {
+  color: var(--ink-muted);
+  font-size: var(--t-small);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contacto-linea__wa:hover,
+  .contacto-linea__wa:focus-visible {
+    transform: none;
+  }
 }

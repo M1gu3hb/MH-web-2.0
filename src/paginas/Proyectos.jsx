@@ -16,7 +16,8 @@ import {
   Seccion,
   TarjetaProyecto,
 } from '../components/ui';
-import { Reveal } from '../components/reactbits';
+import { MarcoExpansivo, Reveal } from '../components/reactbits';
+import { Escala } from '../components/motion';
 import { Seo, nodoMigas, nodoPagina } from '../lib/seo';
 import { CATEGORIAS, INVITACION, PROYECTOS, rutaProyecto } from '../content/proyectos';
 import { DOMINIO, RUTAS } from '../config/rutas';
@@ -95,8 +96,8 @@ export default function Proyectos() {
         }
       />
 
-      <Seccion>
-        <Contenedor>
+      <Seccion className="seccion--portafolio">
+        <div className="contenedor contenedor--amplio">
           {categorias.length > 2 && (
             <div className="filtros" role="group" aria-label="Filtrar proyectos por tipo">
               {categorias.map((c) => (
@@ -122,11 +123,16 @@ export default function Proyectos() {
             {visibles.length} {visibles.length === 1 ? 'proyecto' : 'proyectos'}
           </p>
 
+          {/* El bloque de proyectos se ensancha al pasar por la pantalla y
+              cada pieza llega desde el fondo. Es un portafolio: la entrada
+              tiene que leerse como que las piezas se presentan, no como que
+              una lista se rellena. */}
+          <MarcoExpansivo desde={0.93}>
           <div className="rejilla-proyectos">
             {visibles.map((p, i) => (
-              <Reveal key={p.slug} delay={Math.min(i, 4) * 0.06}>
+              <Escala key={p.slug} delay={Math.min(i, 4) * 0.07} desde={0.95}>
                 <TarjetaProyecto proyecto={p} ruta={rutaProyecto(p.slug)} />
-              </Reveal>
+              </Escala>
             ))}
 
             {/* La invitación cierra la retícula: no es un proyecto, es el CTA
@@ -145,7 +151,8 @@ export default function Proyectos() {
               </article>
             </Reveal>
           </div>
-        </Contenedor>
+          </MarcoExpansivo>
+        </div>
       </Seccion>
 
       <CierreCTA

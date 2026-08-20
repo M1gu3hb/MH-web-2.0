@@ -18,8 +18,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Mail, MessageCircle, Phone } from 'lucide-react';
-import { CabeceraPagina, Contenedor, Seccion, TituloSeccion } from '../components/ui';
-import { Reveal } from '../components/reactbits';
+import { CabeceraPagina, Seccion, TituloSeccion } from '../components/ui';
+import { BordeElectrico, Reveal } from '../components/reactbits';
+import { Cortina, Lateral } from '../components/motion';
+import { whatsappUrl } from '../lib/whatsapp';
 import { Seo, nodoMigas, nodoPagina } from '../lib/seo';
 import { RUTAS, SERVICIOS_CONTACTO, servicioValido } from '../config/rutas';
 import { CONTACT } from '../content';
@@ -109,15 +111,41 @@ export default function Contacto() {
     <>
       <Seo title={TITLE} description={DESC} path={RUTAS.contacto} grafo={grafo} />
 
+      {/* La cabecera deja de ser un titular con media pantalla vacía al
+          lado. En ese hueco va lo que alguien que llega a /contacto está
+          buscando de verdad: el número, en grande y pulsable. Es la pieza
+          que la sección de contacto de producción tenía y que aquí se había
+          quedado enterrada en una lista de enlaces pequeños. */}
       <CabeceraPagina
         migas={MIGAS}
         eyebrow="Contacto"
         titulo="Cuéntame qué necesita tu negocio."
         entrada="Contesto yo. Con lo que me escribas aquí ya puedo decirte por dónde empezar y qué costaría."
+        aparte={
+          <div className="contacto-linea">
+            <span className="contacto-linea__etiqueta">O escríbeme ahora mismo</span>
+            <BordeElectrico radio={18} caos={0.09} className="contacto-linea__marco">
+              <a
+                className="contacto-linea__wa"
+                href={whatsappUrl('contacto')}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => trackWhatsApp('contacto')}
+              >
+                <MessageCircle size={22} aria-hidden="true" />
+                <strong>{CONTACT.phone}</strong>
+                <span>WhatsApp directo</span>
+              </a>
+            </BordeElectrico>
+            <p className="contacto-linea__nota">
+              Contesto yo, no un bot. Normalmente el mismo día.
+            </p>
+          </div>
+        }
       />
 
       <Seccion>
-        <Contenedor>
+        <div className="contenedor contenedor--amplio">
           <div className="contacto-reparto">
             {/* ---- Formulario ---- */}
             <form
@@ -305,7 +333,7 @@ export default function Contacto() {
               </Reveal>
             </aside>
           </div>
-        </Contenedor>
+        </div>
       </Seccion>
     </>
   );

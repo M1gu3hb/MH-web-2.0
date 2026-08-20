@@ -18,6 +18,7 @@ import {
   TituloSeccion,
 } from '../components/ui';
 import { Reveal } from '../components/reactbits';
+import { Cascada, Cortina, Secuencia } from '../components/motion';
 import { Seo, nodoMigas, nodoPagina } from '../lib/seo';
 import { DOMINIO, RUTAS } from '../config/rutas';
 import { CONTACT } from '../content';
@@ -112,15 +113,17 @@ export default function Sobre() {
 
       {/* ---- La historia ---- */}
       <Seccion>
-        <Contenedor ancho="estrecho">
+        <Contenedor ancho="medio">
           <div className="bio">
-            <Reveal>
+            {/* CORTINA en el párrafo de entrada: es la frase que abre la
+                historia y conviene que se descubra, no que se deslice. */}
+            <Cortina>
               <p className="bio__parrafo bio__parrafo--destacado">
                 Empecé haciendo páginas para negocios de mi zona y acabé construyendo los sistemas con los que
                 operan por dentro. Hoy hay varios negocios cobrando, cotizando y organizando su día en cosas que
                 escribí yo.
               </p>
-            </Reveal>
+            </Cortina>
             <Reveal>
               <p className="bio__parrafo">
                 Me pasa seguido que alguien llega pidiendo «una página» y a los diez minutos de plática resulta
@@ -172,16 +175,14 @@ export default function Sobre() {
             titulo="Seis cosas que no negocio."
             entrada="No son valores de folleto. Son las reglas por las que puedes reclamarme si no las cumplo."
           />
-          <div className="principios">
-            {PRINCIPIOS.map((p, i) => (
-              <Reveal key={p.titulo} delay={i * 0.05}>
-                <article className="principio">
-                  <h3>{p.titulo}</h3>
-                  <p>{p.cuerpo}</p>
-                </article>
-              </Reveal>
+          <Cascada className="principios" paso={0.05}>
+            {PRINCIPIOS.map((p) => (
+              <article key={p.titulo} className="principio">
+                <h3>{p.titulo}</h3>
+                <p>{p.cuerpo}</p>
+              </article>
             ))}
-          </div>
+          </Cascada>
         </Contenedor>
       </Seccion>
 
@@ -193,21 +194,22 @@ export default function Sobre() {
             titulo="Qué pasa desde que me escribes hasta que sale en línea."
             entrada="Lo importante: no desapareces del proceso. Vas viendo y vas opinando."
           />
-          <ol className="proceso-largo">
+          {/* SECUENCIA. Siete pasos que se encienden uno a uno al bajar:
+              es un proceso, y verlo construirse es más honesto que verlo
+              aparecer entero de golpe. */}
+          <Secuencia as="ol" className="proceso-largo" paso={0.04}>
             {PROCESO.map((paso, i) => (
-              <Reveal key={paso.titulo} delay={i * 0.04}>
-                <li>
-                  <span className="proceso-largo__numero" aria-hidden="true">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <div>
-                    <h3>{paso.titulo}</h3>
-                    <p>{paso.cuerpo}</p>
-                  </div>
-                </li>
-              </Reveal>
+              <li key={paso.titulo}>
+                <span className="proceso-largo__numero" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <div>
+                  <h3>{paso.titulo}</h3>
+                  <p>{paso.cuerpo}</p>
+                </div>
+              </li>
             ))}
-          </ol>
+          </Secuencia>
           <Reveal>
             <p className="proceso-largo__nota">
               Sobre los cambios, para que no haya sorpresas: los ajustes dentro del alcance acordado van
