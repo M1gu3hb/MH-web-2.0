@@ -101,16 +101,22 @@ ul {
   left: 14px;
   padding: 12px 18px;
   border-radius: var(--r-md);
-  background: var(--ink-strong);
+  /* Estaba en blanco sobre --ink-strong, que es casi blanco: 1.18:1, o sea
+     invisible justo cuando alguien lo enfoca con el teclado. El azul de
+     marca con texto blanco da 5.9:1 y además se reconoce como interfaz. */
+  background: var(--accent-brand);
   color: #fff;
-  font-size: 0.8rem;
+  font-size: max(0.8rem, 12.5px);
   font-weight: var(--w-label);
   transform: translateY(calc(-100% - 28px));
   transition: transform var(--d-fast) var(--ease);
 }
 
-.skip-link:focus-visible {
+.skip-link:focus-visible,
+.skip-link:focus {
   transform: translateY(0);
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }
 
 /* ---- Medidor de scroll ------------------------------------ */

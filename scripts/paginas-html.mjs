@@ -116,6 +116,32 @@ async function main() {
   }
   const base = readFileSync(baseRuta, 'utf8');
 
+  /* Qué trozo de JavaScript necesita cada ruta.
+     Se precarga en su propio HTML con modulepreload para que, cuando React
+     monte, el módulo de la página ya esté en memoria y Suspense resuelva sin
+     pintar el hueco. Sin esto el hueco mide distinto que la página real y
+     todo lo que va debajo se recoloca al llegar el trozo: 0.3 de CLS
+     medidos en /precios, tres veces el umbral. */
+  let manifiesto = {};
+  try {
+    manifiesto = JSON.parse(readFileSync(join(DIST, '.vite/manifest.json'), 'utf8'));
+  } catch {
+    console.warn('[paginas] sin manifiesto: las rutas no precargarán su trozo');
+  }
+
+  const trozoDe = (modulo) => {
+    const entrada = manifiesto[`src/paginas/${modulo}.jsx`];
+    if (!entrada) return [];
+    /* El propio trozo más aquello de lo que dependa, para no encadenar
+       peticiones en cascada. */
+    return [entrada.file, ...(entrada.imports ?? []).map((k) => manifiesto[k]?.file).filter(Boolean)];
+  };
+
+  const precargar = (modulo) =>
+    trozoDe(modulo)
+      .map((f) => `<link rel="modulepreload" crossorigin href="/${f}" />`)
+      .join('\n    ');
+
   const { RUTAS, DOMINIO, MENU } = await importar('src/config/rutas.js');
   const { PAGINAS_SERVICIO, SERVICIOS } = await importar('src/content/servicios.js');
   const { PROYECTOS } = await importar('src/content/proyectos.js');
@@ -159,6 +185,7 @@ async function main() {
   /* Servicios (índice) */
   paginas.push({
     path: RUTAS.servicios,
+    modulo: 'Servicios',
     title: 'Servicios: web, sistemas, CRM y software | Morphiq',
     description:
       'Todo lo que Morphiq construye para negocios: páginas web, punto de venta, CRM y automatización, software a medida y soluciones para restaurantes. Con precios de partida.',
@@ -177,6 +204,7 @@ async function main() {
   for (const [ruta, p] of Object.entries(PAGINAS_SERVICIO)) {
     paginas.push({
       path: ruta,
+      modulo: 'ServicioDetalle',
       title: p.seo.title,
       description: p.seo.description,
       migas: p.migas,
@@ -226,6 +254,7 @@ async function main() {
   /* Proyectos */
   paginas.push({
     path: RUTAS.proyectos,
+    modulo: 'Proyectos',
     title: 'Proyectos: sitios y sistemas construidos | Morphiq',
     description:
       'Páginas web, puntos de venta, CRM y software que he construido para negocios reales. Cada caso con su problema, su solución y su enlace.',
@@ -258,6 +287,7 @@ async function main() {
     const ruta = `${RUTAS.proyectos}/${p.slug}`;
     paginas.push({
       path: ruta,
+      modulo: 'ProyectoDetalle',
       title: `${p.nombre}: ${p.tipo} | Morphiq`,
       description: p.resumen,
       image: `${DOMINIO}${p.imagen}`,
@@ -290,6 +320,7 @@ async function main() {
   /* Precios */
   paginas.push({
     path: RUTAS.precios,
+    modulo: 'Precios',
     title: 'Precios: páginas web desde $2,000 MXN | Morphiq',
     description:
       'Precios de partida para páginas web, punto de venta, CRM, mantenimiento y ecosistemas completos. Todo con «desde» visible y el precio final cerrado antes de empezar.',
@@ -310,6 +341,7 @@ async function main() {
   /* Sobre y contacto */
   paginas.push({
     path: RUTAS.sobre,
+    modulo: 'Sobre',
     title: 'Sobre Morphiq: quién está detrás | Morphiq',
     description:
       'Morphiq es el estudio de Miguel Huerta Bautista en CDMX. Diseño y construyo páginas web, sistemas y automatizaciones para negocios. Tratas conmigo, no con una cuenta.',
@@ -326,6 +358,7 @@ async function main() {
 
   paginas.push({
     path: RUTAS.contacto,
+    modulo: 'Contacto',
     title: 'Contacto: cuéntame tu proyecto | Morphiq',
     description:
       'Cuéntame qué necesita tu negocio y te respondo con una propuesta y un precio cerrado. Por WhatsApp o por correo, como prefieras.',
@@ -352,7 +385,7 @@ async function main() {
       title: 'Página no encontrada | Morphiq',
       description: 'La página que buscas no existe o cambió de dirección.',
       grafo: null,
-    }) + '\n    <meta name="robots" content="noindex, follow" />',
+    }) + '\n    <meta name="robots" content="noindex, follow" />\n    ' + precargar('NoEncontrada'),
     bloqueNoscript(
       'Esta página no existe',
       'O cambió de sitio. Desde aquí puedes seguir a donde ibas.',
@@ -366,7 +399,8 @@ async function main() {
   let escritas = 0;
   for (const pag of paginas) {
     const grafo = [nodoPagina(pag.path, pag.title, pag.description), nodoMigas(pag.migas), ...(pag.extra ?? [])];
-    const head = cabecera({ dominio: DOMINIO, ...pag, grafo });
+    const preload = pag.modulo ? '\n    ' + precargar(pag.modulo) : '';
+    const head = cabecera({ dominio: DOMINIO, ...pag, grafo }) + preload;
     const html = aplicar(base, head, pag.noscript);
     const destino = join(DIST, pag.path, 'index.html');
     mkdirSync(dirname(destino), { recursive: true });

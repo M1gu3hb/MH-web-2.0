@@ -103,6 +103,11 @@ export default function Proyectos() {
             </div>
           )}
 
+          {/* La retícula son H3. Sin un H2 encima, el documento salta de H1 a
+              H3 y un lector de pantalla pierde el nivel. El título ya lo dice
+              el H1, así que este va solo para la estructura. */}
+          <h2 className="rb-visually-hidden">Todos los proyectos</h2>
+
           <p className="filtros__conteo" role="status">
             {visibles.length} {visibles.length === 1 ? 'proyecto' : 'proyectos'}
           </p>

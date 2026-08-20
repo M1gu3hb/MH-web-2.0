@@ -137,7 +137,9 @@
 }
 
 .migas__sep {
-  color: var(--line-strong);
+  /* Estaba en --line-strong (0.26 de opacidad): decorativo, sí, pero
+     prácticamente invisible, y las migas dejaban de leerse como una ruta. */
+  color: var(--ink-muted);
 }
 
 /* ------------------------------------------------------------
@@ -2018,7 +2020,14 @@
    Reserva altura mientras llega el trozo de la página. Sin esto la barra
    quedaría flotando sobre el vacío y el contenido saltaría al entrar. */
 .cargando-ruta {
-  min-height: 70svh;
+  /* Tiene que llenar la ventana entera, no el 70%.
+     CLS solo cuenta lo que se mueve DENTRO de la ventana: con 70svh el pie
+     quedaba visible durante el hueco y, al llegar el trozo de la ruta, daba
+     un salto de 0.3, tres veces el umbral. Llenando la ventana el pie
+     arranca fuera de vista y su recolocación deja de contar, que además es
+     lo correcto: nadie estaba mirando ahí. */
+  min-height: 100vh;
+  min-height: 100svh;
 }
 
 /* ---- Imágenes ----
@@ -2135,4 +2144,14 @@ iframe {
    debajo del suelo de legibilidad. */
 .boot__meta {
   font-size: max(0.66rem, 12.5px);
+}
+
+/* El color de identidad de cada proyecto no siempre pasa el contraste
+   mínimo como texto pequeño: el violeta y el índigo se quedan en 3.5:1
+   sobre el gunmetal. Se aclara la mezcla solo para este texto; el borde y
+   el resaltado de la tarjeta siguen usando el acento puro, que ahí sí
+   funciona porque no es texto. */
+.tarjeta-proyecto__industria,
+.caso-cabecera__industria {
+  color: color-mix(in srgb, var(--acento) 58%, #eef1f6);
 }
