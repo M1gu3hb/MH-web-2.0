@@ -2809,3 +2809,77 @@ iframe {
 .anclas-cabecera .precio { margin: 0; }
 .anclas-cabecera .precio__importe { font-size: 1.12rem; }
 .anclas-cabecera .precio__extra { flex-basis: auto; }
+
+/* ---- Tira de industrias (/proyectos) ---- */
+.tira-industrias {
+  display: grid;
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--line-soft);
+  list-style: none;
+}
+
+.tira-industrias li {
+  display: grid;
+  gap: 2px;
+  padding: var(--sp-3) var(--sp-4);
+  border-left: 2px solid var(--acento);
+  background: color-mix(in srgb, var(--surface-sunken) 88%, transparent);
+}
+
+.tira-industrias span {
+  color: var(--ink-muted);
+  font-size: max(0.7rem, 12.5px);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.tira-industrias strong {
+  color: var(--ink-strong);
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  font-weight: var(--w-bold);
+}
+
+/* ---- La firma como tarjeta (/sobre-morphiq) ---- */
+.tarjeta-firma {
+  display: grid;
+  justify-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-7) var(--sp-6);
+  border: 1px solid color-mix(in srgb, var(--accent-brand) 24%, transparent);
+  border-radius: var(--r-xl);
+  background: color-mix(in srgb, var(--surface-sunken) 82%, transparent);
+  text-align: center;
+}
+
+.tarjeta-firma .firma3d {
+  font-size: clamp(2.4rem, 5vw, 3.4rem);
+}
+
+.tarjeta-firma p {
+  margin-top: var(--sp-4);
+  color: var(--ink-strong);
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: var(--w-bold);
+}
+
+.tarjeta-firma small {
+  color: var(--ink-muted);
+  font-size: max(0.8rem, 12.5px);
+}
+
+/* El acento de cada servicio no siempre pasa el contraste como texto: el
+   índigo del CRM se queda en 3.5:1 sobre el gunmetal. Se aclara la mezcla
+   solo para el texto; el borde, el halo y el filo siguen con el acento puro
+   porque ahí no es texto y su saturación es lo que da la identidad. */
+.solucion__promesa,
+.solucion__indice,
+.solucion__ver {
+  color: color-mix(in srgb, var(--acento) 62%, #eef1f6);
+}

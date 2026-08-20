@@ -137,6 +137,24 @@ async function main() {
     return [entrada.file, ...(entrada.imports ?? []).map((k) => manifiesto[k]?.file).filter(Boolean)];
   };
 
+  /* Las tres fuentes de marca, precargadas.
+     El titular del hero está en Exo 2. Sin precargarla, el navegador pinta
+     primero con la de sistema, y cuando llega la real remide el titular: el
+     bloque entero cambia de alto y todo lo de abajo se recoloca. Medido en
+     la home de escritorio: 0.39 de CLS, casi cuatro veces el umbral. Con la
+     fuente pedida desde el HTML, llega antes del primer pintado y no hay
+     intercambio que provoque salto. */
+  const FUENTES = [
+    'node_modules/@fontsource-variable/exo-2/files/exo-2-latin-wght-normal.woff2',
+    'node_modules/@fontsource-variable/syne/files/syne-latin-wght-normal.woff2',
+    'node_modules/@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2',
+  ];
+
+  const preloadFuentes = FUENTES.map((k) => manifiesto[k]?.file)
+    .filter(Boolean)
+    .map((f) => `<link rel="preload" as="font" type="font/woff2" href="/${f}" crossorigin />`)
+    .join('\n    ');
+
   const precargar = (modulo) =>
     trozoDe(modulo)
       .map((f) => `<link rel="modulepreload" crossorigin href="/${f}" />`)
@@ -400,12 +418,24 @@ async function main() {
   for (const pag of paginas) {
     const grafo = [nodoPagina(pag.path, pag.title, pag.description), nodoMigas(pag.migas), ...(pag.extra ?? [])];
     const preload = pag.modulo ? '\n    ' + precargar(pag.modulo) : '';
-    const head = cabecera({ dominio: DOMINIO, ...pag, grafo }) + preload;
+    const head = cabecera({ dominio: DOMINIO, ...pag, grafo }) + preload + '\n    ' + preloadFuentes;
     const html = aplicar(base, head, pag.noscript);
     const destino = join(DIST, pag.path, 'index.html');
     mkdirSync(dirname(destino), { recursive: true });
     writeFileSync(destino, html);
     escritas += 1;
+  }
+
+  /* La home no pasa por el bucle —su HTML es el base— pero necesita las
+     fuentes igual, y más que ninguna: su titular es el más grande del sitio. */
+  if (preloadFuentes) {
+    const inicio = readFileSync(baseRuta, 'utf8');
+    if (!inicio.includes('rel="preload" as="font"')) {
+      writeFileSync(
+        baseRuta,
+        inicio.replace('</head>', `  ${preloadFuentes}\n  </head>`)
+      );
+    }
   }
 
   console.log(`[paginas] ${escritas} rutas con su propio HTML, title, canonical y JSON-LD`);

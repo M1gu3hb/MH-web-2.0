@@ -91,6 +91,13 @@ export default function Sobre() {
         eyebrow="Sobre Morphiq"
         titulo="Hola, soy Miguel. Yo construyo todo esto."
         entrada="Morphiq no es una agencia con veinte personas. Es un estudio, y el estudio soy yo: diseño, programo, publico y contesto el WhatsApp."
+        aparte={
+          <div className="tarjeta-firma">
+            <span className="firma3d" translate="no" aria-label="MH97">MH97</span>
+            <p>Miguel Huerta Bautista</p>
+            <small>Director · Diseñador · Desarrollador</small>
+          </div>
+        }
         acciones={
           <>
             <BotonPrincipal to={RUTAS.contacto} grande>

@@ -73,6 +73,16 @@ export default function Proyectos() {
         eyebrow="Trabajo real"
         titulo="Negocios que ya están funcionando con esto."
         entrada="Ninguno es una maqueta de portafolio. Son proyectos entregados, y los que están en línea llevan su enlace para que los abras."
+        aparte={
+          <ul className="tira-industrias">
+            {PROYECTOS.map((p) => (
+              <li key={p.slug} style={{ '--acento': p.acento }}>
+                <span>{p.industria}</span>
+                <strong>{p.nombre}</strong>
+              </li>
+            ))}
+          </ul>
+        }
         acciones={
           <>
             <BotonPrincipal to={RUTAS.contacto} grande>
