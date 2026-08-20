@@ -2577,3 +2577,235 @@ iframe {
 .solucion__lienzo .demo--pos .pos-ticket {
   align-content: start;
 }
+
+/* ============================================================
+   CABECERA INTERIOR — señal, no degradado plano
+   ============================================================ */
+
+.cabecera-pagina__senal {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Retícula técnica, muy tenue: da la sensación de plano y de sistema sin
+   competir con el texto. */
+.cabecera-pagina__retic {
+  position: absolute;
+  inset: -1px;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--acento, var(--accent-brand)) 12%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--acento, var(--accent-brand)) 12%, transparent) 1px, transparent 1px);
+  background-size: 62px 62px;
+  /* Se desvanece hacia abajo para que la retícula no llegue al contenido. */
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), transparent 78%);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), transparent 78%);
+}
+
+/* El barrido: una banda de luz que recorre la cabecera despacio. Solo se
+   anima `transform`, así que va en el compositor y no repinta nada. */
+.cabecera-pagina__barrido {
+  position: absolute;
+  top: -30%;
+  left: -40%;
+  width: 55%;
+  height: 160%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    color-mix(in srgb, var(--acento, var(--accent-brand)) 16%, transparent) 45%,
+    transparent
+  );
+  filter: blur(28px);
+  animation: cabecera-barrido 11s ease-in-out infinite;
+}
+
+@keyframes cabecera-barrido {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(210%, 0, 0); }
+}
+
+/* ---- La maqueta del servicio en su cabecera ---- */
+.cabecera-pagina__maqueta {
+  position: relative;
+  perspective: 1400px;
+}
+
+.cabecera-pagina__pantalla {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--acento, var(--accent-brand)) 34%, transparent);
+  border-radius: var(--r-lg);
+  background: var(--surface-sunken);
+  box-shadow:
+    0 30px 70px -28px color-mix(in srgb, var(--acento, var(--accent-brand)) 55%, transparent),
+    var(--e-3);
+  /* Ligeramente girada: da profundidad y deja claro que es una pieza, no
+     una captura pegada. */
+  transform: rotateY(-7deg) rotateX(3deg);
+  contain: paint;
+}
+
+.cabecera-pagina__pantalla .demo {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border-radius: 0;
+}
+
+@media (max-width: 900px) {
+  .cabecera-pagina__pantalla {
+    transform: none;
+    aspect-ratio: 16 / 11;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cabecera-pagina__barrido {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   PROFUNDIDAD EN PROYECTOS Y PRECIOS
+   ============================================================ */
+
+/* ---- La tarjeta de plan sobre SpotlightCard ---- */
+.plan__marco {
+  display: block;
+  height: 100%;
+}
+
+/* StarBorder envuelve la tarjeta destacada: su relleno no debe sumarse al
+   de la tarjeta o el plan destacado quedaría más estrecho que los demás. */
+.plan__marco .rb-star-border__inner {
+  height: 100%;
+}
+
+.plan__marco .plan {
+  height: 100%;
+}
+
+/* ---- Proyectos con más presencia ---- */
+.tarjeta-proyecto {
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.tarjeta-proyecto__imagen {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--surface-sunken);
+}
+
+.tarjeta-proyecto__imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tarjeta-proyecto:hover .tarjeta-proyecto__imagen img,
+.tarjeta-proyecto:focus-within .tarjeta-proyecto__imagen img {
+  transform: scale(1.045);
+}
+
+/* Un filo interior del color del proyecto: convierte la maqueta en una
+   pantalla encendida en vez de una imagen pegada. */
+.tarjeta-proyecto__marco {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--acento) 30%, transparent),
+    inset 0 -60px 70px -50px color-mix(in srgb, var(--acento) 70%, transparent);
+  opacity: 0.7;
+  transition: opacity 0.35s;
+}
+
+.tarjeta-proyecto:hover .tarjeta-proyecto__marco,
+.tarjeta-proyecto:focus-within .tarjeta-proyecto__marco {
+  opacity: 1;
+}
+
+.tarjeta-proyecto:hover,
+.tarjeta-proyecto:focus-within {
+  transform: translateY(-5px);
+  box-shadow:
+    0 26px 60px -28px color-mix(in srgb, var(--acento) 55%, transparent),
+    var(--e-2);
+}
+
+.tarjeta-proyecto__ver svg {
+  transition: translate 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tarjeta-proyecto:hover .tarjeta-proyecto__ver svg,
+.tarjeta-proyecto:focus-within .tarjeta-proyecto__ver svg {
+  translate: 3px -3px;
+}
+
+/* ---- La cabecera interior respiraba de más por abajo ---- */
+.cabecera-pagina {
+  padding-block: clamp(116px, 15vh, 176px) clamp(48px, 7vh, 84px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tarjeta-proyecto,
+  .tarjeta-proyecto__imagen img,
+  .tarjeta-proyecto__ver svg {
+    transition: none;
+  }
+  .tarjeta-proyecto:hover {
+    transform: none;
+  }
+}
+
+/* ---- El aparte de las cabeceras sin maqueta ---- */
+.cabecera-pagina__aparte {
+  align-self: center;
+}
+
+.anclas-cabecera {
+  display: grid;
+  gap: var(--sp-2);
+  margin: 0;
+  padding: var(--sp-5);
+  border: 1px solid color-mix(in srgb, var(--acento, var(--accent-brand)) 26%, transparent);
+  border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--surface-sunken) 82%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  list-style: none;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .anclas-cabecera { background: var(--surface-sunken); }
+}
+
+.anclas-cabecera li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding: var(--sp-3) 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.anclas-cabecera li:last-child { border-bottom: 0; }
+
+.anclas-cabecera__nombre {
+  color: var(--ink-body);
+  font-family: var(--font-display);
+  font-size: max(0.9rem, 12.5px);
+  font-weight: var(--w-medium);
+}
+
+.anclas-cabecera .precio { margin: 0; }
+.anclas-cabecera .precio__importe { font-size: 1.12rem; }
+.anclas-cabecera .precio__extra { flex-basis: auto; }

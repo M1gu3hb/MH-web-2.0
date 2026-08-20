@@ -115,8 +115,28 @@ export function Layout() {
 
         <Navegacion />
 
+        {/* ---- Transición entre rutas ----
+            Un fundido corto con un desplazamiento mínimo. Deliberadamente
+            barato: solo `opacity` y `transform`, que van en el compositor y
+            no cuentan para CLS, y 260 ms de entrada. Cualquier cosa más
+            larga convierte navegar en esperar, que es justo lo que un sitio
+            multipágina no debe sentirse.
+
+            La clave es `pathname`: al cambiar, React desmonta y remonta, y
+            AnimatePresence hace el relevo. `mode="wait"` no se usa a
+            propósito, porque encadenaría salida y entrada y duplicaría el
+            tiempo percibido. */}
         <main id="contenido" tabIndex={-1}>
-          <Outlet />
+          <AnimatePresence initial={false}>
+            <Motion.div
+              key={pathname}
+              initial={sinMovimiento ? false : { opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <Outlet />
+            </Motion.div>
+          </AnimatePresence>
         </main>
 
         <Footer />

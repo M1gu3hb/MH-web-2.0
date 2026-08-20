@@ -18,6 +18,7 @@ import {
   CabeceraPagina,
   CierreCTA,
   Contenedor,
+  Precio,
   Seccion,
   TarjetaPlan,
   TituloSeccion,
@@ -111,6 +112,16 @@ export default function Precios() {
         eyebrow="Precios"
         titulo="Cuánto cuesta, sin que tengas que preguntar."
         entrada="Todos los precios son de partida y el final se cierra antes de empezar. Nunca a mitad del proyecto."
+        aparte={
+          <ul className="anclas-cabecera">
+            {[PLANES.webEsencial, PLANES.webProfesional, PLANES.crm, PLANES.mantenimiento].map((plan) => (
+              <li key={plan.id}>
+                <span className="anclas-cabecera__nombre">{plan.nombre}</span>
+                <Precio plan={plan} tamano="compacto" />
+              </li>
+            ))}
+          </ul>
+        }
         acciones={
           <>
             <BotonPrincipal to={RUTAS.contacto} grande>

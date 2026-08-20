@@ -25,6 +25,14 @@ import {
   contactoCon,
 } from '../components/ui';
 import { Reveal } from '../components/reactbits';
+import {
+  AutomationScreen,
+  CrmScreen,
+  PosScreen,
+  RestauranteScreen,
+  SoftwareScreen,
+  WebsiteScreen,
+} from '../components/mockups/ServiceScreens';
 import { Seo, nodoMigas, nodoPagina, nodoPreguntas, nodoServicio } from '../lib/seo';
 import { PAGINAS_SERVICIO } from '../content/servicios';
 import { PLANES } from '../config/pricing';
@@ -32,11 +40,24 @@ import { PROYECTOS, rutaProyecto } from '../content/proyectos';
 import { RUTAS } from '../config/rutas';
 import NoEncontrada from './NoEncontrada';
 
+/* La maqueta que preside cada página de servicio. Es la misma familia que
+   se usa en las tarjetas de la home, así que el visitante que hizo clic
+   reconoce dónde ha llegado. */
+const MAQUETA_DE = {
+  web: WebsiteScreen,
+  sistemas: PosScreen,
+  crm: CrmScreen,
+  software: SoftwareScreen,
+  restaurantes: RestauranteScreen,
+};
+
 export default function ServicioDetalle() {
   const { pathname } = useLocation();
   const pagina = PAGINAS_SERVICIO[pathname];
 
   if (!pagina) return <NoEncontrada />;
+
+  const Maqueta = MAQUETA_DE[pagina.id];
 
   const proyectos = (pagina.proyectos ?? [])
     .map((slug) => PROYECTOS.find((p) => p.slug === slug))
@@ -73,6 +94,7 @@ export default function ServicioDetalle() {
         titulo={pagina.hero.titulo}
         entrada={pagina.hero.entrada}
         acento={pagina.acento}
+        maqueta={Maqueta ? <Maqueta /> : null}
         acciones={
           <>
             <BotonPrincipal to={contactoCon(pagina.hero.servicio)} grande>

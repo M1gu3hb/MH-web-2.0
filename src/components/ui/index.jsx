@@ -14,7 +14,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Check, ChevronDown, MessageCircle } from 'lucide-react';
 import { useId, useState } from 'react';
-import { Reveal } from '../reactbits';
+import { GlareHover, Reveal, ScrambleText, SpotlightCard, StarBorder } from '../reactbits';
 import { RUTAS, contactoCon } from '../../config/rutas';
 import { precioDe } from '../../config/pricing';
 import { trackWhatsApp, whatsappUrl } from '../../lib/whatsapp';
@@ -44,8 +44,18 @@ export function TituloSeccion({ eyebrow, titulo, entrada, nivel: Nivel = 'h2', c
   return (
     <Reveal>
       <header className={`titulo-seccion ${centrado ? 'titulo-seccion--centro' : ''} ${className}`}>
-        {eyebrow && <p className="titulo-seccion__eyebrow">{eyebrow}</p>}
-        <Nivel className="titulo-seccion__titulo">{titulo}</Nivel>
+        {eyebrow && (
+          <p className="titulo-seccion__eyebrow">
+            <ScrambleText text={eyebrow} trigger="view" />
+          </p>
+        )}
+        {/* El texto se desfragmenta al entrar en pantalla y al pasar el
+            cursor. Es la firma del sitio de producción y lo que hace que un
+            título se lea como una señal y no como una etiqueta. El texto
+            real permanece en el DOM: el efecto pinta encima. */}
+        <Nivel className="titulo-seccion__titulo">
+          <ScrambleText text={titulo} trigger="both" />
+        </Nivel>
         {entrada && <p className="titulo-seccion__entrada">{entrada}</p>}
       </header>
     </Reveal>
@@ -176,8 +186,16 @@ function servicioPorFamilia(plan) {
 }
 
 export function TarjetaPlan({ plan, detallada = false, servicio }) {
-  return (
-    <article className={`plan ${plan.destacado ? 'plan--destacado' : ''}`}>
+  /* SpotlightCard y StarBorder son los mismos que usaba la sección de
+     paquetes en producción: el foco que sigue al cursor y el filo de luz
+     que recorre la tarjeta destacada. Sin ellos las tarjetas de precio
+     eran rectángulos, y un precio en un rectángulo se siente barato. */
+  const cuerpo = (
+    <SpotlightCard
+      className={`plan ${plan.destacado ? 'plan--destacado' : ''}`}
+      accent={plan.destacado ? '#0a66ff' : '#4f95ff'}
+      as="article"
+    >
       {plan.destacado && <span className="plan__sello">Más pedido</span>}
 
       <header className="plan__cabeza">
@@ -250,7 +268,14 @@ export function TarjetaPlan({ plan, detallada = false, servicio }) {
       <BotonPrincipal to={contactoCon(servicio ?? servicioPorFamilia(plan))} className="plan__cta">
         {plan.cta}
       </BotonPrincipal>
-    </article>
+    </SpotlightCard>
+  );
+
+  if (!plan.destacado) return cuerpo;
+  return (
+    <StarBorder color="#0a66ff" speed={7} className="plan__marco">
+      {cuerpo}
+    </StarBorder>
   );
 }
 
@@ -334,9 +359,13 @@ export function TarjetaProyecto({ proyecto, ruta }) {
   return (
     <article className="tarjeta-proyecto" style={{ '--acento': proyecto.acento }}>
       <Link to={ruta} className="tarjeta-proyecto__enlace">
-        <div className="tarjeta-proyecto__imagen">
+        {/* GlareHover pasa una lámina de luz por encima al acercarse: es el
+            mismo gesto de metal reflejado del resto de la marca, y aquí
+            además hace que la maqueta parezca una pantalla y no una foto. */}
+        <GlareHover className="tarjeta-proyecto__imagen">
+          <span className="tarjeta-proyecto__marco" aria-hidden="true" />
           <img src={proyecto.imagen} alt={`Maqueta del proyecto ${proyecto.nombre}`} loading="lazy" width="760" height="480" />
-        </div>
+        </GlareHover>
         <div className="tarjeta-proyecto__cuerpo">
           <p className="tarjeta-proyecto__industria">{proyecto.industria}</p>
           <h3 className="tarjeta-proyecto__nombre">{proyecto.nombre}</h3>
@@ -398,19 +427,44 @@ export function TarjetaServicio({ servicio, grande = false }) {
    Cabecera de página interior
    ------------------------------------------------------------ */
 
-export function CabeceraPagina({ migas, eyebrow, titulo, entrada, acciones, acento, imagen }) {
+export function CabeceraPagina({ migas, eyebrow, titulo, entrada, acciones, acento, imagen, maqueta, aparte }) {
   return (
     <header className="cabecera-pagina" style={acento ? { '--acento': acento } : undefined}>
+      {/* La cabecera de producción no era un degradado plano: tenía señal.
+          Esto es la versión barata de eso —una retícula técnica y un barrido
+          de luz, todo en CSS y todo animado con transform— para que las
+          páginas interiores no se sientan de otro sitio. */}
+      <span className="cabecera-pagina__senal" aria-hidden="true">
+        <span className="cabecera-pagina__retic" />
+        <span className="cabecera-pagina__barrido" />
+      </span>
       <Contenedor>
         {migas && <Migas ruta={migas} />}
-        <div className={`cabecera-pagina__reparto ${imagen ? 'cabecera-pagina__reparto--con-imagen' : ''}`}>
+        <div className={`cabecera-pagina__reparto ${imagen || maqueta || aparte ? 'cabecera-pagina__reparto--con-imagen' : ''}`}>
           <div className="cabecera-pagina__texto">
-            {eyebrow && <p className="cabecera-pagina__eyebrow">{eyebrow}</p>}
-            <h1 className="cabecera-pagina__titulo">{titulo}</h1>
+            {eyebrow && (
+              <p className="cabecera-pagina__eyebrow">
+                <ScrambleText text={eyebrow} trigger="view" />
+              </p>
+            )}
+            <h1 className="cabecera-pagina__titulo">
+              <ScrambleText text={titulo} trigger="both" />
+            </h1>
             {entrada && <p className="cabecera-pagina__entrada">{entrada}</p>}
             {acciones && <div className="cabecera-pagina__acciones">{acciones}</div>}
           </div>
-          {imagen && (
+          {/* En las páginas de servicio, en vez de una foto va la maqueta
+              real de ese servicio: la página demuestra de qué habla desde el
+              primer pantallazo. */}
+          {maqueta && (
+            <div className="cabecera-pagina__maqueta" aria-hidden="true">
+              <div className="cabecera-pagina__pantalla">{maqueta}</div>
+            </div>
+          )}
+          {/* Para las páginas sin maqueta: en vez de dejar media cabecera
+              vacía, se pone algo que el visitante quiere ver ahí mismo. */}
+          {aparte && <div className="cabecera-pagina__aparte">{aparte}</div>}
+          {!maqueta && !aparte && imagen && (
             <div className="cabecera-pagina__imagen">
               <img src={imagen} alt="" aria-hidden="true" width="640" height="640" fetchpriority="high" />
             </div>
