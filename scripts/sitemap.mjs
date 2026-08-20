@@ -1,20 +1,25 @@
-/* Sella el <lastmod> del sitemap al terminar el build.
+/**
+ * Genera dist/sitemap.xml con TODAS las rutas del sitio.
  *
- * Estaba escrito a mano, así que en cuanto se publicaba un cambio la fecha
- * empezaba a mentir. Google solo hace caso al lastmod cuando comprueba que es
- * de fiar; una fecha congelada es peor que no ponerla.
+ * Las rutas salen de los mismos módulos que usan el router y el generador de
+ * HTML por página, así que no pueden desincronizarse: si una página existe,
+ * está en el sitemap, y si no existe, no aparece.
  *
- * La fecha sale del último commit, que es cuando cambió el contenido de
- * verdad. Si por lo que sea no hay git a mano —un build desde un tarball, por
- * ejemplo— se usa la fecha del propio build, que es la mejor aproximación que
- * queda. Pase lo que pase esto nunca tumba el build: un sitemap con la fecha
- * de ayer sigue siendo un sitemap válido.
+ * El `lastmod` sale del último commit, que es cuando cambió el contenido de
+ * verdad. Google solo hace caso al lastmod cuando comprueba que es de fiar;
+ * una fecha escrita a mano deja de serlo en cuanto se publica algo.
+ *
+ * Pase lo que pase esto no tumba el build: un sitio sin sitemap se indexa
+ * igual, solo que más despacio.
  */
-import { execFileSync } from 'node:child_process';
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 
-const ARCHIVO = resolve(process.cwd(), 'dist/sitemap.xml');
+import { execFileSync } from 'node:child_process';
+import { existsSync, writeFileSync } from 'node:fs';
+import { join, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+
+const DIST = resolve(process.cwd(), 'dist');
+const importar = (rel) => import(pathToFileURL(resolve(rel)).href);
 
 function fechaDelUltimoCommit() {
   try {
@@ -28,28 +33,53 @@ function fechaDelUltimoCommit() {
   }
 }
 
-function main() {
-  if (!existsSync(ARCHIVO)) {
-    console.warn('[sitemap] no encuentro dist/sitemap.xml; lo dejo como esté');
+async function main() {
+  if (!existsSync(DIST)) {
+    console.warn('[sitemap] no hay dist/; me salto el paso');
     return;
   }
+
+  const { RUTAS, DOMINIO, PRIORIDAD } = await importar('src/config/rutas.js');
+  const { PROYECTOS } = await importar('src/content/proyectos.js');
 
   const origen = fechaDelUltimoCommit();
-  const fecha = origen ?? new Date().toISOString().slice(0, 10);
-  const antes = readFileSync(ARCHIVO, 'utf8');
+  const lastmod = origen ?? new Date().toISOString().slice(0, 10);
 
-  if (!/<lastmod>[^<]*<\/lastmod>/.test(antes)) {
-    console.warn('[sitemap] el sitemap no tiene <lastmod>; no toco nada');
-    return;
-  }
+  const entradas = [
+    ...Object.values(RUTAS).map((path) => ({
+      path,
+      priority: PRIORIDAD[path] ?? '0.6',
+      changefreq: path === RUTAS.inicio ? 'weekly' : 'monthly',
+    })),
+    /* Las fichas de proyecto cambian poco: son casos cerrados. */
+    ...PROYECTOS.map((p) => ({
+      path: `${RUTAS.proyectos}/${p.slug}`,
+      priority: '0.6',
+      changefreq: 'yearly',
+    })),
+  ];
 
-  const despues = antes.replace(/<lastmod>[^<]*<\/lastmod>/g, `<lastmod>${fecha}</lastmod>`);
-  if (despues !== antes) writeFileSync(ARCHIVO, despues);
-  console.log(`[sitemap] lastmod ${fecha} (${origen ? 'último commit' : 'fecha del build'})`);
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${entradas
+  .map(
+    (e) => `  <url>
+    <loc>${DOMINIO}${e.path === '/' ? '/' : e.path}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>${e.changefreq}</changefreq>
+    <priority>${e.priority}</priority>
+  </url>`
+  )
+  .join('\n')}
+</urlset>
+`;
+
+  writeFileSync(join(DIST, 'sitemap.xml'), xml);
+  console.log(`[sitemap] ${entradas.length} URLs · lastmod ${lastmod} (${origen ? 'último commit' : 'fecha del build'})`);
 }
 
 try {
-  main();
+  await main();
 } catch (error) {
-  console.warn('[sitemap] no pude sellar la fecha:', error.message);
+  console.warn('[sitemap] no pude generar el sitemap:', error.message);
 }

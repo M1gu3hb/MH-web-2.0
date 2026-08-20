@@ -17,7 +17,7 @@
  *   · Cero cifras inventadas.
  */
 
-import { RUTAS } from '../config/rutas';
+import { RUTAS } from '../config/rutas.js';
 
 /* ============================================================
    Índice — lo que se pinta en /servicios y en el menú

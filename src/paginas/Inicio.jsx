@@ -34,7 +34,12 @@ import { ANCLAS_HOME } from '../config/pricing';
 import { RUTAS } from '../config/rutas';
 import { CONTACT } from '../content';
 
-const TITLE = 'Morphiq | Páginas web, sistemas y automatización para negocios en CDMX';
+/* El title y la description de la home son los que Miguel eligió para
+   producción; se respetan tal cual para no cambiarle una decisión suya de
+   posicionamiento dentro de un rediseño que es solo una propuesta. Si
+   después del Preview quiere alinearlo con el nuevo H1, se cambia aquí y en
+   index.html, que son los dos únicos sitios donde vive. */
+const TITLE = 'Morphiq | Digitalizamos la operación de tu negocio en CDMX';
 const DESC =
   'Diseño y construyo páginas web, puntos de venta, CRM y automatizaciones para negocios de la Ciudad de México. Páginas desde $2,000 MXN, con precio cerrado antes de empezar.';
 

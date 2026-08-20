@@ -6,7 +6,7 @@
   "description": "Sitio insignia de Astral Morphiq Systems — digitalización de la operación completa de un negocio.",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/sitemap.mjs",
+    "build": "vite build && node scripts/paginas-html.mjs && node scripts/sitemap.mjs",
     "preview": "vite preview",
     "lint": "eslint ."
   },

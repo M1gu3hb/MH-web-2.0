@@ -15,7 +15,7 @@
  * `imagen` apunta a /casos/*.webp, las maquetas horneadas.
  */
 
-import { RUTAS } from '../config/rutas';
+import { RUTAS } from '../config/rutas.js';
 
 export const CATEGORIAS = [
   { id: 'todos', etiqueta: 'Todos' },
