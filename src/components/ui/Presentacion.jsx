@@ -113,11 +113,17 @@ export function Presentacion({ resumen = true, children }) {
           <ArrowUpRight size={15} aria-hidden="true" />
         </a>
 
+        {/* La rúbrica va apilada y con filo azul a la izquierda, exactamente
+            como en el sitio anterior: nombre grande, rol debajo en versalitas
+            espaciadas y el correo abajo con su icono. En una sola fila el rol
+            y el correo competían con el nombre y los tres se leían como una
+            línea de metadatos; apilados, el nombre manda y lo demás lo
+            acompaña. */}
         <div className="presentacion__rubrica">
           <strong>{CONTACT.owner}</strong>
-          <span>{CONTACT.role}</span>
+          <span className="presentacion__rol">{CONTACT.role}</span>
           <a className="presentacion__correo" href={gmailUrl(CONTACT.emailPersonal)} target="_blank" rel="noreferrer">
-            <Mail size={14} aria-hidden="true" />
+            <Mail size={15} aria-hidden="true" />
             {CONTACT.emailPersonal}
           </a>
         </div>

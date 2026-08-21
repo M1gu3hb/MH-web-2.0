@@ -19,7 +19,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Mail, MessageCircle, Phone } from 'lucide-react';
 import { CabeceraPagina, Seccion, TituloSeccion } from '../components/ui';
-import { BordeElectrico, Reveal } from '../components/reactbits';
+import { Reveal } from '../components/reactbits';
 import { Cortina, Lateral } from '../components/motion';
 import { whatsappUrl } from '../lib/whatsapp';
 import { Seo, nodoMigas, nodoPagina } from '../lib/seo';
@@ -125,19 +125,17 @@ export default function Contacto() {
         aparte={
           <div className="contacto-linea">
             <span className="contacto-linea__etiqueta">O escríbeme ahora mismo</span>
-            <BordeElectrico radio={18} caos={0.09} className="contacto-linea__marco">
-              <a
-                className="contacto-linea__wa"
-                href={whatsappUrl('contacto')}
-                target="_blank"
-                rel="noreferrer"
-                onClick={() => trackWhatsApp('contacto')}
-              >
-                <MessageCircle size={22} aria-hidden="true" />
-                <strong>{CONTACT.phone}</strong>
-                <span>WhatsApp directo</span>
-              </a>
-            </BordeElectrico>
+            <a
+              className="contacto-linea__wa"
+              href={whatsappUrl('contacto')}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => trackWhatsApp('contacto')}
+            >
+              <MessageCircle size={22} aria-hidden="true" />
+              <strong>{CONTACT.phone}</strong>
+              <span>WhatsApp directo</span>
+            </a>
             <p className="contacto-linea__nota">
               Contesto yo, no un bot. Normalmente el mismo día.
             </p>
@@ -145,7 +143,11 @@ export default function Contacto() {
         }
       />
 
-      <Seccion>
+      <Seccion className="seccion--formulario">
+        {/* El mismo símbolo translúcido que cierra la home, detrás del
+            formulario: es el bloque donde alguien se para más rato y donde
+            más falta hace que la marca esté presente sin estorbar. */}
+        <img className="formulario__marca" src="/marca/simbolo-v2-lg.webp" alt="" aria-hidden="true" loading="lazy" />
         <div className="contenedor contenedor--amplio">
           <div className="contacto-reparto">
             {/* ---- Formulario ---- */}

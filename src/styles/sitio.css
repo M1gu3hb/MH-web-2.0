@@ -3666,28 +3666,36 @@ iframe {
   transform: translateY(-2px);
 }
 
+/* La rúbrica va apilada y con filo azul a la izquierda, exactamente como en
+   el sitio anterior: nombre grande, rol debajo en versalitas espaciadas y el
+   correo abajo con su icono. En una sola fila, el rol y el correo competían
+   con el nombre y los tres se leían como una línea de metadatos; apilados, el
+   nombre manda y lo demás lo acompaña. */
 .presentacion__rubrica {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--sp-2) var(--sp-4);
-  margin-top: var(--sp-6);
-  padding-top: var(--sp-5);
-  border-top: 1px solid var(--line-soft);
+  display: grid;
+  justify-items: start;
+  gap: var(--sp-2);
+  margin-top: var(--sp-7);
+  padding-left: clamp(var(--sp-4), 1.6vw, var(--sp-5));
+  border-left: 2px solid var(--accent-brand);
 }
 
 .presentacion__rubrica strong {
   color: var(--ink-strong);
   font-family: var(--font-display);
-  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  font-size: clamp(1.25rem, 1.7vw, 1.6rem);
   font-weight: var(--w-bold);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
 }
 
-.presentacion__rubrica > span {
+.presentacion__rol {
   color: var(--ink-muted);
-  font-size: max(0.82rem, 12.5px);
-  letter-spacing: 0.02em;
+  font-family: var(--font-display);
+  font-size: max(0.76rem, 12.5px);
+  font-weight: var(--w-label);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .presentacion__correo {
@@ -3699,7 +3707,7 @@ iframe {
      enlaces en línea aquí no aplica. */
   min-height: 44px;
   color: var(--accent-pos);
-  font-size: max(0.86rem, 12.5px);
+  font-size: max(0.95rem, 12.5px);
   text-decoration: none;
   text-underline-offset: 3px;
 }
@@ -3744,4 +3752,58 @@ iframe {
 
 .cabecera-pagina__acento {
   color: var(--acento, var(--accent-pos));
+}
+
+
+/* La barra de progreso de scroll se retira del Layout. Se anula aquí por si
+   alguna regla antigua sigue pintándola. */
+.scroll-meter {
+  display: none !important;
+}
+
+
+/* ---- El símbolo detrás del formulario de contacto ---- */
+.seccion--formulario {
+  position: relative;
+  overflow: hidden;
+}
+
+.formulario__marca {
+  position: absolute;
+  z-index: 0;
+  bottom: -12%;
+  left: clamp(-180px, -8vw, -60px);
+  width: clamp(300px, 38vw, 620px);
+  height: auto;
+  opacity: 0.09;
+  filter: saturate(0.7);
+  pointer-events: none;
+  user-select: none;
+}
+
+.seccion--formulario .contenedor--amplio {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 900px) {
+  .formulario__marca {
+    left: -30%;
+    bottom: auto;
+    top: 6%;
+    width: 86vw;
+    opacity: 0.07;
+  }
+}
+
+/* El número de WhatsApp de la cabecera pierde el arco eléctrico. Se queda
+   con su marco, su halo al pasar el cursor y el azul del icono, que ya
+   bastan para que se lea como lo que es: la vía rápida. */
+.contacto-linea__wa {
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-brand) 40%, transparent);
+}
+
+.contacto-linea__wa:hover,
+.contacto-linea__wa:focus-visible {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-brand) 18%, transparent);
 }

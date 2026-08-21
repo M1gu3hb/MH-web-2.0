@@ -2,9 +2,13 @@
  * Envoltorio común de todas las páginas.
  *
  * Se queda con lo bueno del sitio de una sola página —el arranque de marca,
- * el medidor de scroll, el grano, el scroll suave— y le quita lo que solo
- * tenía sentido con un único recorrido: la coreografía de la laptop y los
- * tramos negros.
+ * el grano, el scroll suave— y le quita lo que solo tenía sentido con un
+ * único recorrido: la coreografía de la laptop y los tramos negros.
+ *
+ * Fuera también la barra de progreso de scroll que cruzaba la parte de
+ * arriba. En un sitio de una sola página larga contaba algo —cuánto queda—;
+ * en uno multipágina, donde cada ruta es corta, no cuenta nada y se lee como
+ * un adorno de plantilla.
  *
  * El arranque se ve UNA vez por sesión, no en cada navegación. Volver a
  * ponerle una pantalla de carga a alguien que solo hizo clic en «Precios»
@@ -14,7 +18,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Outlet, ScrollRestoration, useLocation } from 'react-router-dom';
 import Lenis from 'lenis';
-import { AnimatePresence, motion as Motion, useScroll, useSpring } from 'motion/react';
+import { AnimatePresence, motion as Motion } from 'motion/react';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 
@@ -76,8 +80,6 @@ export function Layout() {
   const [arrancando, setArrancando] = useState(
     () => pathname === '/' && !sinMovimientoInicial() && !yaArranco()
   );
-  const { scrollYProgress } = useScroll();
-  const medidor = useSpring(scrollYProgress, { stiffness: 140, damping: 26, mass: 0.3 });
 
   const terminarArranque = useCallback(() => {
     try {
@@ -110,7 +112,6 @@ export function Layout() {
       <AnimatePresence>{arrancando && <BootLoader onDone={terminarArranque} />}</AnimatePresence>
 
       <div className="app-shell" inert={arrancando ? '' : undefined}>
-        <Motion.div className="scroll-meter" style={{ scaleX: medidor }} aria-hidden="true" />
         <div className="paper-grain" aria-hidden="true" />
 
         <Navegacion />
