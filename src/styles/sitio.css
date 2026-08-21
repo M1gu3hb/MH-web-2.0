@@ -3579,7 +3579,7 @@ iframe {
 
 .presentacion__firma small {
   color: var(--ink-muted);
-  font-size: max(0.68rem, 11px);
+  font-size: max(0.78rem, 12.5px);
   font-weight: 780;
   letter-spacing: 0.14em;
   line-height: 1.6;
@@ -3694,6 +3694,10 @@ iframe {
   display: inline-flex;
   align-items: center;
   gap: var(--sp-2);
+  /* En táctil el correo es un enlace suelto, no una palabra dentro de una
+     frase, así que le toca objetivo grande: la excepción de la norma para
+     enlaces en línea aquí no aplica. */
+  min-height: 44px;
   color: var(--accent-pos);
   font-size: max(0.86rem, 12.5px);
   text-decoration: none;
