@@ -87,11 +87,14 @@ export function PortadaHero() {
                 caben una franja y media, y el fondo se lee como un corte duro
                 azul contra negro, no como un fondo.
 
-                Girándolas 90° ese mismo recorrido se reparte sobre el ALTO,
-                donde en un teléfono sí hay sitio: entran ocho o nueve. Además
-                son más finas y más numerosas que en el ejemplo, con menos
-                grano y más escala, para que se lean como luz y no como
-                bandas. Comprobado en 360, 390, 768 y 834 px.
+                Girándolas ese mismo recorrido se reparte sobre el ALTO,
+                donde en un teléfono sí hay sitio. A 45° cruzan la pantalla en
+                diagonal, que es como caían en el sitio anterior y lo que se
+                pidió: en vertical una diagonal recorre más pantalla que una
+                horizontal, así que se ven más franjas y ninguna parece un
+                borde. Además son más finas y más numerosas que en el ejemplo,
+                con menos grano y más escala, para que se lean como luz y no
+                como bandas. Comprobado en 360, 390, 768 y 834 px.
                 ------------------------------------------------------------ */}
             <Beams
               beamWidth={1.2}
@@ -101,7 +104,7 @@ export function PortadaHero() {
               speed={2}
               noiseIntensity={1}
               scale={0.32}
-              rotation={90}
+              rotation={45}
               maxDpr={1.5}
               fondo="#06080d"
               sinMovimiento={sinMovimiento}

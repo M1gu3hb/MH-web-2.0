@@ -4645,3 +4645,55 @@ main#contenido > * {
 .portada__fondo--beams::before {
   content: none;
 }
+
+/* ------------------------------------------------------------
+   EL HERO EN TELÉFONO: EL SÍMBOLO ABRE, EL TITULAR REMATA
+   ------------------------------------------------------------
+   Hasta aquí el teléfono heredaba el orden de la tableta —titular, texto,
+   acción, símbolo— que es el de escritorio puesto en una columna. Funciona,
+   pero no está pensado para vertical: el símbolo, que es la señal de marca,
+   caía por debajo del pliegue y lo primero que se veía era tipografía.
+
+   En vertical hay una cosa que sobra y otra que falta: sobra alto y falta
+   ancho. Así que el símbolo sube a abrir —centrado, grande, que es lo que un
+   formato alto pide— y el titular entra debajo con más cuerpo del que podía
+   tener compitiendo por el ancho con nada. El resto del orden no se toca.
+
+   Solo por debajo de 700 px. En tableta el reparto anterior está bien: ahí sí
+   hay ancho, y mover el símbolo arriba dejaría el titular colgando.
+   ------------------------------------------------------------ */
+@media (max-width: 700px) {
+  .portada__reparto {
+    grid-template-areas:
+      'marca'
+      'titular'
+      'claim'
+      'acciones'
+      'ancla'
+      'frentes'
+      'meta';
+  }
+
+  /* Abre la composición, así que puede con más tamaño que cuando iba en
+     medio de la columna. El tope en vw evita que en un teléfono estrecho se
+     coma la pantalla entera antes de que se lea una sola palabra. */
+  .portada__marca {
+    max-width: min(70vw, 310px);
+    margin-bottom: var(--sp-2);
+  }
+
+  /* El titular gana cuerpo. El tope está medido, no elegido: «DIGITALIZAMOS»
+     es la palabra más larga y a más de 14cqw se sale de la caja en un
+     teléfono de 360 px. */
+  .portada__titular {
+    font-size: clamp(2.55rem, 14cqw, 4.6rem);
+  }
+}
+
+/* Un teléfono estrecho no aguanta el símbolo a 310 px y además el titular
+   grande: se come el pliegue entero. */
+@media (max-width: 420px) {
+  .portada__marca {
+    max-width: min(64vw, 250px);
+  }
+}
