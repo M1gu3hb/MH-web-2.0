@@ -3,11 +3,12 @@
  * PORTADA TIPOGRÁFICA DE PROYECTO
  * ============================================================
  *
- * Los seis proyectos de cliente tienen maqueta horneada: son sitios, y de un
- * sitio se puede enseñar una pantalla. Los productos propios —una app de
+ * Casi todos los encargos de cliente tienen maqueta horneada: son sitios, y de
+ * un sitio se puede enseñar una pantalla. Los productos propios —una app de
  * escritorio, un motor en Rust, una librería de interfaz— no tienen ninguna
  * pantalla que valga como retrato: enseñar una ventana de terminal o un panel
- * de ajustes no dice nada de lo que el proyecto es.
+ * de ajustes no dice nada de lo que el proyecto es. Y algún encargo tampoco la
+ * tiene todavía, simplemente porque no se ha horneado.
  *
  * Así que en vez de fingir una captura, llevan una portada tipográfica: la
  * inicial del proyecto enorme, su color de identidad, y la pila técnica
@@ -16,6 +17,11 @@
  * lo que se construyó para alguien y lo que es de la casa.
  *
  * Todo es CSS y texto: ni una imagen que descargar, ni una petición más.
+ *
+ * Lo que NO lleva es el tipo de proyecto. Lo llevaba, y quedaba escrito dos
+ * veces en la misma tarjeta: una dentro de la portada y otra justo debajo del
+ * nombre. La pila técnica ya dice de qué está hecho; repetir la etiqueta solo
+ * hacía ruido.
  */
 
 export function PortadaProyecto({ proyecto }) {
@@ -31,7 +37,6 @@ export function PortadaProyecto({ proyecto }) {
           <span key={t}>{t}</span>
         ))}
       </span>
-      <span className="portada-proyecto__pie">{proyecto.tipo}</span>
     </span>
   );
 }

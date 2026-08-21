@@ -3861,14 +3861,34 @@ main#contenido > * {
   }
 }
 
-/* Tableta: el ciclo se simplifica a dos anchos —a lo ancho o a media
-   columna—, que es lo que cabe sin que el texto se estrangule. */
+/* ------------------------------------------------------------
+   TABLETA: EL CICLO NO CABE, Y FORZARLO DEJA AGUJEROS
+   ------------------------------------------------------------
+   El ciclo de doce columnas cierra sus filas exactamente —12, 7+5, 5+7,
+   4+4+4—, pero al traducirlo a dos columnas eso deja de cumplirse: entre una
+   pieza a lo ancho y la siguiente hay un número impar de piezas, así que una
+   se queda sola con media fila vacía al lado. En una retícula editorial un
+   hueco al final se lee como respiración; un hueco en medio se lee como que
+   algo se rompió.
+
+   Así que en tableta el reparto es otro y no depende del ciclo: la primera
+   pieza se lleva la fila entera —sigue siendo la protagonista— y el resto va
+   de dos en dos. La regla del final cubre la paridad: si al repartir sobra
+   una, esa se lleva la fila entera también, y da un cierre en vez de un
+   agujero. Funciona con cualquier número de piezas, que es lo que importa
+   porque el filtro cambia cuántas hay.
+   ------------------------------------------------------------ */
 @media (min-width: 700px) and (max-width: 1023px) {
   .rejilla-proyectos--indice {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .rejilla-proyectos--indice > .rejilla-proyectos__hueco[style*='--span: 12'],
-  .rejilla-proyectos--indice > .rejilla-proyectos__hueco[style*='--span: 7'] {
+
+  .rejilla-proyectos--indice > .rejilla-proyectos__hueco {
+    grid-column: span 1;
+  }
+
+  .rejilla-proyectos--indice > .rejilla-proyectos__hueco:first-child,
+  .rejilla-proyectos--indice > .rejilla-proyectos__hueco:last-child:nth-child(even) {
     grid-column: span 2;
   }
 }
@@ -3962,7 +3982,11 @@ main#contenido > * {
   position: relative;
   display: block;
   width: 100%;
+  /* La proporción es el suelo; el alto manda cuando la pieza se estira para
+     igualar a su vecina de fila, y entonces la portada llena la caja en vez
+     de dejar una franja muerta debajo. */
   aspect-ratio: 760 / 480;
+  height: 100%;
   overflow: hidden;
   background:
     radial-gradient(120% 100% at 80% 12%, color-mix(in srgb, var(--acento) 30%, transparent), transparent 62%),
@@ -3997,7 +4021,7 @@ main#contenido > * {
 .portada-proyecto__pila {
   position: absolute;
   right: clamp(16px, 5%, 34px);
-  bottom: clamp(38px, 16%, 66px);
+  bottom: clamp(16px, 6%, 34px);
   display: grid;
   justify-items: end;
   gap: 5px;
@@ -4014,18 +4038,6 @@ main#contenido > * {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-}
-
-.portada-proyecto__pie {
-  position: absolute;
-  left: clamp(18px, 5%, 44px);
-  bottom: clamp(14px, 6%, 26px);
-  color: color-mix(in srgb, var(--acento) 62%, #eef1f6);
-  font-family: var(--font-display);
-  font-size: max(0.68rem, 11px);
-  font-weight: var(--w-label);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
 }
 
 .tarjeta-proyecto__imagen {
@@ -4080,4 +4092,26 @@ main#contenido > * {
 .footer__casos a:hover,
 .footer__casos a:focus-visible {
   color: var(--accent-brand);
+}
+
+/* ------------------------------------------------------------
+   EL AIRE SOBRANTE SE LO QUEDA LA MAQUETA, NO EL TEXTO
+   ------------------------------------------------------------
+   Las piezas de una misma fila comparten altura, así que la más corta se
+   estira hasta igualar a su vecina. Con el cuerpo en `flex: 1`, ese estirón
+   se lo comía el bloque de texto: el resumen quedaba arriba, «Ver el caso»
+   pegado al borde de abajo y doscientos píxeles de nada en medio.
+
+   Ahora crece la imagen y el texto conserva su altura natural. La proporción
+   16/10 pasa a ser un suelo —`flex-shrink: 0` impide que se comprima por
+   debajo— y todo lo que sobre va a la maqueta, que en un portafolio es
+   justo donde quieres que vaya.
+   ------------------------------------------------------------ */
+
+.rejilla-proyectos--indice .tarjeta-proyecto__imagen {
+  flex: 1 0 auto;
+}
+
+.rejilla-proyectos--indice .tarjeta-proyecto__cuerpo {
+  flex: 0 0 auto;
 }
