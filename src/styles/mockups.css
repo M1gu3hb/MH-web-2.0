@@ -1871,3 +1871,1693 @@
 .demo--pos .pos-body {
   align-content: start;
 }
+
+/* ============================================================
+   Ilustraciones de caso: vero, nfc, académico, morphiq ui, qyro
+   ============================================================ */
+
+/* ---- VERO SEGUROS: ella edita su propio sitio -------------- */
+.project-ui--vero {
+  display: grid;
+  grid-template-rows: 52px minmax(0, 1fr);
+  padding: 0;
+  background: var(--paper-bright);
+  color: var(--ink);
+}
+
+/* Barra del administrador. Oscura a propósito: es el marco, no la página. */
+.vero-admin {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 18px;
+  background: var(--ink-soft);
+  color: var(--paper-bright);
+}
+
+.vero-admin b {
+  font-size: 0.95rem;
+  font-weight: 720;
+}
+
+.vero-admin em {
+  margin-right: auto;
+  color: rgba(242, 239, 230, 0.5);
+  font-size: 0.85rem;
+  font-style: normal;
+  font-weight: 620;
+}
+
+.vero-admin__tool {
+  display: grid;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(242, 239, 230, 0.13);
+  color: var(--paper-bright);
+}
+
+.vero-admin__tool svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.vero-admin__publicar {
+  padding: 9px 16px;
+  border-radius: 9px;
+  background: var(--blue);
+  box-shadow: 0 3px 0 rgba(21, 22, 20, 0.45);
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 760;
+}
+
+/* El sitio público. */
+.vero-page {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 0;
+  background:
+    radial-gradient(120% 80% at 88% 100%, rgba(10, 102, 255, 0.15), transparent 62%),
+    var(--paper-bright);
+}
+
+.vero-nav {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 17px 44px;
+  border-bottom: 1px solid rgba(21, 22, 20, 0.1);
+}
+
+/* Monograma abstracto: la agente es anónima. */
+.vero-mark {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  margin-right: auto;
+  border-radius: 11px;
+  background: var(--blue);
+  color: #fff;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 760;
+}
+
+.vero-nav em {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-style: normal;
+  font-weight: 640;
+}
+
+.vero-hero {
+  display: grid;
+  align-content: center;
+  gap: 26px;
+  padding: 34px 44px 40px;
+}
+
+.vero-kicker {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+/* El marco de edición encima del titular de la página. */
+.vero-edit {
+  position: relative;
+  margin-top: 14px;
+  padding: 20px 22px 22px;
+  border: 2px solid var(--blue);
+  border-radius: 12px;
+  background: rgba(10, 102, 255, 0.06);
+  box-shadow: 0 0 0 5px rgba(10, 102, 255, 0.12);
+}
+
+.vero-edit__tab {
+  position: absolute;
+  top: 0;
+  left: -2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 11px;
+  border-radius: 9px 9px 0 0;
+  background: var(--blue);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 750;
+  transform: translateY(-100%);
+}
+
+.vero-edit__tab i {
+  width: 13px;
+  font-size: 0.8rem;
+  font-style: normal;
+  opacity: 0.85;
+  text-align: center;
+}
+
+.vero-edit__tab i:first-of-type {
+  margin-left: 3px;
+  padding-left: 11px;
+  border-left: 1px solid rgba(255, 255, 255, 0.42);
+  width: 24px;
+  font-weight: 850;
+}
+
+.vero-edit__tab i:nth-of-type(2) { font-style: italic; }
+.vero-edit__tab i:nth-of-type(3) { text-decoration: underline; }
+
+.vero-titular {
+  display: block;
+  font-family: var(--display);
+  font-size: 3rem;
+  font-weight: 720;
+  letter-spacing: -0.05em;
+  line-height: 1.02;
+}
+
+/* La selección de texto: sin padding real, para no mover la línea. */
+.vero-sel {
+  border-radius: 2px;
+  background: rgba(10, 102, 255, 0.26);
+  box-shadow: 0 0 0 3px rgba(10, 102, 255, 0.26);
+}
+
+/* El cursor de texto del ratón, dentro de la frase seleccionada. */
+.vero-ibeam {
+  position: absolute;
+  top: 58%;
+  left: 44%;
+  z-index: 3;
+  width: 2px;
+  height: 22px;
+  border-radius: 1px;
+  background: var(--ink);
+  box-shadow:
+    0 0 0 1.5px rgba(250, 248, 241, 0.95),
+    0 3px 7px rgba(21, 22, 20, 0.3);
+}
+
+.vero-ibeam::before,
+.vero-ibeam::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 11px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--ink);
+  box-shadow: 0 0 0 1.5px rgba(250, 248, 241, 0.95);
+  transform: translateX(-50%);
+}
+
+.vero-ibeam::before { top: -1px; }
+.vero-ibeam::after { bottom: -1px; }
+
+.vero-guardado {
+  position: absolute;
+  right: 16px;
+  bottom: 0;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  background: var(--ink);
+  box-shadow: 0 4px 12px rgba(21, 22, 20, 0.28);
+  color: var(--paper-bright);
+  font-size: 0.95rem;
+  font-weight: 720;
+  transform: translateY(50%);
+}
+
+.vero-guardado i {
+  color: var(--lime);
+  font-style: normal;
+  font-weight: 850;
+}
+
+/* El siguiente bloque, con su contorno punteado: también se edita. */
+.vero-lead {
+  position: relative;
+  justify-self: start;
+  padding: 12px 15px;
+  border: 1px dashed rgba(21, 22, 20, 0.22);
+  border-radius: 9px;
+  color: var(--ink-soft);
+  font-size: 1.06rem;
+  font-weight: 560;
+  line-height: 1.5;
+}
+
+.vero-ramos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+}
+
+.vero-ramos span {
+  padding: 10px 15px;
+  border: 1px solid rgba(21, 22, 20, 0.16);
+  border-radius: 999px;
+  background: var(--paper);
+  font-size: 0.98rem;
+  font-weight: 640;
+}
+
+.vero-ramos span.on {
+  border-color: var(--blue);
+  background: rgba(10, 102, 255, 0.16);
+  font-weight: 760;
+}
+
+.vero-ramos b {
+  padding: 10px 12px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 780;
+}
+
+.vero-cta {
+  justify-self: start;
+  padding: 15px 22px;
+  border-radius: 11px;
+  background: var(--ink);
+  box-shadow: 0 5px 0 rgba(21, 22, 20, 0.3);
+  color: var(--paper-bright);
+  font-size: 1.02rem;
+  font-weight: 760;
+}
+
+@media (max-width: 560px) {
+  .vero-nav,
+  .vero-hero { padding-right: 22px; padding-left: 22px; }
+  .vero-admin em,
+  .vero-nav em:nth-of-type(2),
+  .vero-ramos b { display: none; }
+  .vero-titular { font-size: 2rem; }
+  .vero-ibeam { top: 56%; left: 52%; }
+}
+
+/* ---- NFC MANAGER: un toque cambia el modo de la PC --------- */
+.project-ui--nfc {
+  display: grid;
+  grid-template-rows: minmax(0, 1.22fr) minmax(0, 1fr);
+  gap: 16px;
+  padding: 22px;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* La escena física: escritorio a oscuras, teléfono y etiqueta. */
+.nfc-scene {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  background:
+    radial-gradient(64% 80% at 25% 74%, rgba(176, 108, 255, 0.36), transparent 62%),
+    radial-gradient(120% 130% at 100% 0%, rgba(176, 108, 255, 0.12), transparent 58%),
+    var(--ink);
+  color: var(--paper-bright);
+}
+
+.nfc-head {
+  position: absolute;
+  top: 6%;
+  right: 5%;
+  width: 48%;
+  text-align: right;
+}
+
+.nfc-head small {
+  display: block;
+  color: rgba(250, 248, 241, 0.5);
+  font-family: ui-monospace, monospace;
+  font-size: 0.52rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+.nfc-head strong {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--display);
+  font-size: 2.1rem;
+  font-weight: 700;
+  letter-spacing: -0.055em;
+  line-height: 0.93;
+}
+
+.nfc-head strong em {
+  color: #b06cff;
+  font-style: normal;
+}
+
+.nfc-note {
+  position: absolute;
+  right: 5%;
+  bottom: 9%;
+  width: 46%;
+  margin: 0;
+  color: rgba(250, 248, 241, 0.55);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  text-align: right;
+}
+
+/* Cúmulo del toque: coordenadas en píxeles dentro de una caja fija,
+   así el punto de contacto no se mueve por más que cambie el hueco. */
+.nfc-tap {
+  position: absolute;
+  left: 4%;
+  bottom: 0;
+  width: 340px;
+  height: 300px;
+}
+
+.nfc-wave {
+  position: absolute;
+  z-index: 1;
+  top: 25px;
+  left: 131px;
+  width: 260px;
+  height: 260px;
+  overflow: visible;
+  fill: none;
+  stroke: #b06cff;
+  stroke-linecap: round;
+}
+
+.nfc-wave path { stroke-width: 5.6; }
+.nfc-wave path:nth-of-type(2) { stroke-width: 5.1; opacity: 0.74; }
+.nfc-wave path:nth-of-type(3) { stroke-width: 4.6; opacity: 0.5; }
+.nfc-wave path:nth-of-type(4) { stroke-width: 4.1; opacity: 0.3; }
+
+.nfc-wave__dot { fill: #b06cff; stroke: none; }
+
+.nfc-wave__ping {
+  fill: none;
+  stroke: #b06cff;
+  stroke-width: 3;
+  opacity: 0.55;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: nfc-ping 2.6s ease-out infinite;
+}
+
+/* Primer fotograma = el bueno: opacidad 0.55 y escala 1. */
+@keyframes nfc-ping {
+  0% { opacity: 0.55; transform: scale(1); }
+  100% { opacity: 0; transform: scale(2.7); }
+}
+
+.nfc-phone {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  width: 150px;
+  height: 250px;
+  border: 1px solid rgba(250, 248, 241, 0.22);
+  border-radius: 22px;
+  background: linear-gradient(160deg, var(--ink-soft), var(--ink));
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.45);
+  transform: rotate(-10deg);
+}
+
+.nfc-phone > i {
+  position: absolute;
+  z-index: 2;
+  top: 16px;
+  left: 50%;
+  width: 36px;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(250, 248, 241, 0.25);
+  transform: translateX(-50%);
+}
+
+.nfc-phone__screen {
+  position: absolute;
+  inset: 9px;
+  display: grid;
+  align-content: end;
+  gap: 5px;
+  overflow: hidden;
+  padding: 11px;
+  border-radius: 15px;
+  background:
+    radial-gradient(95% 65% at 72% 100%, rgba(176, 108, 255, 0.6), transparent 70%),
+    var(--ink);
+}
+
+.nfc-phone__screen small {
+  color: #b06cff;
+  font-family: ui-monospace, monospace;
+  font-size: 0.46rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.nfc-phone__screen b {
+  color: var(--paper-bright);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.nfc-tag {
+  position: absolute;
+  z-index: 2;
+  top: 196px;
+  left: 176px;
+  display: grid;
+  width: 92px;
+  height: 92px;
+  place-content: center;
+  justify-items: center;
+  gap: 7px;
+  border: 1px solid rgba(21, 22, 20, 0.3);
+  border-radius: 16px;
+  background: var(--paper);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.42);
+  color: var(--ink);
+  transform: rotate(-10deg);
+}
+
+.nfc-tag::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px dashed rgba(176, 108, 255, 0.65);
+  border-radius: 11px;
+}
+
+.nfc-tag__glyph {
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: #b06cff;
+  stroke-width: 2.1;
+  stroke-linecap: round;
+}
+
+.nfc-tag span {
+  font-family: ui-monospace, monospace;
+  font-size: 0.54rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+/* La tarjeta del modo, ya en la computadora. */
+.nfc-mode {
+  display: grid;
+  align-content: space-between;
+  gap: 15px;
+  padding: 19px 22px 20px;
+  border: 1px solid rgba(21, 22, 20, 0.14);
+  border-radius: 14px;
+  background: var(--paper-bright);
+  box-shadow: 0 3px 0 rgba(21, 22, 20, 0.12);
+}
+
+.nfc-mode__head {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(21, 22, 20, 0.12);
+}
+
+.nfc-mode__head i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #b06cff;
+  box-shadow: 0 0 0 4px rgba(176, 108, 255, 0.18);
+}
+
+.nfc-mode__head strong {
+  font-family: var(--display);
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+
+.nfc-mode__head em {
+  margin-left: auto;
+  padding: 5px 9px;
+  border: 1px solid rgba(176, 108, 255, 0.4);
+  border-radius: 6px;
+  background: rgba(176, 108, 255, 0.13);
+  color: #8a3df0;
+  font-family: ui-monospace, monospace;
+  font-size: 0.52rem;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.nfc-mode__cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: 20px;
+}
+
+.nfc-col { min-width: 0; }
+
+.nfc-col--out {
+  padding-left: 20px;
+  border-left: 1px dashed rgba(21, 22, 20, 0.2);
+}
+
+.nfc-col__title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.nfc-col__title b {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.nfc-col__title small {
+  color: var(--muted);
+  font-family: ui-monospace, monospace;
+  font-size: 0.52rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.nfc-col ul {
+  display: grid;
+  gap: 7px;
+  margin: 11px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nfc-col li {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.nfc-col li i {
+  color: #8a3df0;
+  font-family: ui-monospace, monospace;
+  font-size: 0.85rem;
+  font-style: normal;
+  font-weight: 800;
+  text-align: center;
+}
+
+.nfc-col li em { font-style: normal; }
+
+.nfc-col--out li i { color: var(--coral); }
+
+.nfc-col--out li em {
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-color: rgba(255, 104, 79, 0.75);
+  text-decoration-thickness: 1.5px;
+}
+
+/* El matiz que cuenta el producto entero: lo de antes no se toca. */
+.nfc-keep {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 11px 14px;
+  border: 1px dashed rgba(54, 215, 209, 0.6);
+  border-radius: 10px;
+  background: rgba(54, 215, 209, 0.12);
+}
+
+.nfc-keep i {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--aqua);
+  box-shadow: 0 0 0 4px rgba(54, 215, 209, 0.2);
+}
+
+.nfc-keep span {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.nfc-keep b { font-weight: 800; }
+
+.nfc-keep em {
+  margin-left: auto;
+  flex: none;
+  color: #1c8b87;
+  font-family: ui-monospace, monospace;
+  font-size: 0.52rem;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+@media (max-width: 560px) {
+  .nfc-head { position: static; width: auto; padding: 18px 18px 0; text-align: left; }
+  .nfc-note { display: none; }
+  .nfc-tap { left: 2%; transform: scale(0.86); transform-origin: left bottom; }
+  .nfc-mode__cols { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .nfc-col--out { padding: 14px 0 0; border-left: 0; border-top: 1px dashed rgba(21, 22, 20, 0.2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nfc-wave__ping { animation: none; }
+}
+
+/* ---- Portafolio académico: el dato editado ES el titular publicado ---- */
+.project-ui--academico {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  padding: 26px;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* ---- Arriba: el archivo de datos ---- */
+.aca-file {
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--ink);
+  box-shadow: 0 8px 0 rgba(21, 22, 20, 0.22);
+}
+
+.aca-file__bar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(242, 239, 230, 0.12);
+  background: var(--ink-soft);
+}
+
+.aca-file__bar > i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #7ee0a1;
+}
+
+.aca-file__bar > span {
+  overflow: hidden;
+  color: rgba(242, 239, 230, 0.8);
+  font-family: ui-monospace, monospace;
+  font-size: 0.85rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aca-file__bar > em {
+  padding: 5px 10px;
+  border: 1px solid rgba(126, 224, 161, 0.55);
+  border-radius: 6px;
+  color: #7ee0a1;
+  font-family: ui-monospace, monospace;
+  font-size: 0.6rem;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.aca-code {
+  padding: 14px 22px 16px;
+  font-family: ui-monospace, monospace;
+  font-size: 0.92rem;
+  line-height: 1.72;
+}
+
+.aca-code p {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  margin: 0;
+  color: rgba(242, 239, 230, 0.5);
+  white-space: nowrap;
+}
+
+.aca-code p > i {
+  color: rgba(242, 239, 230, 0.26);
+  font-size: 0.8rem;
+  font-style: normal;
+}
+
+/* Sangrías del archivo, en anchos de carácter de la monoespaciada. */
+.aca-i1 > span { padding-left: 2ch; }
+.aca-i2 > span { padding-left: 4ch; }
+
+.aca-code b {
+  color: var(--aqua);
+  font-weight: 600;
+}
+
+.aca-code em {
+  color: rgba(242, 239, 230, 0.6);
+  font-style: normal;
+}
+
+.aca-code small {
+  color: rgba(242, 239, 230, 0.44);
+  font-size: inherit;
+}
+
+/* La línea recién tocada: es el único verde del archivo. */
+.aca-code p.aca-on {
+  margin: 4px -14px;
+  padding: 4px 14px;
+  border-radius: 0 8px 8px 0;
+  background: rgba(126, 224, 161, 0.15);
+  box-shadow: inset 3px 0 0 #7ee0a1;
+}
+
+.aca-on > i { color: rgba(126, 224, 161, 0.75); }
+
+.aca-on em {
+  color: #7ee0a1;
+  font-weight: 700;
+}
+
+.aca-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 3px;
+  background: #7ee0a1;
+  vertical-align: -0.2em;
+  animation: aca-caret 1.1s steps(1) infinite;
+}
+
+/* Empieza encendido: el primer fotograma es el que se fotografía. */
+@keyframes aca-caret {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* ---- El hilo entre las dos mitades ---- */
+.aca-link {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 74px;
+  padding-left: 96px;
+}
+
+.aca-link svg {
+  flex: none;
+  width: 24px;
+  height: 66px;
+}
+
+.aca-link path {
+  fill: none;
+  stroke: #7ee0a1;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.aca-pill {
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: #7ee0a1;
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+/* ---- Abajo: la página ya publicada ---- */
+.aca-page {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(21, 22, 20, 0.18);
+  border-radius: 12px;
+  background: var(--paper-bright);
+  box-shadow: 0 8px 0 rgba(21, 22, 20, 0.14);
+}
+
+.aca-page__bar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(21, 22, 20, 0.12);
+  background: rgba(21, 22, 20, 0.04);
+}
+
+.aca-page__bar > i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #7ee0a1;
+  box-shadow: 0 0 0 3px rgba(126, 224, 161, 0.32);
+}
+
+.aca-page__bar > span {
+  overflow: hidden;
+  color: var(--muted);
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aca-page__bar > em {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(126, 224, 161, 0.42);
+  color: var(--ink-soft);
+  font-family: ui-monospace, monospace;
+  font-size: 0.6rem;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.aca-page__body {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: 22px 26px 20px;
+}
+
+.aca-page__body > small {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 820;
+  letter-spacing: 0.17em;
+}
+
+.aca-page__body h4 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.9rem;
+  font-weight: 720;
+  letter-spacing: -0.045em;
+  line-height: 1.14;
+}
+
+/* El mismo subrayado menta que marca la línea del archivo. */
+.aca-page__body h4 strong {
+  padding: 0 0.08em;
+  background: linear-gradient(rgba(126, 224, 161, 0.55), rgba(126, 224, 161, 0.55)) 0 84% / 100% 0.34em no-repeat;
+  font-weight: inherit;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.aca-meta {
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.aca-rest {
+  display: grid;
+  gap: 10px;
+  margin-top: 6px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(21, 22, 20, 0.12);
+}
+
+.aca-rest > span {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: baseline;
+  color: var(--muted);
+}
+
+.aca-rest b {
+  color: rgba(95, 96, 89, 0.75);
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.aca-rest i {
+  overflow: hidden;
+  font-size: 0.95rem;
+  font-style: normal;
+  font-weight: 620;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .project-ui--academico { padding: 16px; }
+  .aca-code { padding: 12px 14px; font-size: 0.72rem; }
+  .aca-code p { grid-template-columns: 22px minmax(0, 1fr); }
+  .aca-link { height: 58px; padding-left: 48px; }
+  .aca-link svg { height: 50px; }
+  .aca-pill { font-size: 0.78rem; white-space: normal; }
+  .aca-page__body h4 { font-size: 1.35rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aca-caret { animation: none; }
+}
+
+/* ---- MORPHIQ UI: el mismo componente en cuatro materiales -------------
+   Un solo botón repetido cuatro veces. Lo único que cambia entre ellos es
+   el acabado, así que el acabado está dibujado de verdad: clay con sombra
+   interior y nada de brillo, glass translúcido sobre manchas de color,
+   skeuo con bisel y golpe duro abajo, adaptive plano cruzando la costura
+   entre el tema claro y el oscuro. Dibujo quieto: sin animaciones. */
+
+.project-ui--morphiqui {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 18px;
+  padding: 26px;
+  background:
+    radial-gradient(90% 70% at 84% 2%, rgba(255, 61, 129, 0.26), transparent 62%),
+    radial-gradient(80% 60% at 6% 100%, rgba(94, 99, 255, 0.16), transparent 60%),
+    var(--ink);
+  color: var(--paper-bright);
+}
+
+/* ---- Cabecera ---- */
+.mui-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mui-head__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff3d81;
+  box-shadow: 0 0 0 4px rgba(255, 61, 129, 0.18);
+}
+
+.mui-head b {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 760;
+  letter-spacing: -0.03em;
+}
+
+.mui-head em {
+  margin-left: auto;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: ui-monospace, monospace;
+  font-size: 0.68rem;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ---- La retícula de materiales ---- */
+.mui-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  min-height: 0;
+}
+
+.mui-cell {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 9px;
+  min-height: 0;
+}
+
+/* Todas las probetas comparten geometría: lo único que cambia es el
+   material que hay dentro. */
+.mui-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.mui-name {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  padding-left: 3px;
+}
+
+.mui-name b {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 720;
+  letter-spacing: -0.025em;
+}
+
+.mui-name i {
+  color: rgba(255, 255, 255, 0.5);
+  font-family: ui-monospace, monospace;
+  font-size: 0.62rem;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ---- El botón, idéntico en medidas y texto en los cuatro casos ---- */
+.mui-btn {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 176px;
+  padding: 16px 26px;
+  font-family: var(--body);
+  font-size: 1.02rem;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+
+.mui-btn b {
+  position: relative;
+  z-index: 2;
+  font-weight: 750;
+}
+
+/* ---- 1 · CLAY: mate, blando, hundido en su propia luz ---- */
+.mui-stage--clay {
+  background:
+    radial-gradient(120% 100% at 50% 0%, var(--paper-bright), var(--paper) 70%);
+}
+
+.mui-btn--clay {
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255, 61, 129, 0.42), rgba(255, 61, 129, 0.62));
+  box-shadow:
+    inset 0 8px 14px rgba(255, 255, 255, 0.8),
+    inset 0 -10px 16px rgba(21, 22, 20, 0.2),
+    inset 0 0 0 1px rgba(255, 61, 129, 0.28),
+    0 16px 26px rgba(21, 22, 20, 0.18);
+  color: var(--ink-soft);
+}
+
+/* ---- 2 · GLASS: se ve lo que hay detrás, y el borde es luz ---- */
+.mui-stage--glass {
+  background: var(--ink);
+}
+
+.mui-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(30px);
+}
+
+.mui-blob--a {
+  top: -34px;
+  left: -22px;
+  width: 168px;
+  height: 168px;
+  background: #ff3d81;
+}
+
+.mui-blob--b {
+  right: -30px;
+  bottom: -36px;
+  width: 150px;
+  height: 150px;
+  background: var(--violet);
+}
+
+.mui-blob--c {
+  top: 52%;
+  left: 44%;
+  width: 108px;
+  height: 108px;
+  background: var(--aqua);
+  opacity: 0.55;
+}
+
+.mui-btn--glass {
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 17px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.08));
+  -webkit-backdrop-filter: blur(10px) saturate(150%);
+  backdrop-filter: blur(10px) saturate(150%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.14),
+    0 16px 28px rgba(0, 0, 0, 0.45);
+  color: var(--paper-bright);
+}
+
+.mui-btn--glass::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: 1px 1px auto 1px;
+  height: 44%;
+  border-radius: 16px 16px 28px 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.02));
+}
+
+/* ---- 3 · SKEUO: bisel arriba, canto duro abajo, barniz encima ---- */
+.mui-stage--skeuo {
+  background:
+    linear-gradient(180deg, var(--paper-bright), var(--paper) 62%, rgba(21, 22, 20, 0.12));
+}
+
+.mui-btn--skeuo {
+  border: 1px solid rgba(21, 22, 20, 0.42);
+  border-radius: 11px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 46%, rgba(21, 22, 20, 0.3)),
+    #ff3d81;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -2px 0 rgba(21, 22, 20, 0.32),
+    0 5px 0 rgba(21, 22, 20, 0.5),
+    0 12px 16px rgba(21, 22, 20, 0.3);
+  color: var(--paper-bright);
+  text-shadow: 0 1px 0 rgba(21, 22, 20, 0.4);
+}
+
+.mui-btn--skeuo::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: 1px 1px auto 1px;
+  height: 46%;
+  border-radius: 10px 10px 16px 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.05));
+}
+
+/* ---- 4 · ADAPTIVE: plano y limpio, el mismo a un lado y al otro ---- */
+.mui-stage--adaptive {
+  background: linear-gradient(90deg, var(--paper-bright) 0 50%, var(--ink-soft) 50% 100%);
+}
+
+.mui-face {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  color: rgba(21, 22, 20, 0.42);
+  font-family: ui-monospace, monospace;
+  font-size: 0.58rem;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.mui-face--dark {
+  right: 12px;
+  left: auto;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.mui-btn--adaptive {
+  border-radius: 9px;
+  background: #ff3d81;
+  box-shadow: none;
+  color: var(--paper-bright);
+}
+
+/* ---- El pie: los cuatro son la misma etiqueta ---- */
+.mui-foot {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.mui-tag {
+  flex: none;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 61, 129, 0.45);
+  border-radius: 8px;
+  background: rgba(255, 61, 129, 0.14);
+  color: #ff3d81;
+  font-family: ui-monospace, monospace;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.mui-tag em {
+  color: var(--paper-bright);
+  font-style: normal;
+}
+
+.mui-foot > span {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+@media (max-width: 560px) {
+  .project-ui--morphiqui {
+    gap: 14px;
+    padding: 18px;
+  }
+
+  .mui-grid {
+    gap: 10px;
+  }
+
+  .mui-btn {
+    min-width: 0;
+    padding: 13px 16px;
+    font-size: 0.9rem;
+  }
+
+  .mui-foot > span {
+    font-size: 0.82rem;
+  }
+}
+
+/* ---- QYRO: un archivo de un aparato a otro, por la red local -----------
+   El dibujo dice una sola cosa: la nube está tachada y la línea va directa
+   de un aparato al otro. Todo lo demás (código, huella, cifrado) sostiene
+   esa frase, no compite con ella. */
+.project-ui--qyro {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 20px;
+  padding: 26px;
+  background:
+    radial-gradient(115% 65% at 50% 0%, rgba(81, 200, 255, 0.13), transparent 62%),
+    var(--ink);
+  color: var(--paper);
+}
+
+/* ---- El cielo: la nube descartada ---- */
+.qyro-sky {
+  position: relative;
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+/* Las dos rutas que subirían a la nube, dibujadas y cortadas. */
+.qyro-sky__arcs {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.qyro-sky__arcs path {
+  fill: none;
+  stroke: rgba(242, 239, 230, 0.24);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 4 6;
+  vector-effect: non-scaling-stroke;
+}
+
+.qyro-cloud {
+  position: relative;
+  display: block;
+  width: 216px;
+  height: 121px;
+}
+
+.qyro-cloud__shape {
+  fill: rgba(242, 239, 230, 0.06);
+  stroke: rgba(242, 239, 230, 0.42);
+  stroke-width: 2.2;
+  stroke-linejoin: round;
+}
+
+.qyro-cloud__slash {
+  stroke: var(--coral);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.qyro-sky__label {
+  position: relative;
+  color: rgba(242, 239, 230, 0.6);
+  font-family: ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+.qyro-sky__label b {
+  color: var(--coral);
+  font-weight: 800;
+}
+
+/* ---- Los dos aparatos y el cable entre ellos ---- */
+.qyro-link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 0.86fr) minmax(0, 1fr);
+  align-items: stretch;
+  min-height: 0;
+}
+
+.qyro-dev {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  padding: 16px 15px 15px;
+  border: 1px solid rgba(242, 239, 230, 0.16);
+  border-radius: 14px;
+  background: var(--ink-soft);
+  box-shadow: inset 0 1px rgba(242, 239, 230, 0.08);
+}
+
+/* El receptor es el que enseña el código: se marca con el acento. */
+.qyro-dev--to {
+  border-color: rgba(81, 200, 255, 0.5);
+  background:
+    linear-gradient(180deg, rgba(81, 200, 255, 0.15), rgba(81, 200, 255, 0.02) 45%),
+    var(--ink-soft);
+  box-shadow:
+    inset 0 1px rgba(81, 200, 255, 0.25),
+    0 0 0 4px rgba(81, 200, 255, 0.07);
+}
+
+.qyro-dev__bar {
+  display: grid;
+  place-items: center;
+}
+
+.qyro-dev__bar i {
+  width: 42px;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(242, 239, 230, 0.22);
+}
+
+.qyro-dev__tag {
+  color: rgba(242, 239, 230, 0.5);
+  font-family: ui-monospace, monospace;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-align: center;
+}
+
+/* El archivo que va a cruzar. */
+.qyro-file {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 3px 11px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid rgba(242, 239, 230, 0.14);
+  border-radius: 12px;
+  background: rgba(242, 239, 230, 0.05);
+}
+
+.qyro-file__page {
+  position: relative;
+  grid-row: 1 / 3;
+  width: 27px;
+  height: 34px;
+  border-radius: 3px;
+  background: var(--paper);
+}
+
+/* La esquina doblada de la hoja. */
+.qyro-file__page::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-top: 10px solid var(--ink-soft);
+  border-left: 10px solid transparent;
+  border-top-right-radius: 3px;
+}
+
+.qyro-file b {
+  overflow: hidden;
+  font-size: 0.95rem;
+  font-weight: 780;
+  letter-spacing: -0.01em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.qyro-file em {
+  color: rgba(242, 239, 230, 0.5);
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 700;
+}
+
+/* El código tecleado a mano en el emisor. */
+.qyro-key {
+  display: grid;
+  gap: 7px;
+}
+
+.qyro-key small {
+  color: rgba(242, 239, 230, 0.45);
+  font-family: ui-monospace, monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.qyro-key b {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 11px 12px;
+  border: 1px solid rgba(81, 200, 255, 0.45);
+  border-radius: 10px;
+  background: rgba(81, 200, 255, 0.08);
+  color: var(--paper);
+  font-family: ui-monospace, monospace;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.qyro-key b i {
+  width: 2px;
+  height: 17px;
+  margin-left: 3px;
+  background: #51c8ff;
+  animation: qyro-caret 1.1s steps(1, end) infinite;
+}
+
+/* Empieza visible: el primer fotograma es el que se fotografía. */
+@keyframes qyro-caret {
+  0%, 55% { opacity: 1; }
+  56%, 100% { opacity: 0; }
+}
+
+/* La huella corta, idéntica en los dos, para comparar en voz alta. */
+.qyro-fp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding-top: 11px;
+  border-top: 1px solid rgba(242, 239, 230, 0.12);
+  color: rgba(242, 239, 230, 0.55);
+  font-family: ui-monospace, monospace;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.qyro-fp i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #51c8ff;
+}
+
+/* El código en grande, como lo enseña el receptor. */
+.qyro-code {
+  display: flex;
+  gap: 7px;
+}
+
+.qyro-code b {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: 14px 0;
+  border: 1px solid rgba(81, 200, 255, 0.5);
+  border-radius: 12px;
+  background: rgba(81, 200, 255, 0.13);
+  color: #51c8ff;
+  font-family: var(--display);
+  font-size: 1.55rem;
+  font-weight: 760;
+  letter-spacing: 0.01em;
+}
+
+.qyro-hint {
+  color: rgba(242, 239, 230, 0.62);
+  font-size: 0.95rem;
+  font-style: normal;
+  font-weight: 620;
+  line-height: 1.25;
+  text-align: center;
+}
+
+/* ---- El cable directo ---- */
+.qyro-wire {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+  min-width: 0;
+  padding: 0 12px;
+}
+
+.qyro-wire small {
+  color: rgba(242, 239, 230, 0.5);
+  font-family: ui-monospace, monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-align: center;
+}
+
+.qyro-wire small:first-child {
+  color: #51c8ff;
+  letter-spacing: 0.2em;
+}
+
+.qyro-wire__line {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(81, 200, 255, 0.3), #51c8ff 22%, #51c8ff 78%, rgba(81, 200, 255, 0.35));
+  box-shadow: 0 0 14px rgba(81, 200, 255, 0.55);
+  animation: qyro-glow 3.2s ease-in-out infinite;
+}
+
+@keyframes qyro-glow {
+  0%, 100% { box-shadow: 0 0 14px rgba(81, 200, 255, 0.55); }
+  50% { box-shadow: 0 0 22px rgba(81, 200, 255, 0.28); }
+}
+
+/* Punto de salida y punta de flecha: de aquí a allá, en un solo tramo. */
+.qyro-wire__line::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -3px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #51c8ff;
+  transform: translateY(-50%);
+}
+
+.qyro-wire__line::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -2px;
+  width: 0;
+  height: 0;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 11px solid #51c8ff;
+  transform: translateY(-50%);
+}
+
+/* El archivo, a medio camino y sobre la línea. */
+.qyro-packet {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  padding: 9px 11px;
+  border-radius: 8px;
+  background: var(--paper);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+  color: var(--ink);
+  font-family: ui-monospace, monospace;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  transform: translate(-50%, -50%) rotate(-4deg);
+}
+
+/* ---- La frase ---- */
+.qyro-note {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 720;
+  letter-spacing: -0.045em;
+  line-height: 1.02;
+  text-align: center;
+}
+
+.qyro-note b {
+  color: #51c8ff;
+  font-weight: inherit;
+}
+
+@media (max-width: 560px) {
+  .project-ui--qyro { padding: 18px; gap: 14px; }
+  .qyro-cloud { width: 165px; height: 92px; }
+  .qyro-link { grid-template-columns: minmax(0, 1fr) minmax(64px, 0.44fr) minmax(0, 1fr); }
+  .qyro-wire { padding: 0 7px; }
+  .qyro-wire small { display: none; }
+  .qyro-code b { font-size: 1.15rem; padding: 10px 0; }
+  .qyro-note { font-size: 1.2rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qyro-key b i,
+  .qyro-wire__line { animation: none; }
+}
