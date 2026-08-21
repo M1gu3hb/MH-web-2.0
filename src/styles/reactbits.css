@@ -645,3 +645,28 @@ h3 .rb-scramble {
     display: none;
   }
 }
+
+/* ------------------------------------------------------------
+   BEAMS — el fondo del hero en teléfono y tableta
+   ------------------------------------------------------------
+   El CSS del original son cuatro líneas y se queda corto aquí: su
+   `.beams-container` da tamaño al canvas, pero el canvas necesita además una
+   caja que lo coloque detrás del contenido y que el observador pueda medir.
+   Esa caja es `.beams-caja`.
+
+   No lleva `background`: debajo siguen estando los degradados de `.portada`,
+   así que si WebGL no arranca —un teléfono viejo, un contexto perdido, la
+   aceleración apagada— no queda un hueco negro, queda el fondo de antes.
+   ------------------------------------------------------------ */
+
+.beams-caja {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.beams-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}

@@ -37,6 +37,10 @@ import { RUTAS } from '../../config/rutas';
 import { PLANES, formatoMXN } from '../../config/pricing';
 
 const Scanner = lazy(() => import('../reactbits/Scanner'));
+/* Igual que el Scanner: fuera del trozo inicial, para que la página pinte el
+   titular antes que el fondo. El LCP costó bajarlo de 3.1 s a 1.9 s y no se
+   toca por un fondo. */
+const Beams = lazy(() => import('../reactbits/Beams'));
 
 const [claimA, claimVen, claimB, claimNec] = HERO.claim;
 
@@ -44,6 +48,19 @@ export function PortadaHero() {
   const sinMovimiento = useReducedMotion();
   const finoYAncho = useMediaQuery('(min-width: 861px) and (pointer: fine)');
   const conShader = finoYAncho && !sinMovimiento;
+  /* ------------------------------------------------------------
+     TELÉFONO Y TABLETA LLEVAN OTRO FONDO
+     ------------------------------------------------------------
+     La ola de CSS que había aquí se veía rota: un degradado plano con un
+     corte duro abajo. En escritorio no se toca nada —ahí el Scanner funciona
+     y se queda—, pero por debajo de 861 px, o en cualquier pantalla táctil,
+     entra Beams.
+
+     Se monta aunque haya movimiento reducido: en ese caso pinta un solo
+     fotograma y se queda quieto, que es mejor que el degradado roto. El
+     propio componente lo resuelve con `frameloop`.
+     ------------------------------------------------------------ */
+  const conBeams = !finoYAncho;
 
   const entrada = sinMovimiento
     ? false
@@ -55,9 +72,27 @@ export function PortadaHero() {
       <div
         className={`portada__fondo ${conShader ? '' : 'portada__fondo--liso'} ${
           sinMovimiento ? 'portada__fondo--quieto' : ''
-        }`}
+        } ${conBeams ? 'portada__fondo--beams' : ''}`}
         aria-hidden="true"
       >
+        {conBeams && (
+          <Suspense fallback={null}>
+            <Beams
+              beamWidth={2}
+              beamHeight={15}
+              beamNumber={12}
+              lightColor="#1100ff"
+              speed={2}
+              noiseIntensity={1.75}
+              scale={0.2}
+              rotation={0}
+              maxDpr={1.5}
+              fondo="#06080d"
+              sinMovimiento={sinMovimiento}
+            />
+          </Suspense>
+        )}
+
         {conShader && (
           <Suspense fallback={null}>
             <Scanner

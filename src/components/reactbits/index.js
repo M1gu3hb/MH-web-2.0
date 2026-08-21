@@ -36,3 +36,11 @@ export { SpotlightCard } from './SpotlightCard';
 export { StarBorder } from './StarBorder';
 export { TextoProfundo } from './TextoProfundo';
 export { TiltedCard } from './TiltedCard';
+
+/* Beams NO se exporta desde aquí a propósito.
+   Este barril lo importa medio sitio de forma estática, así que reexportar
+   Beams convertía su `lazy()` en papel mojado: three.js, react-three-fiber y
+   drei entraban en el trozo principal, que descargan TODAS las páginas y
+   TODOS los dispositivos —incluido escritorio, donde Beams ni se monta—. El
+   trozo pasaba de 99 KB a 325 KB en gzip.
+   El hero lo importa por su ruta directa: '../reactbits/Beams'. */

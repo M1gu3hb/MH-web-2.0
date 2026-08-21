@@ -4638,3 +4638,10 @@ main#contenido > * {
 .rejilla-proyectos--indice .tarjeta-proyecto__cuerpo {
   flex: 0 0 auto;
 }
+
+/* Con Beams detrás, la ola de CSS sobra: dos fondos animados compitiendo en
+   el mismo sitio. Los degradados se quedan —son el suelo si WebGL no
+   arranca—, pero la ola se para. */
+.portada__fondo--beams::before {
+  content: none;
+}
