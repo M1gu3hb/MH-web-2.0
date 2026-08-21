@@ -120,6 +120,7 @@ export default function Contacto() {
         migas={MIGAS}
         eyebrow="Contacto"
         titulo="Cuéntame qué necesita tu negocio."
+        resalte="tu negocio"
         entrada="Contesto yo. Con lo que me escribas aquí ya puedo decirte por dónde empezar y qué costaría."
         aparte={
           <div className="contacto-linea">

@@ -44,6 +44,13 @@ export function ScrambleText({
   const words = useRef([]);
   const timer = useRef(0);
   const phase = useRef('idle');
+  /* El plazo de rescate. Se arma cada vez que la animación empieza y se
+     desarma cuando termina bien. Es lo único que garantiza que el texto
+     acabe visible pase lo que pase. */
+  const vigilante = useRef(0);
+  /* Una vez que este texto se ha compuesto, NUNCA vuelve a desordenarse por
+     scroll. Ver el porqué en el efecto de abajo. */
+  const yaResuelto = useRef(false);
 
   const stop = useCallback(() => {
     cancelAnimationFrame(timer.current);
@@ -62,13 +69,30 @@ export function ScrambleText({
       : [];
   }, []);
 
-  /** Enseña el texto de verdad y apaga la capa de glifos. */
+  /** Enseña el texto de verdad, apaga los glifos y cierra el ciclo. */
   const mostrar = useCallback(() => {
+    window.clearTimeout(vigilante.current);
+    vigilante.current = 0;
+    phase.current = 'done';
+    yaResuelto.current = true;
     words.current.forEach(({ real, fx }) => {
       if (real) real.style.visibility = '';
       if (fx) fx.textContent = '';
     });
   }, []);
+
+  /** Arma el plazo de rescate para el ciclo que acaba de empezar. */
+  const vigilar = useCallback(
+    (ms) => {
+      window.clearTimeout(vigilante.current);
+      vigilante.current = window.setTimeout(() => {
+        cancelAnimationFrame(timer.current);
+        timer.current = 0;
+        mostrar();
+      }, ms);
+    },
+    [mostrar]
+  );
 
   /** Escribe el estado actual: `revealed` letras reales, el resto en glifos. */
   const paint = useCallback((revealed) => {
@@ -103,13 +127,25 @@ export function ScrambleText({
      se retrasa, la animación sigue acabando en `duration`. */
   const resolve = useCallback((ms = duration) => {
     stop();
+    /* Con la pestaña en segundo plano `requestAnimationFrame` no corre. Si
+       la animación arrancara aquí, se quedaría congelada en glifos hasta
+       que alguien volviera a la pestaña —y ese es exactamente el fallo de
+       «las palabras no cargan»—. Así que ni se intenta: se enseña el texto
+       y ya está. */
+    if (document.hidden) {
+      mostrar();
+      return;
+    }
     phase.current = 'running';
+    /* El plazo se arma AQUÍ, cuando el ciclo empieza, no al montar: un
+       titular que está a diez pantallas de distancia no debe quedarse sin
+       efecto solo porque tarde un minuto en aparecer. */
+    vigilar(ms + 2500);
     const startedAt = performance.now();
     const step = (now) => {
       const t = (now - startedAt) / ms;
       if (t >= 1) {
         timer.current = 0;
-        phase.current = 'done';
         mostrar();
         return;
       }
@@ -117,11 +153,15 @@ export function ScrambleText({
       timer.current = requestAnimationFrame(step);
     };
     timer.current = requestAnimationFrame(step);
-  }, [duration, mostrar, paint, stop, total]);
+  }, [duration, mostrar, paint, stop, total, vigilar]);
 
   const churn = useCallback(() => {
     stop();
     phase.current = 'running';
+    /* Aunque el cursor se quede encima, a los ocho segundos el texto vuelve.
+       Sin esto, salir de la página con el ratón encima de un titular lo
+       dejaba en glifos hasta recargar. */
+    vigilar(8000);
     paint(0);
     let last = 0;
     const step = (now) => {
@@ -132,7 +172,7 @@ export function ScrambleText({
       timer.current = requestAnimationFrame(step);
     };
     timer.current = requestAnimationFrame(step);
-  }, [paint, speed, stop]);
+  }, [paint, speed, stop, vigilar]);
 
   useLayoutEffect(() => {
     if (reduced) return undefined;
@@ -140,7 +180,6 @@ export function ScrambleText({
     if (!element) return undefined;
 
     recoger();
-    phase.current = 'idle';
 
     const conVista = trigger === 'view' || trigger === 'both';
     if (!conVista) {
@@ -148,29 +187,95 @@ export function ScrambleText({
       return undefined;
     }
 
+    /* ------------------------------------------------------------
+       POR QUÉ ESTA GUARDA
+       ------------------------------------------------------------
+       Este efecto puede volver a ejecutarse por motivos que no tienen nada
+       que ver con el texto: el componente se re-monta al recomponerse una
+       rejilla, al terminar una entrada, al cambiar de ruta. Sin la guarda,
+       cada re-ejecución llamaba a `paint(0)` —o sea, volvía a poner glifos
+       en un titular que YA estaba compuesto— y creaba un observador nuevo.
+       Si para entonces el bloque había quedado fuera de pantalla, ese
+       observador no disparaba y el titular se quedaba en glifos hasta
+       recargar la página. Es exactamente el fallo de «las palabras no
+       cargan».
+
+       La regla ahora es simple y no admite excepciones: un texto que ya se
+       compuso no se vuelve a desordenar por scroll. Al cursor sí responde,
+       porque eso lo pide la persona y siempre acaba resolviéndose.
+       ------------------------------------------------------------ */
+    if (yaResuelto.current) {
+      mostrar();
+      return undefined;
+    }
+
+    phase.current = 'idle';
     paint(0);
+
+    /* SUELO ABSOLUTO. Aunque el observador no llegue a disparar nunca —por
+       un recorte de un ancestro, por un reparto que cambia debajo, por lo
+       que sea—, a los quince segundos el texto está a la vista. Es un solo
+       temporizador por titular y se cancela en cuanto se compone, así que no
+       cuesta nada; y es lo que convierte «se queda roto hasta recargar» en
+       imposible por construcción. */
+    const suelo = window.setTimeout(() => {
+      if (phase.current !== 'done') mostrar();
+    }, 15000);
+    /* Umbral casi cero, no 0.3. Con la escala nueva hay titulares metidos
+       dentro de una máscara con `overflow: hidden` que arranca con la línea
+       fuera de su propio borde: mientras la máscara no se abre, la razón de
+       intersección es 0 y con un umbral de 0.3 el observador podía no
+       dispararse nunca. Dos animaciones no deben depender una de la otra. */
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
         observer.disconnect();
         resolve();
       },
-      { threshold: 0.3 },
+      { threshold: 0.01, rootMargin: '0px 0px -2% 0px' },
     );
     observer.observe(element);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(suelo);
+    };
   }, [mostrar, paint, recoger, reduced, resolve, source, trigger]);
 
-  /* Red de seguridad: pase lo que pase con la animación —una capa que se
-     desmonta a medias, una pestaña que vuelve del fondo— a los seis segundos
-     el texto de verdad está a la vista. Nunca se queda a medio componer. */
+  /* ------------------------------------------------------------
+     RED DE SEGURIDAD
+     ------------------------------------------------------------
+     La versión anterior estaba al revés: rescataba el texto solo si la
+     animación NO estaba corriendo. Pero el fallo real es justo el contrario
+     —una animación que ARRANCA y no termina: la pestaña se va al fondo y
+     `requestAnimationFrame` deja de correr, o el elemento se desmonta a
+     medias durante un cambio de ruta—. En ese caso `phase` se queda en
+     `running` para siempre y con ella los glifos en pantalla. De ahí lo de
+     «hay que recargar a huevo».
+
+     Ahora el plazo es incondicional: pasado el tiempo, el texto está a la
+     vista, esté como esté la animación. Y además se rescata en cuanto la
+     pestaña vuelve al frente, sin esperar al plazo.
+     ------------------------------------------------------------ */
   useEffect(() => {
     if (reduced) return undefined;
-    const t = window.setTimeout(() => {
-      if (phase.current !== 'running') mostrar();
-    }, 6000);
-    return () => window.clearTimeout(t);
-  }, [mostrar, reduced, source]);
+
+    /* Al volver de una pestaña oculta, o al restaurar la página desde la
+       caché de atrás/adelante: si el ciclo quedó a medias, se resuelve sin
+       esperar al plazo. */
+    const alVolver = () => {
+      if (document.hidden || phase.current !== 'running') return;
+      stop();
+      mostrar();
+    };
+    document.addEventListener('visibilitychange', alVolver);
+    window.addEventListener('pageshow', alVolver);
+
+    return () => {
+      document.removeEventListener('visibilitychange', alVolver);
+      window.removeEventListener('pageshow', alVolver);
+      window.clearTimeout(vigilante.current);
+    };
+  }, [mostrar, reduced, source, stop]);
 
   useLayoutEffect(() => stop, [stop]);
 

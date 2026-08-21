@@ -73,6 +73,7 @@ export default function Proyectos() {
         migas={MIGAS}
         eyebrow="Trabajo real"
         titulo="Negocios que ya están funcionando con esto."
+        resalte="ya están funcionando"
         entrada="Ninguno es una maqueta de portafolio. Son proyectos entregados, y los que están en línea llevan su enlace para que los abras."
         aparte={
           <ul className="tira-industrias">
@@ -118,10 +119,6 @@ export default function Proyectos() {
               H3 y un lector de pantalla pierde el nivel. El título ya lo dice
               el H1, así que este va solo para la estructura. */}
           <h2 className="rb-visually-hidden">Todos los proyectos</h2>
-
-          <p className="filtros__conteo" role="status">
-            {visibles.length} {visibles.length === 1 ? 'proyecto' : 'proyectos'}
-          </p>
 
           {/* El bloque de proyectos se ensancha al pasar por la pantalla y
               cada pieza llega desde el fondo. Es un portafolio: la entrada

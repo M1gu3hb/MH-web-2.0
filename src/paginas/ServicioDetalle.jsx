@@ -24,7 +24,7 @@ import {
   TituloSeccion,
   contactoCon,
 } from '../components/ui';
-import { BordeElectrico, Reveal } from '../components/reactbits';
+import { Reveal } from '../components/reactbits';
 import { Cascada, Cortina, Escala, Lateral, Secuencia } from '../components/motion';
 import {
   AutomationScreen,
@@ -93,6 +93,7 @@ export default function ServicioDetalle() {
         migas={pagina.migas}
         eyebrow={pagina.hero.eyebrow}
         titulo={pagina.hero.titulo}
+        resalte={pagina.hero.resalte}
         entrada={pagina.hero.entrada}
         acento={pagina.acento}
         maqueta={Maqueta ? <Maqueta /> : null}
@@ -299,24 +300,11 @@ export default function ServicioDetalle() {
           <Contenedor>
             <TituloSeccion titulo={pagina.niveles.titulo} entrada={pagina.niveles.entrada} />
             <div className={`planes planes--${pagina.niveles.planes.length}`}>
-              {pagina.niveles.planes.map((clave, i) => {
-                const plan = PLANES[clave];
-                const tarjeta = <TarjetaPlan plan={plan} detallada servicio={pagina.hero.servicio} />;
-                return (
-                  <Escala key={clave} delay={i * 0.07} desde={0.96}>
-                    {/* El plan recomendado lleva borde eléctrico. Es la única
-                        pieza de la página con arco vivo, así que señala sin
-                        que haga falta una etiqueta más. */}
-                    {plan.destacado ? (
-                      <BordeElectrico radio={20} caos={0.085}>
-                        {tarjeta}
-                      </BordeElectrico>
-                    ) : (
-                      tarjeta
-                    )}
-                  </Escala>
-                );
-              })}
+              {pagina.niveles.planes.map((clave, i) => (
+                <Escala key={clave} delay={i * 0.07} desde={0.96}>
+                  <TarjetaPlan plan={PLANES[clave]} detallada servicio={pagina.hero.servicio} />
+                </Escala>
+              ))}
             </div>
             <Reveal>
               <p className="planes__pie">
@@ -335,6 +323,7 @@ export default function ServicioDetalle() {
             <TituloSeccion
               eyebrow="Trabajo real"
               titulo="Esto ya lo he construido."
+              resalte="ya lo he construido"
               entrada="Cada proyecto tiene su caso completo y, cuando está en línea, su enlace para que lo abras."
             />
             <div className="rejilla-proyectos">
@@ -357,7 +346,7 @@ export default function ServicioDetalle() {
       {pagina.faq && (
         <Seccion tono="elevado">
           <Contenedor ancho="medio">
-            <TituloSeccion titulo="Lo que suelen preguntarme" variante="simple" />
+            <TituloSeccion titulo="Lo que suelen preguntarme" resalte="suelen preguntarme" variante="simple" />
             <Acordeon items={pagina.faq} />
           </Contenedor>
         </Seccion>

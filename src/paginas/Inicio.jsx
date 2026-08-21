@@ -25,9 +25,10 @@ import {
   TarjetaProyecto,
   TituloSeccion,
 } from '../components/ui';
-import { BordeElectrico, CampoPuntos, MarcoExpansivo, Reveal } from '../components/reactbits';
-import { Cascada, Cortina, Escala, Lateral, Secuencia } from '../components/motion';
+import { CampoPuntos, MarcoExpansivo, Reveal } from '../components/reactbits';
+import { Cascada, Escala, Lateral, Secuencia } from '../components/motion';
 import { TarjetaSolucion } from '../components/ui/TarjetaSolucion';
+import { Presentacion } from '../components/ui/Presentacion';
 import { PortadaHero } from '../components/hero/PortadaHero';
 import { Seo, nodoPagina, nodoPreguntas } from '../lib/seo';
 import { SERVICIOS } from '../content/servicios';
@@ -96,6 +97,7 @@ export default function Inicio() {
           <TituloSeccion
             eyebrow="Empieza por aquí"
             titulo="¿Qué necesita tu negocio?"
+            resalte="tu negocio"
             entrada="Elige lo que más se parezca a tu situación. Cada camino lleva a una explicación completa, con precios."
           />
           {/* Rejilla asimétrica: las dos primeras soluciones —las que más se
@@ -121,12 +123,8 @@ export default function Inicio() {
           <TituloSeccion
             eyebrow="Trabajo real"
             titulo="Negocios que ya funcionan con esto."
+            resalte="ya funcionan"
             entrada="No son maquetas de portafolio. Están en línea y los puedes abrir."
-            aparte={
-              <p className="titulo-seccion__dato">
-                <strong>{PROYECTOS_DESTACADOS.length}</strong> de <strong>6</strong> proyectos publicados
-              </p>
-            }
           />
           {/* El bloque de proyectos se ensancha mientras pasa por la
               pantalla. No fija nada ni toca la rueda: si bajas rápido lo ves
@@ -153,8 +151,9 @@ export default function Inicio() {
         <div className="contenedor contenedor--amplio">
           <TituloSeccion
             eyebrow="Precios"
-            titulo="Hay una opción dentro de tu presupuesto."
-            entrada="Estos son los puntos de partida reales. El precio final se cierra antes de empezar, nunca a mitad del proyecto."
+            titulo="Los precios están publicados."
+            resalte="publicados"
+            entrada="Ninguna agencia te los enseña antes de la llamada. Aquí están, con lo que incluye cada uno y lo que lo encarece."
             aparte={
               <p className="titulo-seccion__dato">
                 Desde <strong>$2,000</strong> MXN
@@ -193,10 +192,10 @@ export default function Inicio() {
       <Seccion className="seccion--proceso">
         <div className="contenedor contenedor--amplio">
           <Statement
-            lineas={['No entregas dinero', 'y esperas tres semanas.']}
+            lineas={['Aquí no se trabaja', 'a puerta cerrada.']}
             eyebrow="Cómo trabajo"
             kicker="Cuatro pasos"
-            resalte="tres semanas"
+            resalte="a puerta cerrada"
             className="proceso-statement"
           >
             <p className="proceso-statement__entrada">
@@ -216,24 +215,19 @@ export default function Inicio() {
         </div>
       </Seccion>
 
-      {/* ============ QUIÉN ESTÁ DETRÁS ============ */}
-      <Seccion tono="acento">
-        <Contenedor ancho="medio">
-          <Cortina>
-            <div className="quien">
-              <p className="quien__eyebrow">Quién está detrás</p>
-              <h2 className="quien__titulo">Soy Miguel. Diseño, programo y contesto yo.</h2>
-              <p className="quien__cuerpo">
-                Morphiq no es una agencia con veinte personas. Es un estudio, y el estudio soy yo. Para un negocio
-                pequeño eso no es una limitación: es la razón por la que hablas con quien construye tu proyecto y
-                no con alguien que te traduce.
-              </p>
-              <div className="quien__acciones">
-                <BotonSecundario to={RUTAS.sobre}>Conocer más</BotonSecundario>
-              </div>
+      {/* ============ QUIÉN ESTÁ DETRÁS ============
+          Vuelve la sección de producción: la placa del logo con su efecto de
+          agua al pasar el cursor, la firma MH97 y la rúbrica con el correo
+          personal. Antes era un párrafo centrado en una columna estrecha, o
+          sea puro texto, justo en la sección que tiene que demostrar oficio. */}
+      <Seccion tono="acento" className="seccion--presentacion">
+        <div className="contenedor contenedor--amplio">
+          <Presentacion>
+            <div className="presentacion__acciones">
+              <BotonSecundario to={RUTAS.sobre}>Cómo trabajo, en detalle</BotonSecundario>
             </div>
-          </Cortina>
-        </Contenedor>
+          </Presentacion>
+        </div>
       </Seccion>
 
       {/* ============ DUDAS ============ */}
@@ -242,7 +236,7 @@ export default function Inicio() {
           {/* Aquí sí conviene el modo simple: un acordeón se lee mejor en
               una columna, y meterle una segunda columna de entrada sería
               composición por composición. */}
-          <TituloSeccion titulo="Lo que todos preguntan primero." variante="simple" />
+          <TituloSeccion titulo="Lo que todos preguntan primero." resalte="preguntan primero" variante="simple" />
           <Acordeon items={PREGUNTAS} />
         </Contenedor>
       </Seccion>
@@ -253,6 +247,10 @@ export default function Inicio() {
           pantalla y el resto de la página trabaja a su favor. */}
       <Seccion tono="elevado" className="cierre">
         <CampoPuntos className="cierre__campo" />
+        {/* El símbolo de la marca, enorme y translúcido, detrás del mensaje.
+            Es lo que convierte el cierre en un final con firma en vez de en
+            una sección más con un botón. */}
+        <img className="cierre__marca" src="/marca/simbolo-v2-lg.webp" alt="" aria-hidden="true" loading="lazy" />
         <div className="contenedor contenedor--amplio">
           <Statement
             lineas={['¿Empezamos?']}
@@ -266,11 +264,9 @@ export default function Inicio() {
                 empezar y cuánto costaría, aunque acabemos en la opción más barata.
               </p>
               <div className="cierre__acciones">
-                <BordeElectrico radio={999} className="cierre__chispa">
-                  <BotonPrincipal to={RUTAS.contacto} grande>
-                    Cuéntame tu proyecto
-                  </BotonPrincipal>
-                </BordeElectrico>
+                <BotonPrincipal to={RUTAS.contacto} grande>
+                  Cuéntame tu proyecto
+                </BotonPrincipal>
                 <BotonSecundario to={RUTAS.precios} grande>
                   Ver precios primero
                 </BotonSecundario>

@@ -91,6 +91,7 @@ export default function Sobre() {
         migas={MIGAS}
         eyebrow="Sobre Morphiq"
         titulo="Hola, soy Miguel. Yo construyo todo esto."
+        resalte="Yo construyo todo esto."
         entrada="Morphiq no es una agencia con veinte personas. Es un estudio, y el estudio soy yo: diseño, programo, publico y contesto el WhatsApp."
         aparte={
           <div className="tarjeta-firma">

@@ -100,9 +100,13 @@
 }
 
 .titulo-seccion--centro {
-  max-width: 24ch;
   margin-inline: auto;
   text-align: center;
+}
+
+.titulo-seccion--centro .titulo-seccion__titulo {
+  max-width: 18ch;
+  margin-inline: auto;
 }
 
 .titulo-seccion--centro .titulo-seccion__entrada {
@@ -110,7 +114,13 @@
   max-width: 46ch;
 }
 
-.titulo-seccion--simple {
+/* El límite va en el TÍTULO, no en el encabezado.
+   `ch` se resuelve contra el tamaño de letra del propio elemento, y el
+   encabezado hereda los 16 px del cuerpo: 20ch allí son 195 px, así que el
+   titular de 91 px se partía en una palabra por línea y se salía de su
+   caja. Es lo que rompía «Lo que todos preguntan primero». En el título,
+   con su tamaño real, 20ch son los 20 caracteres que se pretendían. */
+.titulo-seccion--simple .titulo-seccion__titulo {
   max-width: 20ch;
 }
 
@@ -968,23 +978,37 @@
 .principios {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-  gap: var(--sp-5);
+  gap: clamp(var(--sp-5), 2.5vw, var(--sp-7));
 }
 
+/* ------------------------------------------------------------
+   FUERA LAS CAJAS
+   ------------------------------------------------------------
+   Beneficios, piezas y principios eran tres rejillas de tarjetas iguales:
+   recuadro, borde, fondo. Puestas una detrás de otra —y en las páginas de
+   servicio van justo así— la página se convierte en una sucesión de cajas y
+   deja de haber composición: solo contenedores.
+
+   Ahora se apoyan en una regla superior que se enciende en azul al pasar el
+   cursor, igual que los pasos del proceso. Es el mismo lenguaje en todo el
+   sitio, pesa menos y deja respirar el texto, que es lo que se viene a leer.
+   ------------------------------------------------------------ */
 .beneficio,
 .pieza,
 .principio {
   height: 100%;
-  padding: var(--sp-5);
-  border: 1px solid var(--line-soft);
-  border-radius: var(--r-lg);
-  background: var(--surface-base);
+  padding: var(--sp-5) 0 0;
+  border: 0;
+  border-top: 2px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  transition: border-color 0.28s var(--ease);
 }
 
-.seccion--elevado .beneficio,
-.seccion--elevado .pieza,
-.seccion--elevado .principio {
-  background: var(--surface-sunken);
+.beneficio:hover,
+.pieza:hover,
+.principio:hover {
+  border-top-color: var(--accent-brand);
 }
 
 .beneficio h3,
@@ -994,31 +1018,39 @@
   margin-bottom: var(--sp-3);
   color: var(--ink-strong);
   font-family: var(--font-display);
-  font-size: 1.14rem;
+  font-size: clamp(1.15rem, 1.5vw, 1.5rem);
   font-weight: var(--w-bold);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  text-wrap: balance;
 }
 
 .beneficio p,
 .pieza p,
 .principio p {
   color: var(--ink-body);
-  font-size: 0.95rem;
-  line-height: 1.6;
+  font-size: 1rem;
+  line-height: 1.62;
 }
 
 .capacidades {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-  gap: var(--sp-5);
+  gap: clamp(var(--sp-5), 2.5vw, var(--sp-7));
 }
 
 .capacidad {
   height: 100%;
-  padding: var(--sp-5);
-  border: 1px solid var(--line-soft);
-  border-radius: var(--r-lg);
-  background: var(--surface-raised);
+  padding: var(--sp-5) 0 0;
+  border: 0;
+  border-top: 2px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  transition: border-color 0.28s var(--ease);
+}
+
+.capacidad:hover {
+  border-top-color: var(--accent-brand);
 }
 
 .seccion--elevado .capacidad {
@@ -1086,30 +1118,35 @@
    Explicador y aviso
    ------------------------------------------------------------ */
 
+/* El explicador deja de ser una tarjeta flotando en medio de un lienzo
+   vacío. Es una aclaración —«¿qué es un CRM?», «tu página puede crecer»— y
+   una aclaración se lee mejor como una nota al margen bien compuesta que
+   como un recuadro: filo azul a la izquierda, título grande, cuerpo ancho.
+   Sin caja, sin fondo, sin borde alrededor. */
 .explicador {
-  padding: var(--sp-7);
-  border: 1px solid var(--line-soft);
-  border-radius: var(--r-xl);
-  background: var(--surface-base);
-}
-
-.seccion--elevado .explicador {
-  background: var(--surface-sunken);
+  padding: 0 0 0 clamp(var(--sp-5), 3vw, var(--sp-7));
+  border: 0;
+  border-left: 2px solid var(--accent-brand);
+  border-radius: 0;
+  background: transparent;
 }
 
 .explicador__titulo {
-  margin-bottom: var(--sp-4);
+  margin-bottom: var(--sp-5);
+  max-width: 18ch;
   color: var(--ink-strong);
   font-family: var(--font-display);
-  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  font-size: clamp(1.7rem, 3.4vw, 3rem);
   font-weight: var(--w-bold);
-  letter-spacing: -0.03em;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
 }
 
 .explicador__cuerpo {
+  max-width: 62ch;
   color: var(--ink-body);
-  font-size: var(--t-lead);
-  line-height: 1.65;
+  font-size: clamp(1.06rem, 1.35vw, 1.32rem);
+  line-height: 1.62;
 }
 
 .explicador__remate {
@@ -2134,6 +2171,31 @@
   padding-block: clamp(110px, 14vw, 210px);
 }
 
+/* El símbolo de la marca detrás del mensaje: enorme, translúcido y
+   desbordando por la derecha, como una marca de agua estampada. Se recorta
+   contra el borde de la sección, así que no hay que cuadrarlo con nada. */
+.cierre__marca {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  right: clamp(-140px, -6vw, -40px);
+  translate: 0 -50%;
+  width: clamp(320px, 42vw, 720px);
+  height: auto;
+  opacity: 0.12;
+  filter: saturate(0.7);
+  pointer-events: none;
+  user-select: none;
+}
+
+@media (max-width: 900px) {
+  .cierre__marca {
+    right: -22%;
+    width: 78vw;
+    opacity: 0.09;
+  }
+}
+
 .cierre__campo {
   position: absolute;
   inset: 0;
@@ -2174,6 +2236,13 @@
    la columna y el arco daría la vuelta a un rectángulo vacío. */
 .cierre__chispa {
   display: inline-flex;
+}
+
+/* El cierre va en azul, no en plata. Es el único titular del sitio que
+   cambia de color entero: el resto lleva una palabra de acento dentro de una
+   frase en plata, y precisamente por eso este destaca como final. */
+.cierre .statement__titulo {
+  color: var(--accent-pos);
 }
 
 .cierre__nota {
@@ -2541,9 +2610,8 @@ iframe {
    El ancho más estrecho que hay que soportar. Aquí el problema no es que
    falten columnas: es que los rellenos generosos se comen el contenido. */
 @media (max-width: 360px) {
-  .explicador,
-  .formulario {
-    padding: var(--sp-5);
+  .explicador {
+    padding-left: var(--sp-4);
   }
   .plan {
     padding: var(--sp-5);
@@ -3454,4 +3522,222 @@ iframe {
   .contacto-linea__wa:focus-visible {
     transform: none;
   }
+}
+
+/* ------------------------------------------------------------
+   Presentación — quién lo hace
+   ------------------------------------------------------------
+   El bloque de producción, traído entero. La placa a la izquierda con su
+   efecto de agua, el texto a la derecha. Aquí NO se recorta a una columna
+   estrecha: el visitante tiene que ver que detrás hay alguien.
+   ------------------------------------------------------------ */
+
+.seccion--presentacion {
+  overflow: hidden;
+}
+
+.presentacion {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(var(--sp-6), 5vw, 92px);
+  align-items: center;
+}
+
+.presentacion__marca {
+  display: grid;
+  gap: var(--sp-5);
+  align-content: start;
+}
+
+/* Hereda todo el aspecto de `.about__plate` —degradado, marco de puntos,
+   proporción cuadrada— y solo se le pone techo para que en un monitor
+   grande no crezca más que el bloque de texto. */
+.presentacion__placa {
+  max-width: 460px;
+  width: 100%;
+}
+
+/* Debajo del lienzo de agua. Si el canvas se monta, lo tapa; si no —sin
+   WebGL o con movimiento reducido—, esto es lo que se ve, que es
+   exactamente la misma placa quieta. */
+.presentacion__placa-img {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.presentacion__placa > .ripple-distortion {
+  z-index: 1;
+}
+
+.presentacion__firma {
+  padding-inline: var(--sp-1);
+}
+
+.presentacion__firma small {
+  color: var(--ink-muted);
+  font-size: max(0.68rem, 11px);
+  font-weight: 780;
+  letter-spacing: 0.14em;
+  line-height: 1.6;
+}
+
+.presentacion__cuerpo {
+  min-width: 0;
+}
+
+.presentacion__eyebrow {
+  margin-bottom: var(--sp-4);
+  color: var(--accent-pos);
+  font-family: var(--font-display);
+  font-size: var(--t-label);
+  font-weight: var(--w-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.presentacion__titulo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--sp-5);
+  color: var(--ink-strong);
+  font-family: var(--font-display);
+  font-size: var(--t-seccion);
+  font-weight: var(--w-bold);
+  letter-spacing: var(--tr-seccion);
+  line-height: var(--lh-seccion);
+}
+
+/* La segunda línea en plata: es el contraste que hace que dos líneas se
+   lean como una frase y no como dos titulares seguidos. */
+.presentacion__linea--suave {
+  color: var(--accent-silver);
+}
+
+.presentacion__declaracion {
+  margin-bottom: var(--sp-5);
+  color: var(--ink-body);
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 1.9vw, 1.85rem);
+  font-weight: var(--w-display);
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.presentacion__declaracion em {
+  color: var(--accent-pos);
+  font-style: normal;
+}
+
+.presentacion__declaracion strong {
+  color: var(--ink-strong);
+  font-weight: var(--w-bold);
+}
+
+.presentacion__parrafo {
+  max-width: 62ch;
+  margin-bottom: var(--sp-4);
+  color: var(--ink-body);
+  font-size: var(--t-lead);
+  line-height: 1.66;
+}
+
+.presentacion__github {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--line);
+  border-radius: var(--r-full);
+  color: var(--ink-strong);
+  font-size: max(0.88rem, 12.5px);
+  text-decoration: none;
+  transition: border-color 0.22s var(--ease), color 0.22s var(--ease), transform 0.22s var(--ease);
+}
+
+.presentacion__github:hover,
+.presentacion__github:focus-visible {
+  border-color: var(--accent-brand);
+  color: var(--accent-pos);
+  transform: translateY(-2px);
+}
+
+.presentacion__rubrica {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-2) var(--sp-4);
+  margin-top: var(--sp-6);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--line-soft);
+}
+
+.presentacion__rubrica strong {
+  color: var(--ink-strong);
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  font-weight: var(--w-bold);
+  letter-spacing: -0.01em;
+}
+
+.presentacion__rubrica > span {
+  color: var(--ink-muted);
+  font-size: max(0.82rem, 12.5px);
+  letter-spacing: 0.02em;
+}
+
+.presentacion__correo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  color: var(--accent-pos);
+  font-size: max(0.86rem, 12.5px);
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+
+.presentacion__correo:hover,
+.presentacion__correo:focus-visible {
+  text-decoration: underline;
+}
+
+.presentacion__acciones {
+  display: flex;
+  margin-top: var(--sp-6);
+}
+
+@media (max-width: 900px) {
+  .presentacion {
+    grid-template-columns: 1fr;
+    gap: var(--sp-7);
+  }
+  .presentacion__marca {
+    max-width: 380px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .presentacion__github:hover,
+  .presentacion__github:focus-visible {
+    transform: none;
+  }
+}
+
+/* El acento dentro de un titular. Es el mismo gesto que el hero —una voz en
+   color dentro de una frase en plata— aplicado a los encabezados para que
+   dejen de leerse de un solo color de punta a punta.
+
+   En las cabeceras de servicio toma el color de identidad de ESE servicio,
+   el mismo del eyebrow y del degradado del fondo: así cada página tiene su
+   propia personalidad cromática en vez de cinco páginas azules seguidas. */
+.titulo-seccion__acento {
+  color: var(--accent-pos);
+}
+
+.cabecera-pagina__acento {
+  color: var(--acento, var(--accent-pos));
 }

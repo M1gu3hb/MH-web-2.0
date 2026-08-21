@@ -124,6 +124,7 @@ export const PAGINAS_SERVICIO = {
     hero: {
       eyebrow: 'Servicio 01 · Presencia digital',
       titulo: 'Una página que trabaja para tu negocio.',
+      resalte: 'trabaja',
       entrada:
         'No un folleto bonito que nadie visita. Una página que la gente encuentra, entiende en diez segundos y usa para escribirte.',
       servicio: 'pagina-web',
@@ -261,6 +262,7 @@ export const PAGINAS_SERVICIO = {
     hero: {
       eyebrow: 'Servicio 02 · Operación diaria',
       titulo: 'Deja de llevar tu negocio de memoria.',
+      resalte: 'de memoria',
       entrada:
         'La caja, lo que hay en bodega y lo que se vendió ayer deberían ser el mismo dato. Casi nunca lo son.',
       servicio: 'sistema',
@@ -374,6 +376,7 @@ export const PAGINAS_SERVICIO = {
     hero: {
       eyebrow: 'Servicio 03 · Ventas y control',
       titulo: 'Tus clientes, en un solo lugar. No en tu cabeza.',
+      resalte: 'en un solo lugar',
       entrada:
         'Un CRM no es un programa complicado: es saber a quién le quedaste de marcar, cuánto le cotizaste y en qué quedaron.',
       servicio: 'crm',
@@ -478,6 +481,7 @@ export const PAGINAS_SERVICIO = {
     hero: {
       eyebrow: 'Servicio 04 · Herramienta propia',
       titulo: 'Cuando ningún programa hace lo que necesitas.',
+      resalte: 'lo que necesitas',
       entrada:
         'Hay procesos que no caben en un producto de catálogo. Si ya probaste tres opciones y en todas acabas exportando a Excel, ese es el síntoma.',
       servicio: 'software',
@@ -585,6 +589,7 @@ export const PAGINAS_SERVICIO = {
     hero: {
       eyebrow: 'Solución por industria',
       titulo: 'Tu restaurante, ordenado por dentro y por fuera.',
+      resalte: 'por dentro y por fuera',
       entrada:
         'El menú que el cliente escanea, la comanda que entra a cocina y el corte del día no deberían ser tres mundos distintos.',
       servicio: 'restaurante',

@@ -90,6 +90,7 @@ export default function Servicios() {
         migas={MIGAS}
         eyebrow="Servicios"
         titulo="Todo lo que puedo construir para tu negocio."
+        resalte="para tu negocio"
         entrada="Cinco frentes. Se pueden contratar por separado o funcionar juntos, que es cuando de verdad se nota."
         acciones={
           <>
@@ -108,6 +109,7 @@ export default function Servicios() {
         <div className="contenedor contenedor--amplio">
           <TituloSeccion
             titulo="Empieza por tu situación, no por la categoría."
+            resalte="tu situación"
             entrada="Nadie se levanta pensando «necesito un CRM». Se levanta pensando «otra vez se me pasó marcarle»."
           />
           {/* CORTINA sobre la tabla entera, no `Secuencia` fila a fila: las
@@ -144,6 +146,7 @@ export default function Servicios() {
         <div className="contenedor contenedor--amplio">
           <TituloSeccion
             titulo="Los cinco frentes, en detalle."
+            resalte="Los cinco frentes"
             aparte={
               <p className="titulo-seccion__dato">
                 <strong>5</strong> frentes · un precio de partida cada uno

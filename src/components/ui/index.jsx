@@ -14,7 +14,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Check, ChevronDown, MessageCircle } from 'lucide-react';
 import { useId, useState } from 'react';
-import { BordeElectrico, CampoPuntos, GlareHover, Reveal, ScrambleText, SpotlightCard, StarBorder } from '../reactbits';
+import { CampoPuntos, GlareHover, Reveal, ScrambleText, SpotlightCard, StarBorder } from '../reactbits';
 import { Cortina, Titular } from '../motion';
 import { RUTAS, contactoCon } from '../../config/rutas';
 import { precioDe } from '../../config/pricing';
@@ -59,6 +59,12 @@ export function TituloSeccion({
   /* Contenido opcional para la columna derecha cuando la entrada no basta:
      un dato, un enlace, una cifra. */
   aparte,
+  /* Un fragmento del titular que se pinta en azul. Sin esto todos los
+     encabezados del sitio salían del mismo gris de punta a punta y el
+     conjunto se leía plano: mucha escala, ninguna jerarquía dentro de la
+     propia frase. Una palabra en color por titular es suficiente —dos ya
+     dejan de destacar nada—. */
+  resalte,
 }) {
   const modo = centrado ? 'centro' : variante;
 
@@ -78,7 +84,14 @@ export function TituloSeccion({
             real permanece en el DOM: el efecto pinta encima. */}
         <Cortina>
           <Nivel className="titulo-seccion__titulo">
-            <ScrambleText text={titulo} trigger="both" />
+            {partirPorResalte(titulo, resalte).map((tramo, i) => (
+              <ScrambleText
+                key={`${tramo.texto}-${i}`}
+                text={tramo.texto}
+                trigger="both"
+                className={tramo.acento ? 'titulo-seccion__acento' : ''}
+              />
+            ))}
           </Nivel>
         </Cortina>
       </div>
@@ -150,6 +163,21 @@ export function Statement({
       {children && <div className="statement__pie">{children}</div>}
     </div>
   );
+}
+
+/* Parte un titular en los tramos anterior / resaltado / posterior. Los
+   espacios que rodean al fragmento se quedan en el tramo de fuera para que
+   la frase siga midiendo y partiéndose igual que sin resalte. */
+function partirPorResalte(texto, resalte) {
+  if (!resalte) return [{ texto }];
+  const i = texto.indexOf(resalte);
+  if (i === -1) return [{ texto }];
+  const tramos = [];
+  if (i > 0) tramos.push({ texto: texto.slice(0, i) });
+  tramos.push({ texto: resalte, acento: true });
+  const cola = texto.slice(i + resalte.length);
+  if (cola) tramos.push({ texto: cola });
+  return tramos;
 }
 
 function conResalte(linea, resalte) {
@@ -462,11 +490,9 @@ export function CierreCTA({
           <div className="cierre__reparto">
             <p className="cierre__cuerpo">{cuerpo}</p>
             <div className="cierre__acciones">
-              <BordeElectrico radio={999} className="cierre__chispa">
-                <BotonPrincipal to={contactoCon(servicio)} grande>
-                  {etiqueta}
-                </BotonPrincipal>
-              </BordeElectrico>
+              <BotonPrincipal to={contactoCon(servicio)} grande>
+                {etiqueta}
+              </BotonPrincipal>
               <BotonWhatsApp origen="contact" grande />
             </div>
           </div>
@@ -564,7 +590,7 @@ export function TarjetaServicio({ servicio, grande = false }) {
    Cabecera de página interior
    ------------------------------------------------------------ */
 
-export function CabeceraPagina({ migas, eyebrow, titulo, entrada, acciones, acento, imagen, maqueta, aparte }) {
+export function CabeceraPagina({ migas, eyebrow, titulo, entrada, acciones, acento, imagen, maqueta, aparte, resalte }) {
   return (
     <header className="cabecera-pagina" style={acento ? { '--acento': acento } : undefined}>
       {/* La cabecera de producción no era un degradado plano: tenía señal.
@@ -589,7 +615,14 @@ export function CabeceraPagina({ migas, eyebrow, titulo, entrada, acciones, acen
                 todavía se está colocando. */}
             <Cortina amount={0.1}>
               <h1 className="cabecera-pagina__titulo">
-                <ScrambleText text={titulo} trigger="both" />
+                {partirPorResalte(titulo, resalte).map((tramo, i) => (
+                  <ScrambleText
+                    key={`${tramo.texto}-${i}`}
+                    text={tramo.texto}
+                    trigger="both"
+                    className={tramo.acento ? 'cabecera-pagina__acento' : ''}
+                  />
+                ))}
               </h1>
             </Cortina>
             {entrada && <p className="cabecera-pagina__entrada">{entrada}</p>}
