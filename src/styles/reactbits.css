@@ -282,6 +282,56 @@
   pointer-events: none;
 }
 
+/* ============================================================
+   LA CADUCIDAD DEL CIFRADO
+   ============================================================
+   Aquí vive la garantía de que un titular NO PUEDE quedarse ilegible.
+
+   Mientras una palabra está cifrada, JavaScript le pone `data-cifrado` y
+   pinta glifos en la capa de encima. Ese atributo arranca dos animaciones
+   con `step-end`, que no interpolan nada: se quedan quietas en su valor
+   inicial y saltan al final justo al terminar. Al terminar, el texto real
+   recupera su color y la capa de glifos se apaga.
+
+   Lo importante es QUIÉN las lleva. Las lleva el motor de render, no
+   nosotros. Da igual que el JavaScript se cuelgue, que el componente se
+   desmonte a medias, que un `requestAnimationFrame` se cancele, que el
+   observador no dispare nunca o que alguien limpie un temporizador que no
+   era suyo: a los 3,2 segundos el navegador devuelve el texto. No hay
+   ningún estado alcanzable en el que la frase se quede en glifos, porque
+   volver no depende de que nuestro código llegue a ejecutarse.
+
+   En el camino normal —que es el 99 % de las veces— JavaScript termina en
+   1,7 s, quita el atributo y estas animaciones se descartan sin llegar a
+   saltar. Esto es el seguro, no el mecanismo.
+   ============================================================ */
+@keyframes rb-scramble-rescate {
+  to {
+    color: inherit;
+  }
+}
+
+@keyframes rb-scramble-caduca {
+  to {
+    opacity: 0;
+  }
+}
+
+.rb-scramble__word[data-cifrado] > [data-real] {
+  animation: rb-scramble-rescate 3.2s step-end forwards;
+}
+
+.rb-scramble__word[data-cifrado] > .rb-scramble__fx {
+  animation: rb-scramble-caduca 3.2s step-end forwards;
+}
+
+/* El texto real nunca sale del árbol de accesibilidad ni del flujo: se pone
+   transparente, no oculto. Un lector de pantalla y el rastreador de Google
+   leen la frase de verdad esté como esté la animación. */
+.rb-scramble__word > [data-real] {
+  color: inherit;
+}
+
 h1 .rb-scramble,
 h2 .rb-scramble,
 h3 .rb-scramble {

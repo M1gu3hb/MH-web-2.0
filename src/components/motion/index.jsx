@@ -62,15 +62,42 @@ export function Cortina({ children, delay = 0, className = '', amount = 0.3, as 
     return <Plano className={className}>{children}</Plano>;
   }
 
+  /* ------------------------------------------------------------
+     POR QUÉ HAY DOS ELEMENTOS Y NO UNO
+     ------------------------------------------------------------
+     La versión anterior recortaba y observaba el MISMO elemento, y eso es un
+     bloqueo circular: `clip-path: inset(100% 0 0 0)` deja el área visible en
+     cero, un área cero da razón de intersección cero, y `amount: 0.3` exige
+     una razón mayor que cero. O sea, la cortina solo se abría si el
+     observador la veía, y el observador no podía verla porque estaba
+     cerrada. Resultado: bloques que no aparecían NUNCA, y titulares que
+     dentro de ellos se quedaban en glifos porque su propio observador
+     tampoco podía dispararse.
+
+     Ahora el envoltorio de fuera es el que se observa —nunca está recortado,
+     así que su geometría siempre es real— y el recorte vive en el hijo, que
+     se anima por propagación de variantes. Separar quién mira de quién se
+     recorta es lo que hace que esto no se pueda volver a bloquear.
+     ------------------------------------------------------------ */
   return (
     <Tag
       className={className}
-      initial={{ clipPath: 'inset(100% 0 0 0)', opacity: 0.4 }}
-      whileInView={{ clipPath: 'inset(0% 0 0 0)', opacity: 1 }}
+      initial="cerrada"
+      whileInView="abierta"
       viewport={{ once: true, amount }}
-      transition={{ duration: DUR.cortina, delay, ease: CURVA }}
     >
-      {children}
+      <Motion.div
+        variants={{
+          cerrada: { clipPath: 'inset(100% 0 0 0)', opacity: 0.4 },
+          abierta: {
+            clipPath: 'inset(0% 0 0 0)',
+            opacity: 1,
+            transition: { duration: DUR.cortina, delay, ease: CURVA },
+          },
+        }}
+      >
+        {children}
+      </Motion.div>
     </Tag>
   );
 }
@@ -251,21 +278,37 @@ export function Titular({ lineas, className = '', as: Tag = 'h2', delay = 0, pas
     );
   }
 
+  /* Mismo principio que en `Cortina`: quien se observa es el titular entero
+     —que nunca está recortado— y las líneas se animan por propagación de
+     variantes. Observar cada línea era observar algo que arranca DEBAJO del
+     borde de su propia ventana con `overflow: hidden`, o sea con razón de
+     intersección cero, con lo que un `amount` mayor que cero no se alcanzaba
+     nunca y el titular no llegaba a entrar. */
+  const MotionTag = Motion[Tag] ?? Motion.h2;
+
   return (
-    <Tag className={className}>
+    <MotionTag
+      className={className}
+      initial="fuera"
+      whileInView="dentro"
+      viewport={{ once: true, amount: 'some' }}
+    >
       {partes.map((linea, i) => (
         <span key={i} className="titular__ventana">
           <Motion.span
             className={`titular__linea ${claseLinea}`}
-            initial={{ y: '108%' }}
-            whileInView={{ y: '0%' }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: DUR.titular, delay: delay + i * paso, ease: CURVA }}
+            variants={{
+              fuera: { y: '108%' },
+              dentro: {
+                y: '0%',
+                transition: { duration: DUR.titular, delay: delay + i * paso, ease: CURVA },
+              },
+            }}
           >
             {linea}
           </Motion.span>
         </span>
       ))}
-    </Tag>
+    </MotionTag>
   );
 }

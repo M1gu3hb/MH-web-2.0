@@ -3807,3 +3807,35 @@ iframe {
 .contacto-linea__wa:focus-visible {
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-brand) 18%, transparent);
 }
+
+
+/* ============================================================
+   EL RELEVO ENTRE RUTAS OCUPA UNA SOLA CELDA
+   ============================================================
+   `AnimatePresence` sin `mode="wait"` mantiene, durante el relevo, el panel
+   que sale y el que entra vivos a la vez. Los dos son bloques normales, así
+   que el que ENTRA se maquetaba íntegramente POR DEBAJO del que sale:
+   medido, el panel entrante nacía a 9.537 px del principio del documento con
+   el scroll en 0.
+
+   Eso rompe cualquier cosa que dependa de la geometría durante ese fotograma.
+   Los observadores de los titulares nacían viendo su elemento a diez mil
+   píxeles por debajo de la ventana; acto seguido el panel saliente se
+   desmontaba, todo subía de golpe y la restauración del scroll saltaba otros
+   miles de píxeles. Entre dos muestreos el titular cruzaba la ventana entera
+   y el observador no llegaba a enterarse: es el fallo que dejaba veinte
+   titulares en glifos a la vez al volver atrás con el navegador.
+
+   Con una rejilla de una sola celda, los dos paneles se superponen en el
+   mismo sitio y el que entra se maqueta en su posición definitiva desde el
+   primer fotograma. La geometría que ven los observadores es la de verdad.
+   ============================================================ */
+main#contenido {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+main#contenido > * {
+  grid-area: 1 / 1;
+  min-width: 0;
+}

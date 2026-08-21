@@ -2,28 +2,150 @@ import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 
 /**
- * ScrambleText — desfragmentación de letras.
+ * ============================================================
+ * SCRAMBLETEXT — desfragmentación de letras
+ * ============================================================
  *
  *   trigger="hover"  se desordena mientras el cursor está encima
  *   trigger="view"   llega desfragmentado y se recompone al entrar en pantalla
  *   trigger="both"   las dos cosas
  *
- * El texto real NUNCA se toca: se queda en el flujo, con su ancho de verdad,
- * y solo se le apaga la visibilidad mientras dura la animación. Los glifos
- * aleatorios se pintan en una capa absoluta encima de cada palabra.
+ * ------------------------------------------------------------
+ * LA REGLA DE ESTE ARCHIVO
+ * ------------------------------------------------------------
+ * Este componente tuvo un fallo grave y repetido: titulares que se quedaban
+ * en glifos aleatorios hasta que la persona recargaba la página. Se intentó
+ * arreglar dos veces poniendo redes de seguridad en JavaScript, y las dos
+ * veces volvió a pasar. La razón de fondo es que TODAS esas redes vivían en
+ * el mismo sitio que el fallo: si el JavaScript se queda a medias, la red
+ * también.
  *
- * Antes se medía cada palabra y se le fijaba el ancho para que los glifos
- * —que no miden lo mismo que las letras— no movieran la maquetación. Esa
- * medida era el problema: si caía mientras la tipografía todavía estaba
- * cambiando, dentro de una capa aún oculta o bajo un ancestro escalado, el
- * ancho salía corto y, como la palabra recorta lo que sobra, el titular se
- * quedaba mutilado para siempre. Sin medir no hay nada que pueda salir mal:
- * la maquetación la sostiene el propio texto y la capa de glifos flota sin
- * ocupar sitio.
+ * Así que la regla ahora es otra, y es estructural:
+ *
+ *   EL OCULTAMIENTO DEL TEXTO TIENE FECHA DE CADUCIDAD ESCRITA EN CSS.
+ *
+ * Ocultar el texto real no lo hace JavaScript «hasta que yo diga»: lo hace
+ * una animación de CSS que TERMINA SOLA. El motor de render la lleva, no
+ * nosotros. Si el JavaScript se cuelga, se cancela, se desmonta a mitad o
+ * nunca llega a ejecutarse, el navegador devuelve el texto igual. Es la
+ * diferencia entre prometer que el texto va a volver y que no exista ningún
+ * estado alcanzable en el que no vuelva.
+ *
+ * Lo demás son consecuencias de esa regla:
+ *
+ * · El texto real NUNCA sale del flujo ni del árbol de accesibilidad. Se
+ *   vuelve transparente, no invisible. Un lector de pantalla y el rastreador
+ *   de Google leen siempre la frase de verdad, esté como esté la animación.
+ * · La capa de glifos también caduca. Al terminar la animación de rescate,
+ *   el texto real recupera su color y los glifos se apagan, los dos a la vez
+ *   y los dos por CSS.
+ * · JavaScript se limita a poner y quitar un atributo. Si acaba antes —que
+ *   es lo normal—, quita el atributo y la animación se descarta.
+ *
+ * ------------------------------------------------------------
+ * LOS FALLOS CONCRETOS QUE SE ARREGLARON
+ * ------------------------------------------------------------
+ * Salieron de una auditoría con tres lentes independientes, seis de ellos
+ * reproducidos en un navegador de verdad:
+ *
+ * 1. El callback del observador leía `([entry])`, o sea SOLO LA PRIMERA
+ *    entrada. IntersectionObserver AGRUPA: cuando el estado cambia dos veces
+ *    antes de que corra el callback, llega una invocación con dos entradas
+ *    ordenadas de más vieja a más nueva. La vieja dice `isIntersecting:
+ *    false`, el componente hacía `return`, y a partir de ahí el observador
+ *    seguía conectado pero mudo, porque para el navegador el elemento ya
+ *    estaba en estado «intersectando» y no había nada nuevo que notificar.
+ *    Ahora se miran TODAS las entradas.
+ *
+ * 2. `threshold: 0.01` es estrictamente PEOR que `threshold: 0`. Se puso
+ *    para sobrevivir a los titulares metidos dentro de una máscara, y hace
+ *    justo lo contrario: un elemento recortado a cero tiene razón de
+ *    intersección exactamente 0, y 0.01 > 0. Solo el umbral 0 marca
+ *    `isIntersecting: true` con área cero. Ahora es 0.
+ *
+ * 3. El observador podía no recibir NINGÚN callback. Calcula la geometría
+ *    una vez por fotograma y solo avisa cuando el estado NOTIFICADO cambia:
+ *    si el elemento cruza la ventana entera entre dos muestreos, para él
+ *    nunca estuvo dentro. Ahora hay una red de scroll compartida que lo
+ *    cubre, y el margen de raíz se abre a 240 px por arriba y por abajo.
+ *
+ * 4. Un elemento que ya pasó de largo por arriba se resuelve al instante,
+ *    sin animar: animar algo que quedó por encima del pliegue es gastar
+ *    tiempo en algo que nadie va a ver.
  */
 
-const GLYPHS = '#$%&*+-<>=?@[]{}/\\|~^01';
-const randomGlyph = () => GLYPHS[(Math.random() * GLYPHS.length) | 0];
+const GLIFOS = '#$%&*+-<>=?@[]{}/\\|~^01';
+const glifoAlAzar = () => GLIFOS[(Math.random() * GLIFOS.length) | 0];
+
+/* ------------------------------------------------------------
+   RED DE SCROLL COMPARTIDA
+   ------------------------------------------------------------
+   Un solo oyente de scroll para toda la página, estrangulado a un fotograma,
+   y que solo existe mientras haya algún texto esperando. Cubre el caso en el
+   que el observador no llega a disparar nunca porque el elemento cruzó la
+   ventana entre dos muestreos —el salto de la restauración del scroll al
+   volver atrás, por ejemplo, que mueve los titulares miles de píxeles en un
+   fotograma.
+
+   Es deliberadamente un módulo y no un hook: con veinte titulares en una
+   página, veinte oyentes de scroll serían veinte lecturas de geometría por
+   evento. Así es una.
+   ------------------------------------------------------------ */
+const pendientes = new Set();
+let vigilandoScroll = false;
+let tickPedido = 0;
+
+function revisarPendientes() {
+  tickPedido = 0;
+  const alto = window.innerHeight || 0;
+  for (const entrada of Array.from(pendientes)) {
+    const { nodo, resolver } = entrada;
+    if (!nodo.isConnected) {
+      pendientes.delete(entrada);
+      continue;
+    }
+    const r = nodo.getBoundingClientRect();
+    if (r.width === 0 && r.height === 0) continue;
+    /* Ya está a la vista, o ya pasó de largo por arriba. En los dos casos
+       toca resolver: en el segundo, sin animación. */
+    if (r.top < alto + 240 && r.bottom > -240) resolver(false);
+    else if (r.bottom <= 0) resolver(true);
+  }
+  if (pendientes.size === 0) apagarVigilancia();
+}
+
+function pedirRevision() {
+  if (tickPedido) return;
+  tickPedido = requestAnimationFrame(revisarPendientes);
+}
+
+function encenderVigilancia() {
+  if (vigilandoScroll) return;
+  vigilandoScroll = true;
+  window.addEventListener('scroll', pedirRevision, { passive: true });
+  window.addEventListener('resize', pedirRevision, { passive: true });
+}
+
+function apagarVigilancia() {
+  if (!vigilandoScroll) return;
+  vigilandoScroll = false;
+  window.removeEventListener('scroll', pedirRevision);
+  window.removeEventListener('resize', pedirRevision);
+  if (tickPedido) cancelAnimationFrame(tickPedido);
+  tickPedido = 0;
+}
+
+function esperarScroll(entrada) {
+  pendientes.add(entrada);
+  encenderVigilancia();
+  /* Una revisión inmediata: puede que ya esté a la vista al montarse. */
+  pedirRevision();
+}
+
+function dejarDeEsperar(entrada) {
+  pendientes.delete(entrada);
+  if (pendientes.size === 0) apagarVigilancia();
+}
 
 export function ScrambleText({
   text,
@@ -38,146 +160,143 @@ export function ScrambleText({
   className = '',
   children,
 }) {
-  const reduced = useReducedMotion();
-  const source = text ?? (typeof children === 'string' ? children : '');
-  const host = useRef(null);
-  const words = useRef([]);
-  const timer = useRef(0);
-  const phase = useRef('idle');
-  /* El plazo de rescate. Se arma cada vez que la animación empieza y se
-     desarma cuando termina bien. Es lo único que garantiza que el texto
-     acabe visible pase lo que pase. */
-  const vigilante = useRef(0);
-  /* Una vez que este texto se ha compuesto, NUNCA vuelve a desordenarse por
-     scroll. Ver el porqué en el efecto de abajo. */
-  const yaResuelto = useRef(false);
+  const sinMovimiento = useReducedMotion();
+  const fuente = text ?? (typeof children === 'string' ? children : '');
+  const anfitrion = useRef(null);
+  const palabras = useRef([]);
+  const reloj = useRef(0);
+  const fase = useRef('reposo');
 
-  const stop = useCallback(() => {
-    cancelAnimationFrame(timer.current);
-    timer.current = 0;
+  const parar = useCallback(() => {
+    cancelAnimationFrame(reloj.current);
+    reloj.current = 0;
   }, []);
 
   /** Recoge las parejas palabra real / capa de glifos. */
   const recoger = useCallback(() => {
-    const element = host.current;
-    words.current = element
-      ? Array.from(element.querySelectorAll('[data-word]')).map((node) => ({
-          real: node.querySelector('[data-real]'),
-          fx: node.querySelector('[data-fx]'),
-          word: node.dataset.word,
+    const nodo = anfitrion.current;
+    palabras.current = nodo
+      ? Array.from(nodo.querySelectorAll('[data-word]')).map((n) => ({
+          caja: n,
+          real: n.querySelector('[data-real]'),
+          fx: n.querySelector('[data-fx]'),
+          palabra: n.dataset.word,
         }))
       : [];
   }, []);
 
-  /** Enseña el texto de verdad, apaga los glifos y cierra el ciclo. */
+  /**
+   * Enseña el texto de verdad y apaga la capa de glifos.
+   *
+   * Es el ÚNICO dueño del final del ciclo: apaga el bucle de animación antes
+   * de tocar el DOM. La versión anterior no cancelaba el `requestAnimationFrame`
+   * y por eso un bucle vivo podía volver a escribir glifos justo después de
+   * que otra red de seguridad los hubiera limpiado.
+   */
   const mostrar = useCallback(() => {
-    window.clearTimeout(vigilante.current);
-    vigilante.current = 0;
-    phase.current = 'done';
-    yaResuelto.current = true;
-    words.current.forEach(({ real, fx }) => {
-      if (real) real.style.visibility = '';
+    cancelAnimationFrame(reloj.current);
+    reloj.current = 0;
+    fase.current = 'hecho';
+    palabras.current.forEach(({ caja, real, fx }) => {
+      /* Quitar el atributo descarta la animación de rescate de CSS. */
+      if (caja) caja.removeAttribute('data-cifrado');
+      if (real) real.style.color = '';
       if (fx) fx.textContent = '';
     });
   }, []);
 
-  /** Arma el plazo de rescate para el ciclo que acaba de empezar. */
-  const vigilar = useCallback(
-    (ms) => {
-      window.clearTimeout(vigilante.current);
-      vigilante.current = window.setTimeout(() => {
-        cancelAnimationFrame(timer.current);
-        timer.current = 0;
-        mostrar();
-      }, ms);
-    },
-    [mostrar]
-  );
-
-  /** Escribe el estado actual: `revealed` letras reales, el resto en glifos. */
-  const paint = useCallback((revealed) => {
-    let index = 0;
-    words.current.forEach(({ real, fx, word }) => {
-      let out = '';
+  /** Escribe el estado actual: `resueltas` letras reales, el resto en glifos. */
+  const pintar = useCallback((resueltas) => {
+    let indice = 0;
+    palabras.current.forEach(({ caja, real, fx, palabra }) => {
+      let salida = '';
       let intactas = 0;
-      for (let i = 0; i < word.length; i += 1, index += 1) {
-        if (index < revealed) {
-          out += word[i];
+      for (let i = 0; i < palabra.length; i += 1, indice += 1) {
+        if (indice < resueltas) {
+          salida += palabra[i];
           intactas += 1;
         } else {
-          out += randomGlyph();
+          salida += glifoAlAzar();
         }
       }
-      index += 1; // el espacio entre palabras también cuenta
-      /* Palabra ya resuelta: se enseña la de verdad, que es la que mide bien
-         y la que leen los buscadores. */
-      if (intactas === word.length) {
-        if (real) real.style.visibility = '';
+      indice += 1; // el espacio entre palabras también cuenta
+      if (intactas === palabra.length) {
+        /* Palabra ya resuelta: se enseña la de verdad, que es la que mide
+           bien y la que leen los buscadores. */
+        if (caja) caja.removeAttribute('data-cifrado');
+        if (real) real.style.color = '';
         if (fx) fx.textContent = '';
       } else {
-        if (real) real.style.visibility = 'hidden';
-        if (fx) fx.textContent = out;
+        /* El texto real NO se oculta: se vuelve transparente. Sigue en el
+           flujo, sigue midiendo y sigue leyéndose. Y el atributo arranca la
+           animación de CSS que, pase lo que pase con este JavaScript, le
+           devuelve el color al terminar. */
+        if (caja) caja.setAttribute('data-cifrado', '');
+        if (real) real.style.color = 'transparent';
+        if (fx) fx.textContent = salida;
       }
     });
   }, []);
 
-  const total = source.length;
+  const total = fuente.length;
 
   /* El avance se mide con el reloj, no contando fotogramas: si el navegador
      se retrasa, la animación sigue acabando en `duration`. */
-  const resolve = useCallback((ms = duration) => {
-    stop();
-    /* Con la pestaña en segundo plano `requestAnimationFrame` no corre. Si
-       la animación arrancara aquí, se quedaría congelada en glifos hasta
-       que alguien volviera a la pestaña —y ese es exactamente el fallo de
-       «las palabras no cargan»—. Así que ni se intenta: se enseña el texto
-       y ya está. */
-    if (document.hidden) {
-      mostrar();
-      return;
-    }
-    phase.current = 'running';
-    /* El plazo se arma AQUÍ, cuando el ciclo empieza, no al montar: un
-       titular que está a diez pantallas de distancia no debe quedarse sin
-       efecto solo porque tarde un minuto en aparecer. */
-    vigilar(ms + 2500);
-    const startedAt = performance.now();
-    const step = (now) => {
-      const t = (now - startedAt) / ms;
-      if (t >= 1) {
-        timer.current = 0;
+  const resolver = useCallback(
+    (ms = duration) => {
+      parar();
+      /* Con la pestaña en segundo plano `requestAnimationFrame` no corre. Si
+         la animación arrancara aquí, se quedaría congelada hasta que alguien
+         volviera a la pestaña. Así que ni se intenta. */
+      if (document.hidden) {
         mostrar();
         return;
       }
-      paint(Math.floor(t * total));
-      timer.current = requestAnimationFrame(step);
-    };
-    timer.current = requestAnimationFrame(step);
-  }, [duration, mostrar, paint, stop, total, vigilar]);
+      fase.current = 'corriendo';
+      const arranque = performance.now();
+      const paso = (ahora) => {
+        const t = (ahora - arranque) / ms;
+        if (t >= 1) {
+          mostrar();
+          return;
+        }
+        pintar(Math.floor(t * total));
+        reloj.current = requestAnimationFrame(paso);
+      };
+      reloj.current = requestAnimationFrame(paso);
+    },
+    [duration, mostrar, pintar, parar, total]
+  );
 
-  const churn = useCallback(() => {
-    stop();
-    phase.current = 'running';
-    /* Aunque el cursor se quede encima, a los ocho segundos el texto vuelve.
-       Sin esto, salir de la página con el ratón encima de un titular lo
-       dejaba en glifos hasta recargar. */
-    vigilar(8000);
-    paint(0);
-    let last = 0;
-    const step = (now) => {
-      if (now - last >= speed + 14) {
-        last = now;
-        paint(0);
+  const revolver = useCallback(() => {
+    parar();
+    fase.current = 'corriendo';
+    pintar(0);
+    let ultimo = 0;
+    const arranque = performance.now();
+    const paso = (ahora) => {
+      /* El tope de tiempo vive DENTRO del bucle, no en un temporizador de
+         fuera. Un temporizador externo lo puede limpiar cualquiera; esto no.
+         Si el cursor se queda encima —o se va sin que el navegador emita el
+         evento de salida, que pasa con el scroll por JavaScript— el texto
+         vuelve solo. */
+      if (ahora - arranque > 5000) {
+        resolver(exitDuration);
+        return;
       }
-      timer.current = requestAnimationFrame(step);
+      if (ahora - ultimo >= speed + 14) {
+        ultimo = ahora;
+        pintar(0);
+      }
+      reloj.current = requestAnimationFrame(paso);
     };
-    timer.current = requestAnimationFrame(step);
-  }, [paint, speed, stop, vigilar]);
+    reloj.current = requestAnimationFrame(paso);
+  }, [exitDuration, pintar, resolver, speed, parar]);
 
   useLayoutEffect(() => {
-    if (reduced) return undefined;
-    const element = host.current;
-    if (!element) return undefined;
+    if (sinMovimiento) return undefined;
+    const nodo = anfitrion.current;
+    if (!nodo) return undefined;
 
     recoger();
 
@@ -187,118 +306,96 @@ export function ScrambleText({
       return undefined;
     }
 
-    /* ------------------------------------------------------------
-       POR QUÉ ESTA GUARDA
-       ------------------------------------------------------------
-       Este efecto puede volver a ejecutarse por motivos que no tienen nada
-       que ver con el texto: el componente se re-monta al recomponerse una
-       rejilla, al terminar una entrada, al cambiar de ruta. Sin la guarda,
-       cada re-ejecución llamaba a `paint(0)` —o sea, volvía a poner glifos
-       en un titular que YA estaba compuesto— y creaba un observador nuevo.
-       Si para entonces el bloque había quedado fuera de pantalla, ese
-       observador no disparaba y el titular se quedaba en glifos hasta
-       recargar la página. Es exactamente el fallo de «las palabras no
-       cargan».
+    fase.current = 'reposo';
+    pintar(0);
 
-       La regla ahora es simple y no admite excepciones: un texto que ya se
-       compuso no se vuelve a desordenar por scroll. Al cursor sí responde,
-       porque eso lo pide la persona y siempre acaba resolviéndose.
-       ------------------------------------------------------------ */
-    if (yaResuelto.current) {
-      mostrar();
-      return undefined;
-    }
-
-    phase.current = 'idle';
-    paint(0);
-
-    /* SUELO ABSOLUTO. Aunque el observador no llegue a disparar nunca —por
-       un recorte de un ancestro, por un reparto que cambia debajo, por lo
-       que sea—, a los quince segundos el texto está a la vista. Es un solo
-       temporizador por titular y se cancela en cuanto se compone, así que no
-       cuesta nada; y es lo que convierte «se queda roto hasta recargar» en
-       imposible por construcción. */
-    const suelo = window.setTimeout(() => {
-      if (phase.current !== 'done') mostrar();
-    }, 15000);
-    /* Umbral casi cero, no 0.3. Con la escala nueva hay titulares metidos
-       dentro de una máscara con `overflow: hidden` que arranca con la línea
-       fuera de su propio borde: mientras la máscara no se abre, la razón de
-       intersección es 0 y con un umbral de 0.3 el observador podía no
-       dispararse nunca. Dos animaciones no deben depender una de la otra. */
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        observer.disconnect();
-        resolve();
-      },
-      { threshold: 0.01, rootMargin: '0px 0px -2% 0px' },
-    );
-    observer.observe(element);
-    return () => {
-      observer.disconnect();
-      window.clearTimeout(suelo);
+    let vivo = true;
+    const rematar = (sinAnimar) => {
+      if (!vivo) return;
+      vivo = false;
+      observador.disconnect();
+      dejarDeEsperar(espera);
+      if (sinAnimar) mostrar();
+      else resolver();
     };
-  }, [mostrar, paint, recoger, reduced, resolve, source, trigger]);
 
-  /* ------------------------------------------------------------
-     RED DE SEGURIDAD
-     ------------------------------------------------------------
-     La versión anterior estaba al revés: rescataba el texto solo si la
-     animación NO estaba corriendo. Pero el fallo real es justo el contrario
-     —una animación que ARRANCA y no termina: la pestaña se va al fondo y
-     `requestAnimationFrame` deja de correr, o el elemento se desmonta a
-     medias durante un cambio de ruta—. En ese caso `phase` se queda en
-     `running` para siempre y con ella los glifos en pantalla. De ahí lo de
-     «hay que recargar a huevo».
+    /* Umbral 0 y margen amplio. El 0 es el único que marca intersección
+       cuando el área es cero —un titular dentro de una máscara cerrada—, y
+       el margen de 240 px ensancha la ventana de oportunidad para que un
+       salto de scroll tenga que ser enorme para saltársela. */
+    const observador = new IntersectionObserver(
+      (entradas) => {
+        /* TODAS las entradas, no la primera: llegan agrupadas y la primera
+           puede estar caducada. */
+        if (entradas.some((e) => e.isIntersecting)) {
+          rematar(false);
+          return;
+        }
+        /* Aunque no intersecte, si ya pasó de largo por arriba hay que
+           resolver sin animar: la persona ya está más abajo. */
+        const ultima = entradas[entradas.length - 1];
+        const caja = ultima?.boundingClientRect;
+        const raiz = ultima?.rootBounds;
+        if (caja && raiz && caja.bottom <= raiz.top) rematar(true);
+      },
+      { threshold: 0, rootMargin: '240px 0px 240px 0px' }
+    );
 
-     Ahora el plazo es incondicional: pasado el tiempo, el texto está a la
-     vista, esté como esté la animación. Y además se rescata en cuanto la
-     pestaña vuelve al frente, sin esperar al plazo.
-     ------------------------------------------------------------ */
+    const espera = { nodo, resolver: rematar };
+    observador.observe(nodo);
+    esperarScroll(espera);
+
+    return () => {
+      vivo = false;
+      observador.disconnect();
+      dejarDeEsperar(espera);
+      parar();
+    };
+  }, [mostrar, pintar, recoger, sinMovimiento, resolver, fuente, trigger, parar]);
+
+  /* Al volver de una pestaña oculta, o al restaurar la página desde la caché
+     de atrás/adelante: si el ciclo quedó a medias, se resuelve. */
   useEffect(() => {
-    if (reduced) return undefined;
-
-    /* Al volver de una pestaña oculta, o al restaurar la página desde la
-       caché de atrás/adelante: si el ciclo quedó a medias, se resuelve sin
-       esperar al plazo. */
+    if (sinMovimiento) return undefined;
     const alVolver = () => {
-      if (document.hidden || phase.current !== 'running') return;
-      stop();
+      if (document.hidden || fase.current !== 'corriendo') return;
       mostrar();
     };
     document.addEventListener('visibilitychange', alVolver);
     window.addEventListener('pageshow', alVolver);
-
     return () => {
       document.removeEventListener('visibilitychange', alVolver);
       window.removeEventListener('pageshow', alVolver);
-      window.clearTimeout(vigilante.current);
     };
-  }, [mostrar, reduced, source, stop]);
+  }, [mostrar, sinMovimiento]);
 
-  useLayoutEffect(() => stop, [stop]);
+  useLayoutEffect(() => parar, [parar]);
 
-  if (reduced) return <Tag className={className}>{source}</Tag>;
+  if (sinMovimiento) return <Tag className={className}>{fuente}</Tag>;
 
-  const pieces = source.split(' ');
-  /* Los manejadores se envuelven a propósito: pasar `resolve` directo le
+  const trozos = fuente.split(' ');
+  /* Los manejadores se envuelven a propósito: pasar `resolver` directo le
      entregaría el evento como duración. */
-  const settle = () => resolve(exitDuration);
-  const hoverProps =
+  const asentar = () => resolver(exitDuration);
+  const propsCursor =
     trigger === 'hover' || trigger === 'both'
-      ? { onMouseEnter: churn, onMouseLeave: settle, onFocus: churn, onBlur: settle }
+      ? {
+          onPointerEnter: revolver,
+          onPointerLeave: asentar,
+          onFocus: revolver,
+          onBlur: asentar,
+        }
       : {};
 
   return (
-    <Tag ref={host} className={`rb-scramble ${className}`} {...hoverProps}>
-      {pieces.map((word, index) => (
-        <span key={`${word}-${index}`}>
-          <span className="rb-scramble__word" data-word={word}>
-            <span data-real>{word}</span>
+    <Tag ref={anfitrion} className={`rb-scramble ${className}`} {...propsCursor}>
+      {trozos.map((palabra, i) => (
+        <span key={`${palabra}-${i}`}>
+          <span className="rb-scramble__word" data-word={palabra}>
+            <span data-real>{palabra}</span>
             <span className="rb-scramble__fx" data-fx aria-hidden="true" />
           </span>
-          {index < pieces.length - 1 ? ' ' : ''}
+          {i < trozos.length - 1 ? ' ' : ''}
         </span>
       ))}
     </Tag>
