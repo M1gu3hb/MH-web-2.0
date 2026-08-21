@@ -483,6 +483,12 @@ export function CierreCTA({
           queda con su degradado, que ya funciona solo. */}
       <CampoPuntos className="cierre__campo" />
 
+      {/* El símbolo translúcido detrás. Estaba solo en el cierre de la home y
+          en el formulario de contacto, y era justo lo que hacía que ese cierre
+          se leyera como un final firmado en vez de como un bloque más. Ahora
+          va en todos: servicios, precios, proyectos, cada caso y sobre. */}
+      <img className="cierre__marca" src="/marca/simbolo-v2-lg.webp" alt="" aria-hidden="true" loading="lazy" />
+
       <div className="contenedor contenedor--amplio">
         <Statement
           lineas={partes}
