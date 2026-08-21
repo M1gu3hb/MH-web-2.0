@@ -28,6 +28,7 @@ import { Escala } from '../components/motion';
 import { Seo, nodoMigas, nodoOferta, nodoPagina, nodoPreguntas } from '../lib/seo';
 import { AVISO_IVA, PLANES, PLANES_SISTEMAS, PLANES_WEB } from '../config/pricing';
 import { DOMINIO, RUTAS } from '../config/rutas';
+import { PREGUNTAS_PRECIOS } from '../content';
 
 const MIGAS = [
   { nombre: 'Inicio', path: RUTAS.inicio },
@@ -53,32 +54,6 @@ const FAMILIAS = [
   },
 ];
 
-const PREGUNTAS = [
-  {
-    q: '¿Por qué todo dice «desde»?',
-    a: 'Porque cobrar lo mismo por una página de tres secciones que por un catálogo con panel de administración sería mentirle a alguien. El «desde» es el punto de partida real: es lo que cuesta el alcance más sencillo de ese plan. Cuando me cuentes qué necesitas, te doy un número cerrado, y ese número ya no se mueve.',
-  },
-  {
-    q: '¿El precio final puede acabar siendo mucho más alto?',
-    a: 'Puede ser más alto si tu proyecto es más grande, pero lo sabes antes de empezar, no a mitad. Yo cotizo cerrado: si me equivoqué calculando, es mi problema, no una factura sorpresa para ti. Y si con el plan más barato te alcanza, te lo digo.',
-  },
-  {
-    q: '¿Cómo se paga?',
-    a: 'Una parte al arrancar y el resto contra entrega. Los servicios mensuales, como CRM, punto de venta y mantenimiento, se pagan mes a mes y no tienen contrato de permanencia.',
-  },
-  {
-    q: '¿Por qué unos son pago único y otros mensuales?',
-    a: 'Una página web se construye una vez y es tuya. Un sistema que cobra dinero todos los días necesita servidores, respaldos, actualizaciones y alguien que conteste cuando algo falla: eso es un servicio, no un producto, y por eso es mensual.',
-  },
-  {
-    q: '¿Qué es la implementación inicial del CRM y del punto de venta?',
-    a: 'Es dejarlo funcionando de verdad: cargar tu catálogo, configurar sucursales y usuarios, migrar lo que ya tengas y capacitar a quien lo va a usar. Se cotiza aparte, una sola vez, y depende del tamaño de tu operación.',
-  },
-  {
-    q: '¿Hay factura?',
-    a: 'Sí, se puede facturar. Coméntamelo al cotizar para contemplarlo desde el principio.',
-  },
-];
 
 export default function Precios() {
   const [familia, setFamilia] = useState('web');
@@ -98,10 +73,11 @@ export default function Precios() {
           descripcion: p.resumen,
           desde: p.desde,
           path: RUTAS.precios,
+          ancla: p.id,
         })
       ),
     },
-    nodoPreguntas({ path: RUTAS.precios, preguntas: PREGUNTAS }),
+    nodoPreguntas({ path: RUTAS.precios, preguntas: PREGUNTAS_PRECIOS }),
   ];
 
   return (
@@ -242,7 +218,7 @@ export default function Precios() {
       <Seccion tono="elevado">
         <Contenedor ancho="estrecho">
           <TituloSeccion titulo="Lo que todos preguntan del precio" />
-          <Acordeon items={PREGUNTAS} />
+          <Acordeon items={PREGUNTAS_PRECIOS} />
         </Contenedor>
       </Seccion>
 

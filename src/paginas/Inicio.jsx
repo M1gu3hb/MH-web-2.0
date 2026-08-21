@@ -35,7 +35,7 @@ import { SERVICIOS } from '../content/servicios';
 import { PROYECTOS_DESTACADOS, rutaProyecto } from '../content/proyectos';
 import { ANCLAS_HOME } from '../config/pricing';
 import { RUTAS } from '../config/rutas';
-import { CONTACT } from '../content';
+import { CONTACT, PREGUNTAS_INICIO } from '../content';
 
 /* El title y la description de la home son los que Miguel eligió para
    producción; se respetan tal cual para no cambiarle una decisión suya de
@@ -53,33 +53,11 @@ const PROCESO_CORTO = [
   { titulo: 'Sale en línea', cuerpo: 'Publicación, capacitación y acompañamiento los primeros días.' },
 ];
 
-const PREGUNTAS = [
-  {
-    q: '¿Cuánto cuesta una página web?',
-    a: 'Desde $2,000 MXN una página sencilla y bien hecha, y desde $8,000 MXN un sitio completo con varias páginas, formularios y dominio incluido el primer año. El precio final depende del alcance y te lo doy cerrado antes de empezar.',
-  },
-  {
-    q: '¿Cuánto tiempo tarda?',
-    a: 'Depende del alcance, y te doy una fecha antes de arrancar. Lo que no cambia es el ritmo: vas viendo producto funcionando durante el proceso, no reportes de avance.',
-  },
-  {
-    q: '¿Puedo editar el contenido después?',
-    a: 'Depende del proyecto. Cuando incluye panel de administración, sí: cambias precios, fotos, servicios y promociones tú mismo, y te capacito antes de entregar. No todas las páginas lo necesitan y te digo con honestidad si la tuya sí.',
-  },
-  {
-    q: '¿Trabajas con negocios fuera de CDMX?',
-    a: 'Sí. La mayoría de mis clientes son de la ciudad porque me gusta ir a verlos, pero el proceso funciona igual a distancia: videollamadas, avances en línea y entrega remota.',
-  },
-  {
-    q: '¿Cómo sé que no vas a desaparecer a medio proyecto?',
-    a: 'Porque el trabajo está en línea y lo puedes abrir: los proyectos de este sitio tienen enlace directo. Y porque parte del pago va contra entrega: si no entrego, no lo cobro.',
-  },
-];
 
 export default function Inicio() {
   const grafo = [
     nodoPagina({ path: RUTAS.inicio, title: TITLE, description: DESC }),
-    nodoPreguntas({ path: RUTAS.inicio, preguntas: PREGUNTAS }),
+    nodoPreguntas({ path: RUTAS.inicio, preguntas: PREGUNTAS_INICIO }),
   ];
 
   return (
@@ -237,7 +215,7 @@ export default function Inicio() {
               una columna, y meterle una segunda columna de entrada sería
               composición por composición. */}
           <TituloSeccion titulo="Lo que todos preguntan primero." resalte="preguntan primero" variante="simple" />
-          <Acordeon items={PREGUNTAS} />
+          <Acordeon items={PREGUNTAS_INICIO} />
         </Contenedor>
       </Seccion>
 

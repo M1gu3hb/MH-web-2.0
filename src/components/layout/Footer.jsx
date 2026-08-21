@@ -18,6 +18,7 @@ import { BrandLockup } from './BrandLockup';
 import { CONTACT } from '../../content';
 import { MENU, RUTAS } from '../../config/rutas';
 import { PLANES, precioEnLinea } from '../../config/pricing';
+import { PROYECTOS, rutaProyecto } from '../../content/proyectos';
 import { gmailUrl } from '../../lib/correo';
 import { trackWhatsApp, whatsappUrl } from '../../lib/whatsapp';
 
@@ -92,6 +93,23 @@ export function Footer() {
           </p>
         </div>
       </div>
+
+      {/* Los casos, enlazados desde todas las páginas.
+          Las fichas de proyecto eran las URLs peor enlazadas del sitio: solo
+          se llegaba a ellas desde /proyectos, y una página con un único
+          enlace entrante se rastrea tarde y se reconsidera poco. Aquí van
+          las once, en una tira que además hace de índice para quien llega al
+          pie buscando trabajo hecho. */}
+      <nav className="footer__casos" aria-label="Casos">
+        <h2 className="footer__col-title">Casos</h2>
+        <ul>
+          {PROYECTOS.map((p) => (
+            <li key={p.slug}>
+              <Link to={rutaProyecto(p.slug)}>{p.nombre}</Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
       <div className="footer__base">
         <p className="footer__legal">

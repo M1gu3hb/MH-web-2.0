@@ -3839,3 +3839,245 @@ main#contenido > * {
   grid-area: 1 / 1;
   min-width: 0;
 }
+
+
+/* ============================================================
+   EL ÍNDICE DE PROYECTOS
+   ============================================================
+   Doce columnas y un ancho distinto por pieza. Una rejilla de tarjetas
+   iguales se lee como un catálogo —«elige una»— y un portafolio tiene que
+   decir otra cosa. El ritmo lo pone `--span`, que viene del ciclo de
+   `anchoDeProyecto`.
+   ============================================================ */
+
+@media (min-width: 1024px) {
+  .rejilla-proyectos--indice {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: clamp(var(--sp-6), 2.6vw, var(--sp-8)) clamp(var(--sp-5), 1.8vw, var(--sp-6));
+  }
+
+  .rejilla-proyectos--indice > .rejilla-proyectos__hueco {
+    grid-column: span var(--span, 4);
+  }
+}
+
+/* Tableta: el ciclo se simplifica a dos anchos —a lo ancho o a media
+   columna—, que es lo que cabe sin que el texto se estrangule. */
+@media (min-width: 700px) and (max-width: 1023px) {
+  .rejilla-proyectos--indice {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .rejilla-proyectos--indice > .rejilla-proyectos__hueco[style*='--span: 12'],
+  .rejilla-proyectos--indice > .rejilla-proyectos__hueco[style*='--span: 7'] {
+    grid-column: span 2;
+  }
+}
+
+/* ---- La pieza a lo ancho: maqueta al lado del texto ---- */
+@media (min-width: 900px) {
+  .tarjeta-proyecto--destacado .tarjeta-proyecto__enlace {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    align-items: stretch;
+  }
+
+  .tarjeta-proyecto--destacado .tarjeta-proyecto__imagen {
+    height: 100%;
+  }
+
+  .tarjeta-proyecto--destacado .tarjeta-proyecto__imagen img {
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .tarjeta-proyecto--destacado .tarjeta-proyecto__cuerpo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(var(--sp-6), 3vw, var(--sp-8));
+  }
+
+  .tarjeta-proyecto--destacado .tarjeta-proyecto__nombre {
+    font-size: clamp(1.7rem, 2.6vw, 2.7rem);
+  }
+
+  .tarjeta-proyecto--destacado .tarjeta-proyecto__resumen {
+    font-size: var(--t-lead);
+  }
+
+  .tarjeta-proyecto--ancho .tarjeta-proyecto__nombre {
+    font-size: clamp(1.4rem, 1.9vw, 1.9rem);
+  }
+}
+
+/* El resultado: la frase que dice qué cambió, con el filo del color del
+   proyecto. Solo aparece en las piezas anchas, donde hay sitio. */
+.tarjeta-proyecto__resultado {
+  margin-top: var(--sp-4);
+  padding-left: var(--sp-4);
+  border-left: 2px solid var(--acento);
+  color: var(--ink-strong);
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.2vw, 1.18rem);
+  font-weight: var(--w-display);
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+}
+
+/* ---- El cierre del índice ----
+   Lo que antes decía una tarjeta disfrazada de proyecto, dicho en texto: que
+   hay más trabajo del que se puede enseñar. */
+.indice-cierre {
+  display: grid;
+  gap: var(--sp-6);
+  margin-top: clamp(var(--sp-8), 6vw, 120px);
+  padding-top: var(--sp-7);
+  border-top: 1px solid var(--line);
+}
+
+.indice-cierre__texto {
+  max-width: 62ch;
+  color: var(--ink-body);
+  font-size: clamp(1.06rem, 1.35vw, 1.32rem);
+  line-height: 1.6;
+}
+
+.indice-cierre__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+
+@media (min-width: 900px) {
+  .indice-cierre {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--sp-8);
+  }
+}
+
+
+/* ---- Portada tipográfica de proyecto ---- */
+.portada-proyecto {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 760 / 480;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 100% at 80% 12%, color-mix(in srgb, var(--acento) 30%, transparent), transparent 62%),
+    linear-gradient(160deg, var(--surface-sunken), #0e1116);
+}
+
+.portada-proyecto__reticula {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(233, 236, 241, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(233, 236, 241, 0.045) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask: linear-gradient(180deg, #000 20%, transparent 92%);
+  -webkit-mask: linear-gradient(180deg, #000 20%, transparent 92%);
+}
+
+.portada-proyecto__inicial {
+  position: absolute;
+  top: 50%;
+  left: clamp(18px, 5%, 44px);
+  translate: 0 -54%;
+  color: color-mix(in srgb, var(--acento) 76%, #eef1f6);
+  font-family: var(--font-brand);
+  font-size: clamp(5rem, 22cqw, 11rem);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.8;
+  opacity: 0.92;
+}
+
+.portada-proyecto__pila {
+  position: absolute;
+  right: clamp(16px, 5%, 34px);
+  bottom: clamp(38px, 16%, 66px);
+  display: grid;
+  justify-items: end;
+  gap: 5px;
+  max-width: 62%;
+  text-align: right;
+}
+
+.portada-proyecto__pila span {
+  color: var(--ink-muted);
+  font-family: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Menlo, monospace;
+  font-size: max(0.7rem, 11px);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.portada-proyecto__pie {
+  position: absolute;
+  left: clamp(18px, 5%, 44px);
+  bottom: clamp(14px, 6%, 26px);
+  color: color-mix(in srgb, var(--acento) 62%, #eef1f6);
+  font-family: var(--font-display);
+  font-size: max(0.68rem, 11px);
+  font-weight: var(--w-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.tarjeta-proyecto__imagen {
+  container-type: inline-size;
+}
+
+/* En la pieza a lo ancho la portada llena la columna entera. */
+@media (min-width: 900px) {
+  .tarjeta-proyecto--destacado .portada-proyecto {
+    height: 100%;
+    aspect-ratio: auto;
+    min-height: 340px;
+  }
+}
+
+/* ------------------------------------------------------------
+   LA TIRA DE CASOS DEL PIE
+   ------------------------------------------------------------
+   No es una columna más: es una lista horizontal que se dobla, con el tipo
+   pequeño, para que once enlaces no compitan con el resto del pie. Sirve a
+   dos públicos a la vez: a quien busca trabajo hecho y llega al final, y al
+   rastreador, que desde cualquier página tiene camino directo a las once
+   fichas en vez de tener que pasar por el índice.
+   ------------------------------------------------------------ */
+
+.footer__casos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.55rem 1.15rem;
+  padding: 1.6rem 0 0;
+  margin-top: 1.4rem;
+  border-top: 1px solid var(--linea-sutil, rgba(255, 255, 255, 0.08));
+}
+
+.footer__casos ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.15rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer__casos a {
+  font-size: 0.82rem;
+  color: var(--texto-suave, rgba(255, 255, 255, 0.62));
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer__casos a:hover,
+.footer__casos a:focus-visible {
+  color: var(--accent-brand);
+}

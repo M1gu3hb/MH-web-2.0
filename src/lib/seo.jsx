@@ -171,13 +171,20 @@ export function nodoPreguntas({ path, preguntas }) {
   };
 }
 
-/** Una oferta con precio de partida. `desde` en número, sin formatear. */
-export function nodoOferta({ nombre, descripcion, desde, path }) {
+/**
+ * Una oferta con precio de partida. `desde` en número, sin formatear.
+ *
+ * `ancla` es el identificador del plan dentro de la página. Sin él las siete
+ * ofertas apuntaban a la misma URL, y siete ofertas con la misma dirección
+ * son, para un buscador, siete formas de decir lo mismo: no hay manera de
+ * enviar a nadie al plan concreto. Con el ancla, cada una lleva a su bloque.
+ */
+export function nodoOferta({ nombre, descripcion, desde, path, ancla }) {
   const oferta = {
     '@type': 'Offer',
     name: nombre,
     description: descripcion,
-    url: `${DOMINIO}${path}`,
+    url: `${DOMINIO}${path}${ancla ? `#${ancla}` : ''}`,
     priceCurrency: 'MXN',
     availability: 'https://schema.org/InStock',
     seller: ORG,
@@ -203,7 +210,9 @@ export function nodoCaso({ proyecto, path }) {
     headline: proyecto.nombre,
     description: proyecto.resumen,
     url: `${DOMINIO}${path}`,
-    image: `${DOMINIO}${proyecto.imagen}`,
+    /* Los productos propios no llevan maqueta horneada; sin este resguardo el
+       nodo salía con `image: "…/undefined"`, que es peor que no llevar imagen. */
+    image: proyecto.imagen ? `${DOMINIO}${proyecto.imagen}` : IMAGEN_POR_DEFECTO,
     creator: ORG,
     inLanguage: 'es-MX',
     about: proyecto.tipo,

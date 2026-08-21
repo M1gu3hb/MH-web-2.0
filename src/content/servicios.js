@@ -577,7 +577,10 @@ export const PAGINAS_SERVICIO = {
     },
     migas: [
       { nombre: 'Inicio', path: RUTAS.inicio },
-      { nombre: 'Soluciones', path: RUTAS.servicios },
+      /* Decía «Soluciones» y llevaba a /servicios. Una miga cuyo nombre no
+         coincide con su destino es la que Search Console marca como
+         inconsistente, y además desorienta a quien la lee. */
+      { nombre: 'Servicios', path: RUTAS.servicios },
       { nombre: 'Restaurantes', path: RUTAS.restaurantes },
     ],
     schema: {

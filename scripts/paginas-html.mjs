@@ -47,9 +47,17 @@ function escapar(s = '') {
    Construcción del <head> de cada ruta
    ------------------------------------------------------------ */
 
+/* La tarjeta social del sitio, con sus medidas de verdad. Está en un solo
+   sitio porque las medidas se declaran en el `head` y mentir ahí tiene
+   consecuencias: si dices 1200×630 y entregas 760×753, la red social recorta
+   por su cuenta y la tarjeta sale mal cortada. Cuando existan tarjetas
+   sociales por caso —1200×630 de verdad—, se añaden aquí y `imagenSocial`
+   deja de caer en esta. */
+const TARJETA_SOCIAL = { ruta: '/og-morphiq.jpg', tipo: 'image/jpeg', ancho: 1200, alto: 630 };
+
 function cabecera({ dominio, path, title, description, image, grafo }) {
   const url = `${dominio}${path === '/' ? '/' : path}`;
-  const img = image ?? `${dominio}/og-morphiq.jpg`;
+  const img = image ?? `${dominio}${TARJETA_SOCIAL.ruta}`;
   return [
     `<title>${escapar(title)}</title>`,
     `<meta name="description" content="${escapar(description)}" />`,
@@ -58,6 +66,10 @@ function cabecera({ dominio, path, title, description, image, grafo }) {
     `<meta property="og:description" content="${escapar(description)}" />`,
     `<meta property="og:url" content="${url}" />`,
     `<meta property="og:image" content="${img}" />`,
+    `<meta property="og:image:type" content="${TARJETA_SOCIAL.tipo}" />`,
+    `<meta property="og:image:width" content="${TARJETA_SOCIAL.ancho}" />`,
+    `<meta property="og:image:height" content="${TARJETA_SOCIAL.alto}" />`,
+    `<meta property="og:image:alt" content="Morphiq — Digitalizamos la operación de tu negocio" />`,
     `<meta name="twitter:title" content="${escapar(title)}" />`,
     `<meta name="twitter:description" content="${escapar(description)}" />`,
     `<meta name="twitter:image" content="${img}" />`,
@@ -85,9 +97,17 @@ function aplicar(base, head, noscript, robots) {
   }
   html = html.replace(/<title>[\s\S]*?<\/title>/, '@@TITLE@@');
   html = html.replace(/\s*<meta\s+name="description"[\s\S]*?\/>/, '');
-  html = html.replace(/\s*<link rel="canonical"[^>]*\/>/, '');
-  html = html.replace(/\s*<meta property="og:(title|description|url|image)"[^>]*\/>/g, '');
-  html = html.replace(/\s*<meta\s+name="twitter:(title|description|image)"[\s\S]*?\/>/g, '');
+  html = html.replace(/\s*<link\s+rel="canonical"[\s\S]*?\/>/, '');
+  /* `\s+` y no un espacio: en el HTML base hay etiquetas repartidas en
+     varias líneas —`<meta` en una y `property=` en la siguiente— y con un
+     espacio literal se colaban intactas. Ese detalle es lo que dejaba la
+     MISMA og:description y la MISMA twitter:description en las diecisiete
+     URLs, que es justo lo que Search Console señala como duplicado. */
+  html = html.replace(
+    /\s*<meta\s+property="og:(title|description|url|image|image:type|image:width|image:height|image:alt)"[\s\S]*?\/>/g,
+    ''
+  );
+  html = html.replace(/\s*<meta\s+name="twitter:(title|description|image|image:alt)"[\s\S]*?\/>/g, '');
   html = html.replace('@@TITLE@@', head);
   if (noscript) html = html.replace(/<noscript>[\s\S]*?<\/noscript>/, noscript);
   return html;
@@ -164,6 +184,7 @@ async function main() {
   const { PAGINAS_SERVICIO, SERVICIOS } = await importar('src/content/servicios.js');
   const { PROYECTOS } = await importar('src/content/proyectos.js');
   const { PLANES, precioEnLinea } = await importar('src/config/pricing.js');
+  const { PREGUNTAS_INICIO, PREGUNTAS_PRECIOS } = await importar('src/content/index.js');
 
   const org = { '@id': `${DOMINIO}/#organizacion` };
   const sitio = { '@id': `${DOMINIO}/#sitio` };
@@ -193,12 +214,75 @@ async function main() {
     })),
   });
 
+  const nodoPreguntas = (path, preguntas) => ({
+    '@type': 'FAQPage',
+    '@id': `${DOMINIO}${path === '/' ? '/' : path}#preguntas`,
+    inLanguage: 'es-MX',
+    mainEntity: preguntas.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  });
+
+  /* Cada plan con SU dirección. Siete ofertas apuntando a la misma URL no
+     dejan enviar a nadie al plan concreto, ni en un resultado enriquecido ni
+     en un enlace compartido. */
+  const nodoOferta = (plan) => {
+    const oferta = {
+      '@type': 'Offer',
+      name: plan.nombre,
+      description: plan.resumen,
+      url: `${DOMINIO}${RUTAS.precios}#${plan.id}`,
+      priceCurrency: 'MXN',
+      availability: 'https://schema.org/InStock',
+      seller: org,
+    };
+    /* `minPrice` sin `maxPrice`: declarar que el precio ES el de partida
+       sería mentir, porque es donde empieza. */
+    if (plan.desde) {
+      oferta.priceSpecification = {
+        '@type': 'PriceSpecification',
+        minPrice: plan.desde,
+        priceCurrency: 'MXN',
+      };
+    }
+    return oferta;
+  };
+
   const enlacesPrincipales = MENU.flatMap((e) =>
     e.hijos ? [{ href: e.href, texto: e.etiqueta }, ...e.hijos.map((h) => ({ href: h.href, texto: h.etiqueta }))] : [{ href: e.href, texto: e.etiqueta }]
   );
 
   /* ---- El catálogo de páginas a escribir ---- */
   const paginas = [];
+
+  /* La home.
+     Su HTML lo escribe Vite y lleva a mano Organization, Person y WebSite,
+     pero no llevaba ni WebPage ni FAQPage: los dos aparecían solo DESPUÉS de
+     que el navegador ejecutara React. Justo los dos nodos que pueden hacer
+     que la home salga con sus preguntas desplegadas en el resultado. Ahora
+     se escriben en el HTML, así que están antes de que nadie ejecute nada.
+     El grafo escrito a mano se queda donde está: este script añade un
+     segundo bloque JSON-LD, que es perfectamente válido, y ese segundo es el
+     que React reemplaza al navegar. */
+  paginas.push({
+    path: RUTAS.inicio,
+    modulo: 'Inicio',
+    title: 'Morphiq | Digitalizamos la operación de tu negocio en CDMX',
+    description:
+      'Diseño y construyo páginas web, puntos de venta, CRM y automatizaciones para negocios de la Ciudad de México. Páginas desde $2,000 MXN, con precio cerrado antes de empezar.',
+    migas: [{ nombre: 'Inicio', path: RUTAS.inicio }],
+    extra: [nodoPreguntas(RUTAS.inicio, PREGUNTAS_INICIO)],
+    noscript: bloqueNoscript(
+      'Morphiq — Digitalizamos la operación de tu negocio',
+      'Diseño y construyo páginas web, puntos de venta, CRM y automatizaciones para negocios de la Ciudad de México.',
+      enlacesPrincipales,
+      `<h2>Preguntas frecuentes</h2><dl>${PREGUNTAS_INICIO.map(
+        (f) => `<dt>${escapar(f.q)}</dt><dd>${escapar(f.a)}</dd>`
+      ).join('')}</dl>`
+    ),
+  });
 
   /* Servicios (índice) */
   paginas.push({
@@ -303,12 +387,19 @@ async function main() {
   /* Cada proyecto */
   for (const p of PROYECTOS) {
     const ruta = `${RUTAS.proyectos}/${p.slug}`;
+    /* La maqueta del caso mide 760×753 y es WebP: sirve dentro de la página,
+       no como tarjeta social. Compartida sale cuadrada, recortada, y en
+       algunas redes ni se carga. Así que al compartir va la tarjeta del
+       sitio, que sí tiene las medidas que se declaran; la maqueta se queda
+       en el JSON-LD, donde no hay ninguna regla de formato que romper. */
+    const imagenSocial = `${DOMINIO}${TARJETA_SOCIAL.ruta}`;
+    const imagenCaso = p.imagen ? `${DOMINIO}${p.imagen}` : imagenSocial;
     paginas.push({
       path: ruta,
       modulo: 'ProyectoDetalle',
-      title: `${p.nombre}: ${p.tipo} | Morphiq`,
+      title: `${p.tituloSeo ?? `${p.nombre}: ${p.tipo}`} | Morphiq`,
       description: p.resumen,
-      image: `${DOMINIO}${p.imagen}`,
+      image: imagenSocial,
       migas: [
         { nombre: 'Inicio', path: RUTAS.inicio },
         { nombre: 'Proyectos', path: RUTAS.proyectos },
@@ -321,7 +412,7 @@ async function main() {
           name: p.nombre,
           description: p.resumen,
           url: `${DOMINIO}${ruta}`,
-          image: `${DOMINIO}${p.imagen}`,
+          image: imagenCaso,
           creator: org,
           inLanguage: 'es-MX',
         },
@@ -345,6 +436,16 @@ async function main() {
     migas: [
       { nombre: 'Inicio', path: RUTAS.inicio },
       { nombre: 'Precios', path: RUTAS.precios },
+    ],
+    extra: [
+      {
+        '@type': 'OfferCatalog',
+        '@id': `${DOMINIO}${RUTAS.precios}#catalogo`,
+        name: 'Precios de Morphiq',
+        url: `${DOMINIO}${RUTAS.precios}`,
+        itemListElement: Object.values(PLANES).map(nodoOferta),
+      },
+      nodoPreguntas(RUTAS.precios, PREGUNTAS_PRECIOS),
     ],
     noscript: bloqueNoscript(
       'Precios de Morphiq',

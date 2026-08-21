@@ -16,6 +16,9 @@ import { ArrowUpRight, Check, ChevronDown, MessageCircle } from 'lucide-react';
 import { useId, useState } from 'react';
 import { CampoPuntos, GlareHover, Reveal, ScrambleText, SpotlightCard, StarBorder } from '../reactbits';
 import { Cortina, Titular } from '../motion';
+import { PortadaProyecto } from './PortadaProyecto';
+
+export { PortadaProyecto };
 import { RUTAS, contactoCon } from '../../config/rutas';
 import { precioDe } from '../../config/pricing';
 import { trackWhatsApp, whatsappUrl } from '../../lib/whatsapp';
@@ -518,24 +521,49 @@ function partirCierre(texto) {
    Tarjeta de proyecto
    ------------------------------------------------------------ */
 
-export function TarjetaProyecto({ proyecto, ruta }) {
+export function TarjetaProyecto({ proyecto, ruta, formato = 'normal' }) {
+  const ancho = formato === 'destacado' || formato === 'ancho';
+
   return (
-    <article className="tarjeta-proyecto" style={{ '--acento': proyecto.acento }}>
+    <article
+      className={`tarjeta-proyecto tarjeta-proyecto--${formato}`}
+      style={{ '--acento': proyecto.acento }}
+    >
       <Link to={ruta} className="tarjeta-proyecto__enlace">
         {/* GlareHover pasa una lámina de luz por encima al acercarse: es el
             mismo gesto de metal reflejado del resto de la marca, y aquí
             además hace que la maqueta parezca una pantalla y no una foto. */}
         <GlareHover className="tarjeta-proyecto__imagen">
           <span className="tarjeta-proyecto__marco" aria-hidden="true" />
-          <img src={proyecto.imagen} alt={`Maqueta del proyecto ${proyecto.nombre}`} loading="lazy" width="760" height="480" />
+          {/* Los proyectos de cliente llevan su maqueta horneada. Los
+              productos propios no tienen ninguna pantalla que sirva de
+              retrato, así que llevan portada tipográfica en vez de una
+              captura fingida. */}
+          {proyecto.imagen ? (
+            <img
+              src={proyecto.imagen}
+              alt={`Maqueta del proyecto ${proyecto.nombre}`}
+              loading={formato === 'destacado' ? 'eager' : 'lazy'}
+              width="760"
+              height="480"
+            />
+          ) : (
+            <PortadaProyecto proyecto={proyecto} />
+          )}
         </GlareHover>
         <div className="tarjeta-proyecto__cuerpo">
           <p className="tarjeta-proyecto__industria">{proyecto.industria}</p>
           <h3 className="tarjeta-proyecto__nombre">{proyecto.nombre}</h3>
           <p className="tarjeta-proyecto__tipo">{proyecto.tipo}</p>
           <p className="tarjeta-proyecto__resumen">{proyecto.resumen}</p>
+          {/* En las piezas anchas cabe además el resultado, que es la frase
+              que de verdad cuenta qué cambió. En las estrechas no: ahí
+              apretaría el bloque y se leería como relleno. */}
+          {ancho && proyecto.resultado && (
+            <p className="tarjeta-proyecto__resultado">{proyecto.resultado}</p>
+          )}
           <ul className="tarjeta-proyecto__etiquetas">
-            {proyecto.etiquetas.slice(0, 4).map((e) => (
+            {proyecto.etiquetas.slice(0, ancho ? 4 : 3).map((e) => (
               <li key={e}>{e}</li>
             ))}
           </ul>
@@ -547,6 +575,31 @@ export function TarjetaProyecto({ proyecto, ruta }) {
       </Link>
     </article>
   );
+}
+
+/* ------------------------------------------------------------
+   EL RITMO DEL ÍNDICE DE PROYECTOS
+   ------------------------------------------------------------
+   Una rejilla de piezas todas del mismo tamaño se lee como un catálogo, y un
+   catálogo dice «elige una». Un portafolio tiene que decir otra cosa: «mira
+   lo que he hecho». La diferencia no está en las tarjetas, está en que no
+   todas midan lo mismo.
+
+   El ciclo reparte doce columnas en cuatro filas de formas distintas:
+
+     12          una pieza a lo ancho, con la maqueta al lado del texto
+     7 + 5       asimétrica
+     5 + 7       asimétrica al revés
+     4 + 4 + 4   tres iguales, que después de las anteriores se lee como ritmo
+
+   Ocho proyectos por ciclo, y al empezar el segundo vuelve a aparecer una
+   pieza a lo ancho: en una página larga eso da un segundo respiro y un
+   segundo protagonista, en vez de una cuadrícula que se repite hasta el pie.
+   ------------------------------------------------------------ */
+const CICLO = [12, 7, 5, 5, 7, 4, 4, 4];
+
+export function anchoDeProyecto(i) {
+  return CICLO[i % CICLO.length];
 }
 
 /* ------------------------------------------------------------

@@ -455,3 +455,70 @@ export const SECTIONS = {
     lead: 'Un método compacto para convertir una idea dispersa en algo que tu equipo realmente puede usar.',
   },
 };
+
+/**
+ * ------------------------------------------------------------
+ * PREGUNTAS FRECUENTES DE LA HOME Y DE PRECIOS
+ * ------------------------------------------------------------
+ * Estaban dentro de sus páginas, y eso las dejaba fuera del alcance del
+ * generador de HTML: ese script corre en Node y no puede importar un .jsx,
+ * así que el bloque FAQPage de la home y el de precios solo existían DESPUÉS
+ * de que el navegador ejecutara React. Un rastreador que no ejecuta nada no
+ * los veía nunca, y son justo los dos que pueden salir desplegados en los
+ * resultados de búsqueda.
+ *
+ * Viviendo aquí, en JavaScript llano, los usan los dos: la página al pintar
+ * y el build al escribir el HTML. Una sola fuente, sin copia que se
+ * desincronice.
+ * ------------------------------------------------------------
+ */
+
+export const PREGUNTAS_INICIO = [
+  {
+    q: '¿Cuánto cuesta una página web?',
+    a: 'Desde $2,000 MXN una página sencilla y bien hecha, y desde $8,000 MXN un sitio completo con varias páginas, formularios y dominio incluido el primer año. El precio final depende del alcance y te lo doy cerrado antes de empezar.',
+  },
+  {
+    q: '¿Cuánto tiempo tarda?',
+    a: 'Depende del alcance, y te doy una fecha antes de arrancar. Lo que no cambia es el ritmo: vas viendo producto funcionando durante el proceso, no reportes de avance.',
+  },
+  {
+    q: '¿Puedo editar el contenido después?',
+    a: 'Depende del proyecto. Cuando incluye panel de administración, sí: cambias precios, fotos, servicios y promociones tú mismo, y te capacito antes de entregar. No todas las páginas lo necesitan y te digo con honestidad si la tuya sí.',
+  },
+  {
+    q: '¿Trabajas con negocios fuera de CDMX?',
+    a: 'Sí. La mayoría de mis clientes son de la ciudad porque me gusta ir a verlos, pero el proceso funciona igual a distancia: videollamadas, avances en línea y entrega remota.',
+  },
+  {
+    q: '¿Cómo sé que no vas a desaparecer a medio proyecto?',
+    a: 'Porque el trabajo está en línea y lo puedes abrir: los proyectos de este sitio tienen enlace directo. Y porque parte del pago va contra entrega: si no entrego, no lo cobro.',
+  },
+];
+
+export const PREGUNTAS_PRECIOS = [
+  {
+    q: '¿Por qué todo dice «desde»?',
+    a: 'Porque cobrar lo mismo por una página de tres secciones que por un catálogo con panel de administración sería mentirle a alguien. El «desde» es el punto de partida real: es lo que cuesta el alcance más sencillo de ese plan. Cuando me cuentes qué necesitas, te doy un número cerrado, y ese número ya no se mueve.',
+  },
+  {
+    q: '¿El precio final puede acabar siendo mucho más alto?',
+    a: 'Puede ser más alto si tu proyecto es más grande, pero lo sabes antes de empezar, no a mitad. Yo cotizo cerrado: si me equivoqué calculando, es mi problema, no una factura sorpresa para ti. Y si con el plan más barato te alcanza, te lo digo.',
+  },
+  {
+    q: '¿Cómo se paga?',
+    a: 'Una parte al arrancar y el resto contra entrega. Los servicios mensuales, como CRM, punto de venta y mantenimiento, se pagan mes a mes y no tienen contrato de permanencia.',
+  },
+  {
+    q: '¿Por qué unos son pago único y otros mensuales?',
+    a: 'Una página web se construye una vez y es tuya. Un sistema que cobra dinero todos los días necesita servidores, respaldos, actualizaciones y alguien que conteste cuando algo falla: eso es un servicio, no un producto, y por eso es mensual.',
+  },
+  {
+    q: '¿Qué es la implementación inicial del CRM y del punto de venta?',
+    a: 'Es dejarlo funcionando de verdad: cargar tu catálogo, configurar sucursales y usuarios, migrar lo que ya tengas y capacitar a quien lo va a usar. Se cotiza aparte, una sola vez, y depende del tamaño de tu operación.',
+  },
+  {
+    q: '¿Hay factura?',
+    a: 'Sí, se puede facturar. Coméntamelo al cotizar para contemplarlo desde el principio.',
+  },
+];

@@ -13,6 +13,7 @@ import {
   BotonSecundario,
   Contenedor,
   Migas,
+  PortadaProyecto,
   Seccion,
   TarjetaProyecto,
   CierreCTA,
@@ -31,7 +32,7 @@ export default function ProyectoDetalle() {
   if (!proyecto) return <NoEncontrada />;
 
   const ruta = rutaProyecto(proyecto.slug);
-  const title = `${proyecto.nombre}: ${proyecto.tipo} | Morphiq`;
+  const title = `${proyecto.tituloSeo ?? `${proyecto.nombre}: ${proyecto.tipo}`} | Morphiq`;
   const description = proyecto.resumen;
 
   const migas = [
@@ -56,7 +57,10 @@ export default function ProyectoDetalle() {
         title={title}
         description={description}
         path={ruta}
-        image={`https://www.morphiq.com.mx${proyecto.imagen}`}
+        /* Sin `image`: la tarjeta social del sitio mide 1200×630 y la maqueta
+           del caso 760×753. Declarar unas medidas y entregar otras es lo que
+           hace que el enlace salga recortado al compartirlo. La maqueta sí va
+           en el JSON-LD, que no impone formato. */
         grafo={grafo}
       />
 
@@ -85,14 +89,21 @@ export default function ProyectoDetalle() {
               )}
             </div>
 
+            {/* Los productos propios no tienen una pantalla que valga como
+                retrato —una ventana de terminal no cuenta nada—, así que en vez
+                de fingir una captura llevan portada tipográfica. */}
             <figure className="caso-cabecera__imagen">
-              <img
-                src={proyecto.imagen}
-                alt={`Interfaz del proyecto ${proyecto.nombre}`}
-                width="760"
-                height="480"
-                fetchpriority="high"
-              />
+              {proyecto.imagen ? (
+                <img
+                  src={proyecto.imagen}
+                  alt={`Interfaz del proyecto ${proyecto.nombre}`}
+                  width="760"
+                  height="480"
+                  fetchpriority="high"
+                />
+              ) : (
+                <PortadaProyecto proyecto={proyecto} />
+              )}
             </figure>
           </div>
         </Contenedor>

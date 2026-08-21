@@ -295,3 +295,77 @@ con tope de 7 segundos para que nunca se quede colgada.
 Con Chromium real contra el build de producción: sin errores de consola, sin
 desbordamiento horizontal a 390 px, el OS se lee correcto en la pantalla, la
 pila y la perilla responden, y las cinco capacidades avanzan con el scroll.
+
+---
+
+# ITERACIÓN: EL TEXTO, LOS PROYECTOS Y LO QUE VE GOOGLE
+
+## El texto que se quedaba en glifos
+
+Se arregló dos veces antes y volvió las dos. La razón de fondo era siempre la
+misma: **todas las redes de seguridad vivían en el mismo JavaScript que el
+fallo**, así que si el JavaScript se quedaba a medias, la red también.
+
+La regla ahora es estructural: *el ocultamiento del texto tiene fecha de
+caducidad escrita en CSS*. El texto real no se esconde, se vuelve
+transparente, y una animación `step-end` de 3.2 s le devuelve el color sola.
+La lleva el motor de render, no nosotros. Si el JavaScript se cuelga, se
+cancela o nunca llega a ejecutarse, el navegador devuelve el texto igual.
+
+Ocho causas encontradas, seis reproducidas en un navegador de verdad. Las que
+importaban:
+
+| Causa | Qué pasaba |
+|---|---|
+| `([entry])` en el observador | `IntersectionObserver` **agrupa**: llegan varias entradas, la primera puede estar caducada. Leyendo solo la primera, el observador se quedaba mudo para siempre |
+| `threshold: 0.01` | Un elemento recortado a cero tiene razón de intersección exactamente 0, y `0.01 > 0`. Solo el umbral **0** marca intersección con área cero |
+| Ningún callback | El observador muestrea una vez por fotograma; si el elemento cruza la ventana entera entre dos muestreos, para él nunca estuvo dentro |
+| `Cortina` se bloqueaba a sí misma | Recortaba y observaba el mismo elemento: la cortina solo se abría si el observador la veía, y no podía verla porque estaba cerrada |
+| El arreglo anterior | Un suelo de 15 s que no se desarmaba tras resolver, y cuya guarda era falsa justo durante el hover: se disparaba a mitad y dejaba el bucle sin red |
+
+Aparte de la caducidad en CSS: una red de scroll compartida —un solo oyente
+para toda la página— cubre el salto de la restauración del scroll, que mueve
+los titulares miles de píxeles en un fotograma. Y el final de la animación de
+rescate se escucha desde JavaScript para dejar el DOM limpio, no solo legible.
+
+**Probado**: 12 escenarios × 5 repeticiones en Chromium real contra el build
+de producción — scroll lento y muy rápido, navegación por menú, atrás y
+adelante del historial, redimensionar mientras se hace scroll, cursor sobre un
+titular al navegar, pestaña oculta a mitad de animación, CPU a 1/10, recarga
+con el scroll a media página, móvil, URL interior directa y
+`prefers-reduced-motion`.
+
+## `/proyectos` deja de ser un catálogo
+
+Once piezas en vez de seis, y ninguna fila igual a la anterior: el ancho de
+cada una sale de un ciclo de doce columnas (`12 · 7+5 · 5+7 · 4+4+4`), así que
+hay dos protagonistas por página en vez de una cuadrícula de artículos.
+
+Cinco proyectos nuevos, leídos de sus repositorios: **Vero Seguros**,
+**NFC Manager**, **Portafolio académico**, **Morphiq UI** y **Qyro**.
+
+Los productos propios no llevan captura fingida: llevan **portada
+tipográfica** —la inicial enorme en su color, la pila técnica en
+monoespaciada—, que es honesto y además distingue de un vistazo lo que se
+construyó para alguien de lo que es de la casa.
+
+Tres decisiones de contenido que no se negocian:
+
+- El **portafolio académico** no nombra ni enlaza al cliente: es un perfil
+  personal con foto, universidad y laboratorios. Se cuenta el problema, no la
+  persona.
+- **Qyro** se presenta como proyecto de ingeniería, no como producto en uso:
+  su propio repositorio dice que nunca ha corrido en hardware físico.
+- **Vero Seguros** se describe por su oficio, no por su nombre.
+
+Fuera la tarjeta de invitación «Lo que traes en la cabeza»: en un índice de
+once piezas, algo con forma de proyecto que no es un proyecto solo confunde.
+
+## SEO
+
+Ver `docs/SEO.md`. En corto: nada estaba bloqueado —`robots.txt`, meta robots
+y `X-Robots-Tag` estaban bien— pero el HTML no decía lo suficiente antes de
+que se ejecutara React. La misma `og:description` en las diecisiete URLs, un
+`og:image` que declaraba unas medidas y entregaba otras, un sitemap con una
+fecha para todo, y la home sin `FAQPage` hasta que el navegador ejecutaba el
+JavaScript.

@@ -72,6 +72,14 @@ import { useReducedMotion } from '../../hooks/useReducedMotion';
  * 4. Un elemento que ya pasó de largo por arriba se resuelve al instante,
  *    sin animar: animar algo que quedó por encima del pliegue es gastar
  *    tiempo en algo que nadie va a ver.
+ *
+ * 5. Cuando la caducidad de CSS hacía su trabajo, el texto volvía a verse
+ *    pero el DOM se quedaba a medias: el `color: transparent` en línea
+ *    seguía escrito —la animación lo pisa, no lo borra— y los glifos
+ *    seguían en su capa, solo que apagados. Ahora el final de la animación
+ *    se escucha y el estado se limpia, así que lo que se ve y lo que dice
+ *    el DOM son lo mismo. Que era, además, lo que hacía imposible medir si
+ *    el fallo seguía vivo.
  */
 
 const GLIFOS = '#$%&*+-<>=?@[]{}/\\|~^01';
@@ -371,6 +379,32 @@ export function ScrambleText({
 
   useLayoutEffect(() => parar, [parar]);
 
+  /* ------------------------------------------------------------
+     EL CIERRE DEL CÍRCULO: CSS AVISA, JAVASCRIPT RECOGE
+     ------------------------------------------------------------
+     La animación de rescate ya devuelve el color por su cuenta, así que el
+     texto se ve aunque este archivo esté muerto. Pero si nadie escucha, el
+     nodo se queda a medias para siempre: `color: transparent` en línea (que
+     la animación pisa, pero no borra) y la capa de glifos apagada con los
+     glifos todavía dentro.
+
+     Escuchando el final de la animación, el estado del DOM converge con lo
+     que se ve: se quita el atributo, se borra el color en línea y se vacía
+     la capa de glifos. Y como `mostrar` cancela el bucle antes de tocar
+     nada, no hay forma de que la siguiente pasada vuelva a poner el
+     atributo y reinicie la caducidad en bucle.
+
+     Los eventos de animación burbujean, así que un solo oyente en la raíz
+     cubre todas las palabras. Se filtra por nombre para no reaccionar a
+     ninguna otra animación que pase por aquí. */
+  const alCaducar = useCallback(
+    (e) => {
+      if (e.animationName !== 'rb-scramble-rescate') return;
+      mostrar();
+    },
+    [mostrar]
+  );
+
   if (sinMovimiento) return <Tag className={className}>{fuente}</Tag>;
 
   const trozos = fuente.split(' ');
@@ -388,7 +422,7 @@ export function ScrambleText({
       : {};
 
   return (
-    <Tag ref={anfitrion} className={`rb-scramble ${className}`} {...propsCursor}>
+    <Tag ref={anfitrion} className={`rb-scramble ${className}`} onAnimationEnd={alCaducar} {...propsCursor}>
       {trozos.map((palabra, i) => (
         <span key={`${palabra}-${i}`}>
           <span className="rb-scramble__word" data-word={palabra}>

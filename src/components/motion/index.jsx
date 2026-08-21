@@ -155,14 +155,19 @@ export function Cascada({ children, paso = 0.06, delay = 0, className = '', amou
    porque el navegador escala una textura ya rasterizada.
    ------------------------------------------------------------ */
 
-export function Escala({ children, delay = 0, className = '', amount = 0.25, desde = 0.94 }) {
+export function Escala({ children, delay = 0, className = '', amount = 0.25, desde = 0.94, style }) {
   const sinMovimiento = useReducedMotion();
 
-  if (sinMovimiento) return <div className={className}>{children}</div>;
+  /* `style` se reenvía porque la retícula del índice de proyectos reparte el
+     ancho de cada hueco con una variable CSS (`--span`) puesta en línea. Sin
+     este paso la variable se quedaba en el aire y las once piezas volvían a
+     salir todas del mismo tamaño, que es justo lo que se quería evitar. */
+  if (sinMovimiento) return <div className={className} style={style}>{children}</div>;
 
   return (
     <Motion.div
       className={className}
+      style={style}
       initial={{ opacity: 0, scale: desde, y: 16 }}
       whileInView={{ opacity: 1, scale: 1, y: 0 }}
       viewport={{ once: true, amount }}

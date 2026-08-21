@@ -15,12 +15,14 @@ import {
   Contenedor,
   Seccion,
   TarjetaProyecto,
+  anchoDeProyecto,
 } from '../components/ui';
-import { MarcoExpansivo, Reveal } from '../components/reactbits';
+import { Reveal } from '../components/reactbits';
 import { Escala } from '../components/motion';
 import { Seo, nodoMigas, nodoPagina } from '../lib/seo';
-import { CATEGORIAS, INVITACION, PROYECTOS, rutaProyecto } from '../content/proyectos';
+import { CATEGORIAS, PROYECTOS, rutaProyecto } from '../content/proyectos';
 import { DOMINIO, RUTAS } from '../config/rutas';
+import { ABOUT } from '../content';
 
 const MIGAS = [
   { nombre: 'Inicio', path: RUTAS.inicio },
@@ -74,7 +76,7 @@ export default function Proyectos() {
         eyebrow="Trabajo real"
         titulo="Negocios que ya están funcionando con esto."
         resalte="ya están funcionando"
-        entrada="Ninguno es una maqueta de portafolio. Son proyectos entregados, y los que están en línea llevan su enlace para que los abras."
+        entrada="Once piezas. Unas son encargos de negocios que hoy trabajan con ellas; otras son producto propio, construido para resolverme algo a mí primero. Ninguna es una maqueta de portafolio, y la que está en línea lleva su enlace para que la abras."
         aparte={
           <ul className="tira-industrias">
             {PROYECTOS.map((p) => (
@@ -120,35 +122,40 @@ export default function Proyectos() {
               el H1, así que este va solo para la estructura. */}
           <h2 className="rb-visually-hidden">Todos los proyectos</h2>
 
-          {/* El bloque de proyectos se ensancha al pasar por la pantalla y
-              cada pieza llega desde el fondo. Es un portafolio: la entrada
-              tiene que leerse como que las piezas se presentan, no como que
-              una lista se rellena. */}
-          <MarcoExpansivo desde={0.93}>
-          <div className="rejilla-proyectos">
-            {visibles.map((p, i) => (
-              <Escala key={p.slug} delay={Math.min(i, 4) * 0.07} desde={0.95}>
-                <TarjetaProyecto proyecto={p} ruta={rutaProyecto(p.slug)} />
-              </Escala>
-            ))}
-
-            {/* La invitación cierra la retícula: no es un proyecto, es el CTA
-                con la forma de los demás para que la cuadrícula no se corte. */}
-            <Reveal delay={0.1}>
-              <article className="tarjeta-proyecto tarjeta-proyecto--invitacion" style={{ '--acento': INVITACION.acento }}>
-                <div className="tarjeta-proyecto__imagen">
-                  <img src={INVITACION.imagen} alt="" aria-hidden="true" loading="lazy" width="760" height="480" />
-                </div>
-                <div className="tarjeta-proyecto__cuerpo">
-                  <p className="tarjeta-proyecto__industria">{INVITACION.tipo}</p>
-                  <h3 className="tarjeta-proyecto__nombre">{INVITACION.nombre}</h3>
-                  <p className="tarjeta-proyecto__resumen">{INVITACION.resumen}</p>
-                  <BotonPrincipal to={RUTAS.contacto}>Cuéntame qué necesitas</BotonPrincipal>
-                </div>
-              </article>
-            </Reveal>
+          {/* Un índice, no un catálogo. Cada pieza recibe un ancho distinto
+              del ciclo de doce columnas, así que ninguna fila se repite y la
+              página deja de leerse como una cuadrícula de artículos. */}
+          <div className="rejilla-proyectos rejilla-proyectos--indice">
+            {visibles.map((p, i) => {
+              const ancho = anchoDeProyecto(i);
+              const formato = ancho === 12 ? 'destacado' : ancho >= 7 ? 'ancho' : 'normal';
+              return (
+                <Escala
+                  key={p.slug}
+                  delay={Math.min(i, 4) * 0.06}
+                  desde={0.96}
+                  className="rejilla-proyectos__hueco"
+                  style={{ '--span': ancho }}
+                >
+                  <TarjetaProyecto proyecto={p} ruta={rutaProyecto(p.slug)} formato={formato} />
+                </Escala>
+              );
+            })}
           </div>
-          </MarcoExpansivo>
+          <Reveal>
+            <aside className="indice-cierre">
+              <p className="indice-cierre__texto">
+                No todo lo que he construido está aquí. Los sistemas internos de un negocio
+                —cajas, inventarios, paneles de dueño— no se pueden enseñar en público, y son
+                buena parte del trabajo. Detrás de cada caso hay alguien que decidió confiarme
+                el suyo.
+              </p>
+              <div className="indice-cierre__acciones">
+                <BotonPrincipal to={RUTAS.contacto}>Cuéntame qué necesitas</BotonPrincipal>
+                <BotonSecundario href={ABOUT.github}>Ver el código en GitHub</BotonSecundario>
+              </div>
+            </aside>
+          </Reveal>
         </div>
       </Seccion>
 
