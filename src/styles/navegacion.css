@@ -43,6 +43,7 @@
 }
 
 .nav-enlace {
+  position: relative; /* ancla de .nav-enlace__pastilla */
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -66,6 +67,27 @@
 
 .nav-enlace.is-activo {
   color: var(--accent-pos);
+}
+
+/* ---- La pastilla de «estás aquí» ----
+   Va DETRÁS del texto: `absolute` + `inset: 0` la saca del flujo, así que
+   el enlace activo no se corre ni un píxel cuando la recibe. El `z-index`
+   negativo la deja por debajo del contenido del enlace sin sacarla del
+   fondo de la barra, porque `.nav-enlace` no abre contexto de apilado y
+   quien lo abre es `.nav-shell`, que pinta su fondo antes.
+
+   `--r-full` y no un radio menor: Motion corrige la deformación del viaje
+   con escala, y solo un radio ya redondo del todo aguanta ese estirón sin
+   que las esquinas se vean ovaladas.
+
+   El color del enlace activo se queda donde estaba; esto se suma debajo. */
+.nav-enlace__pastilla {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: var(--r-full);
+  background: color-mix(in oklab, var(--accent-brand) 16%, transparent);
+  pointer-events: none;
 }
 
 .nav-enlace svg {
@@ -327,4 +349,53 @@
 
 .nav-panel__pie .tactile-button {
   justify-content: center;
+}
+
+/* ---- El panel entrega sus opciones en orden ----
+   El fundido de 0.22 s del contenedor ya existía y sigue mandando; esto
+   pasa por debajo. 34 ms de paso: menos y las filas llegan a la vez, más y
+   la última se hace esperar. El tope en el sexto es para que el pie del
+   panel —que es donde está el botón que importa— no herede el retraso
+   acumulado de doce elementos.
+
+   La numeración la pone el JSX en `--i` y el fallback a 0 significa que un
+   elemento sin numerar entra al principio, no que se quede fuera.
+
+   `backwards` y nunca `forwards`: en reposo el enlace ya está en su sitio
+   y legible, y la animación solo pinta el camino hasta ahí. Si
+   `mh-llega` no existiera todavía, si la animación se cancela o si el
+   navegador la ignora, lo que queda es el menú entero visible. */
+.nav-panel__principal a,
+.nav-panel__servicios a,
+.nav-panel__pie > * {
+  animation: mh-llega 0.32s var(--ease) calc(min(var(--i, 0), 6) * 34ms) backwards;
+}
+
+/* El hamburguesa por fin cuenta su estado: el icono cambia y gira. El giro
+   cuelga de `aria-expanded`, que es el dato que ya llevaba el botón, para
+   que no haya una segunda verdad sobre si el menú está abierto. */
+.nav-hamburguesa svg {
+  transition: transform 0.2s var(--ease);
+}
+
+.nav-hamburguesa[aria-expanded='true'] svg {
+  transform: rotate(90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-panel__principal a,
+  .nav-panel__servicios a,
+  .nav-panel__pie > * {
+    animation: none;
+  }
+
+  /* El icono sigue cambiando de Menu a X: eso es información, no
+     movimiento. Lo que se va es el giro. */
+  .nav-hamburguesa svg {
+    transition: none;
+  }
+
+  .nav-hamburguesa[aria-expanded='true'] svg {
+    transform: none;
+  }
 }

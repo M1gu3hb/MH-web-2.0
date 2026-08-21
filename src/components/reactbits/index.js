@@ -16,6 +16,7 @@ export { BordeElectrico } from './BordeElectrico';
 export { CampoPuntos } from './CampoPuntos';
 export { ClickSpark } from './ClickSpark';
 export { CountUp } from './CountUp';
+export { CountUpSeguro } from './CountUpSeguro';
 export { DecryptedText } from './DecryptedText';
 export { DesenfoqueProgresivo } from './DesenfoqueProgresivo';
 export { DotGrid } from './DotGrid';

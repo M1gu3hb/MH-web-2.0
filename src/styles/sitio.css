@@ -15,6 +15,31 @@
    ============================================================ */
 
 /* ------------------------------------------------------------
+   LA ENTRADA COMPARTIDA
+   ------------------------------------------------------------
+   Una sola keyframe para todas las llegadas nuevas del sitio: el pie, las
+   etiquetas del caso, los botones de la cabecera interior y el panel del
+   menú (esa vive en `navegacion.css` y se apoya en esta).
+
+   Solo declara el `from`. El `to` es el estado real del elemento en la hoja
+   de estilos, y con `backwards` —nunca `forwards`— la animación se limita a
+   pintar el camino hasta ahí. Si no arranca, si se cancela, si el navegador
+   la ignora o si esta regla se cargara tarde, lo que queda es el contenido
+   visible en su sitio. No hay ningún estado alcanzable en el que la
+   información no esté.
+
+   Es la misma doctrina que sacó a `ScrambleText` del fallo de los titulares
+   que se quedaban en glifos: el ocultamiento lo lleva el motor de render y
+   caduca solo, no lo sostiene JavaScript ni un observador.
+   ------------------------------------------------------------ */
+@keyframes mh-llega {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* ------------------------------------------------------------
    Contenedores y secciones
    ------------------------------------------------------------ */
 
@@ -273,7 +298,9 @@
 .migas a {
   color: var(--ink-muted);
   text-decoration: none;
-  transition: color 0.18s;
+  /* `transform` se suma a la lista que ya estaba, para el acuse de pulsación
+     de `base.css`. El tiempo del color no se toca. */
+  transition: color 0.18s, transform 0.12s var(--ease);
 }
 
 .migas a:hover,
@@ -371,6 +398,24 @@
   flex-wrap: wrap;
   gap: var(--sp-3);
   margin-top: var(--sp-7);
+  /* La cabecera terminaba en dos botones que llevaban ahí desde el primer
+     fotograma: el H1 se descifra, la promesa llega, y la acción —lo único
+     que se pide de esa pantalla— no participaba.
+
+     Los 340 ms de retardo la ponen detrás del titular, no encima.
+
+     Lo que NO entra aquí, a propósito, es `.cabecera-pagina__entrada`: es
+     el párrafo a 48ch de la primera pantalla y candidato serio a LCP en
+     teléfono, en un sitio que peleó hasta 1908 ms con la CPU a 1/4.
+     Retrasar su pintura por coreografía es cambiar una métrica dura por
+     una sensación. Los botones sí: están por debajo y no son LCP. */
+  animation: mh-llega 0.5s var(--ease) 0.34s backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cabecera-pagina__acciones {
+    animation: none;
+  }
 }
 
 .cabecera-pagina__imagen img {
@@ -535,13 +580,26 @@
   color: var(--ink-body);
   text-decoration: none;
   border-bottom: 1px solid transparent;
-  transition: color 0.18s, border-color 0.18s;
+  /* Se añade `transform` a la lista que ya estaba; los dos tiempos de color
+     se quedan exactamente como se escribieron. */
+  transition: color 0.18s, border-color 0.18s, transform 0.18s var(--ease);
 }
 
 .portada__frentes a:hover,
 .portada__frentes a:focus-visible {
   color: var(--accent-pos);
   border-bottom-color: currentColor;
+  /* Un píxel. El hero ya está lleno —Scanner, tres voces de ScrambleText,
+     Logo3D, Magnet—: aquí solo hace falta que los tres destinos de la
+     portada se sientan de la misma familia al pasar el cursor. */
+  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portada__frentes a:hover,
+  .portada__frentes a:focus-visible {
+    transform: none;
+  }
 }
 
 .portada__frentes span {
@@ -565,9 +623,30 @@
   color: var(--ink-strong);
 }
 
+/* Era el único enlace de la portada sin estado: declaraba color y ni
+   siquiera una transición. El subrayado se dibuja con `background-size`, que
+   no toca la caja: nada de `border` ni de `text-decoration` apareciendo de
+   golpe, y cero relayout en la pantalla que decide el LCP. El precio es una
+   promesa dicha en voz baja, así que se subraya en 280 ms, no en 120. */
 .portada__ancla a {
   color: var(--accent-pos);
   text-underline-offset: 3px;
+  background-image: linear-gradient(var(--accent-pos), var(--accent-pos));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0 1px;
+  transition: background-size 0.28s var(--ease);
+}
+
+.portada__ancla a:hover,
+.portada__ancla a:focus-visible {
+  background-size: 100% 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portada__ancla a {
+    transition: none;
+  }
 }
 
 .portada__meta {
@@ -886,7 +965,9 @@
   border-bottom: 1px solid var(--line-soft);
   color: inherit;
   text-decoration: none;
-  transition: background 0.18s;
+  /* `transform` se suma a la lista que ya estaba, para el acuse de
+     pulsación de `base.css`. El fondo conserva su tiempo original. */
+  transition: background 0.18s, transform 0.12s var(--ease);
 }
 
 .tabla-decision__fila:last-child {
@@ -896,6 +977,65 @@
 .tabla-decision__fila:hover,
 .tabla-decision__fila:focus-visible {
   background: var(--surface-sunken);
+}
+
+/* ---- La fila es un enlace y tiene que decirlo ----
+   Una fila de altura completa que solo se tiñe de gris se lee como una fila
+   de tabla, no como un destino, y ahí se pierden clics.
+
+   La flecha está SIEMPRE en el DOM: en reposo se queda tenue y cuatro
+   píxeles atrás. Así lo único que cambia al pasar el cursor son `opacity` y
+   `transform` —nada aparece ni desaparece del flujo, no hay ni un fotograma
+   de relayout dentro de una tabla de tres columnas—.
+
+   Va en la celda del «Desde» y no en la fila: la fila es una rejilla de tres
+   columnas declaradas y un `::after` suyo sería un cuarto hijo, o sea una
+   fila implícita nueva. `inline-block` porque `transform` no aplica a un
+   inline no reemplazado.
+
+   Por debajo de 760px la fila ya trae su propia pista direccional
+   (`.tabla-decision__servicio::before`). Aquella no se toca: esta la
+   extiende hacia arriba, con su propio selector. */
+.tabla-decision__desde::after {
+  content: '→';
+  display: inline-block;
+  margin-left: 0.5em;
+  opacity: 0.28;
+  transform: translateX(-4px);
+  transition: opacity 0.22s var(--ease), transform 0.22s var(--ease);
+}
+
+.tabla-decision__fila:hover .tabla-decision__desde::after,
+.tabla-decision__fila:focus-visible .tabla-decision__desde::after {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* El importe es el dato por el que se recorre la tabla: al apuntar la fila
+   se pone del azul de los enlaces del sitio. Va sobre la celda y no sobre un
+   `strong`: `precioEnLinea()` devuelve texto plano, así que el «Desde» no
+   tiene ningún hijo al que agarrarse. */
+.tabla-decision__desde {
+  transition: color 0.22s var(--ease);
+}
+
+.tabla-decision__fila:hover .tabla-decision__desde,
+.tabla-decision__fila:focus-visible .tabla-decision__desde {
+  color: var(--accent-pos);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* La opacidad se queda: no es movimiento, y es lo que hace que la flecha
+     diga hacia dónde. Lo que se va es el desplazamiento. */
+  .tabla-decision__desde::after {
+    transform: none;
+    transition: opacity 0.22s var(--ease);
+  }
+
+  .tabla-decision__fila:hover .tabla-decision__desde::after,
+  .tabla-decision__fila:focus-visible .tabla-decision__desde::after {
+    transform: none;
+  }
 }
 
 .tabla-decision__situacion {
@@ -951,6 +1091,20 @@
   background: var(--surface-raised);
   color: var(--ink-body);
   line-height: 1.5;
+}
+
+/* El filo que faltaba. `.beneficio`, `.pieza`, `.principio`, `.capacidad` y
+   `.proceso-corto li` se encienden al pasar el cursor; estos tres —problemas,
+   ejemplos y pasos— se quedaron fuera de la familia sin ninguna razón, y el
+   resultado es que la página parece tener listas de primera y de segunda.
+   Aquí el filo ya existe y lleva el coral de los problemas —el mismo del
+   icono—: se enciende en su propio color, no en el azul de las otras. */
+.problemas__item {
+  transition: border-color 0.28s var(--ease);
+}
+
+.problemas__item:hover {
+  border-left-color: var(--accent-web);
 }
 
 .seccion--elevado .problemas__item {
@@ -1110,6 +1264,18 @@
   line-height: 1.5;
 }
 
+/* El ejemplo sigue siendo una caja de borde completo, así que no hay un filo
+   suelto que encender: se enciende el recuadro entero, y a media mezcla para
+   que once ejemplos seguidos no conviertan la sección en un tablero de
+   neones. */
+.ejemplos__item {
+  transition: border-color 0.28s var(--ease);
+}
+
+.ejemplos__item:hover {
+  border-color: color-mix(in oklab, var(--accent-brand) 50%, var(--line-soft));
+}
+
 .seccion--elevado .ejemplos__item {
   background: var(--surface-sunken);
 }
@@ -1169,10 +1335,34 @@
   background: color-mix(in oklab, var(--accent-auto) 7%, var(--surface-raised));
 }
 
+/* Un golpe y quieto. El aviso frena la lectura porque dice algo que cambia
+   la decisión de compra, y para eso basta con que el icono llegue: nada de
+   bucle y nada de parpadeo. Un triángulo latiendo sin parar convierte una
+   nota de honestidad en un banner, y el sitio deja de sonar serio.
+
+   Los 300 ms de retardo lo ponen detrás del `Reveal` que ya trae el bloque,
+   para que el golpe caiga cuando el aviso ya está legible y no mientras
+   sube. `backwards`: si la animación no corre, el icono está donde estaba. */
+@keyframes aviso-atencion {
+  from {
+    transform: scale(0.7);
+  }
+  62% {
+    transform: scale(1.06);
+  }
+}
+
 .aviso svg {
   flex: none;
   margin-top: 2px;
   color: var(--accent-auto);
+  animation: aviso-atencion 0.5s var(--ease) 0.3s backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aviso svg {
+    animation: none;
+  }
 }
 
 .aviso__titulo {
@@ -1218,6 +1408,33 @@
    piezas que responden. */
 .proceso-corto li:hover {
   border-top-color: var(--accent-brand);
+}
+
+/* `.paso` comparte la declaración de arriba —`transition: border-color`— y
+   no existía ninguna regla `.paso:hover` en todo el repo: una transición
+   declarada que no disparaba nunca. Esto es cerrarla, con el mismo azul de
+   la familia. */
+.paso:hover {
+  border-top-color: var(--accent-brand);
+}
+
+/* El número es lo que ordena la secuencia y es lo más pequeño y lo más
+   quieto de la tarjeta. No cambia de color porque ya nace en `--accent-pos`:
+   lo que se le añade es el píxel de desplazamiento, que es lo que hace que
+   la tarjeta entera se sienta apuntada y no solo bordeada. */
+.paso__numero {
+  transition: transform 0.28s var(--ease);
+}
+
+.paso:hover .paso__numero {
+  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* El filo se sigue encendiendo: es color, no movimiento. */
+  .paso:hover .paso__numero {
+    transform: none;
+  }
 }
 
 .paso {
@@ -1517,7 +1734,9 @@
   color: var(--ink-body);
   text-align: left;
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
+  /* `transform` se suma a la lista que ya estaba, para el acuse de pulsación
+     de `base.css`. Los dos tiempos originales no se tocan. */
+  transition: border-color 0.2s, background 0.2s, transform 0.12s var(--ease);
 }
 
 .selector-familia__opcion strong {
@@ -1576,6 +1795,64 @@
   color: var(--ink-body);
   font-size: 0.96rem;
   line-height: 1.55;
+}
+
+/* ---- Los filetes que enumeran ----
+   Lo obvio aquí sería cambiar el `Reveal` que envuelve el bloque por
+   `Secuencia`. Eso es sustituir, y sustituir está prohibido. Meter
+   `Secuencia` dentro del `Reveal` da un doble fundido feo.
+
+   Así que el `Reveal` sigue trayendo el bloque y, por debajo, cada elemento
+   anima UNA PROPIEDAD QUE EL `Reveal` NO ANIMA: el filo de acento se dibuja
+   de arriba abajo. El `Reveal` lleva opacidad y desplazamiento; esto lleva
+   escala del filo. Dos animaciones sobre propiedades distintas del mismo
+   bloque no se pisan: se suman.
+
+   Aquí el filo ya existe: es el `border-left` de acento de cada elemento, y
+   no se toca. Lo que se añade es la LUZ que lo recorre —un `::before` más
+   claro que baja por encima del borde y se apaga al llegar—, y en reposo esa
+   luz vale `opacity: 0`. Así el aspecto en reposo de la lista es exactamente
+   el de antes: si la animación no corre, no se cancela nada visible, porque
+   lo que hay debajo es el borde de siempre.
+
+   Con `scaleY` no se toca la caja: cinco luces bajando no mueven un píxel.
+
+   70 ms de paso: es una lista de promesas, no un menú, y se lee más despacio.
+   Los 500 ms de base la ponen detrás de los 720 ms del `Reveal`. */
+.incluido-siempre li {
+  position: relative;
+}
+
+.incluido-siempre li::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -2px;
+  width: 2px;
+  background: color-mix(in oklab, var(--accent-pos) 55%, #fff);
+  opacity: 0;
+  transform-origin: top;
+  animation: mh-filete-luz 0.42s var(--ease) calc(500ms + var(--i, 0) * 70ms) backwards;
+}
+
+/* El `to` implícito es el estado del elemento: `opacity: 0`. Baja encendida y
+   se entrega al borde. */
+@keyframes mh-filete-luz {
+  from {
+    opacity: 1;
+    transform: scaleY(0);
+  }
+  70% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .incluido-siempre li::before {
+    animation: none;
+  }
 }
 
 .incluido-siempre strong {
@@ -1768,7 +2045,9 @@
   color: var(--ink-muted);
   font-size: var(--t-small);
   cursor: pointer;
-  transition: border-color 0.18s, color 0.18s, background 0.18s;
+  /* `transform` se suma a la lista que ya estaba, para el acuse de pulsación
+     de `base.css`. Los tres tiempos originales no se tocan. */
+  transition: border-color 0.18s, color 0.18s, background 0.18s, transform 0.12s var(--ease);
 }
 
 .filtro.is-activo {
@@ -1848,12 +2127,31 @@
   list-style: none;
 }
 
+/* La cabecera del caso es la única del sitio que no pasa por
+   `CabeceraPagina`, y por eso se quedó sin nada en once páginas. Las
+   etiquetas son lo que la persona escanea para decidir si este caso se
+   parece a lo suyo, así que llegan en orden en vez de encenderse todas a la
+   vez. 34 ms, el mismo paso del panel de teléfono: son fichas cortas y una
+   al lado de otra, y a 70 ms la última se hace esperar.
+
+   La numeración la pone el JSX en `--i`; el fallback a 0 significa que una
+   etiqueta sin numerar entra la primera, no que se quede fuera. El tope en
+   el sexto evita que una lista larga acumule medio segundo de retraso.
+
+   `backwards`, no `forwards`: si no corre, están puestas y legibles. */
 .caso-cabecera__etiquetas li {
   padding: 5px 12px;
   border: 1px solid var(--line);
   border-radius: var(--r-full);
   color: var(--ink-body);
   font-size: 0.78rem;
+  animation: mh-llega 0.32s var(--ease) calc(min(var(--i, 0), 6) * 34ms) backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caso-cabecera__etiquetas li {
+    animation: none;
+  }
 }
 
 .caso-cabecera__imagen {
@@ -2157,6 +2455,40 @@
   line-height: 1.68;
 }
 
+/* ---- La respuesta se despliega ----
+   El `hidden` del panel no se toca: es lo que hace que Google y Ctrl+F
+   encuentren la respuesta plegada.
+
+   Lo que se anima es el CONTENIDO, nunca la caja. Animar la altura del panel
+   es relayout en cada fotograma; así el salto de altura ocurre en un solo
+   fotograma, disparado por un clic, y los desplazamientos dentro de los
+   500 ms siguientes a una interacción no cuentan para CLS.
+
+   Los 60 ms de retardo son deliberados y no cero: la respuesta llega DESPUÉS
+   del clic, no con él, que es lo que la hace leerse como consecuencia del
+   dedo. El galón se toma 220 ms y el texto 340: el gesto por fin es uno solo.
+
+   El cierre se queda instantáneo a propósito. Animar la salida obliga a
+   retrasar el `hidden`, y un panel que sigue pintado mientras dice que está
+   oculto es exactamente la clase de estado a medias que ya costó cara. */
+@keyframes acordeon-abre {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+.acordeon__panel:not([hidden]) > p {
+  animation: acordeon-abre 0.34s var(--ease) 0.06s backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .acordeon__panel:not([hidden]) > p {
+    animation: none;
+  }
+}
+
 /* ------------------------------------------------------------
    Cierre
    ------------------------------------------------------------ */
@@ -2323,10 +2655,66 @@
   }
 }
 
+/* ---- El campo que está atendiendo ----
+   Un formulario de siete campos con el mismo peso visual en todos es una
+   lista de trámites. Con esto, el campo donde se escribe es el que importa
+   ahora y los demás esperan.
+
+   El filete se dibuja con `transform` puro y vive fuera de la caja, en el
+   canalón: no empuja ni un píxel del formulario mientras se teclea, que en
+   un campo enfocado sería lo peor que puede pasar. En reposo mide cero.
+
+   El `transition: border-color` que ya tenían los controles y el
+   `:focus-visible` con su contorno se quedan intactos: esto se suma debajo,
+   no los sustituye. El contorno del foco sigue siendo el que cumple.
+
+   `.campo--doble` monta dos campos dentro de un `.campo`, así que el filete y
+   el color de etiqueta cuelgan del `div` interior: si colgaran del padre se
+   encenderían los dos a la vez y la pista dejaría de señalar. */
+.campo:not(.campo--doble),
+.campo--doble > div {
+  position: relative;
+}
+
+.campo:not(.campo--doble)::before,
+.campo--doble > div::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -10px;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--accent-brand);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.22s var(--ease);
+}
+
+.campo:not(.campo--doble):focus-within::before,
+.campo--doble > div:focus-within::before {
+  transform: scaleY(1);
+}
+
+.campo:not(.campo--doble):focus-within > label,
+.campo--doble > div:focus-within > label {
+  color: var(--accent-pos);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* El filete sigue apareciendo —es la pista de dónde estás—, pero entero y
+     sin dibujarse. */
+  .campo:not(.campo--doble)::before,
+  .campo--doble > div::before {
+    transition: none;
+  }
+}
+
 .campo label {
   color: var(--ink-body);
   font-size: var(--t-small);
   font-weight: var(--w-medium);
+  transition: color 0.18s var(--ease);
 }
 
 .campo label span {
@@ -2366,9 +2754,21 @@
   border-color: var(--accent-web);
 }
 
+/* El error es una corrección que llega, no algo que se rompió: entra con la
+   misma llegada que el resto del sitio y nada más. Sin retardo —el mensaje
+   aparece porque alguien acaba de pulsar Enviar, y ahí la respuesta va con
+   el dedo, no detrás de él— y con `backwards`, así que si la animación no
+   corre el texto del error está igual de puesto y de rojo. */
 .campo__error {
   color: var(--accent-web);
   font-size: var(--t-small);
+  animation: mh-llega 0.26s var(--ease) backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .campo__error {
+    animation: none;
+  }
 }
 
 .campo__pista {
@@ -2457,10 +2857,49 @@
   padding-left: var(--sp-5);
 }
 
+/* El otro lado de la propuesta 18. Aquí el filo no existía, así que lo que se
+   dibuja es el filete entero y se queda: son cuatro escalones y alguien te
+   los va contando.
+
+   Mismo método que en `.incluido-siempre`: el `Reveal` que envuelve el bloque
+   sigue llevando opacidad y desplazamiento, y esto lleva la escala de un
+   pseudoelemento. Propiedades distintas, no se pisan.
+
+   Se sale seis píxeles del `ol` a propósito: el relleno de 24 px es donde el
+   navegador pinta los números de la lista ordenada, y a ras del borde el
+   filete quedaba pegado al «1.». Cae dentro del relleno de la tarjeta, así
+   que no se recorta. Con `scaleY` no mueve nada. Con movimiento reducido
+   nace en `scaleY(1)`: el filete está, sin camino. */
 .contacto-esperar li {
   color: var(--ink-body);
   font-size: 0.93rem;
   line-height: 1.55;
+  position: relative;
+}
+
+.contacto-esperar li::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--sp-5) * -1 - 6px);
+  width: 2px;
+  border-radius: 1px;
+  background: var(--accent-pos);
+  transform-origin: top;
+  animation: mh-filete 0.42s var(--ease) calc(500ms + var(--i, 0) * 70ms) backwards;
+}
+
+@keyframes mh-filete {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contacto-esperar li::before {
+    animation: none;
+  }
 }
 
 .contacto-esperar p {
@@ -2665,6 +3104,30 @@ iframe {
    rastree el sitio entero en vez de quedarse en la home. */
 .footer__grid {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+}
+
+/* El pie es el único bloque del sitio que ni siquiera recibe el fundido de
+   ruta, porque vive fuera del envoltorio de transición del `Layout`. Con
+   esto las columnas llegan en orden y se lee como el índice que es.
+
+   Sin observador: se dispara al montar. Está tan por debajo del pliegue que
+   nadie ve el arranque —para cuando se llega, hace rato que terminó—; lo que
+   se ve es el orden, cuando alguien salta al pie de un tirón.
+
+   40 ms de paso, más que los 34 del menú: son cuatro columnas anchas, no
+   doce filas, y a menos de eso llegan las cuatro a la vez. La numeración la
+   pone el JSX en `--i`; sin ella, todas entran a la vez y sigue estando bien.
+
+   `backwards`: si no corre, el pie está entero. Y el pie es el mapa del
+   sitio, así que aquí no se admite ni un estado a medias. */
+.footer__grid > * {
+  animation: mh-llega 0.32s var(--ease) calc(var(--i, 0) * 40ms) backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer__grid > * {
+    animation: none;
+  }
 }
 
 .footer__col-title {
@@ -4086,12 +4549,72 @@ main#contenido > * {
   font-size: 0.82rem;
   color: var(--texto-suave, rgba(255, 255, 255, 0.62));
   text-decoration: none;
-  transition: color 0.2s ease;
+  position: relative;
+  /* `transform` se suma a la lista que ya estaba, para el acuse de pulsación
+     de `base.css`. El tiempo del color no se toca. */
+  transition: color 0.2s ease, transform 0.12s var(--ease);
 }
 
 .footer__casos a:hover,
 .footer__casos a:focus-visible {
   color: var(--accent-brand);
+}
+
+/* Once enlaces en tipo pequeño y en gris: al apuntar uno, el filete de color
+   se dibuja debajo y confirma cuál es. Es el mismo gesto que la tira de
+   industrias de /proyectos, traído al pie.
+
+   `scaleX` sobre un pseudoelemento que está siempre puesto: no aparece nada
+   nuevo en el flujo, no hay relayout, y el subrayado no roba el píxel de
+   línea base que costaría un `border-bottom`. */
+.footer__casos a::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -2px;
+  left: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.22s var(--ease);
+}
+
+.footer__casos a:hover::after,
+.footer__casos a:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* El botón de volver arriba es el único control del armazón cuyo efecto ES
+   movimiento, y era el que menos movimiento tenía. Dos píxeles al apuntar,
+   cuatro al pulsar: el icono va a donde va a ir la página. */
+.footer__arriba svg {
+  transition: transform 0.18s var(--ease);
+}
+
+.footer__arriba:hover svg,
+.footer__arriba:focus-visible svg {
+  transform: translateY(-2px);
+}
+
+.footer__arriba:active svg {
+  transform: translateY(-4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* El subrayado se queda —dice cuál es el enlace apuntado— pero entero y sin
+     dibujarse. El icono deja de moverse; el color del hover manda igual. */
+  .footer__casos a::after {
+    transition: none;
+  }
+
+  .footer__arriba svg,
+  .footer__arriba:hover svg,
+  .footer__arriba:focus-visible svg,
+  .footer__arriba:active svg {
+    transform: none;
+    transition: none;
+  }
 }
 
 /* ------------------------------------------------------------

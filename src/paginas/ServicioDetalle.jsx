@@ -281,9 +281,16 @@ export default function ServicioDetalle() {
       {pagina.aviso && (
         <Seccion>
           <Contenedor ancho="estrecho">
+            {/* El icono lleva clase propia para que el CSS pueda darle su
+                golpe de atención sin depender de `.aviso > svg`, que se
+                rompe en cuanto alguien añade otro icono aquí. Un golpe y
+                quieto: esto es honestidad sobre la facturación, no una
+                alarma, y un triángulo ámbar latiendo en bucle convierte una
+                decisión de negocio en un banner. El `Reveal` que ya trae el
+                bloque no se toca. */}
             <Reveal>
               <aside className="aviso">
-                <AlertTriangle size={20} aria-hidden="true" />
+                <AlertTriangle size={20} className="aviso__icono" aria-hidden="true" />
                 <div>
                   <h2 className="aviso__titulo">{pagina.aviso.titulo}</h2>
                   <p>{pagina.aviso.cuerpo}</p>

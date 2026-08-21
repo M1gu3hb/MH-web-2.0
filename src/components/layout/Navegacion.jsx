@@ -18,10 +18,44 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import { ArrowUpRight, ChevronDown, Menu, MessageCircle, X } from 'lucide-react';
 import { AnimatePresence, motion as Motion } from 'motion/react';
 import { Brand } from './Brand';
+import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { MENU, RUTAS } from '../../config/rutas';
 import { trackWhatsApp, whatsappUrl } from '../../lib/whatsapp';
 
 const ENFOCABLE = 'a[href], button:not([disabled])';
+
+/* ------------------------------------------------------------
+   La marca de «estás aquí»
+   ------------------------------------------------------------
+   Hasta ahora un enlace se apagaba y otro se encendía en el mismo
+   fotograma, mientras el contenido de abajo sí hacía su fundido de ruta.
+   Con `layoutId` la pastilla es un único elemento que Motion mueve del
+   enlace viejo al nuevo, así que la barra participa en la navegación en
+   vez de mirarla desde fuera.
+
+   El muelle es 380/32 —duro y sin rebote— porque esto acompaña a un
+   cambio de página que ya está ocurriendo: si oscila, llega tarde.
+
+   El `color: var(--accent-pos)` del enlace activo NO se toca. La pastilla
+   se pinta detrás del texto y se suma; no sustituye a la marca que ya
+   existía. */
+function PastillaActiva() {
+  const reducido = useReducedMotion();
+
+  /* Con reduced motion se renderiza la misma pastilla sin `layoutId`:
+     aparece de golpe en su sitio. Se degrada el viaje, nunca el dato de
+     en qué página estás. */
+  if (reducido) return <span className="nav-enlace__pastilla" aria-hidden="true" />;
+
+  return (
+    <Motion.span
+      className="nav-enlace__pastilla"
+      aria-hidden="true"
+      layoutId="nav-activo"
+      transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+    />
+  );
+}
 
 /* ------------------------------------------------------------
    Desplegable de Servicios (escritorio)
@@ -116,6 +150,12 @@ export function Navegacion() {
 
   const cerrar = useCallback(() => setAbierto(false), []);
 
+  /* El escalonado del panel se numera de corrido a través de los tres
+     grupos porque la persona los recorre como una sola lista, no como
+     tres. El `--i` solo viaja hasta el CSS; el retardo lo calcula él. */
+  const principales = MENU.filter((e) => !e.hijos);
+  const servicios = MENU.find((e) => e.hijos)?.hijos ?? [];
+
   /* La barra se condensa al bajar. */
   useEffect(() => {
     const alScroll = () => setCondensada(window.scrollY > 40);
@@ -181,7 +221,12 @@ export function Navegacion() {
                 end={entrada.href === RUTAS.inicio}
                 className={({ isActive }) => `nav-enlace ${isActive ? 'is-activo' : ''}`}
               >
-                {entrada.etiqueta}
+                {({ isActive }) => (
+                  <>
+                    {isActive && <PastillaActiva />}
+                    {entrada.etiqueta}
+                  </>
+                )}
               </NavLink>
             )
           )}
@@ -202,7 +247,11 @@ export function Navegacion() {
             aria-label={abierto ? 'Cerrar menú' : 'Abrir menú'}
             onClick={() => setAbierto((v) => !v)}
           >
-            {abierto ? <Menu size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
+            {/* Las dos ramas de este ternario eran el MISMO icono, así que el
+                botón no contaba su estado. La X en la rama abierta no quita
+                nada porque no había nada; el giro lo pone el CSS a partir de
+                `aria-expanded`, que ya estaba puesto. */}
+            {abierto ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
           </button>
         </div>
       </header>
@@ -231,12 +280,13 @@ export function Navegacion() {
 
             <div className="nav-panel__cuerpo">
               <ul className="nav-panel__principal">
-                {MENU.filter((e) => !e.hijos).map((entrada) => (
+                {principales.map((entrada, i) => (
                   <li key={entrada.href}>
                     <NavLink
                       to={entrada.href}
                       end={entrada.href === RUTAS.inicio}
                       className={({ isActive }) => (isActive ? 'is-activo' : '')}
+                      style={{ '--i': i }}
                     >
                       {entrada.etiqueta}
                       <ArrowUpRight size={18} aria-hidden="true" />
@@ -248,9 +298,13 @@ export function Navegacion() {
               <div className="nav-panel__servicios">
                 <p className="nav-panel__seccion">Servicios</p>
                 <ul>
-                  {MENU.find((e) => e.hijos)?.hijos.map((hijo) => (
+                  {servicios.map((hijo, i) => (
                     <li key={hijo.href}>
-                      <NavLink to={hijo.href} className={({ isActive }) => (isActive ? 'is-activo' : '')}>
+                      <NavLink
+                        to={hijo.href}
+                        className={({ isActive }) => (isActive ? 'is-activo' : '')}
+                        style={{ '--i': principales.length + i }}
+                      >
                         <strong>{hijo.etiqueta}</strong>
                         <span>{hijo.resumen}</span>
                       </NavLink>
@@ -261,7 +315,11 @@ export function Navegacion() {
             </div>
 
             <div className="nav-panel__pie">
-              <Link className="tactile-button tactile-button--glow tactile-button--large" to={RUTAS.contacto}>
+              <Link
+                className="tactile-button tactile-button--glow tactile-button--large"
+                to={RUTAS.contacto}
+                style={{ '--i': principales.length + servicios.length }}
+              >
                 Cotizar proyecto
                 <ArrowUpRight size={17} aria-hidden="true" />
               </Link>
@@ -271,6 +329,7 @@ export function Navegacion() {
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => trackWhatsApp('nav')}
+                style={{ '--i': principales.length + servicios.length + 1 }}
               >
                 <MessageCircle size={17} aria-hidden="true" />
                 Escríbeme por WhatsApp

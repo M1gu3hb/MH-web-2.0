@@ -137,10 +137,16 @@ export function PortadaHero() {
                 <ArrowUpRight size={17} aria-hidden="true" />
               </Link>
             </Magnet>
-            <Link className="tactile-button tactile-button--paper tactile-button--large" to={RUTAS.proyectos}>
-              Ver proyectos
-              <ArrowUpRight size={17} aria-hidden="true" />
-            </Link>
+            {/* El segundo botón también tira del cursor, pero a 0.18 y 90 px
+                frente al 0.3 y 120 del principal: sin esto el cursor se pega
+                a un botón y resbala por el otro, y esa asimetría se nota con
+                la mano. Acompaña, no compite. */}
+            <Magnet strength={0.18} radius={90}>
+              <Link className="tactile-button tactile-button--paper tactile-button--large" to={RUTAS.proyectos}>
+                Ver proyectos
+                <ArrowUpRight size={17} aria-hidden="true" />
+              </Link>
+            </Magnet>
           </div>
 
           <Motion.div

@@ -30,8 +30,14 @@ export function Footer() {
 
   return (
     <footer className="footer">
+      {/* El índice de columna va en el `style` para que el CSS escalone la
+          llegada de las cuatro. El pie es el único bloque del sitio que no
+          recibe el fundido de ruta —vive fuera del envoltorio de transición
+          de `Layout.jsx`—, así que sin esto entra de golpe y sin orden.
+          Como está muy por debajo del pliegue nadie ve el arranque: lo que
+          se ve al llegar es el orden. */}
       <div className="footer__grid">
-        <div className="footer__brand">
+        <div className="footer__brand" style={{ '--i': 0 }}>
           <Link className="brand brand--pie" to={RUTAS.inicio} aria-label="Morphiq. Ir al inicio">
             <BrandLockup layout="horizontal" />
           </Link>
@@ -45,7 +51,7 @@ export function Footer() {
           </p>
         </div>
 
-        <nav className="footer__col" aria-label="Servicios">
+        <nav className="footer__col" aria-label="Servicios" style={{ '--i': 1 }}>
           <h2 className="footer__col-title">Servicios</h2>
           {SERVICIOS.map((s) => (
             <Link key={s.href} className="footer__dato" to={s.href}>
@@ -54,7 +60,7 @@ export function Footer() {
           ))}
         </nav>
 
-        <nav className="footer__col" aria-label="Páginas">
+        <nav className="footer__col" aria-label="Páginas" style={{ '--i': 2 }}>
           <h2 className="footer__col-title">El sitio</h2>
           {PAGINAS.map((p) => (
             <Link key={p.href} className="footer__dato" to={p.href}>
@@ -63,7 +69,7 @@ export function Footer() {
           ))}
         </nav>
 
-        <div className="footer__col">
+        <div className="footer__col" style={{ '--i': 3 }}>
           <h2 className="footer__col-title">Contacto</h2>
           <a
             className="footer__dato"

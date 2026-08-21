@@ -10,6 +10,7 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion as Motion } from 'motion/react';
 import { Info } from 'lucide-react';
 import {
   Acordeon,
@@ -25,6 +26,7 @@ import {
 } from '../components/ui';
 import { Reveal } from '../components/reactbits';
 import { Escala } from '../components/motion';
+import { useReducedMotion } from '../hooks/useReducedMotion';
 import { Seo, nodoMigas, nodoOferta, nodoPagina, nodoPreguntas } from '../lib/seo';
 import { AVISO_IVA, PLANES, PLANES_SISTEMAS, PLANES_WEB } from '../config/pricing';
 import { DOMINIO, RUTAS } from '../config/rutas';
@@ -54,6 +56,41 @@ const FAMILIAS = [
   },
 ];
 
+
+/* ------------------------------------------------------------
+   La marca de la elección, otra vez viajando
+   ------------------------------------------------------------
+   Tercera y última vez que aparece este gesto en el sitio —barra, filtros
+   de /proyectos y aquí—, y es a propósito: que la marca de selección viaje
+   de una opción a otra es del sitio, no un truco de una página.
+
+   `layoutId` propio: solo tiene que hacer el viaje entre las dos opciones
+   de este selector. Compartirlo con la barra, que está montada al mismo
+   tiempo, haría que Motion moviera una sola pastilla entre las dos zonas.
+
+   Lo que este añadido NO arregla, y conviene tenerlo escrito: el efecto de
+   elegir familia ocurre 800 px más abajo, fuera de la vista. Eso es
+   maquetación, no movimiento. Con la pastilla, al menos el clic tiene
+   consecuencia visible donde está el dedo.
+
+   El `is-activa` que ya pinta el botón se queda; esto se suma debajo. */
+function IndicadorFamilia() {
+  const reducido = useReducedMotion();
+
+  /* Con reduced motion, la misma pastilla sin `layoutId`: aparece de golpe
+     en su sitio. Se degrada el viaje, nunca el dato de qué elegiste —que
+     además lo lleva `aria-pressed`. */
+  if (reducido) return <span className="selector-familia__pastilla" aria-hidden="true" />;
+
+  return (
+    <Motion.span
+      className="selector-familia__pastilla"
+      aria-hidden="true"
+      layoutId="familia-activa"
+      transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+    />
+  );
+}
 
 export default function Precios() {
   const [familia, setFamilia] = useState('web');
@@ -131,6 +168,7 @@ export default function Precios() {
               >
                 <strong>{f.etiqueta}</strong>
                 <span>{f.ayuda}</span>
+                {familia === f.id && <IndicadorFamilia />}
               </button>
             ))}
           </div>
@@ -192,21 +230,27 @@ export default function Precios() {
       <Seccion>
         <Contenedor ancho="estrecho">
           <TituloSeccion titulo="Lo que va incluido siempre, elijas lo que elijas" />
+          {/* El `Reveal` sigue trayendo el bloque entero y no se toca. El
+              `--i` es para que, DENTRO, el filete de acento de cada punto se
+              dibuje uno detrás de otro por CSS. Son dos animaciones sobre
+              propiedades distintas del mismo bloque: no se pisan, se suman.
+              Cambiar el `Reveal` por `Secuencia` habría sido sustituir, y
+              meter `Secuencia` dentro deja un doble fundido feo. */}
           <Reveal>
             <ul className="incluido-siempre">
-              <li>
+              <li style={{ '--i': 0 }}>
                 <strong>Precio cerrado antes de empezar.</strong> Si me equivoqué al calcular, es mi problema.
               </li>
-              <li>
+              <li style={{ '--i': 1 }}>
                 <strong>Tratas conmigo.</strong> No hay cuenta, ni ejecutivo, ni cadena de correos.
               </li>
-              <li>
+              <li style={{ '--i': 2 }}>
                 <strong>Ves avances durante el proceso.</strong> No desaparezco tres semanas.
               </li>
-              <li>
+              <li style={{ '--i': 3 }}>
                 <strong>Lo que se construye es tuyo.</strong> Dominio y proyecto quedan a tu nombre.
               </li>
-              <li>
+              <li style={{ '--i': 4 }}>
                 <strong>Sin contrato de permanencia.</strong> Los servicios mensuales se cancelan cuando quieras.
               </li>
             </ul>

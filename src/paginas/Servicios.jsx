@@ -16,7 +16,7 @@ import {
   TarjetaServicio,
   TituloSeccion,
 } from '../components/ui';
-import { Reveal } from '../components/reactbits';
+import { CountUpSeguro, Reveal } from '../components/reactbits';
 import { Cascada, Cortina } from '../components/motion';
 import { Seo, nodoMigas, nodoPagina, nodoServicio } from '../lib/seo';
 import { SERVICIOS, PAGINAS_SERVICIO } from '../content/servicios';
@@ -149,7 +149,10 @@ export default function Servicios() {
             resalte="Los cinco frentes"
             aparte={
               <p className="titulo-seccion__dato">
-                <strong>5</strong> frentes · un precio de partida cada uno
+                <strong>
+                  <CountUpSeguro valor={5} />
+                </strong>{' '}
+                frentes · un precio de partida cada uno
               </p>
             }
           />

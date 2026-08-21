@@ -17,10 +17,12 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { AnimatePresence, motion as Motion } from 'motion/react';
 import { Mail, MessageCircle, Phone } from 'lucide-react';
 import { CabeceraPagina, Seccion, TituloSeccion } from '../components/ui';
 import { Reveal } from '../components/reactbits';
 import { Cortina, Lateral } from '../components/motion';
+import { useReducedMotion } from '../hooks/useReducedMotion';
 import { whatsappUrl } from '../lib/whatsapp';
 import { Seo, nodoMigas, nodoPagina } from '../lib/seo';
 import { RUTAS, SERVICIOS_CONTACTO, servicioValido } from '../config/rutas';
@@ -49,10 +51,73 @@ const PRESUPUESTOS = [
 
 const VACIO = { nombre: '', negocio: '', telefono: '', correo: '', servicio: '', presupuesto: '', mensaje: '' };
 
+/* ------------------------------------------------------------
+   El acuse de envío
+   ------------------------------------------------------------
+   Esto no es decoración. Resuelve un fallo que la gente sufre de verdad:
+   `window.open` es una ventana emergente, y en teléfono el navegador la
+   bloquea a menudo. Cuando eso pasa, la persona pulsa «Enviar por
+   WhatsApp» y para ella NO OCURRE ABSOLUTAMENTE NADA: ni error, ni aviso,
+   ni pista de que el mensaje ya estaba compuesto. El acuse dice que hubo
+   traspaso y, sobre todo, deja el enlace a mano —es el plan B, no un
+   adorno.
+
+   `role="status"` y no un `<p>` cualquiera: si la ventana no se abrió,
+   quien usa lector de pantalla tampoco se entera de nada.
+
+   La entrada es de Motion y no de CSS porque el nodo NACE de un cambio de
+   estado, así que no existe el escenario de «se quedó a medias y el texto
+   no volvió»: si el JavaScript no corre, el acuse no llega a montarse y la
+   página queda exactamente como está hoy. Y no hay observador de por
+   medio: `animate` arranca al montar. */
+function AcuseEnvio({ acuse }) {
+  const sinMovimiento = useReducedMotion();
+
+  const texto = acuse && (
+    <>
+      Abriendo {acuse.canal === 'whatsapp' ? 'WhatsApp' : 'tu correo'} con el mensaje ya escrito.{' '}
+      <a href={acuse.url} target="_blank" rel="noreferrer">
+        Si no se abrió solo, ábrelo desde aquí.
+      </a>
+    </>
+  );
+
+  /* Con reduced motion se renderiza directo, sin `AnimatePresence`. La
+     información no depende nunca del movimiento. */
+  if (sinMovimiento) {
+    return acuse ? (
+      <p className="formulario__acuse" role="status">
+        {texto}
+      </p>
+    ) : null;
+  }
+
+  return (
+    <AnimatePresence>
+      {acuse && (
+        /* La clave es el canal: si alguien prueba WhatsApp y luego correo,
+           el acuse se releva en vez de cambiar de texto a media frase. */
+        <Motion.p
+          key={acuse.canal}
+          className="formulario__acuse"
+          role="status"
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {texto}
+        </Motion.p>
+      )}
+    </AnimatePresence>
+  );
+}
+
 export default function Contacto() {
   const [params] = useSearchParams();
   const [datos, setDatos] = useState(VACIO);
   const [tocado, setTocado] = useState(false);
+  const [enviado, setEnviado] = useState(null);
 
   /* Preselección desde ?servicio=, validada contra la lista blanca. */
   useEffect(() => {
@@ -94,12 +159,16 @@ export default function Contacto() {
     } catch {
       /* La analítica nunca bloquea una conversión. */
     }
-    if (canal === 'whatsapp') {
-      trackWhatsApp('formulario');
-      window.open(`https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(mensaje)}`, '_blank', 'noopener');
-    } else {
-      window.open(gmailUrl(CONTACT.email, `Proyecto: ${datos.negocio.trim() || datos.nombre.trim()}`, mensaje), '_blank', 'noopener');
-    }
+    /* La URL se calcula una vez y se usa dos: para abrir la ventana y para
+       el enlace del acuse. Esa segunda copia es lo único que le queda a la
+       persona si el navegador bloquea la emergente. */
+    const url =
+      canal === 'whatsapp'
+        ? `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(mensaje)}`
+        : gmailUrl(CONTACT.email, `Proyecto: ${datos.negocio.trim() || datos.nombre.trim()}`, mensaje);
+    if (canal === 'whatsapp') trackWhatsApp('formulario');
+    window.open(url, '_blank', 'noopener');
+    setEnviado({ canal, url });
   };
 
   const grafo = [
@@ -179,8 +248,13 @@ export default function Contacto() {
                   aria-invalid={tocado && datos.nombre.trim().length < 2}
                   aria-describedby={tocado && datos.nombre.trim().length < 2 ? 'error-nombre' : undefined}
                 />
+                {/* `aria-live` porque hasta ahora el error existía para el
+                    ojo y no para quien usa lector de pantalla: el
+                    `aria-invalid` solo se oye si vuelves a enfocar el
+                    campo. `polite` y no `assertive`: corriges cuando
+                    termines la frase, no a media palabra. */}
                 {tocado && datos.nombre.trim().length < 2 && (
-                  <p className="campo__error" id="error-nombre">
+                  <p className="campo__error" id="error-nombre" aria-live="polite">
                     Escribe tu nombre para saber cómo dirigirme a ti.
                   </p>
                 )}
@@ -254,7 +328,7 @@ export default function Contacto() {
                   aria-describedby={tocado && datos.mensaje.trim().length < 5 ? 'error-mensaje' : undefined}
                 />
                 {tocado && datos.mensaje.trim().length < 5 && (
-                  <p className="campo__error" id="error-mensaje">
+                  <p className="campo__error" id="error-mensaje" aria-live="polite">
                     Con dos líneas me basta para saber por dónde empezar.
                   </p>
                 )}
@@ -288,6 +362,10 @@ export default function Contacto() {
                   Enviar por correo
                 </button>
               </div>
+
+              {/* Debajo de los botones, no dentro: los `.tactile-button`
+                  conservan su hover y su hundimiento tal cual estaban. */}
+              <AcuseEnvio acuse={enviado} />
 
               <p className="formulario__nota">
                 Se abre tu WhatsApp o tu correo con el mensaje ya escrito. Tú lo revisas antes de mandarlo, así que
@@ -325,11 +403,15 @@ export default function Contacto() {
               <Reveal delay={0.08}>
                 <div className="contacto-esperar">
                   <h2>Qué pasa después</h2>
+                  {/* El `Reveal` de arriba sigue trayendo el bloque entero y
+                      no se toca. El `--i` es para que, dentro, el filete de
+                      cada escalón se dibuje uno detrás de otro por CSS:
+                      otra propiedad, otra animación, no se pisan. */}
                   <ol>
-                    <li>Te contesto yo, no un correo automático.</li>
-                    <li>Si hace falta, hacemos una llamada corta para entender el proyecto.</li>
-                    <li>Te mando una propuesta con alcance y precio cerrado.</li>
-                    <li>Si te sirve, arrancamos. Si no, no pasa nada.</li>
+                    <li style={{ '--i': 0 }}>Te contesto yo, no un correo automático.</li>
+                    <li style={{ '--i': 1 }}>Si hace falta, hacemos una llamada corta para entender el proyecto.</li>
+                    <li style={{ '--i': 2 }}>Te mando una propuesta con alcance y precio cerrado.</li>
+                    <li style={{ '--i': 3 }}>Si te sirve, arrancamos. Si no, no pasa nada.</li>
                   </ol>
                   <p>No hay insistencia ni seguimiento incómodo. Si no contestas, lo entiendo.</p>
                 </div>

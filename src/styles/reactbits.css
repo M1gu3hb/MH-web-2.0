@@ -560,3 +560,88 @@ h3 .rb-scramble {
     transform: none !important;
   }
 }
+
+/* ---- CountUpSeguro ----------------------------------------
+   Mismo reparto que ScrambleText: la cifra real sostiene la maquetación
+   —siempre está, con su ancho de verdad— y la cuenta se pinta encima sin
+   ocupar sitio. Nada se mide, nada se recorta y la caja no cambia de tamaño
+   mientras el número sube: no hay relayout ni un píxel de CLS.
+
+   `tabular-nums` porque las dos capas tienen que coincidir: con cifras de
+   ancho variable, un 1 encima de un 5 se descoloca a la vista. */
+.rb-count {
+  position: relative;
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+}
+
+.rb-count__fx {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ============================================================
+   LA CADUCIDAD DE LA CUENTA
+   ============================================================
+   La garantía de que la página NO PUEDE quedarse enseñando un número que no
+   es. Mientras cuenta, JavaScript pone `data-contando` y la cifra real está
+   transparente. Ese atributo arranca dos animaciones `step-end`, que no
+   interpolan nada: se quedan quietas en su valor inicial y saltan al final
+   justo al terminar.
+
+   Lo importante es quién las lleva: el motor de render, no nosotros. Da igual
+   que el JavaScript se cuelgue, que el componente se desmonte a medias o que
+   se cancele un `requestAnimationFrame`: a los 2,2 segundos el navegador
+   devuelve la cifra de verdad y apaga la capa de encima.
+
+   2,2 s y no los 3,2 de ScrambleText porque la cuenta dura 1,2 s, no 1,7, y
+   el seguro solo tiene que quedar cómodamente por detrás del camino normal.
+   En ese camino JavaScript termina primero, quita el atributo y estas dos
+   animaciones se descartan sin llegar a saltar. Esto es el seguro, no el
+   mecanismo.
+   ============================================================ */
+@keyframes rb-count-rescate {
+  to {
+    color: inherit;
+  }
+}
+
+@keyframes rb-count-caduca {
+  to {
+    opacity: 0;
+  }
+}
+
+.rb-count[data-contando] > [data-real] {
+  animation: rb-count-rescate 2.2s step-end forwards;
+}
+
+.rb-count[data-contando] > .rb-count__fx {
+  animation: rb-count-caduca 2.2s step-end forwards;
+}
+
+/* La cifra real nunca sale del árbol de accesibilidad ni del flujo: se pone
+   transparente, no oculta. */
+.rb-count > [data-real] {
+  color: inherit;
+}
+
+/* El componente ya devuelve la cifra pelada con movimiento reducido, así que
+   este bloque no debería alcanzarse nunca. Está por si el marcado llega por
+   otro camino: primero la información, después todo lo demás. */
+@media (prefers-reduced-motion: reduce) {
+  .rb-count > [data-real] {
+    color: inherit;
+    animation: none;
+  }
+
+  .rb-count__fx {
+    display: none;
+  }
+}

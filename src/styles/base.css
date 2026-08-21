@@ -537,3 +537,80 @@ body.is-booting {
     color: inherit;
   }
 }
+
+/* ============================================================
+   ACUSE DE PULSACIÓN
+   ============================================================
+
+   El hueco más grande que tenía el sitio no estaba en ningún catálogo de
+   componentes: `whileTap` aparecía cero veces y `:active`, dos reglas. En
+   teléfono —donde `(hover:hover)` apaga el tilt, el halo, el foco de luz, el
+   brillo, el imán, CampoPuntos y el Scanner— toda la reacción al dedo eran
+   ClickSpark y un píxel de hundimiento en los botones. Es la diferencia
+   entre una web y una aplicación, y se perdía entera.
+
+   Se arregla en CSS y no con `whileTap` de Motion: no cuesta un byte de
+   JavaScript, funciona en el primer fotograma y no depende de que hidrate
+   nada. Solo `transform`: ni un relayout.
+
+   Sobre la transición: donde el elemento ya declara su propia lista de
+   `transition` en otra hoja, esa lista manda y aquí no se toca —quitarle la
+   suya para meter la nuestra sería sustituir, y sustituir está prohibido—.
+   En esos casos el hundimiento es instantáneo, que se siente seco pero
+   correcto; a `.filtro`, `.selector-familia__opcion`, `.migas a`,
+   `.footer__casos a` y `.tabla-decision__fila` se les añadió `transform` a
+   su propia lista, en su propio archivo, sin tocarles nada más.
+
+   `.tactile-button` no está en la lista: ya tiene su hover y su `:active` y
+   se queda exactamente como está.
+   ============================================================ */
+
+@media (prefers-reduced-motion: no-preference) {
+  .acordeon__titulo button,
+  .filtro,
+  .selector-familia__opcion,
+  .nav-panel__principal a,
+  .nav-panel__servicios a,
+  .nav-hamburguesa,
+  .nav-panel__cerrar,
+  .tabla-decision__fila,
+  .ancla,
+  .tarjeta-servicio,
+  .tarjeta-solucion,
+  .footer__casos a,
+  .footer__arriba,
+  .migas a {
+    transition: transform 0.12s var(--ease);
+  }
+
+  .acordeon__titulo button:active,
+  .filtro:active,
+  .selector-familia__opcion:active,
+  .nav-panel__principal a:active,
+  .nav-panel__servicios a:active,
+  .nav-hamburguesa:active,
+  .nav-panel__cerrar:active,
+  .tabla-decision__fila:active,
+  .footer__casos a:active,
+  .footer__arriba:active,
+  .migas a:active {
+    transform: scale(0.985);
+  }
+
+  /* Las tarjetas grandes bajan a 0.995: a 0.985 una pieza de 400 px se
+     deforma visiblemente en vez de hundirse.
+
+     `.ancla` y `.tarjeta-servicio` ya suben 3 px al pasar el cursor, y esa
+     regla vive en `sitio.css`, que carga después de esta. Por eso el
+     `:active` se escribe también en su forma compuesta `:hover:active`: sin
+     ella el hover ganaría el desempate y en un ratón el hundimiento no
+     existiría. Compone con el hover, no lo sustituye. */
+  .ancla:active,
+  .ancla:hover:active,
+  .tarjeta-servicio:active,
+  .tarjeta-servicio:hover:active,
+  .tarjeta-solucion:active,
+  .tarjeta-solucion:hover:active {
+    transform: translateY(-1px) scale(0.995);
+  }
+}

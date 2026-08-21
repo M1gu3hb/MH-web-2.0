@@ -236,7 +236,11 @@ export default function Inicio() {
             kicker="¿Tienes una idea?"
             className="cierre__statement"
           >
-            <div className="cierre__reparto">
+            {/* El `Titular` del cierre son dos líneas a 0.82 s con paso de
+                0.075: el pie tiene que salir cuando la segunda ya está
+                subiendo, no antes. De ahí el 0.42 — sale detrás y no compite
+                con el «¿Empezamos?». */}
+            <Reveal className="cierre__reparto" delay={0.42}>
               <p className="cierre__cuerpo">
                 Cuéntame qué hace tu negocio y qué te está costando trabajo. Con eso ya puedo decirte por dónde
                 empezar y cuánto costaría, aunque acabemos en la opción más barata.
@@ -249,7 +253,7 @@ export default function Inicio() {
                   Ver precios primero
                 </BotonSecundario>
               </div>
-            </div>
+            </Reveal>
           </Statement>
         </div>
       </Seccion>

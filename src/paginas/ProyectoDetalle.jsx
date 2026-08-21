@@ -19,7 +19,7 @@ import {
   CierreCTA,
   TituloSeccion,
 } from '../components/ui';
-import { Reveal } from '../components/reactbits';
+import { GlareHover, Reveal, ScrambleText } from '../components/reactbits';
 import { Seo, nodoCaso, nodoMigas, nodoPagina } from '../lib/seo';
 import { PROYECTOS, proyectoPorSlug, rutaProyecto } from '../content/proyectos';
 import { RUTAS } from '../config/rutas';
@@ -75,9 +75,16 @@ export default function ProyectoDetalle() {
               <p className="caso-cabecera__tipo">{proyecto.tipo}</p>
               <p className="caso-cabecera__resumen">{proyecto.resumen}</p>
 
+              {/* El índice va en el `style` y no en una clase por posición:
+                  el número de etiquetas cambia de caso a caso y el CSS lo
+                  lee de `--i` para escalonar la llegada. Es la lista que la
+                  persona escanea para decidir si este caso se parece a lo
+                  suyo, así que se entrega en orden de lectura. */}
               <ul className="caso-cabecera__etiquetas">
-                {proyecto.etiquetas.map((e) => (
-                  <li key={e}>{e}</li>
+                {proyecto.etiquetas.map((e, i) => (
+                  <li key={e} style={{ '--i': i }}>
+                    {e}
+                  </li>
                 ))}
               </ul>
 
@@ -92,7 +99,12 @@ export default function ProyectoDetalle() {
             {/* Los productos propios no tienen una pantalla que valga como
                 retrato —una ventana de terminal no cuenta nada—, así que en vez
                 de fingir una captura llevan portada tipográfica. */}
-            <figure className="caso-cabecera__imagen">
+            {/* La misma lámina de luz que ya lleva esta maqueta cuando es
+                tarjeta en el índice (`ui/index.jsx`). Hoy tiene gesto en
+                pequeño y lo pierde al ampliarse, que es al revés de lo que
+                uno espera. Va con `as="figure"` para no meter un div de más
+                entre la rejilla del reparto y su hijo. */}
+            <GlareHover as="figure" className="caso-cabecera__imagen">
               {proyecto.imagen ? (
                 <img
                   src={proyecto.imagen}
@@ -104,7 +116,7 @@ export default function ProyectoDetalle() {
               ) : (
                 <PortadaProyecto proyecto={proyecto} />
               )}
-            </figure>
+            </GlareHover>
           </div>
         </Contenedor>
       </header>
@@ -113,7 +125,16 @@ export default function ProyectoDetalle() {
       <Seccion tono="acento" className="caso-resultado">
         <Contenedor ancho="estrecho">
           <Reveal>
-            <p className="caso-resultado__etiqueta">El resultado</p>
+            {/* Solo la etiqueta, nunca la frase: la frase es la conclusión
+                del caso, ya la trae el `Reveal` y ya está tratada como el
+                momento de la página; apilarle un segundo gesto encima sería
+                animar lo que ya se mueve. La etiqueta está quieta, es corta
+                y es la firma del sitio: hace de golpe de atención para que
+                la frase se lea con peso. El H1 no se toca — es texto de
+                primera pantalla en once páginas. */}
+            <p className="caso-resultado__etiqueta">
+              <ScrambleText text="El resultado" trigger="view" />
+            </p>
             <p className="caso-resultado__frase">{proyecto.resultado}</p>
           </Reveal>
         </Contenedor>
