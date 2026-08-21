@@ -12,6 +12,7 @@ inventariado aquí.
 | [DESIGN-SYSTEM.md](./DESIGN-SYSTEM.md) | Tokens, tipografía, color, escala, patrones visuales, animación. Estado actual y deuda | Antes de tocar `styles.css` |
 | [CONTENT.md](./CONTENT.md) | Inventario de todo el copy y datos: secciones, textos, CTAs, casos, contacto | Para cambiar mensajes o estructura |
 | [VERCEL.md](./VERCEL.md) | Proyectos, dominios, deploys, headers, caché, hallazgos de infraestructura | Antes de publicar |
+| [SEO.md](./SEO.md) | Auditoría de indexación y Search Console: meta robots, duplicados, datos estructurados antes del JavaScript, sitemap | Cuando Google no enseña lo que debería |
 | [AUDIT.md](./AUDIT.md) | Auditoría con severidad: rendimiento, accesibilidad, SEO, UX/conversión, código | Para saber qué está roto y qué duele |
 | [REDESIGN.md](./REDESIGN.md) | Propuesta de rediseño: dirección visual, nueva arquitectura de página, sistema nuevo | El plan creativo |
 | [ROADMAP.md](./ROADMAP.md) | Ejecución por fases, con criterios de aceptación y orden de trabajo | Para trabajar día a día |
