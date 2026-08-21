@@ -77,15 +77,31 @@ export function PortadaHero() {
       >
         {conBeams && (
           <Suspense fallback={null}>
+            {/* ------------------------------------------------------------
+                POR QUÉ ESTOS NÚMEROS Y NO LOS DEL EJEMPLO
+                ------------------------------------------------------------
+                Con `rotation: 0` las franjas salen VERTICALES, y en un
+                teléfono en vertical eso no funciona: las doce franjas de
+                ancho 2 suman 24 unidades a lo ancho, pero con la cámara a
+                z=20 y 30° de campo solo se ven unas 3. O sea que en pantalla
+                caben una franja y media, y el fondo se lee como un corte duro
+                azul contra negro, no como un fondo.
+
+                Girándolas 90° ese mismo recorrido se reparte sobre el ALTO,
+                donde en un teléfono sí hay sitio: entran ocho o nueve. Además
+                son más finas y más numerosas que en el ejemplo, con menos
+                grano y más escala, para que se lean como luz y no como
+                bandas. Comprobado en 360, 390, 768 y 834 px.
+                ------------------------------------------------------------ */}
             <Beams
-              beamWidth={2}
+              beamWidth={1.2}
               beamHeight={15}
-              beamNumber={12}
-              lightColor="#1100ff"
+              beamNumber={20}
+              lightColor="#2148ff"
               speed={2}
-              noiseIntensity={1.75}
-              scale={0.2}
-              rotation={0}
+              noiseIntensity={1}
+              scale={0.32}
+              rotation={90}
               maxDpr={1.5}
               fondo="#06080d"
               sinMovimiento={sinMovimiento}
