@@ -503,7 +503,7 @@ export function QyroVisual() {
           <span className="qyro-wire__line">
             <b className="qyro-packet">PDF</b>
           </span>
-          <small>cifrado · se verifica al llegar</small>
+          <small>cifrado · verificado</small>
         </div>
 
         <div className="qyro-dev qyro-dev--to">

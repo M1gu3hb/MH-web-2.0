@@ -3464,8 +3464,12 @@
   font-family: ui-monospace, monospace;
   font-size: 0.62rem;
   font-weight: 700;
-  letter-spacing: 0.13em;
+  /* El rótulo tiene que caber en una línea: la columna del cable mide poco y
+     al partirse la segunda línea se metía debajo de la punta de la flecha. */
+  letter-spacing: 0.1em;
+  line-height: 1.5;
   text-align: center;
+  white-space: nowrap;
 }
 
 .qyro-wire small:first-child {
@@ -3560,4 +3564,30 @@
 @media (prefers-reduced-motion: reduce) {
   .qyro-key b i,
   .qyro-wire__line { animation: none; }
+}
+
+/* ------------------------------------------------------------
+   EL BANCO DE HORNEADO
+   ------------------------------------------------------------
+   Solo se usa desde herramientas/hornear.html, que `vite build` no compila,
+   así que estas reglas nunca llegan al sitio publicado. Están aquí y no en
+   un archivo aparte para que vivan junto a las maquetas que enmarcan: si
+   alguien cambia el lienzo de una ilustración, lo ve al lado.
+
+   760 × 750 es el lienzo real de las siete originales, medido en los .webp
+   que ya estaban horneados. El alto tiene que estar RESUELTO —no `auto`—
+   porque varias maquetas reparten su contenido con grid y dependen de él.
+   ------------------------------------------------------------ */
+
+.horno {
+  display: grid;
+  gap: 40px;
+  padding: 40px;
+  background: #1b1d22;
+}
+
+.horno-pieza {
+  display: grid;
+  width: 760px;
+  height: 750px;
 }

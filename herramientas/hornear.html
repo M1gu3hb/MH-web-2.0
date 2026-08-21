@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Horno de maquetas de caso — Morphiq</title>
+    <!--
+      PÁGINA DE HERRAMIENTA, NO DEL SITIO.
+
+      Vive fuera de index.html a propósito: `vite build` solo compila
+      index.html, así que esto se sirve en desarrollo y NUNCA se publica.
+
+      Existe porque las siete maquetas originales se hornearon desde el sitio
+      de una sola página, que ya no existe, y averiguar cómo se habían hecho
+      costó excavar en el historial de git y en un script de un directorio
+      temporal. Ahora el procedimiento vive en el repositorio:
+
+        npm run dev
+        node scripts/hornear-maquetas.mjs
+
+      y las imágenes salen a public/casos/.
+    -->
+  </head>
+  <body>
+    <div id="horno"></div>
+    <script type="module" src="/herramientas/hornear.jsx"></script>
+  </body>
+</html>
