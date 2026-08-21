@@ -277,6 +277,24 @@ export const PLANES_WEB = [PLANES.webEsencial, PLANES.webProfesional, PLANES.man
 export const PLANES_SISTEMAS = [PLANES.pos, PLANES.crm, PLANES.ecosistema];
 export const PLANES_TODOS = Object.values(PLANES);
 
+/**
+ * A qué dirección lleva cada plan.
+ *
+ * Casi todos se pintan en /precios, así que su dirección es el ancla de su
+ * tarjeta. El de restaurantes NO: está en PLANES —y por tanto en el catálogo
+ * de ofertas— pero no está en PLANES_WEB ni en PLANES_SISTEMAS, que son las
+ * dos familias que /precios sabe pintar. O sea que su oferta declaraba un
+ * ancla que no existía en ninguna página. No es un plan fantasma: tiene su
+ * propia página, y ahí es donde debe llevar.
+ *
+ * Vive aquí, junto a los planes, porque lo consumen dos sitios que no se
+ * ven entre sí: la página al pintar y el generador de HTML al construir.
+ */
+export function rutaDelPlan(plan) {
+  if (plan.id === 'restaurantes') return '/soluciones/restaurantes';
+  return `/precios#${plan.id}`;
+}
+
 /* ============================================================
    HELPERS DE PRESENTACIÓN
    ============================================================ */

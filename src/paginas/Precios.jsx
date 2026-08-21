@@ -8,7 +8,7 @@
  * Google lo lea completo y quien use Ctrl+F lo encuentre.
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion as Motion } from 'motion/react';
 import { Info } from 'lucide-react';
@@ -28,7 +28,7 @@ import { Reveal } from '../components/reactbits';
 import { Escala } from '../components/motion';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { Seo, nodoMigas, nodoOferta, nodoPagina, nodoPreguntas } from '../lib/seo';
-import { AVISO_IVA, PLANES, PLANES_SISTEMAS, PLANES_WEB } from '../config/pricing';
+import { AVISO_IVA, PLANES, PLANES_SISTEMAS, PLANES_WEB, rutaDelPlan } from '../config/pricing';
 import { DOMINIO, RUTAS } from '../config/rutas';
 import { PREGUNTAS_PRECIOS } from '../content';
 
@@ -92,9 +92,45 @@ function IndicadorFamilia() {
   );
 }
 
+/* Qué familia contiene el plan que pide el ancla. Sin ancla, o con una que no
+   corresponde a ningún plan, se abre la de páginas web como siempre. */
+function familiaDelAncla() {
+  try {
+    const id = decodeURIComponent(window.location.hash.replace('#', ''));
+    if (!id) return 'web';
+    const dueña = FAMILIAS.find((f) => f.planes.some((p) => p.id === id));
+    return dueña?.id ?? 'web';
+  } catch {
+    return 'web';
+  }
+}
+
 export default function Precios() {
-  const [familia, setFamilia] = useState('web');
+  /* ------------------------------------------------------------
+     EL ANCLA DE LA URL MANDA SOBRE LA FAMILIA QUE SE ABRE
+     ------------------------------------------------------------
+     El OfferCatalog de esta página declara siete ofertas, cada una con su
+     URL: /precios#crm, /precios#punto-de-venta, etc. Esas direcciones no
+     llevaban a ninguna parte: solo se montan las tarjetas de la familia
+     activa, así que las siete aterrizaban al principio de la página. Ahora
+     el ancla elige la familia, la tarjeta existe y el navegador puede ir a
+     ella. Prometer una dirección en los datos estructurados y no entregarla
+     es peor que no prometerla.
+     ------------------------------------------------------------ */
+  const [familia, setFamilia] = useState(familiaDelAncla);
   const activa = FAMILIAS.find((f) => f.id === familia);
+
+  /* El navegador intenta ir al ancla al cargar, cuando la tarjeta todavía no
+     existe: React aún no ha montado nada. Así que se repite el salto una vez
+     montada. `block: 'center'` y no `'start'` porque la barra de arriba es
+     fija y con `'start'` el titular de la tarjeta queda debajo de ella. */
+  useEffect(() => {
+    const id = decodeURIComponent(window.location.hash.replace('#', ''));
+    if (!id) return;
+    const destino = document.getElementById(id);
+    if (!destino) return;
+    destino.scrollIntoView({ block: 'center', behavior: 'auto' });
+  }, []);
 
   const grafo = [
     nodoPagina({ path: RUTAS.precios, title: TITLE, description: DESC }),
@@ -109,8 +145,7 @@ export default function Precios() {
           nombre: p.nombre,
           descripcion: p.resumen,
           desde: p.desde,
-          path: RUTAS.precios,
-          ancla: p.id,
+          ruta: rutaDelPlan(p),
         })
       ),
     },
@@ -180,7 +215,7 @@ export default function Precios() {
         <div className="contenedor contenedor--amplio">
           <div className={`planes planes--${activa.planes.length}`}>
             {activa.planes.map((plan, i) => (
-              <Escala key={plan.id} delay={i * 0.07} desde={0.96}>
+              <Escala key={plan.id} id={plan.id} delay={i * 0.07} desde={0.96}>
                 <TarjetaPlan plan={plan} detallada />
               </Escala>
             ))}

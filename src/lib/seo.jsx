@@ -174,17 +174,16 @@ export function nodoPreguntas({ path, preguntas }) {
 /**
  * Una oferta con precio de partida. `desde` en número, sin formatear.
  *
- * `ancla` es el identificador del plan dentro de la página. Sin él las siete
- * ofertas apuntaban a la misma URL, y siete ofertas con la misma dirección
- * son, para un buscador, siete formas de decir lo mismo: no hay manera de
- * enviar a nadie al plan concreto. Con el ancla, cada una lleva a su bloque.
+ * `ruta` es la dirección real del plan, que sale de `rutaDelPlan`. Sin ella
+ * las siete ofertas apuntaban a la misma URL, y siete ofertas con la misma
+ * dirección son, para un buscador, siete formas de decir lo mismo.
  */
-export function nodoOferta({ nombre, descripcion, desde, path, ancla }) {
+export function nodoOferta({ nombre, descripcion, desde, ruta }) {
   const oferta = {
     '@type': 'Offer',
     name: nombre,
     description: descripcion,
-    url: `${DOMINIO}${path}${ancla ? `#${ancla}` : ''}`,
+    url: `${DOMINIO}${ruta}`,
     priceCurrency: 'MXN',
     availability: 'https://schema.org/InStock',
     seller: ORG,

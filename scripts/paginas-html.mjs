@@ -31,7 +31,7 @@
  * Si algo falla no se rompe el build: se avisa y el sitio se publica igual.
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -90,8 +90,23 @@ function cabecera({ dominio, path, title, description, image, grafo }) {
  * base se eliminan antes, porque dos meta robots contradictorias en la
  * misma página son una ambigüedad que no hay razón para dejar ahí.
  */
-function aplicar(base, head, noscript, robots) {
+function aplicar(base, head, noscript, robots, { conLockup = false } = {}) {
   let html = base;
+  /* ------------------------------------------------------------
+     EL PRELOAD DE LA INTRO NO ES DE TODAS LAS RUTAS
+     ------------------------------------------------------------
+     La pantalla de arranque solo existe en la home, y solo la primera vez de
+     la sesión (Layout.jsx lo decide con `pathname === '/'`). Pero su imagen
+     se pedía con `preload` y `fetchpriority="high"` desde el HTML base, que
+     es el molde de las 22 rutas: en /precios o en una ficha de proyecto se
+     descargaba a máxima prioridad un archivo que no se usa NUNCA, compitiendo
+     con el recurso que sí es el LCP de esa página. Search Console lo cantaba
+     en las seis URLs inspeccionadas: «preloaded using link preload but not
+     used within a few seconds».
+     ------------------------------------------------------------ */
+  if (!conLockup) {
+    html = html.replace(/\s*<link rel="preload" as="image"[^>]*lockup-apilado[^>]*\/>/g, '');
+  }
   if (robots) {
     html = html.replace(/\s*<meta name="(robots|googlebot)"[^>]*\/>/g, '');
   }
@@ -111,6 +126,17 @@ function aplicar(base, head, noscript, robots) {
   html = html.replace('@@TITLE@@', head);
   if (noscript) html = html.replace(/<noscript>[\s\S]*?<\/noscript>/, noscript);
   return html;
+}
+
+/* Las preguntas, en texto de verdad. Vivían solo dentro del JSON-LD, y ese
+   bloque lo lee un buscador pero no lo lee nadie más: ni los rastreadores de
+   IA, ni los buscadores pequeños, ni el previsualizador de un enlace en
+   WhatsApp. Son el contenido con más palabras de cada página de servicio. */
+function bloquePreguntas(preguntas) {
+  if (!preguntas?.length) return '';
+  return `<h2>Preguntas frecuentes</h2><dl>${preguntas
+    .map((f) => `<dt>${escapar(f.q)}</dt><dd>${escapar(f.a)}</dd>`)
+    .join('')}</dl>`;
 }
 
 function bloqueNoscript(titulo, entrada, enlaces, extra = '') {
@@ -183,7 +209,7 @@ async function main() {
   const { RUTAS, DOMINIO, MENU } = await importar('src/config/rutas.js');
   const { PAGINAS_SERVICIO, SERVICIOS } = await importar('src/content/servicios.js');
   const { PROYECTOS } = await importar('src/content/proyectos.js');
-  const { PLANES, precioEnLinea } = await importar('src/config/pricing.js');
+  const { PLANES, precioEnLinea, rutaDelPlan } = await importar('src/config/pricing.js');
   const { PREGUNTAS_INICIO, PREGUNTAS_PRECIOS } = await importar('src/content/index.js');
 
   const org = { '@id': `${DOMINIO}/#organizacion` };
@@ -225,15 +251,15 @@ async function main() {
     })),
   });
 
-  /* Cada plan con SU dirección. Siete ofertas apuntando a la misma URL no
-     dejan enviar a nadie al plan concreto, ni en un resultado enriquecido ni
-     en un enlace compartido. */
+  /* Cada plan con SU dirección, que sale de `rutaDelPlan`. Seis llevan a su
+     ancla en /precios; el de restaurantes lleva a su propia página, porque
+     esta no lo pinta. */
   const nodoOferta = (plan) => {
     const oferta = {
       '@type': 'Offer',
       name: plan.nombre,
       description: plan.resumen,
-      url: `${DOMINIO}${RUTAS.precios}#${plan.id}`,
+      url: `${DOMINIO}${rutaDelPlan(plan)}`,
       priceCurrency: 'MXN',
       availability: 'https://schema.org/InStock',
       seller: org,
@@ -343,12 +369,12 @@ async function main() {
         p.hero.titulo,
         p.hero.entrada,
         enlacesPrincipales,
-        p.capacidades
+        (p.capacidades
           ? `<h2>Qué incluye</h2><ul>${p.capacidades.grupos
               .flatMap((g) => g.items)
               .map((i) => `<li>${escapar(i)}</li>`)
               .join('')}</ul>`
-          : ''
+          : '') + bloquePreguntas(p.faq)
       ),
     });
   }
@@ -453,7 +479,7 @@ async function main() {
       enlacesPrincipales,
       `<h2>Planes</h2><ul>${Object.values(PLANES)
         .map((pl) => `<li><strong>${escapar(pl.nombre)}</strong>: ${escapar(precioEnLinea(pl))}. ${escapar(pl.resumen)}</li>`)
-        .join('')}</ul>`
+        .join('')}</ul>` + bloquePreguntas(PREGUNTAS_PRECIOS)
     ),
   });
 
@@ -517,10 +543,18 @@ async function main() {
   /* ---- Escritura ---- */
   let escritas = 0;
   for (const pag of paginas) {
-    const grafo = [nodoPagina(pag.path, pag.title, pag.description), nodoMigas(pag.migas), ...(pag.extra ?? [])];
+    /* Un BreadcrumbList de un solo eslabón no dice nada —«Inicio» y ya— y
+       encima creaba una incoherencia: el HTML servido lo llevaba y el que
+       React monta al hidratar no, porque el grafo de la home no lo incluye.
+       Servido y renderizado tienen que decir lo mismo. */
+    const grafo = [
+      nodoPagina(pag.path, pag.title, pag.description),
+      ...(pag.migas.length > 1 ? [nodoMigas(pag.migas)] : []),
+      ...(pag.extra ?? []),
+    ];
     const preload = pag.modulo ? '\n    ' + precargar(pag.modulo) : '';
     const head = cabecera({ dominio: DOMINIO, ...pag, grafo }) + preload + '\n    ' + preloadFuentes;
-    const html = aplicar(base, head, pag.noscript);
+    const html = aplicar(base, head, pag.noscript, undefined, { conLockup: pag.path === RUTAS.inicio });
     const destino = join(DIST, pag.path, 'index.html');
     mkdirSync(dirname(destino), { recursive: true });
     writeFileSync(destino, html);
@@ -538,6 +572,12 @@ async function main() {
       );
     }
   }
+
+  /* El manifiesto es de uso interno del build: este script lo acaba de leer
+     para saber qué trozo precargar en cada ruta. Publicado no sirve a nadie y
+     enseña el árbol de módulos de src/ en una URL pública. Se borra AQUÍ, al
+     final, nunca antes: quitarlo de vite.config rompería los modulepreload. */
+  rmSync(join(DIST, '.vite'), { recursive: true, force: true });
 
   console.log(`[paginas] ${escritas} rutas con su propio HTML, title, canonical y JSON-LD`);
 }
