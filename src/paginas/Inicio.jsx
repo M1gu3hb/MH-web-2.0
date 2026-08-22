@@ -118,7 +118,7 @@ export default function Inicio() {
           </MarcoExpansivo>
           <Reveal>
             <div className="seccion__pie">
-              <BotonSecundario to={RUTAS.proyectos}>Ver todos los proyectos</BotonSecundario>
+              <BotonSecundario to={RUTAS.proyectos}>Ver el trabajo real</BotonSecundario>
             </div>
           </Reveal>
         </div>

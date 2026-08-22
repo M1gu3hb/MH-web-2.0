@@ -4759,3 +4759,188 @@ main#contenido > * {
 .rampa .ejemplos__item {
   background: color-mix(in srgb, #ffffff 4.5%, var(--fondo-rampa));
 }
+
+/* ------------------------------------------------------------
+   LA MARCA COMPLETA DEL HERO EN VERTICAL
+   ------------------------------------------------------------
+   La perspectiva vive en el PADRE y el giro en el hijo. Puestos en el mismo
+   elemento, `perspective` se aplicaría después de la rotación y el efecto se
+   aplana: gira, pero sin profundidad.
+   ------------------------------------------------------------ */
+
+.marca-profunda {
+  position: relative;
+  display: grid;
+  width: 100%;
+  place-items: center;
+  perspective: 900px;
+  /* El dedo que inclina el logo es el mismo que hace scroll: el gesto
+     vertical tiene que seguir siendo de la página, no de la pieza. */
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.marca-profunda__pieza {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.marca-profunda__arte {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Un filo de luz que cruza la pieza. Al girar, como está a 1 px por delante
+   en el espacio 3D, se desplaza distinto que el arte y es lo que delata que
+   la cosa tiene grosor.
+
+   Va RECORTADO a la silueta del logo. Sin la máscara el degradado pinta
+   sobre el rectángulo entero —incluida la parte transparente— y lo que se
+   ve es una caja más clara alrededor del logo, no un brillo sobre él.
+
+   La máscara apunta a `mask-lockup.webp`, 11 KB, y no al arte de 74 KB.
+   Existe por eso: apuntar una máscara a la imagen grande hace que el
+   navegador la pida OTRA VEZ, una por cada variante de la propiedad. Es la
+   misma silueta que ya usa el destello del símbolo. */
+.marca-profunda__brillo {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(128deg, transparent 38%, rgba(150, 195, 255, 0.22) 50%, transparent 62%);
+  pointer-events: none;
+  transform: translateZ(1px);
+  mask-image: url('/marca/mask-lockup.webp');
+  mask-size: 100% 100%;
+  -webkit-mask-image: url('/marca/mask-lockup.webp');
+  -webkit-mask-size: 100% 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marca-profunda__pieza {
+    transform: none !important;
+    will-change: auto;
+  }
+  .marca-profunda__brillo {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------
+   EN VERTICAL, EL TRABAJO SE ASOMA; NO SE DESPLIEGA
+   ------------------------------------------------------------
+   La home enseñaba las cuatro fichas destacadas una debajo de otra. En un
+   teléfono eso son cuatro pantallas de scroll de una sección que no todo el
+   mundo viene a ver, y para llegar a precios hay que pasar por ellas sí o sí.
+
+   Ahora se asoma UNA, cortada con un desvanecido, y debajo el botón. Se
+   entiende que hay más y se entra si se quiere; quien no, sigue bajando.
+   El título y la entrada no se tocan: eso es lo que cuenta la sección.
+
+   Se hace ocultando las otras y enmascarando el bloque, no recortando la
+   lista en JavaScript: así el HTML sigue llevando las cuatro fichas con sus
+   enlaces, que es lo que sigue el rastreador. Se degrada lo que se ve, nunca
+   lo que hay.
+   ------------------------------------------------------------ */
+
+@media (max-width: 700px) {
+  .seccion--portafolio .rejilla-proyectos--destacados > *:nth-child(n + 2) {
+    display: none;
+  }
+
+  .seccion--portafolio .rejilla-proyectos--destacados {
+    mask: linear-gradient(180deg, #000 46%, rgba(0, 0, 0, 0.35) 78%, transparent 97%);
+    -webkit-mask: linear-gradient(180deg, #000 46%, rgba(0, 0, 0, 0.35) 78%, transparent 97%);
+    /* Se recorta el alto para que el desvanecido no deje un hueco vacío
+       debajo: la mitad que se apaga no tiene por qué ocupar sitio. */
+    max-height: 52vh;
+    overflow: hidden;
+  }
+
+  /* El botón sube a pegarse a lo que se está asomando: es la continuación de
+     esa ficha cortada, no el pie de una sección terminada. */
+  .seccion--portafolio .seccion__pie {
+    margin-top: calc(var(--sp-4) * -1);
+  }
+
+  .seccion--portafolio .seccion__pie .tactile-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ------------------------------------------------------------
+   QUE EL PRECIO ENTRE EN LA PRIMERA PANTALLA
+   ------------------------------------------------------------
+   En vertical el hero terminaba 14 px por debajo del pliegue en un teléfono
+   de 844 de alto y 70 por debajo en uno de 740. O sea que para ver los dos
+   botones y el «desde $2,000» había que arrastrar, justo en el sitio donde
+   se decide si alguien sigue leyendo.
+
+   Se recupera ese alto de tres sitios a la vez, ninguno de los cuales quita
+   contenido:
+
+   · El aire entre bloques pasa a medirse contra el ALTO de la ventana. Un
+     hueco fijo reparte igual en un teléfono de 740 que en uno de 932, y son
+     dos situaciones distintas: en el corto ese aire es lo que echa el precio
+     fuera. Con `vh` el reparto se adapta solo y no hay que mantener una
+     tabla de tamaños.
+   · El respiro de arriba baja: con la barra fija midiendo ~90 px, 16vh era
+     más de lo que hace falta para despegarse de ella.
+   · La marca cede un poco. Sigue abriendo y sigue siendo lo primero, pero no
+     tiene que llevarse un tercio de la pantalla para conseguirlo.
+   ------------------------------------------------------------ */
+
+@media (max-width: 700px) {
+  .portada {
+    padding-block: clamp(94px, 12.5vh, 132px) clamp(40px, 6vh, 72px);
+  }
+
+  .portada__reparto {
+    gap: clamp(13px, 2.4vh, 22px);
+  }
+
+  .portada__marca {
+    max-width: min(62vw, 268px);
+    margin-bottom: 0;
+  }
+
+  /* La frase y el precio aprietan su interlineado: son dos líneas cada uno y
+     a 1.5 se comían 30 px que hacían falta más abajo. */
+  .portada__claim {
+    line-height: 1.42;
+  }
+}
+
+/* En un teléfono CORTO el problema no es el ancho, es el alto: a 740 px de
+   alto cabía justo y a 640 se salía por 76. Así que la regla mira el alto,
+   que es la medida que manda aquí. Un teléfono de 915 no necesita esto y no
+   lo recibe. */
+@media (max-width: 700px) and (max-height: 800px) {
+  .portada {
+    padding-block: clamp(84px, 11vh, 110px) clamp(30px, 5vh, 56px);
+  }
+
+  .portada__reparto {
+    gap: clamp(10px, 1.9vh, 16px);
+  }
+
+  .portada__marca {
+    max-width: min(52vw, 212px);
+  }
+
+  .portada__titular {
+    font-size: clamp(2.15rem, 12.4cqw, 3.4rem);
+  }
+}
+
+/* Por debajo de 680 px de alto la frase del hero se parte en tres líneas en
+   vez de dos, y esos 22 px extra son los que dejaban el precio fuera por
+   seis. La marca cede lo justo para devolverlos. */
+@media (max-width: 700px) and (max-height: 680px) {
+  .portada__marca {
+    max-width: min(46vw, 178px);
+  }
+}

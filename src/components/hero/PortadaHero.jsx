@@ -30,6 +30,7 @@ import { motion as Motion } from 'motion/react';
 
 import { Magnet, ScrambleText } from '../reactbits';
 import { Logo3D } from './Logo3D';
+import { MarcaProfunda } from './MarcaProfunda';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { HERO, CONTACT } from '../../content';
@@ -61,6 +62,11 @@ export function PortadaHero() {
      propio componente lo resuelve con `frameloop`.
      ------------------------------------------------------------ */
   const conBeams = !finoYAncho;
+  /* En vertical el hero enseña la marca ENTERA —símbolo, nombre y bajada—,
+     la misma del arranque, en vez del símbolo suelto. En un formato alto hay
+     sitio para presentarla completa, y hacerlo una vez vale más que repetir
+     el símbolo. De 701 px para arriba sigue mandando `Logo3D`. */
+  const enVertical = useMediaQuery('(max-width: 700px)');
 
   const entrada = sinMovimiento
     ? false
@@ -210,7 +216,7 @@ export function PortadaHero() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.05, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
           >
-            <Logo3D />
+            {enVertical ? <MarcaProfunda /> : <Logo3D />}
           </Motion.div>
 
           <p className="portada__ancla">
