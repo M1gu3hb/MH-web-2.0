@@ -438,7 +438,7 @@
   align-items: center;
   padding-block: clamp(118px, 14vh, 172px) clamp(72px, 10vh, 128px);
   overflow: hidden;
-  background: #06080d;
+  background: var(--negro-hero);
   color: var(--ink-strong);
 
   /* Las variables de tinta del hero de producción, para que el titular a
@@ -507,7 +507,7 @@
   bottom: 0;
   left: 0;
   height: 24vh;
-  background: linear-gradient(180deg, transparent, rgba(6, 8, 13, 0.55) 44%, var(--surface-base));
+  background: linear-gradient(180deg, transparent, rgba(6, 8, 13, 0.55) 44%, var(--negro-hero));
 }
 
 /* ============================================================
@@ -4740,7 +4740,7 @@ main#contenido > * {
   background: var(--fondo-rampa);
 }
 
-.rampa--1 { --fondo-rampa: #06080d; }
+.rampa--1 { --fondo-rampa: var(--negro-hero); }
 .rampa--2 { --fondo-rampa: #0a0c12; }
 .rampa--3 { --fondo-rampa: #0e1116; }
 .rampa--4 { --fondo-rampa: #12151b; }

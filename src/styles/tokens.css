@@ -14,6 +14,12 @@
   --surface-base: #171a20;
   --surface-raised: #1e2229;
   --surface-sunken: #121519;
+  /* El negro del hero, y por tanto el primer escalón de la rampa de la home y
+     el final de su velo. Los tres TIENEN que ser el mismo valor: si el velo
+     acaba en otro color, aparece una banda entre el hero y la sección de
+     abajo. Pasó exactamente eso cuando la rampa bajó a negro y el velo se
+     quedó entregando al gris de antes. */
+  --negro-hero: #06080d;
   --surface-night: #0d0f13;
   --surface-night-raised: #171a20;
 
