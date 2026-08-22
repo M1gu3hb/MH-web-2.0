@@ -168,61 +168,76 @@ export function PortadaHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
         >
-          {/* El titular de marca, a tres voces: las dos de fuera gritan en
-              la tipografía de display y la de en medio matiza en la de
-              texto. Ese contraste es lo que lo hace una frase y no tres
-              líneas del mismo tamaño. */}
-          <h1 className="hero__title portada__titular">
-            {HERO.title.map((linea, i) => (
-              <span key={linea.text} className={`hero__title-line hero__title-line--${linea.voice}`}>
-                <ScrambleText text={linea.text} />
-                {i === HERO.title.length - 1 ? <i className="hero__title-dot" aria-hidden="true" /> : null}
-              </span>
-            ))}
-          </h1>
+          {/* ------------------------------------------------------------
+              LA PRIMERA PANTALLA, COMO UNA PIEZA
+              ------------------------------------------------------------
+              Este envoltorio existe solo para el teléfono, y en cualquier
+              otro sitio es `display: contents`: desaparece del layout y sus
+              hijos siguen colocándose en la rejilla del padre exactamente
+              como antes. Cero cambio fuera de vertical.
 
-          <p className="hero__claim portada__claim">
-            <ScrambleText text={claimA} />
-            <ScrambleText text={claimVen} className="hero__accent hero__accent--azul" />
-            <ScrambleText text={claimB} />
-            <ScrambleText text={claimNec} className="hero__accent hero__accent--plata" />
-          </p>
+              En vertical sí es una caja, y es lo que permite decir «esto
+              mide una pantalla y termina en el precio». Sin un elemento que
+              agrupe los cinco bloques no hay forma de fijar esa altura: las
+              filas de una rejilla no se pueden sumar entre sí.
+              ------------------------------------------------------------ */}
+          <div className="portada__primera">
+            {/* El titular de marca, a tres voces: las dos de fuera gritan en
+                la tipografía de display y la de en medio matiza en la de
+                texto. Ese contraste es lo que lo hace una frase y no tres
+                líneas del mismo tamaño. */}
+            <h1 className="hero__title portada__titular">
+              {HERO.title.map((linea, i) => (
+                <span key={linea.text} className={`hero__title-line hero__title-line--${linea.voice}`}>
+                  <ScrambleText text={linea.text} />
+                  {i === HERO.title.length - 1 ? <i className="hero__title-dot" aria-hidden="true" /> : null}
+                </span>
+              ))}
+            </h1>
 
-          <div className="portada__acciones">
-            {/* Magnet ya se desactiva solo con reduced-motion y en
-                dispositivos sin hover, así que no hace falta condicionarlo. */}
-            <Magnet strength={0.3} radius={120}>
-              <Link className="tactile-button tactile-button--glow tactile-button--large" to={RUTAS.servicios}>
-                Ver soluciones
-                <ArrowUpRight size={17} aria-hidden="true" />
-              </Link>
-            </Magnet>
-            {/* El segundo botón también tira del cursor, pero a 0.18 y 90 px
-                frente al 0.3 y 120 del principal: sin esto el cursor se pega
-                a un botón y resbala por el otro, y esa asimetría se nota con
-                la mano. Acompaña, no compite. */}
-            <Magnet strength={0.18} radius={90}>
-              <Link className="tactile-button tactile-button--paper tactile-button--large" to={RUTAS.proyectos}>
-                Ver proyectos
-                <ArrowUpRight size={17} aria-hidden="true" />
-              </Link>
-            </Magnet>
+            <p className="hero__claim portada__claim">
+              <ScrambleText text={claimA} />
+              <ScrambleText text={claimVen} className="hero__accent hero__accent--azul" />
+              <ScrambleText text={claimB} />
+              <ScrambleText text={claimNec} className="hero__accent hero__accent--plata" />
+            </p>
+
+            <div className="portada__acciones">
+              {/* Magnet ya se desactiva solo con reduced-motion y en
+                  dispositivos sin hover, así que no hace falta condicionarlo. */}
+              <Magnet strength={0.3} radius={120}>
+                <Link className="tactile-button tactile-button--glow tactile-button--large" to={RUTAS.servicios}>
+                  Ver soluciones
+                  <ArrowUpRight size={17} aria-hidden="true" />
+                </Link>
+              </Magnet>
+              {/* El segundo botón también tira del cursor, pero a 0.18 y 90 px
+                  frente al 0.3 y 120 del principal: sin esto el cursor se pega
+                  a un botón y resbala por el otro, y esa asimetría se nota con
+                  la mano. Acompaña, no compite. */}
+              <Magnet strength={0.18} radius={90}>
+                <Link className="tactile-button tactile-button--paper tactile-button--large" to={RUTAS.proyectos}>
+                  Ver proyectos
+                  <ArrowUpRight size={17} aria-hidden="true" />
+                </Link>
+              </Magnet>
+            </div>
+
+            <Motion.div
+              className="portada__marca"
+              aria-hidden="true"
+              initial={sinMovimiento ? false : { opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.05, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {enVertical ? <MarcaProfunda /> : <Logo3D />}
+            </Motion.div>
+
+            <p className="portada__ancla">
+              Páginas web desde <strong>{formatoMXN(PLANES.webEsencial.desde)}</strong> ·{' '}
+              <Link to={RUTAS.precios}>ver todos los precios</Link>
+            </p>
           </div>
-
-          <Motion.div
-            className="portada__marca"
-            aria-hidden="true"
-            initial={sinMovimiento ? false : { opacity: 0, scale: 0.92 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.05, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
-          >
-            {enVertical ? <MarcaProfunda /> : <Logo3D />}
-          </Motion.div>
-
-          <p className="portada__ancla">
-            Páginas web desde <strong>{formatoMXN(PLANES.webEsencial.desde)}</strong> ·{' '}
-            <Link to={RUTAS.precios}>ver todos los precios</Link>
-          </p>
 
           {/* Lo que la home multipágina añade: qué hay detrás de la frase,
               dicho en cinco palabras y con enlace a cada camino. */}

@@ -556,6 +556,13 @@
 .portada__meta { grid-area: meta; }
 .portada__marca { grid-area: marca; }
 
+/* El envoltorio de la primera pantalla no existe para el layout: es
+   `display: contents`, así que titular, claim, acciones, marca y ancla
+   siguen siendo hijos efectivos del reparto y sus `grid-area` resuelven
+   exactamente como antes. Solo en vertical (≤700 px) se convierte en una
+   caja de verdad. */
+.portada__primera { display: contents; }
+
 /* El titular se mide contra el reparto, no contra la ventana: DIGITALIZAMOS
    es indivisible y atado al viewport se salía de cuadro en tableta apaisada,
    donde la columna es mucho más estrecha que la pantalla. */
@@ -619,8 +626,11 @@
   font-size: max(0.9rem, 12.5px);
 }
 
+/* La cifra y su moneda son una sola cosa: al equilibrar los renglones el
+   navegador partía «$2,000 / MXN», que se lee como un precio a medias. */
 .portada__ancla strong {
   color: var(--ink-strong);
+  white-space: nowrap;
 }
 
 /* Era el único enlace de la portada sin estado: declaraba color y ni
@@ -4670,38 +4680,15 @@ main#contenido > * {
    hay ancho, y mover el símbolo arriba dejaría el titular colgando.
    ------------------------------------------------------------ */
 @media (max-width: 700px) {
+  /* El orden de la primera pantalla —símbolo, titular, frase, botones,
+     precio— lo escribe ahora `.portada__primera`, más abajo, junto con la
+     regla que la hace medir una pantalla justa. Aquí solo queda el reparto
+     de la sección entera. */
   .portada__reparto {
     grid-template-areas:
-      'marca'
-      'titular'
-      'claim'
-      'acciones'
-      'ancla'
+      'primera'
       'frentes'
       'meta';
-  }
-
-  /* Abre la composición, así que puede con más tamaño que cuando iba en
-     medio de la columna. El tope en vw evita que en un teléfono estrecho se
-     coma la pantalla entera antes de que se lea una sola palabra. */
-  .portada__marca {
-    max-width: min(70vw, 310px);
-    margin-bottom: var(--sp-2);
-  }
-
-  /* El titular gana cuerpo. El tope está medido, no elegido: «DIGITALIZAMOS»
-     es la palabra más larga y a más de 14cqw se sale de la caja en un
-     teléfono de 360 px. */
-  .portada__titular {
-    font-size: clamp(2.55rem, 14cqw, 4.6rem);
-  }
-}
-
-/* Un teléfono estrecho no aguanta el símbolo a 310 px y además el titular
-   grande: se come el pliegue entero. */
-@media (max-width: 420px) {
-  .portada__marca {
-    max-width: min(64vw, 250px);
   }
 }
 
@@ -4872,75 +4859,178 @@ main#contenido > * {
 }
 
 /* ------------------------------------------------------------
-   QUE EL PRECIO ENTRE EN LA PRIMERA PANTALLA
+   VERTICAL: LA PRIMERA PANTALLA TERMINA EN EL PRECIO. SIEMPRE.
    ------------------------------------------------------------
-   En vertical el hero terminaba 14 px por debajo del pliegue en un teléfono
-   de 844 de alto y 70 por debajo en uno de 740. O sea que para ver los dos
-   botones y el «desde $2,000» había que arrastrar, justo en el sitio donde
-   se decide si alguien sigue leyendo.
+   Antes esto se perseguía a mano: se apretaba un hueco aquí, se bajaba un
+   tamaño allá, y el resultado dependía del teléfono. Medido, sobraban 15 px
+   en uno de 640 de alto y 105 px en uno de 915. O sea que en el corto casi
+   se escapaba y en el largo quedaba un hueco muerto debajo del precio.
 
-   Se recupera ese alto de tres sitios a la vez, ninguno de los cuales quita
-   contenido:
+   Aquí se resuelve por construcción y no por ajuste. `.portada__primera`
+   agrupa los cinco bloques de la primera pantalla y mide EXACTAMENTE lo que
+   queda de ventana después del respiro de la barra:
 
-   · El aire entre bloques pasa a medirse contra el ALTO de la ventana. Un
-     hueco fijo reparte igual en un teléfono de 740 que en uno de 932, y son
-     dos situaciones distintas: en el corto ese aire es lo que echa el precio
-     fuera. Con `vh` el reparto se adapta solo y no hay que mantener una
-     tabla de tamaños.
-   · El respiro de arriba baja: con la barra fija midiendo ~90 px, 16vh era
-     más de lo que hace falta para despegarse de ella.
-   · La marca cede un poco. Sigue abriendo y sigue siendo lo primero, pero no
-     tiene que llevarse un tercio de la pantalla para conseguirlo.
+       alto = 100svh − respiro
+
+   `svh` y no `vh`: `vh` es la ventana con las barras del navegador
+   escondidas, que es el estado que NO se ve al llegar. Con `svh` la cuenta
+   se hace contra la ventana pequeña, la de las barras a la vista, y el
+   precio entra también en ese momento.
+
+   Dentro, las cuatro piezas de texto miden lo que miden y el símbolo se
+   queda con TODO lo que sobre: su fila es la única `1fr`. Eso es lo que
+   convierte «sobran 90 px» en «el logo es 90 px más grande» en vez de en un
+   hueco. Y en un teléfono corto la misma fila se encoge sola, sin que haya
+   que escribir una regla por modelo.
+
+   El precio, al ser la última fila de una caja de alto fijo, cae siempre en
+   el filo inferior de la pantalla. No hay teléfono en el que se escape.
    ------------------------------------------------------------ */
 
 @media (max-width: 700px) {
   .portada {
-    padding-block: clamp(94px, 12.5vh, 132px) clamp(40px, 6vh, 72px);
+    --respiro-portada: clamp(94px, 12.5svh, 132px);
+
+    padding-block: var(--respiro-portada) clamp(40px, 6vh, 72px);
   }
 
   .portada__reparto {
-    gap: clamp(13px, 2.4vh, 22px);
+    grid-template-areas:
+      'primera'
+      'frentes'
+      'meta';
   }
 
+  .portada__primera {
+    grid-area: primera;
+    display: grid;
+    grid-template-areas:
+      'marca'
+      'titular'
+      'claim'
+      'acciones'
+      'ancla';
+    /* La fila del símbolo es la elástica; las cuatro de texto piden lo suyo
+       y no ceden. `minmax(0, 1fr)` y no `1fr` a secas: si un teléfono muy
+       corto no diera de sí, la fila se encoge hasta cero en vez de empujar
+       el precio fuera de pantalla. */
+    grid-template-rows: minmax(0, 1fr) auto auto auto auto;
+    gap: clamp(12px, 2.1svh, 20px);
+    /* La cuenta entera de esta sección. El descuento del final es el aire
+       del filo: sin él la última línea del precio queda pegada al borde de
+       la pantalla y se lee como texto cortado, que es justo lo contrario de
+       lo que esta regla busca. Doce píxeles bastan para que se lea como el
+       final de algo y no como el corte de algo. */
+    height: calc(100svh - var(--respiro-portada) - clamp(8px, 1.2svh, 12px));
+  }
+
+  /* ---- EL TITULAR, CENTRADO ----
+     A ancho completo se probó y no funcionaba: la palabra tocando los dos
+     filos deja el resto de la composición —logo centrado arriba, frase con
+     su guía a la izquierda— descolgado, y lo que se lee es una pancarta, no
+     un titular. Vuelve al tamaño de siempre y se centra bajo el símbolo, que
+     ya viene centrado: los dos forman una sola pieza y el ojo baja recto.
+
+     Solo en vertical. En cualquier otra medida el titular sigue alineado a
+     la izquierda, que es de donde arranca la lectura cuando hay ancho.
+
+     El tope de 14cqw no es elegido: es donde DIGITALIZAMOS —indivisible—
+     deja de caber en la columna de un teléfono de 360 px. */
+  .portada__titular {
+    align-items: center;
+    font-size: clamp(2.55rem, 14cqw, 4.6rem);
+    line-height: 0.86;
+    text-align: center;
+  }
+
+  /* A esta escala el ajuste de letra es parte de la medida, no un detalle:
+     son casi treinta píxeles de la palabra. Estaba escrito para ≤640 y aquí
+     se extiende a todo el vertical, para que un teléfono de 690 px de ancho
+     vea el mismo titular que uno de 390 y no otro más suelto. */
+  .portada__titular .hero__title-line--mark {
+    letter-spacing: -0.068em;
+  }
+
+  /* El renglón que baja la voz lleva una guía delante; centrado, la guía y
+     el texto viajan juntos como un grupo en vez de quedarse ella pegada al
+     margen izquierdo. */
+  .portada__titular .hero__title-line--soft {
+    justify-content: center;
+  }
+
+  /* Y el punto vuelve al flujo. Descolgarlo tenía sentido cuando la palabra
+     llegaba al filo y no le quedaba sitio; centrado y a este tamaño sí cabe,
+     y fuera del flujo se quedaba colgando a la derecha del renglón centrado,
+     que es lo único que delataba que no formaba parte de él. */
+  .portada__titular .hero__title-dot {
+    position: static;
+  }
+
+  /* ---- EL SÍMBOLO, QUE SE QUEDA CON LO QUE SOBRE ----
+     `height: 100%` es el alto de su fila, o sea el sobrante de la pantalla.
+     El ancho no se escribe: lo deduce la proporción del arte (720 × 787).
+
+     Las dos limitaciones —lo que queda de alto y lo ancho que puede llegar a
+     ser— caen las dos sobre el ALTO, y en propiedades distintas: el sobrante
+     en `height`, el tope en `max-height` ya dividido por la proporción.
+     Puestas una en cada eje se pelean y el logo sale deformado; puestas
+     juntas dentro de un `min()` no funcionan, porque un porcentaje metido en
+     `min()` no tiene contra qué resolverse dentro de una pista `1fr` y el
+     navegador se queda con la otra rama. Medido: el logo salía a 280 px de
+     alto dentro de una fila de 87 y se montaba encima del titular. */
   .portada__marca {
-    max-width: min(62vw, 268px);
+    height: 100%;
+    max-height: calc(min(80vw, 360px) / 0.915);
+    min-height: 0;
+    max-width: none;
+    align-self: center;
     margin-bottom: 0;
   }
 
-  /* La frase y el precio aprietan su interlineado: son dos líneas cada uno y
-     a 1.5 se comían 30 px que hacían falta más abajo. */
+  /* La fila explícita es lo que hace que el `100%` de la pieza tenga contra
+     qué medirse. Sin ella la fila es `auto`, o sea indefinida, el porcentaje
+     no resuelve y la pieza se estira a lo ancho de la columna: medido, 350 px
+     de ancho y 383 de alto dentro de una caja de 228. */
+  .portada__marca .marca-profunda {
+    height: 100%;
+    grid-template-rows: 100%;
+  }
+
+  .portada__marca .marca-profunda__pieza {
+    width: auto;
+    height: 100%;
+    aspect-ratio: 720 / 787;
+  }
+
+  .portada__marca .marca-profunda__arte {
+    height: 100%;
+  }
+
   .portada__claim {
     line-height: 1.42;
   }
+
+  .portada__ancla {
+    /* Es la última fila y el filo de la primera pantalla: sin margen debajo,
+       la línea del precio ES el final. */
+    margin-bottom: 0;
+    /* Se parte por la mitad en vez de dejar «precios» solo en el último
+       renglón: una palabra suelta en el filo inferior parece contenido
+       cortado, y dos renglones parejos parecen el final. */
+    text-wrap: balance;
+  }
 }
 
-/* En un teléfono CORTO el problema no es el ancho, es el alto: a 740 px de
-   alto cabía justo y a 640 se salía por 76. Así que la regla mira el alto,
-   que es la medida que manda aquí. Un teléfono de 915 no necesita esto y no
-   lo recibe. */
+/* En un teléfono corto solo cambia el respiro de arriba: todo lo demás lo
+   resuelve ya la cuenta de `.portada__primera`. Se queda porque 12.5svh de
+   una pantalla de 640 son 80 px y la barra fija mide ~90: hay que despegarse
+   de ella antes de repartir nada. */
 @media (max-width: 700px) and (max-height: 800px) {
   .portada {
-    padding-block: clamp(84px, 11vh, 110px) clamp(30px, 5vh, 56px);
+    --respiro-portada: clamp(88px, 13.5svh, 110px);
   }
 
-  .portada__reparto {
-    gap: clamp(10px, 1.9vh, 16px);
-  }
-
-  .portada__marca {
-    max-width: min(52vw, 212px);
-  }
-
-  .portada__titular {
-    font-size: clamp(2.15rem, 12.4cqw, 3.4rem);
-  }
-}
-
-/* Por debajo de 680 px de alto la frase del hero se parte en tres líneas en
-   vez de dos, y esos 22 px extra son los que dejaban el precio fuera por
-   seis. La marca cede lo justo para devolverlos. */
-@media (max-width: 700px) and (max-height: 680px) {
-  .portada__marca {
-    max-width: min(46vw, 178px);
+  .portada__primera {
+    gap: clamp(10px, 1.7svh, 16px);
   }
 }
