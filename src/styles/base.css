@@ -614,3 +614,59 @@ body.is-booting {
     transform: translateY(-1px) scale(0.995);
   }
 }
+
+/* ------------------------------------------------------------
+   LO QUE SE PULSA NO SE SELECCIONA
+   ------------------------------------------------------------
+   `::selection` está pintado con el azul de marca, así que al hacer clic en
+   una pestaña del menú —sobre todo con doble clic, o arrastrando un par de
+   píxeles sin querer— el navegador seleccionaba el texto del enlace y lo
+   dejaba con un recuadro azul encima. En un enlace de navegación esa
+   selección no sirve para nada: nadie copia la palabra «Precios» del menú.
+
+   Se apaga SOLO en los controles: navegación, botones, pestañas, filtros,
+   tarjetas enteras que son un enlace y enlaces del pie. El texto del sitio
+   —los párrafos, los precios, el correo, el teléfono, la descripción de cada
+   proyecto— sigue siendo seleccionable y copiable, que es justo lo que
+   alguien sí quiere hacer con ellos.
+
+   Tampoco se toca el anillo de foco: vive en `:focus-visible`, solo aparece
+   con teclado, y es lo que hace el sitio navegable sin ratón.
+
+   `-webkit-tap-highlight-color` sí va a todo: es el destello gris que Chrome
+   de Android pinta al tocar cualquier cosa, llega tarde y se queda pegado al
+   hacer scroll. La respuesta al dedo ya la da el hundimiento de `:active`,
+   que es inmediata y va en el compositor.
+   ------------------------------------------------------------ */
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-shell__links a,
+.nav-enlace,
+.nav-menu a,
+.nav-menu__todos,
+.nav-desplegable a,
+.nav-hamburguesa,
+.nav-panel a,
+.nav-panel__cerrar,
+.nav-panel__titulo,
+.tactile-button,
+button,
+[role='button'],
+.filtro,
+.selector-familia__opcion,
+.acordeon__pregunta,
+.ancla,
+.tarjeta-proyecto__enlace,
+.tarjeta-servicio,
+.tarjeta-solucion,
+.footer__dato,
+.footer__casos a,
+.footer__col a,
+.footer__arriba,
+.migas a {
+  -webkit-user-select: none;
+  user-select: none;
+}
