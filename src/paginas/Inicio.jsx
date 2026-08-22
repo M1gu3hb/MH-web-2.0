@@ -67,7 +67,7 @@ export default function Inicio() {
       <PortadaHero />
 
       {/* ============ ¿QUÉ NECESITAS? ============ */}
-      <Seccion tono="elevado" id="que-necesitas">
+      <Seccion tono="elevado" id="que-necesitas" className="rampa rampa--1">
         <div className="contenedor contenedor--amplio">
           {/* El encabezado deja de estar centrado en una columna estrecha:
               el titular ocupa siete columnas y la entrada se va abajo a la
@@ -96,7 +96,7 @@ export default function Inicio() {
       </Seccion>
 
       {/* ============ PROYECTOS ============ */}
-      <Seccion className="seccion--portafolio">
+      <Seccion className="seccion--portafolio rampa rampa--2">
         <div className="contenedor contenedor--amplio">
           <TituloSeccion
             eyebrow="Trabajo real"
@@ -125,7 +125,7 @@ export default function Inicio() {
       </Seccion>
 
       {/* ============ PRECIOS COMO ANCLA ============ */}
-      <Seccion tono="elevado" id="precios">
+      <Seccion tono="elevado" id="precios" className="rampa rampa--3">
         <div className="contenedor contenedor--amplio">
           <TituloSeccion
             eyebrow="Precios"
@@ -167,7 +167,7 @@ export default function Inicio() {
           nivel A que ocupa su propia pantalla, y los cuatro pasos se
           encienden uno a uno conforme bajas. No se fija nada ni se secuestra
           la rueda: quien baja rápido ve la lista completa y sigue. */}
-      <Seccion className="seccion--proceso">
+      <Seccion className="seccion--proceso rampa rampa--4">
         <div className="contenedor contenedor--amplio">
           <Statement
             lineas={['Aquí no se trabaja', 'a puerta cerrada.']}
@@ -198,7 +198,7 @@ export default function Inicio() {
           agua al pasar el cursor, la firma MH97 y la rúbrica con el correo
           personal. Antes era un párrafo centrado en una columna estrecha, o
           sea puro texto, justo en la sección que tiene que demostrar oficio. */}
-      <Seccion tono="acento" className="seccion--presentacion">
+      <Seccion tono="acento" className="seccion--presentacion rampa rampa--5">
         <div className="contenedor contenedor--amplio">
           <Presentacion>
             <div className="presentacion__acciones">
@@ -209,7 +209,7 @@ export default function Inicio() {
       </Seccion>
 
       {/* ============ DUDAS ============ */}
-      <Seccion>
+      <Seccion className="rampa rampa--6">
         <Contenedor ancho="medio">
           {/* Aquí sí conviene el modo simple: un acordeón se lee mejor en
               una columna, y meterle una segunda columna de entrada sería

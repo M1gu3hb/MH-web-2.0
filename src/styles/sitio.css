@@ -560,7 +560,7 @@
    es indivisible y atado al viewport se salía de cuadro en tableta apaisada,
    donde la columna es mucho más estrecha que la pantalla. */
 .portada__titular {
-  font-size: clamp(2rem, 7.1cqw, 7.4rem);
+  font-size: clamp(2.1rem, 7.8cqw, 8.1rem);
 }
 
 .portada__claim {
@@ -660,6 +660,13 @@
   min-height: min(60vh, 520px);
 }
 
+/* El símbolo crece con el titular, para que la pareja siga pesando lo mismo.
+   Va apuntado a `.portada__marca` y no a `.logo3d` a secas porque ese mismo
+   componente lo usa también el hero del sitio de una página, que no se toca. */
+.portada__marca .logo3d {
+  width: min(90%, 560px);
+}
+
 /* ---- Indicador de scroll ---- */
 .portada__pista {
   position: absolute;
@@ -699,7 +706,7 @@
     grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.55fr);
   }
   .portada__titular {
-    font-size: clamp(2rem, 8.2cqw, 4.6rem);
+    font-size: clamp(2.1rem, 8.9cqw, 5rem);
   }
   .portada__marca {
     min-height: min(46vh, 380px);
@@ -4696,4 +4703,59 @@ main#contenido > * {
   .portada__marca {
     max-width: min(64vw, 250px);
   }
+}
+
+/* ------------------------------------------------------------
+   LA RAMPA DE FONDOS DE LA HOME
+   ------------------------------------------------------------
+   La home arrancaba con el hero en negro (#06080d) y la sección siguiente
+   saltaba de golpe al gris elevado. Ese salto partía la página en dos justo
+   donde tiene que engancharse.
+
+   Ahora las seis secciones intermedias suben del negro del hero al gris del
+   cierre en pasos iguales, y el cierre se queda exactamente donde estaba.
+   Los valores están calculados, no elegidos a ojo: son la interpolación de
+   #06080d a #1e2229 en siete tramos, tomando los seis primeros.
+
+     hero      #06080d
+     rampa 1   #06080d   ← empata con el hero, sin costura
+     rampa 2   #0a0c12
+     rampa 3   #0e1116
+     rampa 4   #12151b
+     rampa 5   #16191f
+     rampa 6   #1a1e24
+     cierre    #1e2229   ← intacto
+
+   ESTO ES SOLO DE LA HOME, y lo es por construcción: la clase `rampa` solo
+   se escribe en Inicio.jsx. Ninguna otra página puede heredarla por
+   descuido, que es la razón de resolverlo con una clase y no con un selector
+   colgado de la ruta.
+
+   `--fondo-rampa` se declara además de pintar el fondo, para que lo que va
+   DENTRO de cada sección pueda referirse al fondo real de su sección en vez
+   de a un token fijo.
+   ------------------------------------------------------------ */
+
+.rampa {
+  background: var(--fondo-rampa);
+}
+
+.rampa--1 { --fondo-rampa: #06080d; }
+.rampa--2 { --fondo-rampa: #0a0c12; }
+.rampa--3 { --fondo-rampa: #0e1116; }
+.rampa--4 { --fondo-rampa: #12151b; }
+.rampa--5 { --fondo-rampa: #16191f; }
+.rampa--6 { --fondo-rampa: #1a1e24; }
+
+/* Las tarjetas se apoyaban en `--surface-sunken`, un valor fijo. Con la rampa
+   eso se invierte a mitad de página: en las primeras secciones la tarjeta
+   quedaba más clara que su fondo —bien— y en las últimas más oscura, o sea
+   hundida donde debería estar elevada. Ahora cada tarjeta se calcula desde el
+   fondo de SU sección, así que la relación se mantiene de arriba abajo. */
+.rampa .tarjeta-servicio,
+.rampa .plan,
+.rampa .capacidad,
+.rampa .problemas__item,
+.rampa .ejemplos__item {
+  background: color-mix(in srgb, #ffffff 4.5%, var(--fondo-rampa));
 }
