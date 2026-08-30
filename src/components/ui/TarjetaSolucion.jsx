@@ -33,6 +33,7 @@ import { ArrowUpRight } from 'lucide-react';
 import {
   AutomationScreen,
   CrmScreen,
+  FacturacionScreen,
   PosScreen,
   RestauranteScreen,
   SoftwareScreen,
@@ -47,6 +48,7 @@ const MAQUETAS = {
   crm: AutomationScreen,
   software: SoftwareScreen,
   restaurantes: RestauranteScreen,
+  facturacion: FacturacionScreen,
 };
 
 /* Cuánto se reduce cada maqueta dentro del marco. La de restaurantes y la
@@ -57,6 +59,10 @@ const ESCALAS = {
   crm: 0.46,
   software: 0.52,
   restaurantes: 0.5,
+  /* La sexta va a lo ancho de la retícula, así que su marco es mucho más
+     grande que el de las demás: con la escala de las otras el dibujo se
+     quedaba diminuto dentro de su propia caja. */
+  facturacion: 0.6,
 };
 
 export function TarjetaSolucion({ servicio, indice = 0 }) {

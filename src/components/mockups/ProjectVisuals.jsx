@@ -533,62 +533,95 @@ export function QyroVisual() {
    ------------------------------------------------------------ */
 
 export function JchCrmVisual() {
+  /* La versión anterior era una agenda con importes: honesta, pero se leía
+     como «un panel de algo». Faltaban las dos cosas que hacen falta para
+     entenderla sin leer: DE QUÉ negocio es y QUIÉN la usa.
+
+     Ahora lo dice el dibujo: arriba, el salón con su nombre y el rótulo de
+     quién está mirando; en medio, eventos con su tipo escrito con todas sus
+     letras —boda, XV años— que es lo que hace reconocible un salón; y abajo,
+     lo único que un dueño mira primero: cuánto le deben. */
   const eventos = [
-    ['Boda · 180 personas', 'Confirmado', 'ok'],
-    ['XV años · 120', 'Apartado', 'medio'],
-    ['Empresa · 60', 'Realizado', 'listo'],
+    ['Boda', 'Sáb 24 oct', '180', 'Confirmado', 'ok'],
+    ['XV años', 'Sáb 7 nov', '120', 'Apartado', 'medio'],
+    ['Empresa', 'Vie 20 nov', '60', 'Cotizado', 'frio'],
   ];
   return (
     <div className="project-ui project-ui--jchcrm">
-      <div className="jchcrm-cab">
-        <span>AGENDA DEL SALÓN</span>
-        <b>Octubre</b>
+      <div className="jchcrm-marca">
+        <span className="jchcrm-logo" aria-hidden="true">JCH</span>
+        <span className="jchcrm-quien">
+          <b>Salón de eventos</b>
+          <small>PANEL DE LA CASA · SOLO PERSONAL</small>
+        </span>
       </div>
+
       <div className="jchcrm-lista">
-        {eventos.map(([que, estado, tono]) => (
-          <span key={que} className={`jchcrm-fila jchcrm-fila--${tono}`}>
-            <em>{que}</em>
+        {eventos.map(([tipo, fecha, gente, estado, tono]) => (
+          <span key={tipo} className={`jchcrm-fila jchcrm-fila--${tono}`}>
+            <span className="jchcrm-que">
+              <b>{tipo}</b>
+              <small>{fecha} · {gente} personas</small>
+            </span>
             <i>{estado}</i>
           </span>
         ))}
       </div>
+
       <div className="jchcrm-cuenta">
         <span><small>CONTRATADO</small><strong>$86,400</strong></span>
         <span><small>COBRADO</small><strong>$52,000</strong></span>
-        <span className="jchcrm-saldo"><small>SALDO</small><strong>$34,400</strong></span>
-      </div>
-      <div className="jchcrm-pie">
-        <span className="jchcrm-chip">Puerta con QR</span>
-        <span className="jchcrm-chip">Contratos</span>
-        <span className="jchcrm-chip">Resumen diario</span>
+        <span className="jchcrm-saldo"><small>FALTA POR COBRAR</small><strong>$34,400</strong></span>
       </div>
     </div>
   );
 }
 
 export function JchPortalVisual() {
+  /* Lo mismo por el otro lado. Antes era una cuenta atrás con unos círculos:
+     se entendía que faltaban 42 días para algo, pero no de qué ni de quién.
+
+     Ahora el encabezado dice a quién pertenece la pantalla —«Tu evento», y
+     el nombre del salón debajo—, y lo que ocupa el centro es la lista de
+     decisiones del cliente escritas como lo que son: el cronograma, la
+     música, las mesas y la invitación. Cualquiera que haya organizado una
+     fiesta reconoce esa lista. */
+  const tareas = [
+    ['Cronograma', 'Listo', true],
+    ['Música', 'Listo', true],
+    ['Mesas', '12 de 14', false],
+    ['Invitación', 'Por enviar', false],
+  ];
   return (
     <div className="project-ui project-ui--jchportal">
-      <div className="jchportal-cuenta">
-        <small>FALTAN</small>
-        <strong>42</strong>
-        <span>días para tu evento</span>
+      <div className="jchportal-marca">
+        <span className="jchportal-quien">
+          <small>TU EVENTO</small>
+          <b>Boda · 24 de octubre</b>
+        </span>
+        <span className="jchportal-sede">Jardines Club Hípico</span>
       </div>
-      <div className="jchportal-mesas" aria-hidden="true">
-        {Array.from({ length: 8 }, (_, i) => (
-          <i key={i} className={i === 2 || i === 5 ? 'es-llena' : ''} />
+
+      <div className="jchportal-cuenta">
+        <strong>42</strong>
+        <span>días</span>
+      </div>
+
+      <div className="jchportal-tareas">
+        {tareas.map(([que, estado, hecho]) => (
+          <span key={que} className={hecho ? 'es-hecho' : ''}>
+            <b>{que}</b>
+            <i>{estado}</i>
+          </span>
         ))}
       </div>
-      <div className="jchportal-tareas">
-        <span className="es-hecho">Cronograma</span>
-        <span className="es-hecho">Música</span>
-        <span>Mesas</span>
-        <span>Invitación</span>
-      </div>
+
       <div className="jchportal-rsvp">
-        <small>CONFIRMADOS</small>
-        <strong>96</strong>
-        <em>de 140 invitados</em>
+        <span className="jchportal-rsvp__dato">
+          <strong>96</strong>
+          <small>confirmados de 140</small>
+        </span>
+        <span className="jchportal-barra" aria-hidden="true"><i /></span>
       </div>
     </div>
   );
