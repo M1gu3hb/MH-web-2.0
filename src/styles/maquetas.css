@@ -485,3 +485,1270 @@
   background: var(--acento, var(--accent-pos));
   content: '';
 }
+
+/* ============================================================
+   PÁGINAS WEB
+   ============================================================
+   Un navegador con una tienda dentro y un interruptor de dispositivo. El
+   cambio a teléfono no es un icono ni una etiqueta: la página SE REACOMODA,
+   que es la única forma de demostrar «se ve bien en el teléfono» sin pedir
+   que te crean.
+   ============================================================ */
+
+.mq--sitio {
+  --mq-acento: #ff684f;
+}
+
+.sitio__switch {
+  display: inline-flex;
+  padding: 0.7cqw;
+  border-radius: 999px;
+  gap: 0.6cqw;
+  background: var(--mq-alza);
+}
+
+.sitio__switch > * {
+  margin: 0;
+  padding: 0.9cqw 2.2cqw;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--mq-apagado);
+  font: inherit;
+  font-size: 2.6cqw;
+  font-weight: 700;
+  transition: background 0.24s, color 0.24s;
+}
+
+.sitio__switch > .is-puesto {
+  background: var(--mq-ac);
+  color: #1a0703;
+}
+
+.is-vivo .sitio__switch > button {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---- El navegador ---- */
+
+.sitio__marco {
+  display: flex;
+  overflow: hidden;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  border: 1px solid var(--mq-linea);
+  border-radius: 1.8cqw;
+  background: #f6f2ea;
+  color: #1a1714;
+  /* El paso a teléfono estrecha el marco. Se anima `max-width` y no
+     `transform` a propósito: aquí lo que tiene que verse es que el CONTENIDO
+     se recoloca, y un `scale` lo único que haría es encogerlo todo por igual,
+     que es justo lo que no hace una página bien hecha. */
+  width: 100%;
+  max-width: 100%;
+  margin-inline: auto;
+  transition: max-width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mq--sitio.is-movil .sitio__marco {
+  max-width: 46%;
+}
+
+.sitio__cromo {
+  display: flex;
+  flex: none;
+  align-items: center;
+  padding: 1.6cqw 2cqw;
+  border-bottom: 1px solid rgba(26, 23, 20, 0.1);
+  gap: 1.2cqw;
+  background: #ece6db;
+}
+
+.sitio__cromo i {
+  width: 1.7cqw;
+  height: 1.7cqw;
+  border-radius: 50%;
+  background: #d6cec0;
+}
+
+.sitio__cromo em {
+  overflow: hidden;
+  margin-left: 1cqw;
+  color: #6d655b;
+  font-size: 2.5cqw;
+  font-style: normal;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sitio__carrito {
+  display: inline-flex;
+  align-items: center;
+  margin-left: auto;
+  padding: 0.7cqw 1.6cqw;
+  border-radius: 999px;
+  gap: 1cqw;
+  background: rgba(26, 23, 20, 0.08);
+  color: #4a423a;
+  font-size: 2.4cqw;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.sitio__carrito b {
+  display: grid;
+  min-width: 3.6cqw;
+  height: 3.6cqw;
+  padding-inline: 0.6cqw;
+  border-radius: 999px;
+  background: rgba(26, 23, 20, 0.16);
+  color: #1a1714;
+  font-size: 2.4cqw;
+  place-items: center;
+  transition: background 0.24s, color 0.24s, transform 0.24s;
+}
+
+.sitio__carrito[data-lleno='si'] b {
+  background: var(--mq-ac);
+  color: #fff;
+  transform: scale(1.08);
+}
+
+/* ---- La página ---- */
+
+.sitio__pagina {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  padding: 2.4cqw;
+  gap: 2.2cqw;
+}
+
+.sitio__hero {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  padding: 2.6cqw;
+  border-radius: 1.4cqw;
+  gap: 0.8cqw;
+  background: linear-gradient(120deg, #1a1714, #3a322c);
+  color: #f6f2ea;
+}
+
+.sitio__hero strong {
+  font-family: var(--font-display, 'Syne Variable', system-ui, sans-serif);
+  font-size: 4.4cqw;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.sitio__hero span {
+  color: rgba(246, 242, 234, 0.72);
+  font-size: 2.5cqw;
+}
+
+.sitio__vitrina {
+  display: grid;
+  flex: 1;
+  min-height: 0;
+  gap: 1.8cqw;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  transition: gap 0.4s;
+}
+
+/* En teléfono la vitrina pasa a una sola columna y solo cabe una ficha. No
+   es una carencia: es exactamente lo que hace una tienda bien hecha en un
+   teléfono, y verlo cambiar es el argumento. */
+.mq--sitio.is-movil .sitio__vitrina {
+  grid-template-columns: 1fr;
+}
+
+.mq--sitio.is-movil .sitio__ficha:nth-child(n + 2) {
+  display: none;
+}
+
+.sitio__ficha {
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  min-height: 0;
+  margin: 0;
+  padding: 1.4cqw;
+  border: 1px solid rgba(26, 23, 20, 0.1);
+  border-radius: 1.2cqw;
+  gap: 0.8cqw;
+  background: #fffdf9;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.sitio__foto {
+  flex: 1;
+  min-height: 3cqw;
+  border-radius: 0.9cqw;
+  background: linear-gradient(140deg, #e4dbcd, #cfc3b1);
+}
+
+.sitio__ficha em {
+  color: #4a423a;
+  font-size: 2.4cqw;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.sitio__ficha i {
+  color: #1a1714;
+  font-size: 3.2cqw;
+  font-style: normal;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.sitio__agregar {
+  padding: 1cqw;
+  border-radius: 0.9cqw;
+  background: var(--mq-ac);
+  color: #fff;
+  font-size: 2.4cqw;
+  font-weight: 800;
+  text-align: center;
+}
+
+.is-vivo .sitio__ficha {
+  cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.18s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.is-vivo .sitio__ficha:hover {
+  box-shadow: 0 1.4cqw 3cqw rgba(26, 23, 20, 0.16);
+}
+
+.is-vivo .sitio__ficha:active {
+  transform: scale(0.97);
+}
+
+@container (max-width: 420px) {
+  .sitio__hero {
+    padding: 2cqw;
+  }
+
+  .sitio__vitrina {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sitio__ficha:nth-child(n + 3) {
+    display: none;
+  }
+}
+
+/* ============================================================
+   CRM Y AUTOMATIZACIÓN
+   ============================================================
+   Tres etapas arriba, la ficha del cliente deslizándose a la suya, y abajo
+   el mensaje que sale solo. Las dos mitades del servicio —el seguimiento y
+   la automatización— en una sola lectura.
+   ============================================================ */
+
+.mq--seguimiento {
+  --mq-acento: #5e63ff;
+}
+
+.seg__etapas {
+  display: grid;
+  flex: none;
+  gap: 1.4cqw;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.seg__etapa {
+  margin: 0;
+  padding: 1.5cqw 1cqw;
+  border: 1px solid var(--mq-linea);
+  border-radius: 1.2cqw;
+  background: var(--mq-alza);
+  color: var(--mq-apagado);
+  font: inherit;
+  font-size: 2.7cqw;
+  font-weight: 700;
+  text-align: center;
+  transition: border-color 0.28s, background 0.28s, color 0.28s;
+}
+
+.seg__etapa.is-hecha {
+  color: color-mix(in srgb, var(--mq-ac) 70%, #e8edf5);
+}
+
+.seg__etapa.is-aqui {
+  border-color: var(--mq-ac);
+  background: color-mix(in srgb, var(--mq-ac) 18%, transparent);
+  color: #fff;
+}
+
+.is-vivo .seg__etapa {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---- La ficha que viaja ----
+   Se mueve con `translate` sobre un riel de tres carriles. Sale del mismo
+   `--etapa` que pinta la pastilla de arriba, así que el movimiento y el
+   estado no pueden desincronizarse. */
+
+.seg__riel {
+  flex: none;
+  padding: 1cqw 0;
+}
+
+.seg__ficha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: calc((100% - 2.8cqw) / 3);
+  padding: 1.8cqw;
+  border: 1px solid color-mix(in srgb, var(--mq-ac) 40%, transparent);
+  border-radius: 1.4cqw;
+  gap: 1.4cqw;
+  background: color-mix(in srgb, var(--mq-ac) 10%, var(--mq-alza));
+  transform: translateX(calc(var(--etapa) * (100% + 1.4cqw)));
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.is-quieto .seg__ficha {
+  transition: none;
+}
+
+/* `min-width: 0` en los dos niveles, no solo en el de fuera: un hijo de flex
+   se niega por defecto a encoger por debajo de su contenido, así que sin esto
+   el nombre del cliente no se recortaba con puntos suspensivos —se metía
+   debajo del monto—. */
+.seg__quien {
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  min-width: 0;
+  gap: 1.4cqw;
+}
+
+.seg__quien > span {
+  overflow: hidden;
+  min-width: 0;
+}
+
+.seg__quien > i {
+  display: grid;
+  flex: none;
+  width: 6cqw;
+  height: 6cqw;
+  border-radius: 1cqw;
+  background: var(--mq-ac);
+  color: #fff;
+  font-size: 2.4cqw;
+  font-style: normal;
+  font-weight: 800;
+  place-items: center;
+}
+
+.seg__quien b,
+.seg__quien em {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.seg__quien b {
+  font-size: 2.8cqw;
+  font-weight: 700;
+}
+
+.seg__quien em {
+  color: var(--mq-apagado);
+  font-size: 2.4cqw;
+  font-style: normal;
+}
+
+.seg__monto {
+  flex: none;
+  font-size: 3.2cqw;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Lo que pasa solo ---- */
+
+.seg__auto {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  justify-content: center;
+  padding: 2.2cqw;
+  border: 1px solid var(--mq-linea-suave);
+  border-radius: 1.6cqw;
+  gap: 1.4cqw;
+  background: var(--mq-alza);
+}
+
+.seg__auto-cabeza {
+  display: flex;
+  align-items: center;
+  gap: 1.2cqw;
+  color: #6ee7a8;
+  font-size: 2.5cqw;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.seg__auto-cabeza i {
+  width: 1.6cqw;
+  height: 1.6cqw;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.seg__burbuja {
+  position: relative;
+  margin: 0;
+  padding: 2cqw 2.4cqw;
+  border-radius: 1.6cqw 1.6cqw 1.6cqw 0.4cqw;
+  background: #0f5c3f;
+  color: #eafff5;
+  font-size: 2.9cqw;
+  /* Se remonta en cada etapa (`key`), así que esta entrada se dispara otra
+     vez: sin ella el texto cambiaría en silencio y parecería un cartel, no
+     un mensaje que acaba de salir. */
+  animation: mq-entra-burbuja 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes mq-entra-burbuja {
+  from { opacity: 0; transform: translateY(1.4cqw) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+.is-quieto .seg__burbuja {
+  animation: none;
+}
+
+.seg__enviado {
+  color: var(--mq-apagado);
+  font-size: 2.4cqw;
+}
+
+/* ============================================================
+   SOFTWARE A MEDIDA
+   ============================================================
+   El antes y el después, cruzándose en el mismo hueco. Los dos estados
+   ocupan la misma caja y se relevan con opacidad y escala: así el cambio se
+   lee como que una cosa SE CONVIERTE en la otra, no como dos paneles.
+   ============================================================ */
+
+.mq--medida {
+  --mq-acento: #f5a524;
+}
+
+.medida__escena {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.medida__desorden,
+.medida__app {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.5s, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.medida__desorden {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2cqw;
+}
+
+.mq--medida.is-hecho .medida__desorden {
+  opacity: 0;
+  transform: scale(0.94);
+  pointer-events: none;
+}
+
+.medida__app {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2.6cqw;
+  border: 1px solid color-mix(in srgb, var(--mq-ac) 40%, transparent);
+  border-radius: 1.8cqw;
+  gap: 1.8cqw;
+  background: var(--mq-alza);
+  opacity: 0;
+  transform: scale(1.05);
+  pointer-events: none;
+}
+
+.mq--medida.is-hecho .medida__app {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.is-quieto .medida__desorden,
+.is-quieto .medida__app {
+  transition: none;
+}
+
+/* ---- Los tres trastos ----
+   Torcidos y a distinta altura. La inclinación es el mensaje: tres cosas que
+   no encajan entre ellas. */
+
+.medida__trasto {
+  display: flex;
+  flex-direction: column;
+  padding: 2cqw;
+  border: 1px solid var(--mq-linea);
+  border-radius: 1.2cqw;
+  gap: 0.6cqw;
+  background: var(--mq-alza);
+  transform: rotate(calc((var(--i) - 1) * 4deg)) translateY(calc((var(--i) - 1) * 1.6cqw));
+}
+
+.medida__trasto b {
+  font-size: 2.7cqw;
+  font-weight: 700;
+}
+
+.medida__trasto em {
+  color: var(--mq-apagado);
+  font-size: 2.3cqw;
+  font-style: normal;
+}
+
+.medida__grieta {
+  position: absolute;
+  bottom: 1cqw;
+  left: 50%;
+  padding: 0.8cqw 2cqw;
+  border-radius: 999px;
+  background: rgba(245, 165, 36, 0.16);
+  color: var(--mq-ac);
+  font-size: 2.4cqw;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+}
+
+/* ---- La herramienta ---- */
+
+.medida__app-cabeza {
+  display: flex;
+  align-items: center;
+  gap: 1.2cqw;
+  color: var(--mq-ac);
+  font-size: 2.5cqw;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.medida__app-cabeza i {
+  width: 1.6cqw;
+  height: 1.6cqw;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.medida__campos {
+  display: grid;
+  margin: 0;
+  gap: 1.4cqw;
+}
+
+.medida__campos > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 1.2cqw;
+  border-bottom: 1px solid var(--mq-linea-suave);
+  gap: 2cqw;
+}
+
+.medida__campos dt {
+  color: var(--mq-apagado);
+  font-size: 2.5cqw;
+  font-weight: 600;
+}
+
+.medida__campos dd {
+  margin: 0;
+  font-size: 2.9cqw;
+  font-weight: 700;
+  text-align: right;
+}
+
+.medida__listo {
+  color: #6ee7a8;
+  font-size: 2.4cqw;
+  font-weight: 700;
+}
+
+.medida__accion {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 2cqw;
+  border: 1px solid var(--mq-linea);
+  border-radius: 1.4cqw;
+  background: var(--mq-alza);
+  color: var(--mq-tinta, #e8edf5);
+  font: inherit;
+  font-size: 2.9cqw;
+  font-weight: 700;
+  text-align: center;
+}
+
+.is-vivo .medida__accion {
+  border-color: color-mix(in srgb, var(--mq-ac) 50%, transparent);
+  background: color-mix(in srgb, var(--mq-ac) 14%, transparent);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@container (max-width: 420px) {
+  .medida__desorden {
+    flex-direction: column;
+    gap: 1.2cqw;
+  }
+
+  .medida__trasto {
+    width: 100%;
+    transform: rotate(calc((var(--i) - 1) * 2deg));
+  }
+
+  .medida__grieta {
+    display: none;
+  }
+}
+
+/* ============================================================
+   RESTAURANTES
+   ============================================================
+   El menú del cliente y la cocina, con la relación a la vista: lo que se
+   toca a la izquierda aparece a la derecha.
+   ============================================================ */
+
+.mq--resto {
+  --mq-acento: #36d7d1;
+}
+
+.resto__cuerpo {
+  display: grid;
+  flex: 1;
+  min-height: 0;
+  gap: 2.4cqw;
+  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.resto__menu,
+.resto__cocina {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 2.2cqw;
+  border: 1px solid var(--mq-linea-suave);
+  border-radius: 1.6cqw;
+  gap: 1.6cqw;
+  background: var(--mq-alza);
+}
+
+.resto__menu-cabeza,
+.resto__cocina-cabeza {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 1.2cqw;
+  color: var(--mq-apagado);
+  font-size: 2.5cqw;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.resto__cocina-cabeza {
+  color: var(--mq-ac);
+}
+
+.resto__cocina-cabeza i {
+  width: 1.6cqw;
+  height: 1.6cqw;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.resto__carta {
+  display: flex;
+  overflow: hidden;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  gap: 1.2cqw;
+}
+
+.resto__platillo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  padding: 1.5cqw 1.8cqw;
+  border: 1px solid var(--mq-linea);
+  border-radius: 1.2cqw;
+  gap: 1.4cqw;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  transition: border-color 0.22s, background 0.22s;
+}
+
+.resto__platillo.is-puesto {
+  border-color: var(--mq-ac);
+  background: color-mix(in srgb, var(--mq-ac) 15%, transparent);
+}
+
+.resto__platillo em {
+  overflow: hidden;
+  font-size: 2.7cqw;
+  font-style: normal;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resto__platillo i {
+  flex: none;
+  font-size: 2.7cqw;
+  font-style: normal;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.resto__platillo.is-puesto i {
+  color: var(--mq-ac);
+}
+
+.is-vivo .resto__platillo {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.resto__pedir {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 1.7cqw;
+  border: 0;
+  border-radius: 1.2cqw;
+  background: var(--mq-ac);
+  color: #052120;
+  font-family: var(--font-display, 'Syne Variable', system-ui, sans-serif);
+  font-size: 2.9cqw;
+  font-weight: 800;
+}
+
+.resto__pedir.is-apagado {
+  background: var(--mq-linea);
+  color: var(--mq-apagado);
+}
+
+.is-vivo .resto__pedir:not(.is-apagado) {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---- La cocina ---- */
+
+.resto__espera {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  margin: 0;
+  color: var(--mq-apagado);
+  font-size: 2.6cqw;
+}
+
+.resto__comanda {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1.8cqw;
+  border: 1px solid color-mix(in srgb, var(--mq-ac) 45%, transparent);
+  border-left: 0.9cqw solid var(--mq-ac);
+  border-radius: 1.2cqw;
+  gap: 0.9cqw;
+  background: color-mix(in srgb, var(--mq-ac) 8%, transparent);
+  /* La comanda ENTRA. Que aparezca deslizándose desde la izquierda —desde el
+     lado del menú— es lo que cuenta que viene de ahí. */
+  animation: mq-entra-comanda 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes mq-entra-comanda {
+  from { opacity: 0; transform: translateX(-3cqw); }
+  to { opacity: 1; transform: none; }
+}
+
+.is-quieto .resto__comanda {
+  animation: none;
+}
+
+.resto__comanda small {
+  color: var(--mq-apagado);
+  font-size: 2.3cqw;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.resto__comanda > span {
+  overflow: hidden;
+  font-size: 2.7cqw;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resto__estado {
+  margin-top: auto;
+  padding: 0.7cqw 1.6cqw;
+  border-radius: 999px;
+  background: var(--mq-ac);
+  color: #052120;
+  font-size: 2.3cqw;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  align-self: flex-start;
+}
+
+@container (max-width: 420px) {
+  .resto__cuerpo {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  }
+}
+
+/* ============================================================
+   FACTURACIÓN AUTOMÁTICA
+   ============================================================
+   Entra un ticket, sale una factura timbrada. Lo que hay en medio es una
+   flecha, porque en medio no hay nadie capturando datos: ese es el servicio.
+   ============================================================ */
+
+.mq--factura {
+  --mq-acento: #4fd46a;
+}
+
+.fac__cuerpo {
+  display: grid;
+  flex: 1;
+  align-items: stretch;
+  min-height: 0;
+  gap: 1.8cqw;
+  grid-template-columns: 0.85fr auto 1.15fr;
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.fac__ticket,
+.fac__cfdi {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 2.2cqw;
+  border: 1px solid var(--mq-linea-suave);
+  border-radius: 1.6cqw;
+  gap: 1cqw;
+  background: var(--mq-alza);
+}
+
+.fac__ticket-cabeza,
+.fac__cfdi-cabeza {
+  display: flex;
+  align-items: center;
+  gap: 1.4cqw;
+  color: var(--mq-apagado);
+  font-size: 2.5cqw;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.fac__folio {
+  font-family: var(--font-display, 'Syne Variable', system-ui, sans-serif);
+  font-size: 4.6cqw;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.fac__importe {
+  font-size: 3.4cqw;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.fac__pie {
+  margin-top: auto;
+  color: var(--mq-apagado);
+  font-size: 2.3cqw;
+}
+
+/* La flecha. Se enciende cuando la factura se está armando: es el único
+   momento en que hay algo viajando de un lado al otro. */
+.fac__flecha {
+  align-self: center;
+  width: 5cqw;
+  height: 0.6cqw;
+  border-radius: 999px;
+  background: var(--mq-linea);
+  transition: background 0.4s;
+}
+
+.mq--factura.is-armando .fac__flecha {
+  background: var(--mq-ac);
+}
+
+.mq--factura.is-armando:not(.is-quieto) .fac__flecha {
+  animation: mq-viaje 1.2s ease-in-out infinite;
+}
+
+@keyframes mq-viaje {
+  0%, 100% { transform: translateX(-0.6cqw); opacity: 0.55; }
+  50% { transform: translateX(0.6cqw); opacity: 1; }
+}
+
+.fac__sello {
+  padding: 0.5cqw 1.4cqw;
+  border-radius: 999px;
+  background: var(--mq-ac);
+  color: #04200d;
+  font-size: 2.2cqw;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  /* Sella de golpe, como un sello de verdad. */
+  animation: mq-sella 0.44s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes mq-sella {
+  from { opacity: 0; transform: scale(1.6) rotate(-6deg); }
+  to { opacity: 1; transform: none; }
+}
+
+.is-quieto .fac__sello {
+  animation: none;
+}
+
+.fac__datos {
+  display: grid;
+  margin: 0;
+  gap: 1cqw;
+}
+
+.fac__datos > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.6cqw;
+}
+
+.fac__datos dt {
+  color: var(--mq-apagado);
+  font-size: 2.4cqw;
+  font-weight: 600;
+}
+
+.fac__datos dd {
+  margin: 0;
+  font-size: 2.7cqw;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.fac__archivos {
+  display: flex;
+  margin-top: auto;
+  gap: 1.2cqw;
+}
+
+.fac__archivos span {
+  padding: 1cqw 2cqw;
+  border: 1px solid var(--mq-linea);
+  border-radius: 1cqw;
+  color: var(--mq-apagado);
+  font-size: 2.5cqw;
+  font-weight: 800;
+  transition: border-color 0.3s, background 0.3s, color 0.3s;
+}
+
+.fac__archivos .is-listo {
+  border-color: color-mix(in srgb, var(--mq-ac) 55%, transparent);
+  background: color-mix(in srgb, var(--mq-ac) 14%, transparent);
+  color: var(--mq-ac);
+}
+
+.fac__accion {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 2cqw;
+  border: 0;
+  border-radius: 1.4cqw;
+  background: var(--mq-ac);
+  color: #04200d;
+  font-family: var(--font-display, 'Syne Variable', system-ui, sans-serif);
+  font-size: 3.1cqw;
+  font-weight: 800;
+  text-align: center;
+}
+
+.is-vivo .fac__accion {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@container (max-width: 420px) {
+  .fac__cuerpo {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto minmax(0, 1fr);
+  }
+
+  /* Apilado, la flecha deja de apuntar a la derecha y apunta hacia abajo.
+     Lleva su propia animación en vez de redefinir `mq-viaje`: unos
+     `@keyframes` dentro de un `@container` no son CSS válido y el navegador
+     los tira, así que la regla de fuera seguiría moviéndola en horizontal. */
+  .fac__flecha {
+    width: 0.6cqw;
+    height: 3.4cqw;
+    justify-self: center;
+  }
+
+  .mq--factura.is-armando:not(.is-quieto) .fac__flecha {
+    animation-name: mq-viaje-vertical;
+  }
+}
+
+@keyframes mq-viaje-vertical {
+  0%, 100% { transform: translateY(-0.6cqw); opacity: 0.55; }
+  50% { transform: translateY(0.6cqw); opacity: 1; }
+}
+
+/* ============================================================
+   LOS FRENTES, A DOBLE PÁGINA — bloque de /servicios
+   ============================================================
+   Antes eran cinco tarjetas iguales en una rejilla de 300 px con su foto
+   cuadrada: la retícula de una tienda. Ahora cada frente es una franja con
+   la maqueta a un lado y el detalle al otro, y el lado se alterna al bajar.
+
+   El alternado se escribe con `direction`, no duplicando la rejilla: la
+   franja impar invierte el eje y la columna de texto vuelve a `ltr` para que
+   el texto no se lea al revés. Así el orden del DOM —maqueta, texto— se
+   mantiene idéntico en las cinco, que es lo que importa para quien navega
+   con teclado o con lector.
+   ============================================================ */
+
+.frentes {
+  display: grid;
+  gap: clamp(56px, 8vh, 120px);
+}
+
+.frente {
+  display: grid;
+  align-items: center;
+  gap: clamp(28px, 4vw, 72px);
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+}
+
+.frente--espejo {
+  direction: rtl;
+}
+
+.frente--espejo > * {
+  direction: ltr;
+}
+
+/* ---- La maqueta ---- */
+
+.frente__maqueta {
+  perspective: 1500px;
+}
+
+.frente__pantalla {
+  position: relative;
+  aspect-ratio: 16 / 11;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--acento) 32%, transparent);
+  border-radius: var(--r-lg);
+  background: var(--surface-sunken);
+  box-shadow:
+    0 30px 70px -30px color-mix(in srgb, var(--acento) 50%, transparent),
+    var(--e-3);
+  /* Cada franja se inclina hacia su lado, así que la alternancia también se
+     nota en la profundidad y no solo en la posición. */
+  transform: rotateY(-6deg) rotateX(2.5deg);
+  contain: paint;
+}
+
+.frente--espejo .frente__pantalla {
+  transform: rotateY(6deg) rotateX(2.5deg);
+}
+
+.frente__pantalla .demo {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border-radius: 0;
+}
+
+/* ---- El detalle ---- */
+
+.frente__texto {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-3);
+}
+
+/* La numeración visible es identidad del sitio, no decoración. A
+   `--t-label` salía a 11 px al lado de un título de 50: un susurro. Aquí
+   manda la franja, así que el número se planta y le sigue una raya que abre
+   la composición hacia el lado que le toque. */
+.frente__indice {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  width: 100%;
+  color: var(--acento);
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.5vw, 1.35rem);
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+.frente__indice::after {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--acento) 55%, transparent),
+    transparent
+  );
+  content: '';
+}
+
+.frente__nombre {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 3.2vw, 3.1rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.frente__nombre a {
+  color: var(--ink-strong);
+  text-decoration: none;
+  background-image: linear-gradient(var(--acento), var(--acento));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0 2px;
+  transition: background-size 0.32s var(--ease);
+}
+
+.frente__nombre a:hover,
+.frente__nombre a:focus-visible {
+  background-size: 100% 2px;
+}
+
+.frente__promesa {
+  margin: 0;
+  max-width: 34ch;
+  color: var(--acento);
+  font-size: clamp(1.05rem, 1.5vw, 1.32rem);
+  font-weight: 600;
+}
+
+.frente__para {
+  margin: 0;
+  max-width: 42ch;
+  color: var(--ink-body);
+}
+
+.frente__puntos {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  gap: var(--sp-2);
+  list-style: none;
+}
+
+.frente__puntos li {
+  padding: 6px 14px;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  color: var(--ink-muted);
+  font-size: max(0.84rem, 12.5px);
+}
+
+.frente__ver {
+  display: inline-flex;
+  align-items: center;
+  margin-top: var(--sp-2);
+  gap: 8px;
+  color: var(--acento);
+  font-weight: 700;
+  text-decoration: none;
+  transition: gap 0.22s var(--ease);
+}
+
+.frente__ver:hover,
+.frente__ver:focus-visible {
+  gap: 14px;
+}
+
+/* ---- Una columna ----
+   Por debajo de 900 px la franja se apila y la maqueta se endereza: girada y
+   estrecha, el texto de dentro se lee peor de lo que la profundidad aporta.
+   Y se quita el `direction: rtl`, que apilado no alterna nada y solo movería
+   los puntos de la lista al lado contrario. */
+@media (max-width: 900px) {
+  .frentes {
+    gap: clamp(44px, 7vh, 72px);
+  }
+
+  .frente,
+  .frente--espejo {
+    direction: ltr;
+    grid-template-columns: 1fr;
+  }
+
+  .frente__pantalla,
+  .frente--espejo .frente__pantalla {
+    transform: none;
+  }
+}

@@ -105,6 +105,7 @@ export const PAGINAS_SERVICIO = {
   [RUTAS.paginasWeb]: {
     id: 'web',
     acento: '#ff684f',
+    pista: 'Cambia de escritorio a teléfono y agrega algo al carrito.',
     seo: {
       title: 'Páginas web para negocios en CDMX | Morphiq',
       description:
@@ -361,6 +362,7 @@ export const PAGINAS_SERVICIO = {
   [RUTAS.crmAutomatizacion]: {
     id: 'crm',
     acento: '#5e63ff',
+    pista: 'Mueve al cliente de etapa: el mensaje sale solo.',
     seo: {
       title: 'CRM y automatización para negocios | Morphiq',
       description:
@@ -466,6 +468,7 @@ export const PAGINAS_SERVICIO = {
   [RUTAS.softwareAMedida]: {
     id: 'software',
     acento: '#f5a524',
+    pista: 'Toca «Unificar» y mira qué sustituye.',
     seo: {
       title: 'Software a medida para empresas | Morphiq',
       description:
@@ -573,6 +576,7 @@ export const PAGINAS_SERVICIO = {
   [RUTAS.restaurantes]: {
     id: 'restaurantes',
     acento: '#36d7d1',
+    pista: 'Pide algo del menú y velo entrar a cocina.',
     vertical: true,
     seo: {
       title: 'Soluciones digitales para restaurantes | Morphiq',

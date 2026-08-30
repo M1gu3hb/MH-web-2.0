@@ -13,9 +13,9 @@ import {
   CierreCTA,
   Contenedor,
   Seccion,
-  TarjetaServicio,
   TituloSeccion,
 } from '../components/ui';
+import { FrenteServicio } from '../components/ui/FrenteServicio';
 import { CountUpSeguro, Reveal } from '../components/reactbits';
 import { Cascada, Cortina } from '../components/motion';
 import { Seo, nodoMigas, nodoPagina, nodoServicio } from '../lib/seo';
@@ -156,9 +156,14 @@ export default function Servicios() {
               </p>
             }
           />
-          <Cascada className="rejilla-servicios" paso={0.06}>
-            {SERVICIOS.map((s) => (
-              <TarjetaServicio key={s.id} servicio={s} />
+          {/* Antes eran cinco tarjetas iguales con su foto cuadrada: la
+              retícula de una tienda, y con imágenes de archivo que no
+              enseñaban el servicio. Ahora cada frente ocupa una franja con
+              su maqueta viva a un lado y el detalle al otro, alternando el
+              lado al bajar. Es un expediente, no un estante. */}
+          <Cascada className="frentes" paso={0.08}>
+            {SERVICIOS.map((s, i) => (
+              <FrenteServicio key={s.id} servicio={s} indice={i} />
             ))}
           </Cascada>
         </div>
