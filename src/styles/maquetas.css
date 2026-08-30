@@ -57,7 +57,20 @@
   padding: 3cqw;
   border-radius: 2.4cqw;
   gap: 2.4cqw;
-  background: var(--mq-fondo, #0c1017);
+  /* EL COLOR ENTRA POR EL FONDO, NO POR LOS ELEMENTOS.
+     Antes era un gris plano (#0c1017) igual en las seis, y el acento aparecía
+     solo en piezas sueltas: el dibujo se leía frío y las seis se parecían
+     entre ellas. Ahora el fondo lleva dos luces del acento —una arriba a la
+     izquierda, otra abajo a la derecha con el color secundario— sobre la
+     misma tinta oscura.
+
+     Son degradados, no capas nuevas: nada se mueve, nada cambia de sitio y
+     ningún elemento se entera. El comportamiento de las maquetas es
+     exactamente el mismo que antes de pintarlas. */
+  background:
+    radial-gradient(120% 90% at 8% 0%, color-mix(in srgb, var(--mq-ac) 20%, transparent), transparent 62%),
+    radial-gradient(100% 80% at 100% 100%, color-mix(in srgb, var(--mq-ac2, var(--mq-ac)) 16%, transparent), transparent 58%),
+    var(--mq-fondo, #0a0e15);
   color: var(--mq-tinta, #e8edf5);
   font-family: var(--font-body, 'Manrope Variable', system-ui, sans-serif);
   line-height: 1.25;
@@ -73,10 +86,14 @@
    que una maqueta suelta nunca salga sin color. */
 .mq {
   --mq-ac: var(--mq-acento, #4f95ff);
-  --mq-linea: rgba(232, 237, 245, 0.12);
-  --mq-linea-suave: rgba(232, 237, 245, 0.07);
-  --mq-alza: rgba(232, 237, 245, 0.045);
-  --mq-apagado: rgba(232, 237, 245, 0.52);
+  /* Las líneas y los fondos de las piezas se tiñen del acento en vez de ser
+     blanco a baja opacidad. Es la diferencia entre un dibujo gris con un
+     detalle de color y un dibujo que TIENE color: los bordes, las cajas y
+     las separaciones también llevan la temperatura del servicio. */
+  --mq-linea: color-mix(in srgb, var(--mq-ac) 26%, rgba(232, 237, 245, 0.1));
+  --mq-linea-suave: color-mix(in srgb, var(--mq-ac) 16%, rgba(232, 237, 245, 0.05));
+  --mq-alza: color-mix(in srgb, var(--mq-ac) 9%, rgba(232, 237, 245, 0.04));
+  --mq-apagado: rgba(232, 237, 245, 0.58);
 }
 
 /* ---- La barra de arriba: común a todas ---- */
@@ -90,9 +107,9 @@
 }
 
 .mq__marca {
-  color: var(--mq-apagado);
+  color: color-mix(in srgb, var(--mq-ac2, var(--mq-ac)) 62%, var(--mq-apagado));
   font-size: 2.7cqw;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -101,12 +118,18 @@
   display: inline-flex;
   align-items: center;
   padding: 1cqw 2.2cqw;
+  border: 1px solid color-mix(in srgb, var(--mq-ac) 45%, transparent);
   border-radius: 999px;
   gap: 1.2cqw;
-  background: color-mix(in srgb, var(--mq-ac) 16%, transparent);
-  color: var(--mq-ac);
+  background: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--mq-ac) 26%, transparent),
+    color-mix(in srgb, var(--mq-ac2, var(--mq-ac)) 16%, transparent)
+  );
+  box-shadow: 0 0 3cqw -0.6cqw color-mix(in srgb, var(--mq-ac) 70%, transparent);
+  color: color-mix(in srgb, var(--mq-ac) 80%, #fff);
   font-size: 2.7cqw;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.04em;
 }
 
@@ -137,6 +160,10 @@
 
 .mq--punto {
   --mq-acento: #4f95ff;
+  /* Duotono. El azul es el servicio; la lima es EL DINERO —el importe de
+     cada renglón, el total y el botón de cobrar—. Separar los dos papeles
+     por color es lo que hace que el ojo encuentre la cifra sin buscarla. */
+  --mq-ac2: #b6f24a;
 }
 
 .punto__cuerpo {
@@ -223,7 +250,7 @@
 }
 
 .punto__linea i {
-  color: var(--mq-tinta, #e8edf5);
+  color: color-mix(in srgb, var(--mq-ac2) 70%, #fff);
   font-style: normal;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
@@ -289,7 +316,11 @@
 }
 
 .punto__total strong {
-  color: #fff;
+  background: linear-gradient(120deg, #fff 20%, var(--mq-ac2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
   font-family: var(--font-display, 'Syne Variable', system-ui, sans-serif);
   font-size: 6.8cqw;
   font-weight: 800;
@@ -318,7 +349,9 @@
   border: 1px solid var(--mq-linea);
   border-radius: 1.6cqw;
   gap: 0.6cqw;
-  background: var(--mq-alza);
+  background:
+    linear-gradient(150deg, color-mix(in srgb, var(--mq-ac) 15%, transparent), transparent 72%),
+    var(--mq-alza);
   color: inherit;
   font: inherit;
   text-align: left;
@@ -373,7 +406,8 @@
   padding: 2.1cqw;
   border: 0;
   border-radius: 1.6cqw;
-  background: var(--mq-ac);
+  background: linear-gradient(110deg, var(--mq-ac), var(--mq-ac2));
+  box-shadow: 0 1.4cqw 4cqw -1.4cqw var(--mq-ac);
   color: #05122b;
   font-family: var(--font-display, 'Syne Variable', system-ui, sans-serif);
   font-size: 3.6cqw;
@@ -497,6 +531,10 @@
 
 .mq--sitio {
   --mq-acento: #ff684f;
+  /* Coral y ámbar. La tienda de dentro es de papel claro, así que el color
+     vive alrededor: fondo, interruptor y carrito. Dentro solo se pinta lo
+     que se pulsa. */
+  --mq-ac2: #ffb454;
 }
 
 .sitio__switch {
@@ -521,8 +559,9 @@
 }
 
 .sitio__switch > .is-puesto {
-  background: var(--mq-ac);
-  color: #1a0703;
+  background: linear-gradient(110deg, var(--mq-ac), var(--mq-ac2));
+  box-shadow: 0 0 3cqw -0.8cqw var(--mq-ac);
+  color: #2a0a02;
 }
 
 .is-vivo .sitio__switch > button {
@@ -612,7 +651,8 @@
 }
 
 .sitio__carrito[data-lleno='si'] b {
-  background: var(--mq-ac);
+  background: linear-gradient(120deg, var(--mq-ac), var(--mq-ac2));
+  box-shadow: 0 0 2.4cqw -0.6cqw var(--mq-ac);
   color: #fff;
   transform: scale(1.08);
 }
@@ -635,8 +675,10 @@
   padding: 2.6cqw;
   border-radius: 1.4cqw;
   gap: 0.8cqw;
-  background: linear-gradient(120deg, #1a1714, #3a322c);
-  color: #f6f2ea;
+  /* El hero de la tienda de ejemplo lleva su propio color de marca. Antes
+     era un degradado de grises y la tienda parecía una plantilla sin dueño. */
+  background: linear-gradient(120deg, #2a1410, #6b2417 55%, #8a3a1e);
+  color: #fff3ec;
 }
 
 .sitio__hero strong {
@@ -693,7 +735,7 @@
   flex: 1;
   min-height: 3cqw;
   border-radius: 0.9cqw;
-  background: linear-gradient(140deg, #e4dbcd, #cfc3b1);
+  background: linear-gradient(140deg, #ffd9c4, #ffb454 60%, #ff8f6b);
 }
 
 .sitio__ficha em {
@@ -714,7 +756,7 @@
 .sitio__agregar {
   padding: 1cqw;
   border-radius: 0.9cqw;
-  background: var(--mq-ac);
+  background: linear-gradient(110deg, var(--mq-ac), #ff9152);
   color: #fff;
   font-size: 2.4cqw;
   font-weight: 800;
@@ -759,6 +801,10 @@
 
 .mq--seguimiento {
   --mq-acento: #5e63ff;
+  /* Índigo para el seguimiento, verde para lo que sale solo. El verde no es
+     decorativo: es el color con el que todo el mundo asocia un mensaje
+     enviado, y aquí es justo lo que se está enseñando. */
+  --mq-ac2: #2fd07a;
 }
 
 .seg__etapas {
@@ -788,7 +834,12 @@
 
 .seg__etapa.is-aqui {
   border-color: var(--mq-ac);
-  background: color-mix(in srgb, var(--mq-ac) 18%, transparent);
+  background: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--mq-ac) 42%, transparent),
+    color-mix(in srgb, var(--mq-ac) 16%, transparent)
+  );
+  box-shadow: 0 0 3.4cqw -1cqw var(--mq-ac);
   color: #fff;
 }
 
@@ -813,10 +864,15 @@
   justify-content: space-between;
   width: calc((100% - 2.8cqw) / 3);
   padding: 1.8cqw;
-  border: 1px solid color-mix(in srgb, var(--mq-ac) 40%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mq-ac) 55%, transparent);
   border-radius: 1.4cqw;
   gap: 1.4cqw;
-  background: color-mix(in srgb, var(--mq-ac) 10%, var(--mq-alza));
+  background: linear-gradient(
+    130deg,
+    color-mix(in srgb, var(--mq-ac) 30%, transparent),
+    color-mix(in srgb, var(--mq-ac) 8%, transparent)
+  );
+  box-shadow: 0 1.4cqw 3.6cqw -1.6cqw var(--mq-ac);
   transform: translateX(calc(var(--etapa) * (100% + 1.4cqw)));
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -848,7 +904,7 @@
   width: 6cqw;
   height: 6cqw;
   border-radius: 1cqw;
-  background: var(--mq-ac);
+  background: linear-gradient(140deg, var(--mq-ac), #a06bff);
   color: #fff;
   font-size: 2.4cqw;
   font-style: normal;
@@ -877,6 +933,7 @@
 
 .seg__monto {
   flex: none;
+  color: color-mix(in srgb, var(--mq-ac2) 55%, #fff);
   font-size: 3.2cqw;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
@@ -901,7 +958,7 @@
   display: flex;
   align-items: center;
   gap: 1.2cqw;
-  color: #6ee7a8;
+  color: var(--mq-ac2);
   font-size: 2.5cqw;
   font-weight: 800;
   letter-spacing: 0.06em;
@@ -920,8 +977,9 @@
   margin: 0;
   padding: 2cqw 2.4cqw;
   border-radius: 1.6cqw 1.6cqw 1.6cqw 0.4cqw;
-  background: #0f5c3f;
-  color: #eafff5;
+  background: linear-gradient(120deg, #0b6b43, #12a35f);
+  box-shadow: 0 1.2cqw 3.4cqw -1.4cqw #12a35f;
+  color: #f2fff8;
   font-size: 2.9cqw;
   /* Se remonta en cada etapa (`key`), así que esta entrada se dispara otra
      vez: sin ella el texto cambiaría en silencio y parecería un cartel, no
@@ -953,6 +1011,26 @@
 
 .mq--medida {
   --mq-acento: #f5a524;
+  --mq-ac2: #ff7a59;
+}
+
+/* EL COLOR AQUÍ ES EL ARGUMENTO.
+   Los tres trastos van cada uno de un color distinto —el verde de una hoja
+   de cálculo, el azul de una libreta, el verde de WhatsApp— porque eso es
+   exactamente lo que se está contando: tres herramientas que no son del
+   mismo sitio, que no combinan y que nadie diseñó juntas. La app de la
+   derecha va de un solo color. La incoherencia de la izquierda frente a la
+   coherencia de la derecha es el servicio dicho en pintura. */
+.medida__trasto:nth-child(1) {
+  --trasto: #1f9d63;
+}
+
+.medida__trasto:nth-child(2) {
+  --trasto: #4f7dff;
+}
+
+.medida__trasto:nth-child(3) {
+  --trasto: #25d366;
 }
 
 .medida__escena {
@@ -986,10 +1064,13 @@
   flex-direction: column;
   justify-content: center;
   padding: 2.6cqw;
-  border: 1px solid color-mix(in srgb, var(--mq-ac) 40%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mq-ac) 55%, transparent);
   border-radius: 1.8cqw;
   gap: 1.8cqw;
-  background: var(--mq-alza);
+  background:
+    linear-gradient(140deg, color-mix(in srgb, var(--mq-ac) 20%, transparent), transparent 68%),
+    var(--mq-alza);
+  box-shadow: 0 2cqw 5cqw -2cqw var(--mq-ac);
   opacity: 0;
   transform: scale(1.05);
   pointer-events: none;
@@ -1014,14 +1095,19 @@
   display: flex;
   flex-direction: column;
   padding: 2cqw;
-  border: 1px solid var(--mq-linea);
+  border: 1px solid color-mix(in srgb, var(--trasto, var(--mq-ac)) 45%, transparent);
   border-radius: 1.2cqw;
   gap: 0.6cqw;
-  background: var(--mq-alza);
+  background: linear-gradient(
+    150deg,
+    color-mix(in srgb, var(--trasto, var(--mq-ac)) 22%, transparent),
+    rgba(232, 237, 245, 0.03) 75%
+  );
   transform: rotate(calc((var(--i) - 1) * 4deg)) translateY(calc((var(--i) - 1) * 1.6cqw));
 }
 
 .medida__trasto b {
+  color: color-mix(in srgb, var(--trasto, var(--mq-ac)) 45%, #fff);
   font-size: 2.7cqw;
   font-weight: 700;
 }
@@ -1037,9 +1123,14 @@
   bottom: 1cqw;
   left: 50%;
   padding: 0.8cqw 2cqw;
+  border: 1px solid color-mix(in srgb, var(--mq-ac2) 40%, transparent);
   border-radius: 999px;
-  background: rgba(245, 165, 36, 0.16);
-  color: var(--mq-ac);
+  background: linear-gradient(
+    110deg,
+    color-mix(in srgb, var(--mq-ac2) 28%, transparent),
+    color-mix(in srgb, var(--mq-ac) 18%, transparent)
+  );
+  color: color-mix(in srgb, var(--mq-ac2) 45%, #fff);
   font-size: 2.4cqw;
   font-weight: 800;
   letter-spacing: 0.06em;
@@ -1090,6 +1181,7 @@
 
 .medida__campos dd {
   margin: 0;
+  color: color-mix(in srgb, var(--mq-ac) 30%, #fff);
   font-size: 2.9cqw;
   font-weight: 700;
   text-align: right;
@@ -1150,6 +1242,11 @@
 
 .mq--resto {
   --mq-acento: #36d7d1;
+  /* Duotono con significado: el menú del cliente va en el turquesa de la
+     marca y la cocina en naranja de fuego. Frío el que pide, caliente el que
+     cocina. Es lo que hace que las dos mitades se distingan de un vistazo en
+     vez de parecer dos paneles iguales. */
+  --mq-ac2: #ff8f3c;
 }
 
 .resto__cuerpo {
@@ -1187,7 +1284,14 @@
 }
 
 .resto__cocina-cabeza {
-  color: var(--mq-ac);
+  color: var(--mq-ac2);
+}
+
+.resto__cocina {
+  border-color: color-mix(in srgb, var(--mq-ac2) 28%, transparent);
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--mq-ac2) 14%, transparent), transparent 70%),
+    var(--mq-alza);
 }
 
 .resto__cocina-cabeza i {
@@ -1224,7 +1328,12 @@
 
 .resto__platillo.is-puesto {
   border-color: var(--mq-ac);
-  background: color-mix(in srgb, var(--mq-ac) 15%, transparent);
+  background: linear-gradient(
+    110deg,
+    color-mix(in srgb, var(--mq-ac) 32%, transparent),
+    color-mix(in srgb, var(--mq-ac) 10%, transparent)
+  );
+  box-shadow: 0 0 2.8cqw -1cqw var(--mq-ac);
 }
 
 .resto__platillo em {
@@ -1262,7 +1371,8 @@
   padding: 1.7cqw;
   border: 0;
   border-radius: 1.2cqw;
-  background: var(--mq-ac);
+  background: linear-gradient(110deg, var(--mq-ac), #5fe8a8);
+  box-shadow: 0 1.2cqw 3.4cqw -1.4cqw var(--mq-ac);
   color: #052120;
   font-family: var(--font-display, 'Syne Variable', system-ui, sans-serif);
   font-size: 2.9cqw;
@@ -1295,11 +1405,15 @@
   flex: 1;
   flex-direction: column;
   padding: 1.8cqw;
-  border: 1px solid color-mix(in srgb, var(--mq-ac) 45%, transparent);
-  border-left: 0.9cqw solid var(--mq-ac);
+  border: 1px solid color-mix(in srgb, var(--mq-ac2) 50%, transparent);
+  border-left: 0.9cqw solid var(--mq-ac2);
   border-radius: 1.2cqw;
   gap: 0.9cqw;
-  background: color-mix(in srgb, var(--mq-ac) 8%, transparent);
+  background: linear-gradient(
+    140deg,
+    color-mix(in srgb, var(--mq-ac2) 22%, transparent),
+    transparent 72%
+  );
   /* La comanda ENTRA. Que aparezca deslizándose desde la izquierda —desde el
      lado del menú— es lo que cuenta que viene de ahí. */
   animation: mq-entra-comanda 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -1334,8 +1448,9 @@
   margin-top: auto;
   padding: 0.7cqw 1.6cqw;
   border-radius: 999px;
-  background: var(--mq-ac);
-  color: #052120;
+  background: linear-gradient(110deg, var(--mq-ac2), #ffc154);
+  box-shadow: 0 0 2.4cqw -0.8cqw var(--mq-ac2);
+  color: #2a1002;
   font-size: 2.3cqw;
   font-style: normal;
   font-weight: 800;
@@ -1360,6 +1475,9 @@
 
 .mq--factura {
   --mq-acento: #4fd46a;
+  /* Verde para lo timbrado —el sello, la validación— y azul para los
+     archivos, que es como se ven un PDF y un XML en cualquier gestor. */
+  --mq-ac2: #4f9dff;
 }
 
 .fac__cuerpo {
@@ -1397,6 +1515,7 @@
 }
 
 .fac__folio {
+  color: color-mix(in srgb, var(--mq-ac2) 40%, #fff);
   font-family: var(--font-display, 'Syne Variable', system-ui, sans-serif);
   font-size: 4.6cqw;
   font-weight: 800;
@@ -1404,6 +1523,7 @@
 }
 
 .fac__importe {
+  color: color-mix(in srgb, var(--mq-ac) 45%, #fff);
   font-size: 3.4cqw;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
@@ -1427,7 +1547,8 @@
 }
 
 .mq--factura.is-armando .fac__flecha {
-  background: var(--mq-ac);
+  background: linear-gradient(90deg, var(--mq-ac2), var(--mq-ac));
+  box-shadow: 0 0 2cqw -0.4cqw var(--mq-ac);
 }
 
 .mq--factura.is-armando:not(.is-quieto) .fac__flecha {
@@ -1442,7 +1563,8 @@
 .fac__sello {
   padding: 0.5cqw 1.4cqw;
   border-radius: 999px;
-  background: var(--mq-ac);
+  background: linear-gradient(110deg, var(--mq-ac), #9df58a);
+  box-shadow: 0 0 2.6cqw -0.7cqw var(--mq-ac);
   color: #04200d;
   font-size: 2.2cqw;
   font-style: normal;
@@ -1504,9 +1626,13 @@
 }
 
 .fac__archivos .is-listo {
-  border-color: color-mix(in srgb, var(--mq-ac) 55%, transparent);
-  background: color-mix(in srgb, var(--mq-ac) 14%, transparent);
-  color: var(--mq-ac);
+  border-color: color-mix(in srgb, var(--mq-ac2) 55%, transparent);
+  background: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--mq-ac2) 26%, transparent),
+    color-mix(in srgb, var(--mq-ac) 14%, transparent)
+  );
+  color: color-mix(in srgb, var(--mq-ac2) 40%, #fff);
 }
 
 .fac__accion {
@@ -1518,7 +1644,8 @@
   padding: 2cqw;
   border: 0;
   border-radius: 1.4cqw;
-  background: var(--mq-ac);
+  background: linear-gradient(110deg, var(--mq-ac), #a5f77e);
+  box-shadow: 0 1.4cqw 4cqw -1.4cqw var(--mq-ac);
   color: #04200d;
   font-family: var(--font-display, 'Syne Variable', system-ui, sans-serif);
   font-size: 3.1cqw;
