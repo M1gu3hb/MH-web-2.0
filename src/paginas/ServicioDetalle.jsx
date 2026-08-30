@@ -96,7 +96,11 @@ export default function ServicioDetalle() {
         resalte={pagina.hero.resalte}
         entrada={pagina.hero.entrada}
         acento={pagina.acento}
-        maqueta={Maqueta ? <Maqueta /> : null}
+        /* Aquí la maqueta va viva: está suelta, no dentro de un enlace, y
+           tiene sitio de sobra. Es el único punto de la web donde el
+           visitante puede tocar el servicio en vez de leerlo. */
+        maqueta={Maqueta ? <Maqueta interactivo /> : null}
+        pista={pagina.pista}
         acciones={
           <>
             <BotonPrincipal to={contactoCon(pagina.hero.servicio)} grande>

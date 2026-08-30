@@ -1,3 +1,5 @@
+import { Punto } from './maquetas/Punto';
+
 import { ArrowUpRight, FileText } from 'lucide-react';
 
 /* Logos de las apps del flujo, incrustados: son tres trazos pequeños y así
@@ -59,28 +61,8 @@ export function WebsiteScreen() {
   );
 }
 
-export function PosScreen() {
-  return (
-    <div className="demo demo--pos">
-      <div className="pos-head">
-        <span><i /> CAJA ABIERTA</span>
-        <strong>$ 1,248.00</strong>
-      </div>
-      <div className="pos-body">
-        <div className="pos-ticket">
-          <small>ORDEN #0284</small>
-          <span><b>2</b> Producto especial <em>$420</em></span>
-          <span><b>1</b> Servicio adicional <em>$280</em></span>
-          <span><b>3</b> Complemento <em>$548</em></span>
-          <strong>TOTAL <em>$1,248</em></strong>
-        </div>
-        <div className="pos-pad">
-          {[7, 8, 9, 4, 5, 6, 1, 2, 3].map((number) => <i key={number}>{number}</i>)}
-          <span className="pos-pad__action">Cobrar</span>
-        </div>
-      </div>
-    </div>
-  );
+export function PosScreen({ interactivo = false }) {
+  return <Punto interactivo={interactivo} />;
 }
 
 export function CrmScreen() {

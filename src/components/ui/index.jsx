@@ -649,7 +649,7 @@ export function TarjetaServicio({ servicio, grande = false }) {
    Cabecera de página interior
    ------------------------------------------------------------ */
 
-export function CabeceraPagina({ migas, eyebrow, titulo, entrada, acciones, acento, imagen, maqueta, aparte, resalte }) {
+export function CabeceraPagina({ migas, eyebrow, titulo, entrada, acciones, acento, imagen, maqueta, pista, aparte, resalte }) {
   return (
     <header className="cabecera-pagina" style={acento ? { '--acento': acento } : undefined}>
       {/* La cabecera de producción no era un degradado plano: tenía señal.
@@ -662,7 +662,17 @@ export function CabeceraPagina({ migas, eyebrow, titulo, entrada, acciones, acen
       </span>
       <div className="contenedor contenedor--amplio">
         {migas && <Migas ruta={migas} />}
-        <div className={`cabecera-pagina__reparto ${imagen || maqueta || aparte ? 'cabecera-pagina__reparto--con-imagen' : ''}`}>
+        {/* `--con-maqueta` reparte distinto que `--con-imagen`. Una foto
+            ilustra y puede ir pequeña; la maqueta de un servicio es lo que
+            explica de qué va el servicio antes de que nadie lea, así que
+            necesita sitio de verdad. Con el reparto de la foto le tocaban
+            381 px de caja y ahí un punto de venta con sus productos se
+            aplasta. */}
+        <div
+          className={`cabecera-pagina__reparto ${
+            imagen || maqueta || aparte ? 'cabecera-pagina__reparto--con-imagen' : ''
+          } ${maqueta ? 'cabecera-pagina__reparto--con-maqueta' : ''}`}
+        >
           <div className="cabecera-pagina__texto">
             {eyebrow && (
               <p className="cabecera-pagina__eyebrow">
@@ -689,11 +699,22 @@ export function CabeceraPagina({ migas, eyebrow, titulo, entrada, acciones, acen
           </div>
           {/* En las páginas de servicio, en vez de una foto va la maqueta
               real de ese servicio: la página demuestra de qué habla desde el
-              primer pantallazo. */}
+              primer pantallazo.
+
+              CUANDO LA MAQUETA SE TOCA deja de ir `aria-hidden`. Esconder del
+              árbol de accesibilidad algo que tiene botones dentro es lo peor
+              de los dos mundos: quien navega con teclado tabula hasta ellos y
+              el lector de pantalla no sabe decir dónde está. Con `pista` se
+              convierte en una figura con su pie, y los botones ya se anuncian
+              solos porque llevan su texto («Café, $35»). */}
           {maqueta && (
-            <div className="cabecera-pagina__maqueta" aria-hidden="true">
+            <figure
+              className="cabecera-pagina__maqueta"
+              {...(pista ? {} : { 'aria-hidden': true })}
+            >
               <div className="cabecera-pagina__pantalla">{maqueta}</div>
-            </div>
+              {pista && <figcaption className="cabecera-pagina__pista">{pista}</figcaption>}
+            </figure>
           )}
           {/* Para las páginas sin maqueta: en vez de dejar media cabecera
               vacía, se pone algo que el visitante quiere ver ahí mismo. */}

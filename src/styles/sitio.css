@@ -350,6 +350,15 @@
   align-items: center;
 }
 
+/* La maqueta del servicio pide más que una foto. Medido a 1440: con el
+   reparto de arriba la caja de la maqueta quedaba en 381 px de ancho —y a esa
+   medida un punto de venta con su ticket y sus productos se aplasta a
+   catorce píxeles por ficha—. El titular no lo echa de menos: ya está
+   limitado a `15ch`, así que la anchura que cede no la estaba usando. */
+.cabecera-pagina__reparto--con-maqueta {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
 @media (max-width: 900px) {
   .cabecera-pagina__reparto--con-imagen {
     grid-template-columns: 1fr;
@@ -3610,7 +3619,7 @@ iframe {
 
 .cabecera-pagina__pantalla {
   position: relative;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 11;
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--acento, var(--accent-brand)) 34%, transparent);
   border-radius: var(--r-lg);

@@ -243,6 +243,10 @@ export const PAGINAS_SERVICIO = {
   [RUTAS.sistemas]: {
     id: 'sistemas',
     acento: '#4f95ff',
+    /* El pie de la maqueta de la cabecera. Existe porque una demo que nadie
+       sabe que se puede tocar es un dibujo caro: sin esta línea, la
+       interacción no la descubre nadie. */
+    pista: 'Toca un producto y cóbralo: así se ve una venta.',
     seo: {
       title: 'Sistemas y punto de venta para negocios | Morphiq',
       description:

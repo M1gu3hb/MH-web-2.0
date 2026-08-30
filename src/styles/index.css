@@ -13,6 +13,10 @@
 @import './faq.css';
 @import './contact.css';
 @import './mockups.css';
+/* La familia nueva de maquetas de servicio. Va DESPUÉS de mockups.css a
+   propósito: comparte la clase `.demo` con la familia vieja para heredar su
+   encaje en los tres envoltorios, y necesita ganarle en color y tamaño. */
+@import './maquetas.css';
 
 /* Capa del sitio multipágina. Va al final para poder ajustar lo anterior
    sin tocarlo: los estilos del sitio de una sola página siguen sirviendo a

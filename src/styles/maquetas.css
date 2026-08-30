@@ -1,0 +1,487 @@
+/* ============================================================
+   MAQUETAS DE SERVICIO — LA FAMILIA NUEVA
+   ============================================================
+
+   Estas son las estampas que presiden cada servicio. Sustituyen a las
+   `.demo*` de `mockups.css`, que se leían mal por una razón medible:
+
+   La tarjeta de la home dibuja la maqueta a tamaño de escritorio —hasta
+   1659 px de ancho— y luego la encoge con `transform: scale(.46–.52)`. Los
+   textos de `0.4rem` acababan midiendo 3.3 px reales. Lo único que
+   sobrevivía al encogido eran las formas grandes, así que la maqueta
+   comunicaba lo que fuera su forma más grande: en el punto de venta, un
+   teclado numérico; o sea, una calculadora.
+
+   DE AHÍ SALEN LAS TRES REGLAS DE ESTA FAMILIA
+
+   1 · TODO SE MIDE EN `cqw`, NUNCA EN PX NI EN REM.
+       `.mq` es un contenedor de consulta. Como la caja se encoge con
+       `scale`, el tamaño que se ve en pantalla es `cqw × caja × escala`, y
+       eso es exactamente el ancho del marco visible. Medir en `cqw` hace
+       que el dibujo se vea igual de proporcionado en un marco de 318 px de
+       teléfono que en uno de 863 de escritorio, sin una sola media query.
+       Medir en px o rem lo rompe: esos valores también se encogen.
+
+   2 · LA IDEA VIAJA EN LAS FORMAS GRANDES, NO EN EL TEXTO.
+       A media escala, cualquier texto por debajo de ~3cqw es textura. Así
+       que lo que tiene que entenderse —el total de una venta, la factura
+       timbrada, la comanda entrando a cocina— va en piezas gordas. El texto
+       fino confirma la lectura de cerca; nunca la sostiene.
+
+   3 · UNA SOLA IDEA POR SERVICIO, Y ES UN VERBO.
+       Cobrar. Publicar. Dar seguimiento. Facturar. No un panel con todo lo
+       que el producto sabe hacer.
+
+   DOS MODOS, UN DIBUJO
+   `.is-vivo` es la maqueta interactiva de la cabecera de cada página de
+   servicio: ahí está suelta, se puede tocar y el detalle fino se lee.
+   Sin esa clase es la de la tarjeta de la home, que va dentro de un `<a>`
+   y bajo `aria-hidden`: ahí no puede haber nada tocable ni enfocable, y la
+   escena avanza sola en bucle.
+
+   `.is-quieto` marca que no hay bucle —movimiento reducido, o fuera de
+   pantalla— y sirve para apagar cualquier animación de CSS.
+   ============================================================ */
+
+.mq {
+  container-type: inline-size;
+
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 3cqw;
+  border-radius: 2.4cqw;
+  gap: 2.4cqw;
+  background: var(--mq-fondo, #0c1017);
+  color: var(--mq-tinta, #e8edf5);
+  font-family: var(--font-body, 'Manrope Variable', system-ui, sans-serif);
+  line-height: 1.25;
+}
+
+.mq *,
+.mq *::before,
+.mq *::after {
+  box-sizing: border-box;
+}
+
+/* El acento lo pone quien la pinta. El de reserva es el azul de marca, para
+   que una maqueta suelta nunca salga sin color. */
+.mq {
+  --mq-ac: var(--mq-acento, #4f95ff);
+  --mq-linea: rgba(232, 237, 245, 0.12);
+  --mq-linea-suave: rgba(232, 237, 245, 0.07);
+  --mq-alza: rgba(232, 237, 245, 0.045);
+  --mq-apagado: rgba(232, 237, 245, 0.52);
+}
+
+/* ---- La barra de arriba: común a todas ---- */
+
+.mq__barra {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2cqw;
+}
+
+.mq__marca {
+  color: var(--mq-apagado);
+  font-size: 2.7cqw;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.mq__pastilla {
+  display: inline-flex;
+  align-items: center;
+  padding: 1cqw 2.2cqw;
+  border-radius: 999px;
+  gap: 1.2cqw;
+  background: color-mix(in srgb, var(--mq-ac) 16%, transparent);
+  color: var(--mq-ac);
+  font-size: 2.7cqw;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.mq__pastilla--viva::before {
+  width: 1.6cqw;
+  height: 1.6cqw;
+  border-radius: 50%;
+  background: currentColor;
+  content: '';
+}
+
+.mq:not(.is-quieto) .mq__pastilla--viva::before {
+  animation: mq-latido 2.4s ease-in-out infinite;
+}
+
+@keyframes mq-latido {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.72); }
+}
+
+/* ============================================================
+   PUNTO DE VENTA
+   ============================================================
+   Reparto: el ticket a la izquierda con el total gordo abajo, y la rejilla
+   de productos a la derecha. Sin teclado numérico — era justo la forma que
+   hacía que la maqueta se leyera como una calculadora.
+   ============================================================ */
+
+.mq--punto {
+  --mq-acento: #4f95ff;
+}
+
+.punto__cuerpo {
+  display: grid;
+  flex: 1;
+  min-height: 0;
+  gap: 2.4cqw;
+  grid-template-columns: 1fr 1.15fr;
+  grid-template-rows: minmax(0, 1fr);
+}
+
+/* QUIÉN CEDE ALTO CUANDO NO HAY.
+   Un hijo de rejilla vale `min-height: auto`, o sea que se niega a encoger
+   por debajo de su contenido; sin tocarlo, el ticket y los productos
+   empujaban la fila más allá del `1fr` y `overflow: hidden` cortaba el botón
+   de cobrar.
+
+   Pero dejar encoger al ticket ENTERO fue peor: se aplastaba a 31 px y su
+   contenido se derramaba por encima de los productos. Lo que puede ceder es
+   la lista de renglones —un ticket con menos renglones a la vista sigue
+   siendo un ticket—, nunca la cabecera ni el total. */
+.punto__ticket,
+.punto__catalogo {
+  min-height: 0;
+}
+
+.punto__lineas {
+  overflow: hidden;
+}
+
+/* ---- Ticket ---- */
+
+.punto__ticket {
+  display: flex;
+  flex-direction: column;
+  padding: 2.4cqw;
+  border: 1px solid var(--mq-linea-suave);
+  border-radius: 1.8cqw;
+  gap: 1.6cqw;
+  background: var(--mq-alza);
+}
+
+.punto__ticket-cabeza {
+  color: var(--mq-apagado);
+  font-size: 2.5cqw;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.punto__lineas {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 1.4cqw;
+}
+
+.punto__linea {
+  display: grid;
+  align-items: baseline;
+  gap: 1.6cqw;
+  grid-template-columns: auto 1fr auto;
+  /* Cada renglón entra desde abajo: es lo que hace que la venta se lea como
+     algo que ESTÁ PASANDO y no como una lista impresa. */
+  animation: mq-entra-renglon 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+  font-size: 3.1cqw;
+}
+
+.punto__linea b {
+  min-width: 4.6cqw;
+  padding: 0.3cqw 1.1cqw;
+  border-radius: 0.9cqw;
+  background: color-mix(in srgb, var(--mq-ac) 22%, transparent);
+  color: var(--mq-ac);
+  font-weight: 800;
+  text-align: center;
+}
+
+.punto__linea em {
+  overflow: hidden;
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.punto__linea i {
+  color: var(--mq-tinta, #e8edf5);
+  font-style: normal;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes mq-entra-renglon {
+  from { opacity: 0; transform: translateY(1.6cqw); }
+  to { opacity: 1; transform: none; }
+}
+
+.is-quieto .punto__linea {
+  animation: none;
+}
+
+.punto__vacio,
+.punto__cobrado {
+  margin: 0;
+  color: var(--mq-apagado);
+  font-size: 2.9cqw;
+}
+
+.punto__cobrado {
+  display: flex;
+  align-items: center;
+  gap: 1.4cqw;
+  color: #6ee7a8;
+  font-weight: 700;
+}
+
+.punto__cobrado i {
+  display: grid;
+  width: 4cqw;
+  height: 4cqw;
+  border-radius: 50%;
+  background: #6ee7a8;
+  color: #06231a;
+  font-size: 2.4cqw;
+  place-items: center;
+}
+
+.punto__cobrado i::before {
+  content: '✓';
+}
+
+/* El total. Es lo más grande del dibujo y no es una decisión estética: a
+   media escala es lo único que todavía se lee, así que tiene que ser lo que
+   cuenta de qué va la pantalla. */
+.punto__total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-top: 1.8cqw;
+  border-top: 1px solid var(--mq-linea);
+  gap: 1.6cqw;
+}
+
+.punto__total span {
+  color: var(--mq-apagado);
+  font-size: 2.7cqw;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.punto__total strong {
+  color: #fff;
+  font-family: var(--font-display, 'Syne Variable', system-ui, sans-serif);
+  font-size: 6.8cqw;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+/* ---- Productos ---- */
+
+.punto__catalogo {
+  display: grid;
+  align-content: stretch;
+  gap: 1.8cqw;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.punto__producto {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+  margin: 0;
+  padding: 1.6cqw 1.5cqw;
+  border: 1px solid var(--mq-linea);
+  border-radius: 1.6cqw;
+  gap: 0.6cqw;
+  background: var(--mq-alza);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.punto__producto em {
+  overflow: hidden;
+  color: var(--mq-tinta, #e8edf5);
+  font-size: 3cqw;
+  font-style: normal;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.punto__producto i {
+  color: var(--mq-ac);
+  font-size: 2.9cqw;
+  font-style: normal;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Solo la versión interactiva reacciona: en la tarjeta de la home esto es
+   un `<span>` dentro de un enlace y fingir que se puede pulsar sería
+   mentir sobre lo que hace el clic. */
+.is-vivo .punto__producto {
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s, transform 0.12s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.is-vivo .punto__producto:hover,
+.is-vivo .punto__producto:focus-visible {
+  border-color: color-mix(in srgb, var(--mq-ac) 55%, transparent);
+  background: color-mix(in srgb, var(--mq-ac) 12%, var(--mq-alza));
+}
+
+.is-vivo .punto__producto:active {
+  transform: scale(0.96);
+}
+
+/* ---- Cobrar ---- */
+
+.punto__cobrar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  margin: 0;
+  padding: 2.1cqw;
+  border: 0;
+  border-radius: 1.6cqw;
+  background: var(--mq-ac);
+  color: #05122b;
+  font-family: var(--font-display, 'Syne Variable', system-ui, sans-serif);
+  font-size: 3.6cqw;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.punto__cobrar.is-apagado {
+  background: var(--mq-linea);
+  color: var(--mq-apagado);
+}
+
+.is-vivo .punto__cobrar:not(.is-apagado) {
+  cursor: pointer;
+  transition: transform 0.12s, filter 0.18s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.is-vivo .punto__cobrar:not(.is-apagado):hover {
+  filter: brightness(1.08);
+}
+
+.is-vivo .punto__cobrar:not(.is-apagado):active {
+  transform: scale(0.985);
+}
+
+.punto__cobrar.is-pulsado {
+  animation: mq-cobro 1.5s ease-out;
+}
+
+@keyframes mq-cobro {
+  0% { transform: scale(1); }
+  14% { transform: scale(0.97); filter: brightness(1.25); }
+  40% { transform: scale(1); filter: none; }
+}
+
+.is-quieto .punto__cobrar {
+  animation: none;
+}
+
+/* ---- Muy angosta: el ticket se va arriba y los productos abajo ----
+   El corte mira el ANCHO DE LA CAJA, no el del navegador. Es la diferencia
+   que rompía la familia anterior: sus media queries miraban el viewport,
+   así que en un teléfono de 390 px se disparaban sobre un dibujo cuya caja
+   real medía 611. */
+/* ---- Caja estrecha ----
+   El corte mira el ANCHO DE LA CAJA, no el del navegador. Es la diferencia
+   que rompía la familia anterior: sus media queries miraban el viewport, así
+   que en un teléfono de 390 px se disparaban sobre un dibujo cuya caja real
+   medía 611.
+
+   Aquí el caso es el contrario y hay que decirlo, porque no se ve: la
+   cabecera de la página de servicio gira la pantalla en 3D
+   (`rotateY(-7deg)`), y eso hace que APARENTE 447 px de ancho cuando su caja
+   de maquetación mide 359. Es una caja pequeña y casi cuadrada, no la caja
+   ancha que sugiere la pantalla.
+
+   Ahí no caben seis productos en dos filas sin aplastarlos a catorce
+   píxeles. Caben tres en una fila, y tres productos con su precio cuentan lo
+   mismo que seis: que aquí se cobra tocando lo que se vende. */
+@container (max-width: 420px) {
+  .punto__cuerpo {
+    /* El ticket pide lo suyo y los productos se quedan con el resto. Con las
+       dos filas a `1fr` el ticket se quedaba corto y se derramaba encima. */
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .punto__catalogo {
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .punto__producto:nth-child(n + 4) {
+    display: none;
+  }
+
+  .punto__producto {
+    min-height: 9cqw;
+  }
+}
+
+/* ============================================================
+   EL PIE DE LA MAQUETA VIVA
+   ============================================================
+   Una demo que nadie sabe que se puede tocar es un dibujo caro. Esta línea
+   es lo único que convierte la maqueta en una invitación, y por eso va
+   debajo y a la vista, no como un `title` ni como un icono que hay que
+   adivinar.
+   ============================================================ */
+
+.cabecera-pagina__maqueta {
+  margin: 0;
+}
+
+.cabecera-pagina__pista {
+  display: flex;
+  align-items: center;
+  margin-top: var(--sp-3);
+  gap: var(--sp-2);
+  color: var(--ink-muted);
+  font-size: max(0.86rem, 12.5px);
+}
+
+.cabecera-pagina__pista::before {
+  flex: none;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--acento, var(--accent-pos));
+  content: '';
+}
