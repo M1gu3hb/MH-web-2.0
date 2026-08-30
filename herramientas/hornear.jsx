@@ -20,10 +20,14 @@ import {
   GestechVisual,
   HipicoVisual,
   ImaginationVisual,
+  JchCrmVisual,
+  JchPortalVisual,
   MorphiqUiVisual,
+  PosTienditaVisual,
   NfcVisual,
   PhotoBoothVisual,
   QyroVisual,
+  StopMotionVisual,
   VeroVisual,
 } from '../src/components/mockups/ProjectVisuals';
 
@@ -41,6 +45,10 @@ const PIEZAS = [
   ['academico', AcademicoVisual],
   ['morphiq-ui', MorphiqUiVisual],
   ['qyro', QyroVisual],
+  ['jch-crm', JchCrmVisual],
+  ['jch-portal', JchPortalVisual],
+  ['stopmotion', StopMotionVisual],
+  ['tiendita', PosTienditaVisual],
 ];
 
 function Horno() {

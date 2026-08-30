@@ -241,15 +241,18 @@ export default function Precios() {
       <Seccion tono="elevado">
         <Contenedor>
           <TituloSeccion
-            titulo="Y dos que se cotizan aparte"
+            titulo="Y tres que se cotizan aparte"
             entrada="Porque dependen tanto del caso que publicar un número sería inventarlo."
           />
-          <div className="planes planes--2">
+          <div className="planes planes--3">
             <Reveal>
               <TarjetaPlan plan={PLANES.ecosistema} detallada />
             </Reveal>
             <Reveal delay={0.07}>
               <TarjetaPlan plan={PLANES.restaurantes} detallada />
+            </Reveal>
+            <Reveal delay={0.14}>
+              <TarjetaPlan plan={PLANES.facturacion} detallada />
             </Reveal>
           </div>
           <Reveal>

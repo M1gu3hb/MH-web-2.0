@@ -30,7 +30,7 @@ export const SERVICIOS = [
     nombre: 'Páginas web',
     promesa: 'Que te encuentren, entiendan qué haces y te escriban.',
     resumen:
-      'Desde una página sencilla y bien hecha hasta un sitio con catálogo que tú mismo administras.',
+      'Desde una página sencilla y bien hecha hasta una tienda en línea que tú mismo administras. También remodelo el sitio que ya tienes.',
     acento: '#ff684f',
     imagen: '/servicios/web.webp',
     imagenSq: '/servicios/web-sq.webp',
@@ -90,6 +90,17 @@ export const SERVICIOS = [
     puntos: ['Menú QR que editas tú', 'Punto de venta y cocina', 'Clientes y promociones'],
     vertical: true,
   },
+  {
+    id: 'facturacion',
+    ruta: RUTAS.facturacion,
+    nombre: 'Facturación automática',
+    promesa: 'Que el ticket se vuelva factura sin capturar nada.',
+    resumen:
+      'Facturación electrónica conectada a donde ya vendes: el punto de venta, la tienda en línea o el restaurante.',
+    acento: '#4fd46a',
+    paraTi: 'Facturas a mano, en el portal, con el cliente esperando y el riesgo de teclear mal un RFC.',
+    puntos: ['Se conecta a lo que ya tienes', 'PDF y XML al correo', 'Sin capturar dos veces'],
+  },
 ];
 
 export function servicioPorRuta(ruta) {
@@ -136,8 +147,10 @@ export const PAGINAS_SERVICIO = {
       lista: [
         'Cuando alguien te pide información, le mandas capturas de tu Instagram.',
         'Tienes página, pero te da pena pasarla y prefieres explicar por WhatsApp.',
+        'Tu sitio se hizo hace años y hoy se ve viejo al lado del de tu competencia.',
         'Para cambiar un precio o una foto tienes que buscar a quien te la hizo.',
         'Te buscan en Google por tu nombre y no apareces.',
+        'Vendes por mensajes y anotas los pedidos a mano, uno por uno.',
         'Tu página se ve mal en el teléfono, que es donde te ve casi todo el mundo.',
       ],
     },
@@ -184,17 +197,30 @@ export const PAGINAS_SERVICIO = {
           ],
         },
         {
-          nombre: 'Cuando el negocio ya vende en línea',
+          nombre: 'Tienda en línea, cuando toca vender',
           items: [
-            'Catálogo con carrito',
-            'Pedidos y reservas',
+            'Catálogo con carrito y cobro en línea',
+            'Pedidos, reservas y envíos',
+            'Existencias que bajan solas al vender',
             'Cotizador automático',
-            'Conexión con tu punto de venta',
+            'Conexión con tu punto de venta y con la facturación',
             'Correo empresarial con tu dominio',
           ],
         },
       ],
       nota: 'No todos los proyectos llevan todo. La propuesta define exactamente qué lleva el tuyo, y el precio se cierra antes de empezar.',
+    },
+
+    /* Remodelación. Va en Páginas web y no como servicio aparte porque no lo
+       es: es el mismo trabajo empezando desde algo que ya existe. Y conviene
+       decirlo en la página, porque mucha gente con sitio viejo da por hecho
+       que su única opción es tirarlo y empezar de cero. */
+    remodelacion: {
+      titulo: '¿Y si ya tienes una página?',
+      cuerpo:
+        'No hace falta tirarla. Se puede remodelar: mismo dominio, mismo contenido que sirve, y encima un diseño de ahora, que cargue rápido y se vea bien en el teléfono. Lo que ya funciona se queda; lo que estorba se va.',
+      remate:
+        'Primero la reviso y te digo la verdad: hay sitios donde remodelar sale más caro que rehacer, y en esos te lo digo antes de cobrarte nada.',
     },
 
     editable: {
@@ -224,6 +250,14 @@ export const PAGINAS_SERVICIO = {
       {
         q: '¿Qué pasa si necesito cambios después de entregar?',
         a: 'Los ajustes que salen justo después de entregar van incluidos, y lo dejamos por escrito al cerrar. Después puedes contratar mantenimiento desde $200 MXN al mes o pedirme cambios por bloque. No hay contrato de permanencia.',
+      },
+      {
+        q: 'Ya tengo una página vieja. ¿La rehaces o la remodelas?',
+        a: 'Las dos cosas son posibles y depende de con qué esté hecha. Si se puede aprovechar, se remodela y conservas dominio, textos y posicionamiento. Si por dentro está armada de una forma que va a dar problemas cada vez que la toques, sale más barato rehacerla, y te lo digo antes de empezar en vez de cobrarte por parchear.',
+      },
+      {
+        q: '¿Puedo vender en línea desde mi página?',
+        a: 'Sí: catálogo con carrito, cobro en línea, pedidos y envíos. Y como lo construyo yo, se puede conectar con tu punto de venta para que las existencias bajen solas al vender, y con la facturación para que el ticket se vuelva factura. Ese es el sentido de tener una tienda hecha a la medida y no una plantilla alquilada.',
       },
       {
         q: '¿La página es mía?',
@@ -349,7 +383,7 @@ export const PAGINAS_SERVICIO = {
       },
     ],
 
-    proyectos: ['pasteleria-confetti', 'electrotecnica-berlin'],
+    proyectos: ['pasteleria-confetti', 'pos-tiendita', 'electrotecnica-berlin'],
 
     cierre: {
       titulo: 'Cuéntame cómo opera tu negocio hoy',
@@ -455,7 +489,7 @@ export const PAGINAS_SERVICIO = {
       },
     ],
 
-    proyectos: ['jardines-club-hipico', 'pasteleria-confetti'],
+    proyectos: ['jch-crm', 'jch-portal-cliente', 'pasteleria-confetti'],
 
     cierre: {
       titulo: 'Cuéntame cómo vendes hoy',
@@ -563,12 +597,126 @@ export const PAGINAS_SERVICIO = {
       },
     ],
 
-    proyectos: ['gestech', 'mh-photo-booth'],
+    proyectos: ['gestech', 'stopmotion-studio', 'mh-photo-booth'],
 
     cierre: {
       titulo: 'Cuéntame qué necesitas que exista',
       cuerpo: 'Explícamelo como se lo explicarías a un amigo. Si lo puedes explicar, lo puedo construir, y si no te conviene construirlo, te lo digo.',
       servicio: 'software',
+    },
+  },
+
+  /* ---------------------------------------------------------- */
+  /* Facturación automática. Es el único servicio que se vende igual solo que
+     pegado a otro: se puede conectar al punto de venta, a la tienda en línea
+     o al restaurante, y también contratarse a secas. Por eso el texto habla
+     todo el rato de «donde ya vendes» en vez de describir un producto
+     cerrado.
+
+     NO LLEVA BLOQUE `niveles`, y es a propósito. El precio depende del
+     negocio —no cuesta lo mismo una sucursal que ocho, ni un negocio que
+     empieza que uno con años de operación—, así que publicar un «desde»
+     sería inventarlo. Es el mismo precedente que `software a medida`, que
+     tampoco lo lleva. */
+  [RUTAS.facturacion]: {
+    id: 'facturacion',
+    acento: '#4fd46a',
+    pista: 'Factura el ticket y mira salir el PDF y el XML.',
+    seo: {
+      title: 'Facturación automática para negocios | Morphiq',
+      description:
+        'Facturación electrónica conectada a tu punto de venta, tu tienda en línea o tu restaurante. El ticket se vuelve factura con su PDF y su XML, sin capturar los datos dos veces.',
+    },
+    migas: [
+      { nombre: 'Inicio', path: RUTAS.inicio },
+      { nombre: 'Servicios', path: RUTAS.servicios },
+      { nombre: 'Facturación automática', path: RUTAS.facturacion },
+    ],
+    schema: {
+      tipo: 'Facturación electrónica automatizada',
+      descripcion:
+        'Integración de facturación electrónica con el punto de venta, la tienda en línea o el sistema del negocio, para emitir comprobantes sin capturar los datos otra vez.',
+    },
+
+    hero: {
+      eyebrow: 'Servicio 06 · Complemento',
+      titulo: 'El ticket se vuelve factura solo.',
+      resalte: 'factura solo',
+      entrada:
+        'Se conecta a donde ya vendes —el punto de venta, la tienda en línea, el restaurante— y de ahí sale el comprobante. También se puede hacer solo, si lo único que te duele es facturar.',
+      servicio: 'facturacion',
+    },
+
+    quees: {
+      titulo: '¿Qué significa «automática»?',
+      cuerpo:
+        'Que los datos de la venta ya están en el sistema, así que nadie los vuelve a teclear. El cliente pide factura con su folio, y el comprobante se genera, se timbra y le llega con su PDF y su XML.',
+      remate: 'Lo que hoy son diez minutos y un portal abierto, pasa a ser un botón.',
+    },
+
+    problemas: {
+      titulo: '¿Alguna de estas te suena?',
+      lista: [
+        'Facturas a mano, en el portal, con el cliente esperando enfrente.',
+        'Alguien teclea el RFC y una letra mal obliga a cancelar y rehacer.',
+        'Te piden factura de una venta de hace tres semanas y hay que buscar el ticket.',
+        'Cierras el mes y no cuadra lo facturado con lo vendido.',
+        'La persona que sabe facturar se va de vacaciones y el negocio se detiene.',
+      ],
+      nota: 'Y si tu negocio factura tres veces al mes, no necesitas esto: necesitas diez minutos. Te lo voy a decir aunque signifique no venderte un proyecto.',
+    },
+
+    capacidades: {
+      titulo: 'Dónde se puede conectar',
+      entrada:
+        'La facturación no es una isla: vive pegada a donde ocurre la venta. Estas son las puertas por las que entra.',
+      grupos: [
+        {
+          nombre: 'De dónde sale la venta',
+          items: [
+            'Del punto de venta, al cerrar el ticket',
+            'De la tienda en línea, al confirmar el pedido',
+            'Del restaurante, al cerrar la cuenta de la mesa',
+            'De una pantalla propia, si prefieres capturarla ahí',
+            'De un folio que el cliente escribe en tu página',
+          ],
+        },
+        {
+          nombre: 'Qué queda resuelto',
+          items: [
+            'Comprobante con su PDF y su XML',
+            'Envío por correo al cliente, sin reenviarlo a mano',
+            'Registro de lo facturado junto a lo vendido',
+            'Facturación de una venta pasada, buscándola por folio',
+            'Cancelaciones y sustituciones cuando toca',
+          ],
+        },
+      ],
+    },
+
+    faq: [
+      {
+        q: '¿Cuánto cuesta?',
+        a: 'Se cotiza, y no es por no querer decirlo: depende del negocio. No cuesta lo mismo conectarlo a una sucursal que a ocho, ni a un sistema que ya existe que a uno que hay que hacer. Publicar un «desde» aquí sería inventarlo. Cuéntame cómo vendes hoy y te doy un número cerrado.',
+      },
+      {
+        q: '¿Tengo que contratar también un sistema contigo?',
+        a: 'No. Si ya tienes punto de venta o tienda en línea, se conecta a lo que tienes, siempre que permita conectarse; eso lo reviso antes de cotizar. Y si no tienes nada todavía, sale más barato hacerlo junto con el sistema que después por separado.',
+      },
+      {
+        q: '¿Y el timbrado ante el SAT?',
+        a: 'El timbrado lo hace un proveedor autorizado por el SAT, que es como funciona la facturación electrónica en México para todo el mundo. Lo que yo construyo es lo que lleva tu venta hasta ahí y trae de vuelta el comprobante, sin que nadie capture nada.',
+      },
+      {
+        q: '¿Qué pasa si el cliente pide factura días después?',
+        a: 'Se busca la venta por su folio y se factura desde ahí, con los datos que ya estaban. Ese es justo el caso que hoy obliga a alguien a ponerse a buscar tickets.',
+      },
+    ],
+
+    cierre: {
+      titulo: 'Cuéntame cómo facturas hoy',
+      cuerpo: 'Con saber cómo vendes y cuántas facturas emites al mes me alcanza para decirte si te conviene automatizarlo o todavía no.',
+      servicio: 'facturacion',
     },
   },
 

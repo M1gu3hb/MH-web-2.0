@@ -259,6 +259,34 @@ export const PLANES = {
     cta: 'Ver soluciones para restaurantes',
     destacado: false,
   },
+
+  /* Sin `desde`, y no por descuido. Lo que cuesta conectar la facturación
+     depende de a cuántos sitios se conecta y de si el sistema del que sale la
+     venta ya existe: no es lo mismo una sucursal que ocho, ni un negocio que
+     empieza que uno con años de operación. Un «desde» aquí sería un número
+     inventado, que es justo lo que la regla 3 de este archivo prohíbe. */
+  facturacion: {
+    id: 'facturacion',
+    nombre: 'Facturación automática',
+    familia: 'sistemas',
+    desde: null,
+    periodo: null,
+    cotizacion: 'Según dónde se conecte',
+    resumen: 'Que el ticket, el pedido o la cuenta de la mesa se vuelvan factura sin que nadie capture los datos otra vez.',
+    paraQuien: 'Negocios que ya facturan seguido y hoy lo hacen a mano, en el portal, con el cliente esperando.',
+    puedeIncluir: [
+      'Conexión con tu punto de venta',
+      'Conexión con tu tienda en línea',
+      'Conexión con el sistema del restaurante',
+      'Pantalla para facturar una venta pasada por folio',
+      'Envío del PDF y el XML al cliente',
+      'Cancelaciones y sustituciones',
+    ],
+    nota: 'El timbrado lo hace un proveedor autorizado por el SAT, como en toda la facturación electrónica del país. Lo que se construye es lo que lleva tu venta hasta ahí y trae el comprobante de vuelta.',
+    salida: 'Sin permanencia. Los comprobantes y los datos son tuyos.',
+    cta: 'Cotizar mi facturación',
+    destacado: false,
+  },
 };
 
 /* ============================================================
@@ -292,6 +320,7 @@ export const PLANES_TODOS = Object.values(PLANES);
  */
 export function rutaDelPlan(plan) {
   if (plan.id === 'restaurantes') return '/soluciones/restaurantes';
+  if (plan.id === 'facturacion') return '/servicios/facturacion-automatica';
   return `/precios#${plan.id}`;
 }
 

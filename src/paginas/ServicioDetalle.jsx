@@ -29,6 +29,7 @@ import { Cascada, Cortina, Escala, Lateral, Secuencia } from '../components/moti
 import {
   AutomationScreen,
   CrmScreen,
+  FacturacionScreen,
   PosScreen,
   RestauranteScreen,
   SoftwareScreen,
@@ -50,6 +51,7 @@ const MAQUETA_DE = {
   crm: CrmScreen,
   software: SoftwareScreen,
   restaurantes: RestauranteScreen,
+  facturacion: FacturacionScreen,
 };
 
 export default function ServicioDetalle() {
@@ -81,7 +83,12 @@ export default function ServicioDetalle() {
   ];
 
   return (
-    <>
+    /* El acento del servicio se declara una vez aquí, en la raíz de la
+       página, y de él cuelga todo lo que lo use más abajo. Antes solo se le
+       pasaba a `CabeceraPagina`, así que el resto de la página caía en el
+       valor de reserva: las frases de «¿te suena?» pintaban su flecha en azul
+       en las seis páginas, incluida la de páginas web, que es coral. */
+    <div className="pagina-servicio" style={{ '--acento': pagina.acento }}>
       <Seo
         title={pagina.seo.title}
         description={pagina.seo.description}
@@ -246,6 +253,23 @@ export default function ServicioDetalle() {
         </Seccion>
       )}
 
+      {/* ---- Remodelar un sitio que ya existe (web) ----
+          Usa el mismo `explicador` que los otros bloques de texto: es una
+          idea más de la misma página, no una sección con reglas propias. */}
+      {pagina.remodelacion && (
+        <Seccion>
+          <Contenedor ancho="medio">
+            <Cortina>
+              <div className="explicador">
+                <h2 className="explicador__titulo">{pagina.remodelacion.titulo}</h2>
+                <p className="explicador__cuerpo">{pagina.remodelacion.cuerpo}</p>
+                <p className="explicador__remate">{pagina.remodelacion.remate}</p>
+              </div>
+            </Cortina>
+          </Contenedor>
+        </Seccion>
+      )}
+
       {/* ---- Páginas editables (web) ---- */}
       {pagina.editable && (
         <Seccion tono="elevado">
@@ -368,6 +392,6 @@ export default function ServicioDetalle() {
         cuerpo={pagina.cierre.cuerpo}
         servicio={pagina.cierre.servicio}
       />
-    </>
+    </div>
   );
 }

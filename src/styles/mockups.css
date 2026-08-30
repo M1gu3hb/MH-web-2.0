@@ -2772,3 +2772,492 @@
   width: 760px;
   height: 750px;
 }
+
+/* ============================================================
+   LAS CUATRO ILUSTRACIONES NUEVAS
+   ============================================================
+   Se hornean a .webp con `scripts/hornear-maquetas.mjs`, así que se dibujan
+   a los 760 × 750 del lienzo y su primer fotograma tiene que ser ya el bueno:
+   la foto se toma sin esperar animaciones.
+   ============================================================ */
+
+.project-ui--jchcrm,
+.project-ui--jchportal,
+.project-ui--stopmotion,
+.project-ui--tiendita {
+  display: flex;
+  flex-direction: column;
+  padding: 42px;
+  gap: 26px;
+  font-family: var(--display);
+}
+
+/* ---- CRM del salón: la agenda y lo que falta por cobrar ---- */
+
+.project-ui--jchcrm {
+  background: linear-gradient(150deg, #10131b, #1a2030 60%, #101822);
+  color: #e8edf5;
+}
+
+.jchcrm-cab {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  color: #8ea0bb;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.jchcrm-cab b {
+  color: #ceff3d;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.jchcrm-lista {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.jchcrm-lista .jchcrm-fila {
+  flex: 1;
+}
+
+.jchcrm-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border: 1px solid rgba(232, 237, 245, 0.12);
+  border-left: 4px solid var(--tono, #8ea0bb);
+  border-radius: 14px;
+  gap: 18px;
+  background: rgba(232, 237, 245, 0.04);
+}
+
+.jchcrm-fila--ok { --tono: #ceff3d; }
+.jchcrm-fila--medio { --tono: #ffc455; }
+.jchcrm-fila--listo { --tono: #6ee7a8; }
+
+.jchcrm-fila em {
+  font-size: 1.12rem;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.jchcrm-fila i {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tono) 18%, transparent);
+  color: var(--tono);
+  font-size: 0.78rem;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.jchcrm-cuenta {
+  display: grid;
+  padding: 24px;
+  border: 1px solid rgba(232, 237, 245, 0.12);
+  border-radius: 16px;
+  gap: 18px;
+  grid-template-columns: repeat(3, 1fr);
+  background: rgba(232, 237, 245, 0.04);
+}
+
+.jchcrm-cuenta span {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.jchcrm-cuenta small {
+  color: #8ea0bb;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.jchcrm-cuenta strong {
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.jchcrm-saldo strong {
+  color: #ffc455;
+}
+
+.jchcrm-pie {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: auto;
+  gap: 10px;
+}
+
+.jchcrm-chip {
+  padding: 9px 16px;
+  border: 1px solid rgba(232, 237, 245, 0.14);
+  border-radius: 999px;
+  color: #b6c2d4;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+/* ---- Portal del cliente: la cuenta atrás y lo que ya armó ---- */
+
+.project-ui--jchportal {
+  background: linear-gradient(150deg, #1a1330, #2b1f4d 55%, #171029);
+  color: #f0ecff;
+}
+
+.jchportal-cuenta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px;
+  border: 1px solid rgba(206, 255, 61, 0.28);
+  border-radius: 20px;
+  gap: 2px;
+  background: rgba(206, 255, 61, 0.07);
+}
+
+.jchportal-cuenta small {
+  color: #cbbcf5;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+}
+
+.jchportal-cuenta strong {
+  color: #ceff3d;
+  font-size: 5.4rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+}
+
+.jchportal-cuenta span {
+  color: #cbbcf5;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.jchportal-mesas {
+  display: grid;
+  flex: 1;
+  align-content: center;
+  padding: 22px;
+  border: 1px solid rgba(240, 236, 255, 0.12);
+  border-radius: 16px;
+  gap: 16px;
+  grid-template-columns: repeat(4, 1fr);
+  background: rgba(240, 236, 255, 0.04);
+}
+
+.jchportal-mesas i {
+  aspect-ratio: 1;
+  border: 2px solid rgba(240, 236, 255, 0.22);
+  border-radius: 50%;
+}
+
+.jchportal-mesas i.es-llena {
+  border-color: #ceff3d;
+  background: rgba(206, 255, 61, 0.22);
+}
+
+.jchportal-tareas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.jchportal-tareas span {
+  padding: 11px 18px;
+  border: 1px solid rgba(240, 236, 255, 0.16);
+  border-radius: 999px;
+  color: #cbbcf5;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.jchportal-tareas .es-hecho {
+  border-color: rgba(110, 231, 168, 0.5);
+  background: rgba(110, 231, 168, 0.14);
+  color: #6ee7a8;
+}
+
+.jchportal-rsvp {
+  display: flex;
+  align-items: baseline;
+  margin-top: auto;
+  padding: 22px 26px;
+  border-radius: 16px;
+  gap: 14px;
+  background: rgba(240, 236, 255, 0.06);
+}
+
+.jchportal-rsvp small {
+  color: #cbbcf5;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.jchportal-rsvp strong {
+  font-size: 2.4rem;
+  letter-spacing: -0.03em;
+}
+
+.jchportal-rsvp em {
+  color: #cbbcf5;
+  font-size: 0.95rem;
+  font-style: normal;
+}
+
+/* ---- StopMotion Studio: la tira de fotos y el timeline ---- */
+
+.project-ui--stopmotion {
+  background: linear-gradient(150deg, #0d1117, #161c26 60%, #0b0f15);
+  color: #e7ecff;
+}
+
+.stm-cab {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  color: #7f90ab;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.stm-cab b {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(206, 255, 61, 0.16);
+  color: #ceff3d;
+  font-size: 0.82rem;
+  letter-spacing: 0;
+}
+
+/* Cada fotograma un poco más claro que el anterior: la tira se lee como una
+   secuencia y no como seis cuadros iguales. */
+.stm-tira {
+  display: grid;
+  flex: 1;
+  gap: 10px;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.stm-tira i {
+  border: 1px solid rgba(231, 236, 255, 0.14);
+  border-radius: 10px;
+  background: linear-gradient(
+    160deg,
+    hsl(calc(210 - var(--f) * 8) 32% calc(22% + var(--f) * 6%)),
+    hsl(calc(210 - var(--f) * 8) 26% calc(14% + var(--f) * 4%))
+  );
+}
+
+.stm-pistas {
+  display: flex;
+  flex-direction: column;
+  padding: 22px;
+  border: 1px solid rgba(231, 236, 255, 0.12);
+  border-radius: 16px;
+  gap: 14px;
+  background: rgba(231, 236, 255, 0.04);
+}
+
+.stm-pista {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.stm-pista small {
+  width: 62px;
+  color: #7f90ab;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.stm-pista i {
+  height: 26px;
+  flex: 1;
+  border-radius: 7px;
+}
+
+.stm-pista--video i {
+  background: linear-gradient(90deg, #2f7ef2 65%, rgba(47, 126, 242, 0.18) 65%);
+}
+
+.stm-pista--audio i {
+  background: linear-gradient(90deg, #b06cff 42%, rgba(176, 108, 255, 0.18) 42%);
+}
+
+.stm-pie {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: auto;
+  gap: 10px;
+}
+
+.stm-chip {
+  padding: 9px 16px;
+  border: 1px solid rgba(231, 236, 255, 0.14);
+  border-radius: 999px;
+  color: #b6c2d4;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.stm-chip--ok {
+  border-color: rgba(206, 255, 61, 0.45);
+  background: rgba(206, 255, 61, 0.14);
+  color: #ceff3d;
+}
+
+/* ---- POS Tiendita: el ticket y el escáner del teléfono ---- */
+
+.project-ui--tiendita {
+  background: linear-gradient(150deg, #101a14, #16261c 60%, #0c130f);
+  color: #e9f5ec;
+}
+
+.tiendita-cab {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  color: #86a894;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.tiendita-cab b {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(110, 231, 168, 0.16);
+  color: #6ee7a8;
+  font-size: 0.82rem;
+  letter-spacing: 0;
+}
+
+.tiendita-cuerpo {
+  display: grid;
+  flex: 1;
+  gap: 18px;
+  grid-template-columns: 1.25fr 0.75fr;
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.tiendita-ticket {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  border: 1px solid rgba(233, 245, 236, 0.12);
+  border-radius: 16px;
+  gap: 14px;
+  background: rgba(233, 245, 236, 0.04);
+}
+
+.tiendita-ticket span,
+.tiendita-ticket strong {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.tiendita-ticket em {
+  font-size: 1.02rem;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.tiendita-ticket i {
+  font-size: 1.02rem;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.tiendita-ticket strong {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid rgba(233, 245, 236, 0.16);
+}
+
+.tiendita-ticket strong em {
+  color: #86a894;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.tiendita-ticket strong i {
+  color: #6ee7a8;
+  font-size: 2.1rem;
+  letter-spacing: -0.03em;
+}
+
+.tiendita-escaner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  border: 1px solid rgba(110, 231, 168, 0.3);
+  border-radius: 16px;
+  gap: 14px;
+  background: rgba(110, 231, 168, 0.07);
+  text-align: center;
+}
+
+.tiendita-escaner small {
+  color: #86a894;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.tiendita-codigo {
+  display: flex;
+  height: 62px;
+  align-items: stretch;
+  gap: 4px;
+}
+
+.tiendita-codigo i {
+  width: calc(3px + var(--b) * 3px);
+  border-radius: 1px;
+  background: #e9f5ec;
+}
+
+.tiendita-escaner b {
+  color: #6ee7a8;
+  font-size: 0.9rem;
+}
+
+.tiendita-pie {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: auto;
+  gap: 10px;
+}
+
+.tiendita-chip {
+  padding: 9px 16px;
+  border: 1px solid rgba(233, 245, 236, 0.14);
+  border-radius: 999px;
+  color: #a9c4b4;
+  font-size: 0.82rem;
+  font-weight: 700;
+}

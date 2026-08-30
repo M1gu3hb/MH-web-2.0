@@ -1098,10 +1098,36 @@
    Problemas, beneficios, capacidades
    ------------------------------------------------------------ */
 
+/* ------------------------------------------------------------
+   «¿ALGUNA DE ESTAS TE SUENA?» — DE LISTA A GOLPE
+   ------------------------------------------------------------
+   Era una rejilla `auto-fit` de tres columnas con las frases a 16 px dentro
+   de una caja. Cinco cajas de ese tamaño se leen de un vistazo, como una
+   lista de la compra: nadie se reconoce en una lista de la compra. Y en tres
+   columnas la cola quedaba 3+2, con un hueco a la derecha de la última fila.
+
+   Ahora es una sola columna y las frases son tipografía de statement, sin
+   caja: cada una ocupa su renglón y hay que bajar para leer la siguiente.
+   Eso es lo que convierte cinco datos en cinco golpes.
+
+   TRES COSAS QUE HABÍA QUE ARREGLAR ANTES DE AGRANDARLAS
+
+   · El acento estaba clavado en `--accent-web` —coral— en las CINCO páginas,
+     así que sistemas, CRM, software y restaurantes pintaban sus problemas en
+     el color de «páginas web». A 16 px no se notaba; a este tamaño cantaría
+     en cuatro de las cinco. Ahora usa `--acento`, que ya lo pone cada página.
+   · `line-height: 1.5` contradice la escala del propio sistema, que dice que
+     cuanto más grande el cuerpo, más apretado va. A 40 px, 1.5 son renglones
+     que flotan sueltos.
+   · La flecha tenía `margin-top: 3px`, un calce óptico calibrado a ojo para
+     16 px. Al triplicar el cuerpo se quedaba flotando arriba. Ahora se
+     alinea en `em`, así que el calce escala con la letra.
+   ------------------------------------------------------------ */
+
 .problemas {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
-  gap: var(--sp-3);
+  grid-template-columns: 1fr;
+  gap: clamp(18px, 2.4vw, 34px);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1109,14 +1135,34 @@
 
 .problemas__item {
   display: flex;
-  gap: var(--sp-3);
-  padding: var(--sp-4) var(--sp-5);
-  border: 1px solid var(--line-soft);
-  border-left: 2px solid color-mix(in oklab, var(--accent-web) 60%, transparent);
-  border-radius: var(--r-md);
-  background: var(--surface-raised);
-  color: var(--ink-body);
-  line-height: 1.5;
+  align-items: baseline;
+  gap: clamp(12px, 1.4vw, 22px);
+  max-width: 22ch;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink-strong);
+  font-family: var(--font-display);
+  /* El techo lo pone la frase más larga de las cinco páginas. Por encima de
+     esto empieza a partirse en renglones de dos palabras y deja de leerse
+     como una frase. */
+  font-size: clamp(1.45rem, 3.1vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.06;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+/* El ancho se mide en caracteres y no en porcentaje: lo que hace legible un
+   renglón grande es cuántas palabras caben, no cuánto mide la columna. A
+   `22ch` cada frase cae en dos o tres renglones en escritorio, que es el
+   ritmo que buscamos. Las pares se van a la derecha para que el bloque no
+   sea una columna plana pegada al margen. */
+.problemas__item:nth-child(even) {
+  margin-left: auto;
+  text-align: right;
+  flex-direction: row-reverse;
 }
 
 /* El filo que faltaba. `.beneficio`, `.pieza`, `.principio`, `.capacidad` y
@@ -1125,22 +1171,36 @@
    resultado es que la página parece tener listas de primera y de segunda.
    Aquí el filo ya existe y lleva el coral de los problemas —el mismo del
    icono—: se enciende en su propio color, no en el azul de las otras. */
-.problemas__item {
-  transition: border-color 0.28s var(--ease);
+.problemas__item span {
+  /* La frase entera lleva un subrayado del acento que se dibuja al pasar por
+     encima. Es el único adorno que queda, y solo aparece si lo buscas. */
+  background-image: linear-gradient(var(--acento, var(--accent-pos)), var(--acento, var(--accent-pos)));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0 2px;
+  transition: background-size 0.42s var(--ease);
 }
 
-.problemas__item:hover {
-  border-left-color: var(--accent-web);
+.problemas__item:hover span {
+  background-size: 100% 2px;
 }
 
-.seccion--elevado .problemas__item {
-  background: var(--surface-sunken);
+.problemas__item:nth-child(even):hover span {
+  background-position: 100% 100%;
 }
 
+/* La flecha se alinea en `em`, así que el calce óptico escala con la letra en
+   vez de quedarse en los 3 px que se calibraron para un cuerpo de 16. */
 .problemas__item svg {
   flex: none;
-  margin-top: 3px;
-  color: var(--accent-web);
+  width: 0.52em;
+  height: 0.52em;
+  color: var(--acento, var(--accent-pos));
+  transform: translateY(-0.06em);
+}
+
+.problemas__item:nth-child(even) svg {
+  transform: translateY(-0.06em) rotate(180deg);
 }
 
 .problemas__nota {
@@ -4751,7 +4811,6 @@ main#contenido > * {
 .rampa .tarjeta-servicio,
 .rampa .plan,
 .rampa .capacidad,
-.rampa .problemas__item,
 .rampa .ejemplos__item {
   background: color-mix(in srgb, #ffffff 4.5%, var(--fondo-rampa));
 }

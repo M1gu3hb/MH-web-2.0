@@ -141,16 +141,16 @@ export default function Servicios() {
         </div>
       </Seccion>
 
-      {/* ---- Las cinco fichas ---- */}
+      {/* ---- Los seis frentes ---- */}
       <Seccion>
         <div className="contenedor contenedor--amplio">
           <TituloSeccion
-            titulo="Los cinco frentes, en detalle."
-            resalte="Los cinco frentes"
+            titulo="Los seis frentes, en detalle."
+            resalte="Los seis frentes"
             aparte={
               <p className="titulo-seccion__dato">
                 <strong>
-                  <CountUpSeguro valor={5} />
+                  <CountUpSeguro valor={6} />
                 </strong>{' '}
                 frentes · un precio de partida cada uno
               </p>

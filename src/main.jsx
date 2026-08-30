@@ -57,6 +57,7 @@ const router = createBrowserRouter([
       { path: RUTAS.sistemas, element: conSuspense(ServicioDetalle) },
       { path: RUTAS.crmAutomatizacion, element: conSuspense(ServicioDetalle) },
       { path: RUTAS.softwareAMedida, element: conSuspense(ServicioDetalle) },
+      { path: RUTAS.facturacion, element: conSuspense(ServicioDetalle) },
       { path: RUTAS.restaurantes, element: conSuspense(ServicioDetalle) },
       { path: RUTAS.proyectos, element: conSuspense(Proyectos) },
       { path: `${RUTAS.proyectos}/:slug`, element: conSuspense(ProyectoDetalle) },

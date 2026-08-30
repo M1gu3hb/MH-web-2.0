@@ -77,17 +77,33 @@ export const PROYECTOS = [
     tecnologias: ['React', 'Vite', 'Supabase', 'Vercel'],
   },
 
+  /* ------------------------------------------------------------
+     EL ECOSISTEMA DEL CLUB HÍPICO — TRES PROYECTOS, NO UNO
+     ------------------------------------------------------------
+     Estaba como una sola ficha porque cuando se escribió era una sola cosa:
+     un sitio con cotizador. Hoy son tres aplicaciones distintas, con
+     usuarios distintos y problemas distintos: el sitio que ve cualquiera, el
+     panel con el que la casa opera, y el portal donde el cliente organiza su
+     propio evento. Meterlas en una ficha se leía como «una web con extras»,
+     que es justo lo que no son.
+
+     Los dos sistemas internos van SIN ENLACE. No es un olvido: viven detrás
+     de un login y manejan datos de clientes reales —nombres, teléfonos,
+     pagos, listas de invitados—. Lo que se cuenta es el problema y cómo se
+     resolvió, que es la misma regla que ya sigue el portafolio académico.
+     ------------------------------------------------------------ */
+
   {
     slug: 'jardines-club-hipico',
-    tituloSeo: 'Jardines Club Hípico: sitio y CRM con cotizador',
+    tituloSeo: 'Jardines Club Hípico: sitio del recinto',
     nombre: 'Jardines Club Hípico',
     industria: 'Recinto de eventos',
-    categorias: ['web', 'sistemas'],
-    tipo: 'Sitio + CRM con cotizador y contratos',
+    categorias: ['web'],
+    tipo: 'Sitio público con solicitudes',
     resumen:
-      'Sitio, cotizador automatizado, seguimiento de prospectos y generación de contratos para un recinto de eventos.',
-    resultado: 'Cotización y contrato generados en minutos, no en días',
-    etiquetas: ['CRM', 'Cotizador', 'Contratos', 'Web'],
+      'El sitio del recinto: los salones, los servicios, la galería y el formulario por el que entra cada solicitud, que cae directo al panel de la casa.',
+    resultado: 'Las solicitudes dejan de vivir en el teléfono de alguien',
+    etiquetas: ['Web', 'Formulario', 'SEO local', 'Contenido editable'],
     acento: '#ceff3d',
     imagen: '/casos/hipico.webp',
     url: 'https://jardines-club-hipico.vercel.app',
@@ -95,29 +111,127 @@ export const PROYECTOS = [
     destacado: true,
 
     contexto:
-      'Un jardín de eventos que recibe solicitudes para bodas, XV años y eventos de empresa. Cada solicitud pedía una cotización distinta según fecha, número de personas y servicios.',
+      'Un jardín de eventos que recibe solicitudes para bodas, XV años y eventos de empresa. Antes del sitio, cada solicitud llegaba por mensaje o por llamada, y quedaba en el teléfono de quien la había contestado.',
     problema: [
-      'Cada cotización se armaba a mano en un documento, desde cero.',
-      'Los prospectos se perdían entre llamadas, mensajes y correos.',
-      'El contrato se redactaba otra vez, copiando datos de la cotización.',
-      'Nadie sabía cuántas solicitudes había abiertas ni en qué iba cada una.',
+      'Las solicitudes entraban por tres vías distintas y ninguna quedaba registrada.',
+      'La información del recinto —salones, servicios, precios— vivía en fotos de WhatsApp.',
+      'Cambiar un texto o subir fotos nuevas obligaba a pedírselo a alguien.',
+      'Quien buscaba un salón por su zona no encontraba el lugar.',
     ],
     objetivo:
-      'Convertir una solicitud en una cotización y en un contrato sin volver a escribir los mismos datos tres veces, y no perder de vista ningún prospecto.',
+      'Que el recinto se explicara solo, que la solicitud entrara por un formulario y quedara registrada, y que la casa pudiera cambiar el contenido sin llamar a nadie.',
     solucion: [
-      'Sitio con la información del recinto y formulario de solicitud.',
-      'Cotizador que arma el presupuesto a partir de fecha, personas y servicios.',
-      'Tablero de prospectos por etapa, para ver en qué va cada evento.',
-      'Generación del contrato con los datos que ya están en la cotización.',
+      'Sitio con los salones, los servicios, las amenidades y la galería.',
+      'Una página por tipo de evento, con su propio texto y sus datos para buscadores.',
+      'Formulario de solicitud que entra directo al panel de la casa.',
+      'Todo el contenido —textos, fotos, anuncios, servicios— editable desde el panel.',
+      'Anuncios con fecha de caducidad, para que se apaguen solos.',
     ],
     construido: [
       'Sitio público',
-      'Cotizador automatizado',
-      'Seguimiento de prospectos',
-      'Generación de contratos',
-      'Historial por cliente',
+      'Páginas por tipo de evento',
+      'Formulario de solicitud',
+      'Galería etiquetada',
+      'Contenido editable por la casa',
     ],
     tecnologias: ['React', 'Vite', 'Supabase', 'Vercel'],
+  },
+
+  {
+    slug: 'jch-crm',
+    tituloSeo: 'CRM de un salón de eventos: agenda, cobros y puerta',
+    nombre: 'CRM del salón de eventos',
+    industria: 'Recinto de eventos · sistema interno',
+    categorias: ['sistemas', 'software'],
+    tipo: 'Panel de operación con cobros y control de acceso',
+    resumen:
+      'La trastienda del recinto: la agenda de eventos, el estado de cuenta de cada cliente, las solicitudes que entran por la web y el control de puerta el día del evento.',
+    resultado: 'El negocio entero se opera desde una sola pantalla',
+    etiquetas: ['CRM', 'Cobros', 'QR de acceso', 'Gestor de contenido'],
+    acento: '#5b8def',
+    imagen: '/casos/jch-crm.webp',
+    destacado: true,
+
+    /* Sin `url` a propósito: es un panel interno, detrás de un login, con
+       datos de clientes reales. No hay nada que se pueda enseñar sin enseñar
+       información de terceros. */
+    contexto:
+      'El mismo recinto, por dentro. Con el sitio publicado, las solicitudes ya entraban ordenadas, pero lo que pasaba después —convertirlas en evento, cobrar por partes, saber cuánto falta, organizar la puerta el día del evento— seguía repartido entre una libreta, un chat y la memoria de quien llevaba más tiempo.',
+    problema: [
+      'El estado de cada evento vivía en la cabeza de quien lo había apartado.',
+      'Los pagos se anotaban aparte, así que el saldo se calculaba a mano cada vez.',
+      'Un cobro mal registrado se borraba, y con él desaparecía el rastro.',
+      'El día del evento, el control de entrada era una lista impresa y buena voluntad.',
+      'Cambiar un texto del sitio público seguía siendo una petición a otra persona.',
+    ],
+    objetivo:
+      'Que el dueño pudiera abrir una pantalla y ver el negocio: qué hay contratado, qué se ha cobrado, qué falta, qué solicitudes están sin contestar y cómo va la puerta esta noche.',
+    solucion: [
+      'Agenda de eventos con estatus y ficha por evento, con lo contratado, los documentos y el cronograma.',
+      'Libro de pagos donde un cobro no se edita ni se borra: se anula con motivo, y el saldo lo calcula la base.',
+      'Bandeja de solicitudes que convierte una petición del sitio en evento con los datos ya puestos.',
+      'Control de puerta con códigos QR por invitación y un enlace para el personal, sin cuenta ni panel.',
+      'Gestor del contenido del sitio público, con un botón de publicar.',
+      'Correo-resumen diario al dueño: solicitudes sin contestar, eventos de la semana y saldos pendientes.',
+    ],
+    construido: [
+      'Agenda y ficha de evento',
+      'Libro de pagos y estado de cuenta',
+      'Bandeja de solicitudes',
+      'Editor de mesas e invitados',
+      'Acceso con QR y vista de personal',
+      'Gestor del sitio público',
+      'Resumen diario automático',
+    ],
+    tecnologias: ['React', 'Vite', 'Supabase', 'Funciones serverless', 'Vercel'],
+  },
+
+  {
+    slug: 'jch-portal-cliente',
+    tituloSeo: 'Portal del cliente: organiza tu evento desde tu cuenta',
+    nombre: 'Portal del cliente',
+    industria: 'Recinto de eventos · portal privado',
+    categorias: ['web', 'software'],
+    tipo: 'Portal privado con invitación digital y confirmaciones',
+    resumen:
+      'Quien ya apartó su evento entra con su cuenta y lo organiza: cronograma, música, acomodo de mesas, invitación digital y las confirmaciones de sus invitados.',
+    resultado: 'El cliente deja de preguntar y empieza a decidir',
+    etiquetas: ['Portal privado', 'Invitación digital', 'Mesas', 'Confirmaciones'],
+    acento: '#b06cff',
+    imagen: '/casos/jch-portal.webp',
+    destacado: false,
+
+    /* Sin `url`: cada cuenta es de un cliente y de su evento. */
+    contexto:
+      'La tercera pieza del mismo ecosistema. Entre que alguien aparta un salón y el día del evento pasan meses de decisiones pequeñas —a qué hora entra el pastel, qué canción no debe sonar, quién se sienta con quién— y todas ellas iban y venían por mensajes.',
+    problema: [
+      'El cronograma se armaba por chat y nadie tenía la versión buena.',
+      'La lista de canciones llegaba en capturas, y la de las prohibidas se olvidaba.',
+      'El acomodo de mesas se dibujaba en papel y se rehacía entero por un cambio.',
+      'Las confirmaciones de los invitados se contaban a mano, y nunca cuadraban.',
+      'El cliente preguntaba cuánto lleva pagado, y alguien tenía que ir a mirarlo.',
+    ],
+    objetivo:
+      'Darle al cliente su propia pantalla, con lo que ya contrató y con todo lo que sí puede decidir, para que las decisiones queden escritas en un solo sitio y la casa las vea al momento.',
+    solucion: [
+      'Acceso con su cuenta, o de un clic con un enlace de un solo uso que le llega por correo.',
+      'Inicio con la cuenta atrás, su salón y cuánto lleva pagado sobre el total.',
+      'Cronograma hora por hora, con sugerencias del siguiente momento según el tipo de evento.',
+      'Lista de música en dos columnas: lo que sí debe sonar y lo que no debe sonar nunca.',
+      'Editor de mesas sobre el plano real del salón, si la casa le dio permiso de tocarlo.',
+      'Invitación digital que arma él mismo y reparte por WhatsApp, con enlace revocable.',
+      'Tablero de confirmaciones de sus invitados, con aviso —nunca bloqueo— si se pasa de lo contratado.',
+    ],
+    construido: [
+      'Acceso privado con enlace de un solo uso',
+      'Cronograma del evento',
+      'Lista de música',
+      'Editor de mesas',
+      'Invitación digital y su página pública',
+      'Confirmaciones de invitados',
+      'Aplicación instalable en el teléfono',
+    ],
+    tecnologias: ['React', 'Vite', 'Supabase', 'PWA', 'Vercel'],
   },
 
   {
@@ -481,6 +595,99 @@ export const PROYECTOS = [
     construido: ['App de escritorio', 'Base de datos local', 'Sincronización diferida', 'Portal de descargas'],
     tecnologias: ['Electron', 'Next.js', 'SQLite'],
   },
+  {
+    slug: 'stopmotion-studio',
+    tituloSeo: 'StopMotion Studio: editor de stop motion en el navegador',
+    nombre: 'StopMotion Studio',
+    industria: 'Producto propio · herramienta creativa',
+    categorias: ['software'],
+    tipo: 'Estudio de stop motion que corre en el navegador',
+    resumen:
+      'Captura con la cámara, edición de fotogramas, línea de tiempo con varias pistas, pantalla verde y exportación a vídeo. Todo dentro del navegador, sin cuenta y sin subir nada a ningún servidor.',
+    resultado: 'Un estudio completo sin instalar nada',
+    etiquetas: ['React', 'TypeScript', 'Local-first', 'Exportación de vídeo'],
+    acento: '#51c8ff',
+    imagen: '/casos/stopmotion.webp',
+    url: 'https://github.com/M1gu3hb/STMPR',
+    etiquetaEnlace: 'Ver repositorio',
+    destacado: false,
+
+    contexto:
+      'Hacer stop motion en serio pide un programa de escritorio, una licencia y un equipo que lo aguante. Y lo que hace falta de verdad es poco: disparar fotos ordenadas, poder reordenarlas, ponerles tiempo y sacar un vídeo.',
+    problema: [
+      'Las herramientas serias son de escritorio, de pago y pesadas.',
+      'Las fáciles no dejan controlar los fotogramas uno a uno, que es de lo que va el stop motion.',
+      'Subir material de un proyecto a un servicio ajeno no siempre es una opción.',
+      'Trabajar con cientos de fotos suele volver lenta la línea de tiempo.',
+    ],
+    objetivo:
+      'Un estudio que se abra en una pestaña, que no pida cuenta y que no mande el material a ningún lado, sin renunciar al control fino que la técnica necesita.',
+    solucion: [
+      'Estudio de captura con la cámara del equipo, con papel cebolla, cuadrícula, cuenta regresiva e intervalómetro.',
+      'Cada foto es un fotograma editable: reordenar, duplicar, desactivar, repetir exposiciones y sustituir la imagen.',
+      'Línea de tiempo con varias pistas de vídeo y audio, recorte, división y fotogramas clave.',
+      'Control de fps que retempla el proyecto entero de forma coherente.',
+      'Pantalla verde, efectos y sonido, y exportación a MP4 o WebM.',
+      'Todo se guarda en el propio navegador; no hay servidor ni cuentas.',
+    ],
+    construido: [
+      'Captura con cámara',
+      'Editor de fotogramas',
+      'Línea de tiempo multipista',
+      'Fotogramas clave',
+      'Pantalla verde',
+      'Exportación a vídeo',
+    ],
+    tecnologias: ['React', 'TypeScript', 'Vite', 'IndexedDB', 'Playwright'],
+  },
+
+  {
+    slug: 'pos-tiendita',
+    tituloSeo: 'Punto de venta para tienditas y abarrotes',
+    nombre: 'Punto de venta para tienditas',
+    industria: 'Producto propio · comercio de barrio',
+    categorias: ['sistemas', 'software'],
+    tipo: 'Punto de venta con inventario, cortes y escáner por teléfono',
+    resumen:
+      'Vender, cobrar en efectivo, tarjeta, transferencia o mezcla, controlar existencias, registrar compras y gastos, y cerrar el turno con su corte. Con el teléfono como escáner de códigos.',
+    resultado: 'El teléfono del dueño se vuelve el escáner de la caja',
+    etiquetas: ['Next.js', 'Supabase', 'Multi-sucursal', 'Cortes de caja'],
+    acento: '#7ee0a1',
+    imagen: '/casos/tiendita.webp',
+    destacado: false,
+
+    /* Sin enlace: es un punto de venta, o sea el sistema interno de un
+       negocio. No hay demo pública que enseñar sin enseñar datos de ventas. */
+    contexto:
+      'Una tiendita de barrio vende decenas de veces al día en importes pequeños. Ahí el problema no es cobrar: es saber, al final del día, qué se vendió, qué falta y si la caja cuadra.',
+    problema: [
+      'La venta se anota en libreta, así que el inventario nunca es de fiar.',
+      'Los pagos mixtos —una parte en efectivo y otra con tarjeta— se apuntan mal.',
+      'Un lector de códigos de barras cuesta y hay que instalarlo.',
+      'Con más de un empleado, no se sabe quién hizo cada movimiento.',
+      'Con dos sucursales, cada una lleva sus propios números.',
+    ],
+    objetivo:
+      'Un punto de venta que un mostrador pequeño pueda usar desde el primer día, con el inventario cuadrando solo y el corte de caja saliendo sin sumar a mano.',
+    solucion: [
+      'Venta con cobro en efectivo, tarjeta, transferencia o mezcla, y ticket impreso.',
+      'El teléfono como escáner: lo que se lee cae en el carrito de la caja al momento.',
+      'Vista de cliente que enseña el carrito en vivo a quien está comprando.',
+      'Inventario que baja al vender, con registro de compras y de gastos.',
+      'Cortes de caja por turno y reportes del negocio.',
+      'Cada negocio ve solo lo suyo, con su propia gente y sus sucursales.',
+    ],
+    construido: [
+      'Punto de venta',
+      'Escáner desde el teléfono',
+      'Vista de cliente',
+      'Inventario, compras y gastos',
+      'Cortes de caja y reportes',
+      'Varios usuarios y sucursales',
+    ],
+    tecnologias: ['Next.js', 'React', 'TypeScript', 'Supabase', 'Tailwind'],
+  },
+
 ];
 
 /** Los que se pintan en la home. */

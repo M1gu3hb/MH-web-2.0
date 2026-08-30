@@ -521,3 +521,133 @@ export function QyroVisual() {
     </div>
   );
 }
+
+/* ------------------------------------------------------------
+   LOS CUATRO NUEVOS
+   ------------------------------------------------------------
+   Dos son sistemas internos con login —el CRM del salón y el portal de su
+   cliente— y no tienen ninguna pantalla pública que se pueda enseñar. Así
+   que estas ilustraciones no son capturas ni pretenden serlo: son el dibujo
+   de lo que resuelven, con datos inventados. Ninguna lleva un nombre, un
+   correo, un teléfono ni un identificador que exista de verdad.
+   ------------------------------------------------------------ */
+
+export function JchCrmVisual() {
+  const eventos = [
+    ['Boda · 180 personas', 'Confirmado', 'ok'],
+    ['XV años · 120', 'Apartado', 'medio'],
+    ['Empresa · 60', 'Realizado', 'listo'],
+  ];
+  return (
+    <div className="project-ui project-ui--jchcrm">
+      <div className="jchcrm-cab">
+        <span>AGENDA DEL SALÓN</span>
+        <b>Octubre</b>
+      </div>
+      <div className="jchcrm-lista">
+        {eventos.map(([que, estado, tono]) => (
+          <span key={que} className={`jchcrm-fila jchcrm-fila--${tono}`}>
+            <em>{que}</em>
+            <i>{estado}</i>
+          </span>
+        ))}
+      </div>
+      <div className="jchcrm-cuenta">
+        <span><small>CONTRATADO</small><strong>$86,400</strong></span>
+        <span><small>COBRADO</small><strong>$52,000</strong></span>
+        <span className="jchcrm-saldo"><small>SALDO</small><strong>$34,400</strong></span>
+      </div>
+      <div className="jchcrm-pie">
+        <span className="jchcrm-chip">Puerta con QR</span>
+        <span className="jchcrm-chip">Contratos</span>
+        <span className="jchcrm-chip">Resumen diario</span>
+      </div>
+    </div>
+  );
+}
+
+export function JchPortalVisual() {
+  return (
+    <div className="project-ui project-ui--jchportal">
+      <div className="jchportal-cuenta">
+        <small>FALTAN</small>
+        <strong>42</strong>
+        <span>días para tu evento</span>
+      </div>
+      <div className="jchportal-mesas" aria-hidden="true">
+        {Array.from({ length: 8 }, (_, i) => (
+          <i key={i} className={i === 2 || i === 5 ? 'es-llena' : ''} />
+        ))}
+      </div>
+      <div className="jchportal-tareas">
+        <span className="es-hecho">Cronograma</span>
+        <span className="es-hecho">Música</span>
+        <span>Mesas</span>
+        <span>Invitación</span>
+      </div>
+      <div className="jchportal-rsvp">
+        <small>CONFIRMADOS</small>
+        <strong>96</strong>
+        <em>de 140 invitados</em>
+      </div>
+    </div>
+  );
+}
+
+export function StopMotionVisual() {
+  return (
+    <div className="project-ui project-ui--stopmotion">
+      <div className="stm-cab">
+        <span>STOPMOTION STUDIO</span>
+        <b>12 fps</b>
+      </div>
+      <div className="stm-tira" aria-hidden="true">
+        {Array.from({ length: 6 }, (_, i) => (
+          <i key={i} style={{ '--f': i }} />
+        ))}
+      </div>
+      <div className="stm-pistas">
+        <span className="stm-pista stm-pista--video"><small>VÍDEO</small><i /></span>
+        <span className="stm-pista stm-pista--audio"><small>AUDIO</small><i /></span>
+      </div>
+      <div className="stm-pie">
+        <span className="stm-chip">Cámara</span>
+        <span className="stm-chip">Croma</span>
+        <span className="stm-chip stm-chip--ok">Exportar MP4</span>
+      </div>
+    </div>
+  );
+}
+
+export function PosTienditaVisual() {
+  return (
+    <div className="project-ui project-ui--tiendita">
+      <div className="tiendita-cab">
+        <span>CAJA · TIENDITA</span>
+        <b>Turno abierto</b>
+      </div>
+      <div className="tiendita-cuerpo">
+        <div className="tiendita-ticket">
+          <span><em>Refresco 600 ml</em><i>$22</i></span>
+          <span><em>Pan de caja</em><i>$48</i></span>
+          <span><em>Detergente</em><i>$36</i></span>
+          <strong><em>TOTAL</em><i>$106</i></strong>
+        </div>
+        <div className="tiendita-escaner">
+          <small>ESCÁNER</small>
+          <span className="tiendita-codigo" aria-hidden="true">
+            {Array.from({ length: 11 }, (_, i) => (
+              <i key={i} style={{ '--b': i % 3 }} />
+            ))}
+          </span>
+          <b>Desde el teléfono</b>
+        </div>
+      </div>
+      <div className="tiendita-pie">
+        <span className="tiendita-chip">Inventario</span>
+        <span className="tiendita-chip">Corte de caja</span>
+        <span className="tiendita-chip">Varias sucursales</span>
+      </div>
+    </div>
+  );
+}
