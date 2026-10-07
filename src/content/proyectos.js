@@ -45,7 +45,7 @@ export const PROYECTOS = [
     etiquetas: ['Web', 'Punto de venta', 'Panel de dueño', 'Multi-sucursal'],
     acento: '#ff684f',
     imagen: '/casos/confetti.webp',
-    url: 'https://pasteleria-confetti.vercel.app',
+    url: 'https://www.pasteleria-confetti.com',
     etiquetaEnlace: 'Ver sitio',
     destacado: true,
 
@@ -247,6 +247,8 @@ export const PROYECTOS = [
     etiquetas: ['Next.js', 'Administrador propio', 'Supabase', 'WhatsApp'],
     acento: '#0a66ff',
     imagen: '/casos/vero.webp',
+    url: 'https://veronica-mendez.vercel.app',
+    etiquetaEnlace: 'Ver sitio',
     destacado: false,
 
     contexto:
@@ -315,12 +317,12 @@ export const PROYECTOS = [
     slug: 'electrotecnica-berlin',
     tituloSeo: 'Electrotécnica Berlín: punto de venta y web',
     nombre: 'Electrotécnica Berlín',
-    industria: 'Electrónica · negocio familiar',
+    industria: 'Electrónica · tienda y taller',
     categorias: ['web', 'sistemas'],
     tipo: 'Punto de venta + presencia web e identidad',
     resumen:
-      'Sistema de cobro y presencia digital para un negocio familiar de electrónica, unidos por una identidad visual propia.',
-    resultado: 'Un negocio familiar con identidad propia y caja digital',
+      'Sistema de cobro y presencia digital para una tienda de electrónica, unidos por una identidad visual propia.',
+    resultado: 'Un taller de toda la vida con identidad propia y caja digital',
     etiquetas: ['Punto de venta', 'Web', 'Identidad'],
     acento: '#36d7d1',
     imagen: '/casos/berlin.webp',
