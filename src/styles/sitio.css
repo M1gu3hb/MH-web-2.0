@@ -549,10 +549,9 @@
     'titular  marca'
     'claim    marca'
     'acciones marca'
-    'ancla    marca'
     'frentes  marca'
     'meta     marca';
-  grid-template-rows: auto auto auto auto auto 1fr;
+  grid-template-rows: auto auto auto auto 1fr;
   gap: clamp(20px, 2.4vw, 40px) clamp(28px, 4.5vw, 76px);
   align-items: start;
 }
@@ -560,13 +559,12 @@
 .portada__titular { grid-area: titular; }
 .portada__claim { grid-area: claim; }
 .portada__acciones { grid-area: acciones; }
-.portada__ancla { grid-area: ancla; }
 .portada__frentes { grid-area: frentes; }
 .portada__meta { grid-area: meta; }
 .portada__marca { grid-area: marca; }
 
 /* El envoltorio de la primera pantalla no existe para el layout: es
-   `display: contents`, así que titular, claim, acciones, marca y ancla
+   `display: contents`, así que titular, claim, acciones y marca
    siguen siendo hijos efectivos del reparto y sus `grid-area` resuelven
    exactamente como antes. Solo en vertical (≤700 px) se convierte en una
    caja de verdad. */
@@ -628,44 +626,6 @@
   align-items: center;
   gap: var(--sp-3);
   margin-top: var(--sp-4);
-}
-
-.portada__ancla {
-  color: var(--ink-muted);
-  font-size: max(0.9rem, 12.5px);
-}
-
-/* La cifra y su moneda son una sola cosa: al equilibrar los renglones el
-   navegador partía «$2,000 / MXN», que se lee como un precio a medias. */
-.portada__ancla strong {
-  color: var(--ink-strong);
-  white-space: nowrap;
-}
-
-/* Era el único enlace de la portada sin estado: declaraba color y ni
-   siquiera una transición. El subrayado se dibuja con `background-size`, que
-   no toca la caja: nada de `border` ni de `text-decoration` apareciendo de
-   golpe, y cero relayout en la pantalla que decide el LCP. El precio es una
-   promesa dicha en voz baja, así que se subraya en 280 ms, no en 120. */
-.portada__ancla a {
-  color: var(--accent-pos);
-  text-underline-offset: 3px;
-  background-image: linear-gradient(var(--accent-pos), var(--accent-pos));
-  background-repeat: no-repeat;
-  background-position: 0 100%;
-  background-size: 0 1px;
-  transition: background-size 0.28s var(--ease);
-}
-
-.portada__ancla a:hover,
-.portada__ancla a:focus-visible {
-  background-size: 100% 1px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .portada__ancla a {
-    transition: none;
-  }
 }
 
 .portada__meta {
@@ -754,7 +714,6 @@
       'claim'
       'acciones'
       'marca'
-      'ancla'
       'frentes'
       'meta';
     grid-template-rows: none;
@@ -3227,12 +3186,6 @@ iframe {
   text-transform: uppercase;
 }
 
-.footer__desde {
-  margin-top: var(--sp-4);
-  color: var(--accent-pos);
-  font-size: max(0.82rem, 12.5px);
-}
-
 .footer__legal {
   font-size: max(0.72rem, 12.5px);
 }
@@ -4781,8 +4734,8 @@ main#contenido > * {
    hay ancho, y mover el símbolo arriba dejaría el titular colgando.
    ------------------------------------------------------------ */
 @media (max-width: 700px) {
-  /* El orden de la primera pantalla —símbolo, titular, frase, botones,
-     precio— lo escribe ahora `.portada__primera`, más abajo, junto con la
+  /* El orden de la primera pantalla —símbolo, titular, frase y
+     botones— lo escribe ahora `.portada__primera`, más abajo, junto con la
      regla que la hace medir una pantalla justa. Aquí solo queda el reparto
      de la sección entera. */
   .portada__reparto {
@@ -4959,32 +4912,32 @@ main#contenido > * {
 }
 
 /* ------------------------------------------------------------
-   VERTICAL: LA PRIMERA PANTALLA TERMINA EN EL PRECIO. SIEMPRE.
+   VERTICAL: LA PRIMERA PANTALLA TERMINA EN LOS BOTONES. SIEMPRE.
    ------------------------------------------------------------
    Antes esto se perseguía a mano: se apretaba un hueco aquí, se bajaba un
    tamaño allá, y el resultado dependía del teléfono. Medido, sobraban 15 px
    en uno de 640 de alto y 105 px en uno de 915. O sea que en el corto casi
-   se escapaba y en el largo quedaba un hueco muerto debajo del precio.
+   se escapaba y en el largo quedaba un hueco muerto debajo de la última línea.
 
    Aquí se resuelve por construcción y no por ajuste. `.portada__primera`
-   agrupa los cinco bloques de la primera pantalla y mide EXACTAMENTE lo que
+   agrupa los cuatro bloques de la primera pantalla y mide EXACTAMENTE lo que
    queda de ventana después del respiro de la barra:
 
        alto = 100svh − respiro
 
    `svh` y no `vh`: `vh` es la ventana con las barras del navegador
    escondidas, que es el estado que NO se ve al llegar. Con `svh` la cuenta
-   se hace contra la ventana pequeña, la de las barras a la vista, y el
-   precio entra también en ese momento.
+   se hace contra la ventana pequeña, la de las barras a la vista, y los
+   botones entran también en ese momento.
 
-   Dentro, las cuatro piezas de texto miden lo que miden y el símbolo se
+   Dentro, las tres piezas de texto miden lo que miden y el símbolo se
    queda con TODO lo que sobre: su fila es la única `1fr`. Eso es lo que
    convierte «sobran 90 px» en «el logo es 90 px más grande» en vez de en un
    hueco. Y en un teléfono corto la misma fila se encoge sola, sin que haya
    que escribir una regla por modelo.
 
-   El precio, al ser la última fila de una caja de alto fijo, cae siempre en
-   el filo inferior de la pantalla. No hay teléfono en el que se escape.
+   Los botones, al ser la última fila de una caja de alto fijo, caen siempre
+   en el filo inferior de la pantalla. No hay teléfono en el que se escapen.
    ------------------------------------------------------------ */
 
 @media (max-width: 700px) {
@@ -5008,16 +4961,15 @@ main#contenido > * {
       'marca'
       'titular'
       'claim'
-      'acciones'
-      'ancla';
-    /* La fila del símbolo es la elástica; las cuatro de texto piden lo suyo
+      'acciones';
+    /* La fila del símbolo es la elástica; las tres de texto piden lo suyo
        y no ceden. `minmax(0, 1fr)` y no `1fr` a secas: si un teléfono muy
        corto no diera de sí, la fila se encoge hasta cero en vez de empujar
-       el precio fuera de pantalla. */
-    grid-template-rows: minmax(0, 1fr) auto auto auto auto;
+       los botones fuera de pantalla. */
+    grid-template-rows: minmax(0, 1fr) auto auto auto;
     gap: clamp(12px, 2.1svh, 20px);
     /* La cuenta entera de esta sección. El descuento del final es el aire
-       del filo: sin él la última línea del precio queda pegada al borde de
+       del filo: sin él los botones quedan pegados al borde de
        la pantalla y se lee como texto cortado, que es justo lo contrario de
        lo que esta regla busca. Doce píxeles bastan para que se lea como el
        final de algo y no como el corte de algo. */
@@ -5108,16 +5060,6 @@ main#contenido > * {
 
   .portada__claim {
     line-height: 1.42;
-  }
-
-  .portada__ancla {
-    /* Es la última fila y el filo de la primera pantalla: sin margen debajo,
-       la línea del precio ES el final. */
-    margin-bottom: 0;
-    /* Se parte por la mitad en vez de dejar «precios» solo en el último
-       renglón: una palabra suelta en el filo inferior parece contenido
-       cortado, y dos renglones parejos parecen el final. */
-    text-wrap: balance;
   }
 }
 

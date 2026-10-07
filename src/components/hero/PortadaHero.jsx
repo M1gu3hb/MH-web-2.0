@@ -7,7 +7,7 @@
  * composición, misma tipografía a tres voces, mismo fondo Scanner, mismo
  * símbolo por capas, misma firma. Lo que cambia es que ahora vive dentro de
  * un sitio multipágina, así que los CTA llevan a rutas reales en vez de a
- * anclas, y aparece el ancla de precio que la arquitectura nueva permite.
+ * anclas.
  *
  * DECISIONES DE RENDIMIENTO
  *
@@ -35,7 +35,6 @@ import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { HERO, CONTACT } from '../../content';
 import { RUTAS } from '../../config/rutas';
-import { PLANES, formatoMXN } from '../../config/pricing';
 
 const Scanner = lazy(() => import('../reactbits/Scanner'));
 /* Igual que el Scanner: fuera del trozo inicial, para que la página pinte el
@@ -160,8 +159,8 @@ export function PortadaHero() {
             escritorio y teléfono sean DOS COMPOSICIONES, no una y su versión
             estrujada: en teléfono el símbolo 3D sube al centro, justo
             después del botón, en vez de caer al final porque ya no cupo.
-            El orden visual del teléfono es titular → explicación → acción →
-            señal de marca → precio → frentes → credenciales. */}
+            El orden visual del teléfono es señal de marca → titular →
+            explicación → acción → frentes → credenciales. */}
         <Motion.div
           className="portada__reparto"
           initial={entrada}
@@ -177,8 +176,8 @@ export function PortadaHero() {
               como antes. Cero cambio fuera de vertical.
 
               En vertical sí es una caja, y es lo que permite decir «esto
-              mide una pantalla y termina en el precio». Sin un elemento que
-              agrupe los cinco bloques no hay forma de fijar esa altura: las
+              mide una pantalla y termina en los botones». Sin un elemento que
+              agrupe los cuatro bloques no hay forma de fijar esa altura: las
               filas de una rejilla no se pueden sumar entre sí.
               ------------------------------------------------------------ */}
           <div className="portada__primera">
@@ -232,11 +231,6 @@ export function PortadaHero() {
             >
               {enVertical ? <MarcaProfunda /> : <Logo3D />}
             </Motion.div>
-
-            <p className="portada__ancla">
-              Páginas web desde <strong>{formatoMXN(PLANES.webEsencial.desde)}</strong> ·{' '}
-              <Link to={RUTAS.precios}>ver todos los precios</Link>
-            </p>
           </div>
 
           {/* Lo que la home multipágina añade: qué hay detrás de la frase,

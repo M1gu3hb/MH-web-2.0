@@ -297,7 +297,7 @@ async function main() {
     modulo: 'Inicio',
     title: 'Morphiq | Digitalizamos la operación de tu negocio en CDMX',
     description:
-      'Diseño y construyo páginas web, puntos de venta, CRM y automatizaciones para negocios de la Ciudad de México. Páginas desde $2,000 MXN, con precio cerrado antes de empezar.',
+      'Diseño y construyo páginas web, puntos de venta, CRM y automatizaciones para negocios de la Ciudad de México, con precio cerrado antes de empezar.',
     migas: [{ nombre: 'Inicio', path: RUTAS.inicio }],
     extra: [nodoPreguntas(RUTAS.inicio, PREGUNTAS_INICIO)],
     noscript: bloqueNoscript(

@@ -17,7 +17,6 @@ import { ArrowUp, Github, Mail, MapPin, MessageCircle, Phone } from 'lucide-reac
 import { BrandLockup } from './BrandLockup';
 import { CONTACT } from '../../content';
 import { MENU, RUTAS } from '../../config/rutas';
-import { PLANES, precioEnLinea } from '../../config/pricing';
 import { PROYECTOS, rutaProyecto } from '../../content/proyectos';
 import { gmailUrl } from '../../lib/correo';
 import { trackWhatsApp, whatsappUrl } from '../../lib/whatsapp';
@@ -45,9 +44,6 @@ export function Footer() {
             Diseño que vende.
             <br />
             Sistemas que ordenan.
-          </p>
-          <p className="footer__desde">
-            Páginas web {precioEnLinea(PLANES.webEsencial).toLowerCase()}
           </p>
         </div>
 

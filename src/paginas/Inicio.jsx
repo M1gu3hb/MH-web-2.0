@@ -44,7 +44,7 @@ import { CONTACT, PREGUNTAS_INICIO } from '../content';
    index.html, que son los dos únicos sitios donde vive. */
 const TITLE = 'Morphiq | Digitalizamos la operación de tu negocio en CDMX';
 const DESC =
-  'Diseño y construyo páginas web, puntos de venta, CRM y automatizaciones para negocios de la Ciudad de México. Páginas desde $2,000 MXN, con precio cerrado antes de empezar.';
+  'Diseño y construyo páginas web, puntos de venta, CRM y automatizaciones para negocios de la Ciudad de México, con precio cerrado antes de empezar.';
 
 const PROCESO_CORTO = [
   { titulo: 'Me cuentas', cuerpo: 'Qué hace tu negocio y qué te está costando trabajo.' },
