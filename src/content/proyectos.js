@@ -20,6 +20,13 @@
  * Existe porque «Nombre: tipo | Morphiq» se iba a setenta y cinco caracteres
  * y Google corta alrededor de sesenta: la mitad del título se perdía justo
  * donde estaba lo que distingue un caso de otro.
+ *
+ * `estado: 'en-desarrollo'` marca lo que todavía se está construyendo. No
+ * cambia la tarjeta del índice: la etiqueta aparece solo dentro de su ficha,
+ * junto a la industria.
+ *
+ * `enlaces` va en lugar de `url` cuando un caso reúne varios sitios en vivo:
+ * la ficha pinta un botón por cada uno.
  */
 
 import { RUTAS } from '../config/rutas.js';
@@ -32,6 +39,52 @@ export const CATEGORIAS = [
 ];
 
 export const PROYECTOS = [
+  {
+    slug: 'glyphos',
+    tituloSeo: 'GLYPHOS: estudio de arte ASCII en el navegador',
+    nombre: 'GLYPHOS',
+    industria: 'Producto propio · arte ASCII en tiempo real',
+    categorias: ['software', 'web'],
+    tipo: 'Estudio de arte ASCII que corre en el navegador',
+    resumen:
+      'Convierte fotos, video, la cámara o un texto en arte hecho de caracteres, en tiempo real y sin subir nada a ningún servidor. Lo que creas se lleva como imagen, como video, como código para tu web o como animación para la terminal.',
+    resultado: 'De una foto a código que funciona, sin salir del navegador',
+    etiquetas: ['Arte generativo', 'WebGL 2', 'Exporta a código', 'Sin servidor'],
+    acento: '#ff5b1f',
+    imagen: '/casos/glyphos.webp',
+    url: 'https://glyphos-ascii.vercel.app',
+    etiquetaEnlace: 'Abrir GLYPHOS',
+    destacado: false,
+
+    contexto:
+      'GLYPHOS no es un encargo: es producto propio, con nombre, marca y sitio público. El arte ASCII vive repartido en herramientas sueltas —una convierte una imagen, otra anima un texto, otra genera un fondo— y casi ninguna deja llevarse el resultado a otro lado que no sea una captura de pantalla.',
+    problema: [
+      'Cada herramienta de ASCII hace una sola cosa y no habla con las demás.',
+      'Lo que sale suele ser una captura: no se edita, no se anima y no se puede pegar en una web.',
+      'Antes de ver algo bonito hay que mover decenas de ajustes sin saber qué hace cada uno.',
+      'Sin una tarjeta gráfica moderna, la mayoría simplemente no dibuja.',
+    ],
+    objetivo:
+      'Un solo estudio donde cualquiera llegue, tire el dado, encuentre algo que le guste y se lo lleve a donde lo necesite: su web, un video o su terminal.',
+    solucion: [
+      'Un motor WebGL 2 con más de cien patrones —objetos 3D, partículas, campos— que se combinan en capas, y un motor de respaldo que dibuja la misma pieza donde WebGL no está.',
+      'Un dado con semillas legibles: la misma semilla da la misma pieza, y el historial guarda los últimos mil resultados en el propio navegador.',
+      'Foto, video y cámara convertidos en caracteres en vivo, con transformaciones como semitono, contorno neón o caleidoscopio.',
+      'Vistas de destino —fondo web, pantalla de teléfono, historia vertical, README, terminal— que enseñan la pieza a la medida exacta en la que se va a usar.',
+      'Exportación a PNG, SVG, MP4, GIF, texto ANSI, scripts de terminal y código para web en HTML, Web Component o React.',
+      'Nada se sube: imagen, video, cámara y micrófono se procesan en el equipo de quien lo usa.',
+    ],
+    construido: [
+      'Motor WebGL 2 y motor de respaldo',
+      'Laboratorio con dado e historial',
+      'Imagen, video y cámara a ASCII',
+      'Exportación a imagen, video y código',
+      'Biblioteca de componentes para web',
+      'Guías públicas para cada uso',
+    ],
+    tecnologias: ['TypeScript', 'WebGL 2', 'React', 'Vite', 'WebCodecs', 'Playwright'],
+  },
+
   {
     slug: 'pasteleria-confetti',
     tituloSeo: 'Pastelería Confetti: web y punto de venta',
@@ -78,14 +131,15 @@ export const PROYECTOS = [
   },
 
   /* ------------------------------------------------------------
-     EL ECOSISTEMA DEL CLUB HÍPICO — TRES PROYECTOS, NO UNO
+     EL ECOSISTEMA DEL CLUB HÍPICO — VARIAS PIEZAS, NO UNA
      ------------------------------------------------------------
      Estaba como una sola ficha porque cuando se escribió era una sola cosa:
-     un sitio con cotizador. Hoy son tres aplicaciones distintas, con
-     usuarios distintos y problemas distintos: el sitio que ve cualquiera, el
-     panel con el que la casa opera, y el portal donde el cliente organiza su
-     propio evento. Meterlas en una ficha se leía como «una web con extras»,
-     que es justo lo que no son.
+     un sitio con cotizador. Hoy son aplicaciones distintas, con usuarios
+     distintos y problemas distintos: el sitio que ve cualquiera, el panel
+     con el que la casa opera, el portal donde el cliente organiza su propio
+     evento, el estudio 3D donde se diseña el montaje y el sitio de las clases
+     de baile. Meterlas en una ficha se leía como «una web con extras», que es
+     justo lo que no son.
 
      Los dos sistemas internos van SIN ENLACE. No es un olvido: viven detrás
      de un login y manejan datos de clientes reales —nombres, teléfonos,
@@ -235,6 +289,93 @@ export const PROYECTOS = [
   },
 
   {
+    slug: 'jch-3d',
+    tituloSeo: 'Estudio 3D para diseñar el montaje de un evento',
+    nombre: 'Estudio 3D de eventos',
+    industria: 'Recinto de eventos · montaje en 3D',
+    categorias: ['software', 'sistemas'],
+    tipo: 'Editor 3D de montajes con presentación para el cliente',
+    resumen:
+      'Los salones del recinto modelados en 3D para acomodar mesas, sillas y pista, organizar invitados y presupuesto, y mandarle al cliente su montaje para que lo recorra desde el teléfono.',
+    resultado: 'El cliente ve su evento antes de que exista',
+    etiquetas: ['3D', 'Montaje de mesas', 'Visor sin internet', 'Three.js'],
+    acento: '#4fbf7a',
+    imagen: '/casos/jch-3d.webp',
+    url: 'https://jch3d.vercel.app',
+    etiquetaEnlace: 'Abrir el estudio',
+    destacado: false,
+
+    contexto:
+      'La cuarta pieza del ecosistema del recinto. Entre que alguien aparta un salón y el día del evento, la pregunta que más se repite es cómo se va a ver: cuántas mesas caben, dónde queda la pista, quién se sienta junto al escenario. Contestarla con un plano dibujado a mano pedía mucha imaginación de los dos lados.',
+    problema: [
+      'Un plano en papel no le dice al cliente cómo se va a sentir el salón lleno.',
+      'Cada cambio de mesas obligaba a redibujar el acomodo completo.',
+      'La lista de invitados y los lugares vivían separados del dibujo del salón.',
+      'Mandar una propuesta visual dependía de que el cliente tuviera buena conexión al abrirla.',
+    ],
+    objetivo:
+      'Que la casa diseñe el montaje sobre el salón de verdad y que el cliente lo recorra él mismo, desde su teléfono, antes de cerrar el evento.',
+    solucion: [
+      'Los dos salones modelados en 3D, cada uno con su montaje, sus invitados, su programa y su presupuesto por separado.',
+      'Mesas redondas, rectangulares y cuadradas con sus sillas, editables una por una o todas a la vez, con aviso cuando dos se encuentran.',
+      'Vista 3D, planta y recorrido desde la entrada, con deshacer y rehacer.',
+      'Invitados por grupo con confirmaciones y asignación de lugares, programa del evento y presupuesto con pagos.',
+      'Un enlace que comparte una instantánea del montaje —sin invitados ni presupuesto— y un visor en un solo archivo que se abre sin internet.',
+    ],
+    construido: [
+      'Salones modelados en 3D',
+      'Editor de mesas y sillas',
+      'Organización de invitados',
+      'Programa y presupuesto',
+      'Presentación compartible y visor sin internet',
+    ],
+    tecnologias: ['JavaScript', 'Three.js', 'WebGL', 'Playwright', 'Vercel'],
+  },
+
+  {
+    slug: 'jch-baile',
+    tituloSeo: 'JCH Baile: sitio de clases de baile en Xochimilco',
+    nombre: 'JCH Baile',
+    industria: 'Clases de baile · Xochimilco',
+    categorias: ['web'],
+    tipo: 'Sitio multipágina para clases de baile con membresías',
+    resumen:
+      'El sitio de las clases de baile del recinto en su salón principal: la maestra, los ritmos, las membresías con su precio, el salón y una ruta directa a WhatsApp para apartar lugar.',
+    resultado: 'Quien nunca ha bailado entiende cómo empezar',
+    etiquetas: ['Web', 'Membresías', 'SEO local', 'WhatsApp'],
+    acento: '#d3ff57',
+    imagen: '/casos/jch-baile.webp',
+    url: 'https://jch-baile-web.vercel.app',
+    etiquetaEnlace: 'Ver sitio',
+    destacado: false,
+
+    contexto:
+      'El mismo recinto, con otra actividad dentro: clases de salsa, bachata, cumbia y ritmos de salón en su salón principal, con una maestra con trayectoria. Antes de la primera clase hacía falta un lugar que explicara qué se enseña, cuánto cuesta y para quién es.',
+    problema: [
+      'Las dudas de siempre —si hace falta saber bailar, si hay que llevar pareja— tenían que contestarse antes del primer mensaje.',
+      'Los planes y sus precios no podían depender de mandar fotos sueltas por chat.',
+      'Quien busca clases de baile en la zona tiene que poder encontrarlas.',
+    ],
+    objetivo:
+      'Que alguien que nunca ha bailado entienda en un minuto qué se ofrece, cuánto cuesta y cómo empezar.',
+    solucion: [
+      'Sitio multipágina: inicio, la maestra, los ritmos, las membresías, el salón, preguntas y contacto.',
+      'Membresías por número de clases al mes, más la clase suelta, con su precio publicado.',
+      'Página de la maestra con fotos restauradas de su propio archivo y un reel armado con sus videos.',
+      'Un ritmo latino generado en el navegador, que solo suena si la persona lo activa.',
+      'SEO local con datos estructurados, para aparecer cuando alguien busca clases en Xochimilco.',
+    ],
+    construido: [
+      'Sitio multipágina',
+      'Membresías y precios',
+      'Perfil de la maestra',
+      'Ritmo generado en el navegador',
+      'SEO local',
+    ],
+    tecnologias: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Motion', 'Vercel'],
+  },
+
+  {
     slug: 'vero-seguros',
     tituloSeo: 'Vero Seguros: sitio con administrador propio',
     nombre: 'Vero Seguros',
@@ -279,6 +420,51 @@ export const PROYECTOS = [
   },
 
   {
+    slug: 'the-best-moment',
+    tituloSeo: 'The Best Moment: sitio de un fotógrafo de bodas',
+    nombre: 'The Best Moment',
+    industria: 'Fotografía · bodas y XV años',
+    categorias: ['web'],
+    tipo: 'Sitio editorial con portafolio, paquetes e identidad',
+    resumen:
+      'El sitio de un fotógrafo de bodas, XV años y retratos: un portafolio de más de ochocientas fotos que se recorre sin trabarse, sus seis paquetes lado a lado y la consulta de fecha directo a WhatsApp.',
+    resultado: 'Las fotos hablan primero; la fecha se consulta en un toque',
+    etiquetas: ['Web', 'Portafolio', 'Paquetes', 'Identidad'],
+    acento: '#c9a46b',
+    imagen: '/casos/the-best-moment.webp',
+    url: 'https://the-best-moment.vercel.app',
+    etiquetaEnlace: 'Ver sitio',
+    destacado: false,
+
+    contexto:
+      'Un fotógrafo de bodas, XV años y retratos. Su trabajo y sus paquetes vivían en un catálogo en PDF: no se puede buscar, no se actualiza solo y en un teléfono se lee a pellizcos.',
+    problema: [
+      'Un PDF con cientos de fotos se traba en el teléfono justo cuando alguien lo está viendo.',
+      'Los paquetes había que compararlos de memoria, página por página.',
+      'Las fotos originales no estaban hechas para la web: pesadas y con los datos de la cámara dentro.',
+      'Hacía falta una identidad propia que se reconociera igual en una tarjeta que en una galería.',
+    ],
+    objetivo:
+      'Que el portafolio se recorra como un libro, que cada paquete se entienda solo y que pedir una fecha sea mandar un mensaje que ya viene escrito.',
+    solucion: [
+      'Identidad de marca: el logo y su aplicación en todo el sitio.',
+      'Portada editorial y portafolio por colección —bodas, XV años y retratos— con carga progresiva y visor accesible.',
+      'Cada foto preparada en varios tamaños, sin los datos de la cámara y sin ampliarla nunca por encima de su original.',
+      'Los seis paquetes con su propia página y una comparación lado a lado.',
+      'Páginas para la experiencia y los fotolibros, lo que no cabe en una lista de precios.',
+      'Un formulario que prepara la consulta y la abre en WhatsApp con los datos ya escritos.',
+    ],
+    construido: [
+      'Identidad de marca',
+      'Sitio editorial multipágina',
+      'Portafolio por colecciones',
+      'Comparador de paquetes',
+      'Consulta de fecha por WhatsApp',
+    ],
+    tecnologias: ['React', 'TypeScript', 'Vite', 'Supabase', 'Vercel'],
+  },
+
+  {
     slug: 'fiesta-total-dj',
     tituloSeo: 'Fiesta Total DJ\'s: sitio de conversión',
     nombre: "Fiesta Total DJ's",
@@ -314,6 +500,95 @@ export const PROYECTOS = [
   },
 
   {
+    slug: 'paginas-de-enlaces',
+    tituloSeo: 'Páginas de enlaces para QR, NFC y redes sociales',
+    nombre: 'Páginas de enlaces',
+    industria: 'Tres negocios · QR, NFC y redes',
+    categorias: ['web'],
+    tipo: 'Páginas de enlaces con la marca de cada negocio',
+    resumen:
+      "Una sola dirección para el QR de la tarjeta, la etiqueta NFC y la biografía de redes: WhatsApp primero y todo lo demás a un toque. Tres hechas a la medida, para Morphiq, Jardín La Palapa y Fiesta Total DJ's.",
+    resultado: 'Un QR que lleva directo a la conversación',
+    etiquetas: ['QR y NFC', 'WhatsApp', 'Animación', 'Marca propia'],
+    acento: '#2f7bff',
+    imagen: '/casos/enlaces.webp',
+    /* Un caso con tres sitios en vivo: la ficha pinta un botón por cada uno. */
+    enlaces: [
+      { etiqueta: 'Morphiq', url: 'https://morphiq-links.vercel.app' },
+      { etiqueta: 'Jardín La Palapa', url: 'https://la-palapa-links.vercel.app' },
+      { etiqueta: "Fiesta Total DJ's", url: 'https://fiesta-total-links.vercel.app' },
+    ],
+    destacado: false,
+
+    contexto:
+      'La tarjeta de presentación lleva un QR, el mostrador una etiqueta NFC y el perfil de Instagram un solo enlace. Los tres apuntan al mismo lugar, y ese lugar suele ser una página genérica de otra plataforma, con su logo, su tipografía y sus límites.',
+    problema: [
+      'Las plataformas de enlaces se ven iguales para todos: la marca del negocio queda en segundo plano.',
+      'Lo que más importa —escribir por WhatsApp— queda al mismo nivel que todo lo demás.',
+      'Cuántas personas abren cada enlace lo sabe la plataforma, no el negocio.',
+      'Un QR impreso no se puede cambiar: si la dirección se cae, la tarjeta se va a la basura.',
+    ],
+    objetivo:
+      'Que cada negocio tenga su propia página de enlaces, con su identidad, sus prioridades en orden y una dirección estable para imprimir.',
+    solucion: [
+      'WhatsApp primero, y después llamada, ubicación, redes y sitio web, en el orden que le importa a cada negocio.',
+      'Morphiq: fondo ASCII animado y un panel privado que cuenta las aperturas de cada enlace por día, sin guardar la IP de nadie.',
+      'Jardín La Palapa: el logo se escribe solo con una pluma de oro, las fotos del jardín se funden de fondo, cada botón se forma primero con caracteres y uno de ellos comparte la página con el menú del propio teléfono.',
+      "Fiesta Total DJ's: el neón de la marca, WhatsApp al frente y su sitio y sus redes a un toque.",
+      'Direcciones estables, pensadas para imprimirse en una tarjeta o grabarse en una etiqueta y no cambiar nunca.',
+    ],
+    construido: [
+      'Tres páginas con la marca de cada negocio',
+      'Panel privado de clics',
+      'Animaciones de logo y botones',
+      'Direcciones estables para QR y NFC',
+    ],
+    tecnologias: ['JavaScript', 'HTML', 'CSS', 'Funciones serverless', 'Redis', 'Vercel'],
+  },
+
+  {
+    slug: 'thexavimtz',
+    tituloSeo: 'TheXaviMTZ: sitio oficial de un DJ y productor',
+    nombre: 'TheXaviMTZ',
+    industria: 'Música · DJ y productor',
+    categorias: ['web'],
+    tipo: 'Sitio oficial de artista con sus lanzamientos',
+    resumen:
+      'El sitio oficial de un DJ y productor de house de la Ciudad de México: su lanzamiento más reciente al frente, el catálogo completo y todas sus plataformas a un clic.',
+    resultado: 'Del enlace de la biografía a escucharlo en Spotify',
+    etiquetas: ['Web', 'Música', 'Lanzamientos', 'Next.js'],
+    acento: '#7b5cff',
+    imagen: '/casos/thexavimtz.webp',
+    url: 'https://thexavimtz.vercel.app',
+    etiquetaEnlace: 'Ver sitio',
+    destacado: false,
+
+    contexto:
+      'Un DJ y productor independiente que construye un catálogo entre house, dance y electrónica. Su música vive en Spotify, Apple Music, SoundCloud, Instagram y TikTok, y cada plataforma la presenta con su diseño, no con el suyo.',
+    problema: [
+      'Sin un sitio propio, cada lanzamiento dependía del formato de otra plataforma.',
+      'No había un solo lugar al que mandar a un promotor o a quien quisiera contratarlo.',
+      'Los lanzamientos anteriores se perdían en cuanto salía el siguiente.',
+    ],
+    objetivo:
+      'Un sitio con la estética del artista, donde el último lanzamiento mande y el resto del catálogo siga a la mano.',
+    solucion: [
+      'Portada con el lanzamiento más reciente al frente y salida directa a Spotify.',
+      'Catálogo de lanzamientos, cada uno con su portada y sus enlaces.',
+      'Reproductor de Spotify dentro de la página.',
+      'Sus redes y plataformas a un clic: Instagram, TikTok, SoundCloud y Apple Music.',
+      'Tipografía enorme y movimiento con la energía de una cabina, no de un folleto.',
+    ],
+    construido: [
+      'Sitio oficial',
+      'Lanzamiento destacado',
+      'Catálogo de lanzamientos',
+      'Reproductor integrado',
+    ],
+    tecnologias: ['Next.js', 'React', 'Vercel'],
+  },
+
+  {
     slug: 'electrotecnica-berlin',
     tituloSeo: 'Electrotécnica Berlín: punto de venta y web',
     nombre: 'Electrotécnica Berlín',
@@ -346,81 +621,6 @@ export const PROYECTOS = [
     ],
     construido: ['Identidad visual', 'Sitio público', 'Punto de venta', 'Control de inventario'],
     tecnologias: ['React', 'Vite', 'Vercel'],
-  },
-
-  {
-    slug: 'nfc-manager',
-    tituloSeo: 'NFC Manager: automatización de escritorio',
-    nombre: 'NFC Manager',
-    industria: 'Producto propio · automatización de escritorio',
-    categorias: ['software', 'sistemas'],
-    tipo: 'App de escritorio para Windows con app Android',
-    resumen:
-      'Tocas una etiqueta NFC con el teléfono y la computadora cambia de modo: abre lo que ese modo necesita y, al salir, cierra solo lo que ese modo abrió.',
-    resultado: 'Cambiar de modo en un toque',
-    etiquetas: ['NFC', 'Electron', 'Android', 'Automatización'],
-    acento: '#b06cff',
-    imagen: '/casos/nfc.webp',
-    destacado: false,
-
-    contexto:
-      'Trabajar, descansar, jugar. Cada cambio en la misma computadora era el mismo ritual a mano: el editor, las pestañas de siempre, la carpeta del proyecto, la música, el volumen. Y al terminar, cerrar todo uno por uno con cuidado de no llevarse lo que ya estaba abierto desde antes.',
-    problema: [
-      'Entrar en un modo era abrir apps, webs, carpetas y música una por una, siempre en el mismo orden.',
-      'Al salir había que cerrar todo a mano, y era fácil cerrar algo que ya tenías abierto de antes.',
-      'Las automatizaciones de escritorio piden rutas de archivos y nombres de ejecutables: solo las configura quien programa.',
-      'Si el comando va escrito dentro de la etiqueta, cada vez que cambias de opinión hay que reescribirla.',
-    ],
-    objetivo:
-      'Que cambiar de modo sea tocar una etiqueta, sin perder nada de lo que ya tenías abierto.',
-    solucion: [
-      'Un motor que registra qué abrió cada modo y al desactivarlo cierra solo eso; si una app tiene trabajo sin guardar no la mata, la marca.',
-      'Un selector visual que detecta lo que hay instalado en la PC, con sus iconos reales. Nunca escribes una ruta.',
-      'La etiqueta solo lleva un identificador: para cambiar lo que hace la re-vinculas desde la app y la etiqueta física no se reescribe nunca.',
-      'Un servidor local con emparejamiento por QR y confirmación en la propia PC; las peticiones llevan identificadores, nunca comandos.',
-      'App Android nativa que activa el modo al instante, más widget y mosaico de ajustes rápidos para hacerlo sin NFC.',
-    ],
-    construido: [
-      'App de escritorio en Electron',
-      'Agente local con historial de ejecuciones',
-      'App Android que lee y escribe etiquetas',
-      'Emparejamiento por QR',
-      'Página móvil servida por la propia PC',
-    ],
-    tecnologias: ['TypeScript', 'Electron', 'React', 'Fastify', 'SQLite', 'Kotlin', 'Jetpack Compose'],
-  },
-
-  {
-    slug: 'gestech',
-    tituloSeo: 'GESTECH: control por gestos en Windows',
-    nombre: 'GESTECH',
-    industria: 'Software · accesibilidad',
-    categorias: ['software'],
-    tipo: 'Software de escritorio con visión por computadora',
-    resumen:
-      'Controla el cursor, los clics, el scroll y las ventanas de Windows con pura cámara web.',
-    resultado: 'Manejar la computadora sin tocarla',
-    etiquetas: ['Python', 'OpenCV', 'MediaPipe', 'Windows'],
-    acento: '#f5a524',
-    imagen: '/casos/gestech.webp',
-    destacado: false,
-
-    contexto:
-      'Un proyecto propio para resolver un problema concreto: manejar una computadora sin poder usar el ratón.',
-    problema: [
-      'Los controles por gestos existentes reaccionan a cualquier movimiento.',
-      'Gesticular mientras hablas convertía el control en un estorbo.',
-    ],
-    objetivo:
-      'Que el control por gestos solo obedeciera cuando la persona lo pide, y que se sintiera preciso.',
-    solucion: [
-      'Reconocimiento de mano en tiempo real con la cámara web.',
-      'Activación deliberada: palma abierta un segundo para entrar.',
-      'Salida igual de explícita: puño cerrado dos segundos.',
-      'Control de cursor, clic, scroll y ventanas.',
-    ],
-    construido: ['Reconocimiento de gestos', 'Control de cursor y clics', 'Scroll y ventanas', 'Modo de activación explícita'],
-    tecnologias: ['Python', 'OpenCV', 'MediaPipe', 'Windows'],
   },
 
   {
@@ -467,93 +667,36 @@ export const PROYECTOS = [
   },
 
   {
-    slug: 'morphiq-ui',
-    tituloSeo: 'Morphiq UI: componentes React y editor visual',
-    nombre: 'Morphiq UI',
-    industria: 'Producto propio · sistema de interfaz',
-    categorias: ['software', 'web'],
-    tipo: 'Librería de componentes React y editor visual',
+    slug: 'gestech',
+    tituloSeo: 'GESTECH: control por gestos en Windows',
+    nombre: 'GESTECH',
+    industria: 'Software · accesibilidad',
+    categorias: ['software'],
+    tipo: 'Software de escritorio con visión por computadora',
     resumen:
-      'Más de doscientos componentes React con cuatro acabados de material, y un editor visual encima que exporta exactamente el mismo código que ves.',
-    resultado: 'La base de interfaz de la casa',
-    etiquetas: ['Sistema de diseño', 'React', 'Editor visual', 'Código exportable'],
-    acento: '#ff3d81',
-    imagen: '/casos/morphiq-ui.webp',
-    url: 'https://morphiq-ui.vercel.app',
-    etiquetaEnlace: 'Ver sitio',
+      'Controla el cursor, los clics, el scroll y las ventanas de Windows con pura cámara web.',
+    resultado: 'Manejar la computadora sin tocarla',
+    etiquetas: ['Python', 'OpenCV', 'MediaPipe', 'Windows'],
+    acento: '#f5a524',
+    imagen: '/casos/gestech.webp',
     destacado: false,
 
     contexto:
-      'Morphiq UI no es un encargo: es producto propio. La mayoría de las librerías de interfaz dan estructura y nada más. Aquí cada componente llega con material, peso y punto de vista, y el mismo botón se ve en cuatro acabados sin cambiar cómo se comporta.',
+      'Un proyecto propio para resolver un problema concreto: manejar una computadora sin poder usar el ratón.',
     problema: [
-      'Cambiar el acabado de un componente obligaba a reconstruirlo: el comportamiento era el mismo, pero el código había que escribirlo otra vez.',
-      'Agregar un componente al catálogo significaba editar el mismo archivo compartido, así que dos frentes de trabajo chocaban siempre ahí.',
-      'Los editores visuales suelen sacar un formato propio que después nadie puede llevar a producción.',
-      'Una captura no dice qué pasa al hacer foco, en estado de carga, ni con el movimiento reducido activado.',
+      'Los controles por gestos existentes reaccionan a cualquier movimiento.',
+      'Gesticular mientras hablas convertía el control en un estorbo.',
     ],
     objetivo:
-      'Tener una base de interfaz propia: componentes que se copian y se usan hoy, y un editor que produce ese mismo código.',
+      'Que el control por gestos solo obedeciera cuando la persona lo pide, y que se sintiera preciso.',
     solucion: [
-      'Un registro de componentes repartidos por categorías, cada uno con su código, su vista previa funcional y su ficha.',
-      'Cuatro recetas de material que se cambian sin tocar el comportamiento del componente.',
-      'Un editor visual con capas, vectores, máscaras, auto layout, variantes, interacciones y línea de tiempo.',
-      'Exportadores que sacan componente interactivo, CSS, HTML autónomo, SVG y el proyecto completo sin pérdida.',
-      'Cada componente documentado en accesibilidad y dependencias, en español y en inglés.',
+      'Reconocimiento de mano en tiempo real con la cámara web.',
+      'Activación deliberada: palma abierta un segundo para entrar.',
+      'Salida igual de explícita: puño cerrado dos segundos.',
+      'Control de cursor, clic, scroll y ventanas.',
     ],
-    construido: [
-      'Registro de componentes generado',
-      'Cuatro acabados de material',
-      'Editor visual con historial',
-      'Motor de exportación verificado',
-      'Puerta de calidad en un solo comando',
-    ],
-    tecnologias: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Motion', 'Playwright'],
-  },
-
-  {
-    slug: 'qyro',
-    tituloSeo: 'Qyro: envío de archivos por red local',
-    nombre: 'Qyro',
-    industria: 'Producto propio · transferencia de archivos',
-    categorias: ['software', 'sistemas'],
-    tipo: 'App de envío de archivos sin internet',
-    resumen:
-      'Mandar un archivo de un aparato a otro por la red local, sin nube, sin cuentas y sin servidor de por medio. Motor en Rust, interfaz en Flutter, cifrado de extremo a extremo.',
-    resultado: 'Archivos que no pasan por nadie',
-    etiquetas: ['Rust', 'Flutter', 'Criptografía', 'Sin nube'],
-    acento: '#51c8ff',
-    imagen: '/casos/qyro.webp',
-    destacado: false,
-
-    contexto:
-      'Pasar un archivo de una computadora a un teléfono que están en el mismo cuarto casi siempre termina igual: lo subes a un Drive o te lo mandas por WhatsApp. El archivo sale de tu red, se sienta en el servidor de alguien más y regresa comprimido. Qyro nace de esa molestia.',
-    problema: [
-      'Mandar un archivo a un aparato que está a dos metros obliga a que salga de tu red y pase por un tercero.',
-      'En una red pública con aislamiento de cliente los aparatos no se ven, así que el descubrimiento automático no sirve.',
-      'Las apps que sí transfieren en local piden permisos de almacenamiento completos y copian el archivo antes de leerlo.',
-      'Si el aparato del otro lado cambia de llave, casi ningún sistema avisa: te deja seguir igual.',
-    ],
-    objetivo:
-      'Que dos aparatos en la misma red se manden un archivo cifrado y verificado sin depender de internet, de una cuenta ni de un servidor.',
-    solucion: [
-      'El emparejamiento se hace tecleando un código, así funciona hasta en redes donde los aparatos no se ven entre sí.',
-      'El núcleo en Rust hace el saludo autenticado, cifra cada bloque y verifica cada archivo; el que no verifica no se entrega.',
-      'Cada aparato tiene una identidad que sobrevive a cerrar la app y enseña una huella corta para comparar en voz alta.',
-      'El receptor siempre decide: ve cuántos archivos son, cómo se llaman y cuánto pesan antes de aceptar.',
-      'En Android los archivos se eligen con el selector del sistema, sin pedir un solo permiso de almacenamiento.',
-    ],
-    /* Honestidad antes que escaparate: el código está completo y probado en
-       integración continua, pero la prueba en teléfono físico sigue pendiente.
-       Aquí se cuenta como lo que es, un proyecto de ingeniería, no como un
-       producto en uso. */
-    construido: [
-      'Núcleo de protocolo y criptografía en Rust',
-      'App para Android y Windows',
-      'Binario de terminal',
-      'Integración continua por plataforma',
-      'Prueba en hardware pendiente',
-    ],
-    tecnologias: ['Rust', 'Flutter', 'Dart', 'Kotlin', 'Ed25519', 'ChaCha20-Poly1305'],
+    construido: ['Reconocimiento de gestos', 'Control de cursor y clics', 'Scroll y ventanas', 'Modo de activación explícita'],
+    tecnologias: ['Python', 'OpenCV', 'MediaPipe', 'Windows'],
   },
 
   {
@@ -587,95 +730,136 @@ export const PROYECTOS = [
     construido: ['App de escritorio', 'Base de datos local', 'Sincronización diferida', 'Portal de descargas'],
     tecnologias: ['Electron', 'Next.js', 'SQLite'],
   },
+
   {
-    slug: 'stopmotion-studio',
-    tituloSeo: 'StopMotion Studio: editor de stop motion en el navegador',
-    nombre: 'StopMotion Studio',
-    industria: 'Producto propio · herramienta creativa',
-    categorias: ['software'],
-    tipo: 'Estudio de stop motion que corre en el navegador',
+    slug: 'nfc-manager',
+    tituloSeo: 'NFC Manager: automatización de escritorio',
+    nombre: 'NFC Manager',
+    industria: 'Producto propio · automatización de escritorio',
+    categorias: ['software', 'sistemas'],
+    tipo: 'App de escritorio para Windows con app Android',
     resumen:
-      'Captura con la cámara, edición de fotogramas, línea de tiempo con varias pistas, pantalla verde y exportación a vídeo. Todo dentro del navegador, sin cuenta y sin subir nada a ningún servidor.',
-    resultado: 'Un estudio completo sin instalar nada',
-    etiquetas: ['React', 'TypeScript', 'Local-first', 'Exportación de vídeo'],
-    acento: '#51c8ff',
-    imagen: '/casos/stopmotion.webp',
+      'Tocas una etiqueta NFC con el teléfono y la computadora cambia de modo: abre lo que ese modo necesita y, al salir, cierra solo lo que ese modo abrió.',
+    resultado: 'Cambiar de modo en un toque',
+    etiquetas: ['NFC', 'Electron', 'Android', 'Automatización'],
+    acento: '#b06cff',
+    imagen: '/casos/nfc.webp',
     destacado: false,
 
     contexto:
-      'Hacer stop motion en serio pide un programa de escritorio, una licencia y un equipo que lo aguante. Y lo que hace falta de verdad es poco: disparar fotos ordenadas, poder reordenarlas, ponerles tiempo y sacar un vídeo.',
+      'Trabajar, descansar, jugar. Cada cambio en la misma computadora era el mismo ritual a mano: el editor, las pestañas de siempre, la carpeta del proyecto, la música, el volumen. Y al terminar, cerrar todo uno por uno con cuidado de no llevarse lo que ya estaba abierto desde antes.',
     problema: [
-      'Las herramientas serias son de escritorio, de pago y pesadas.',
-      'Las fáciles no dejan controlar los fotogramas uno a uno, que es de lo que va el stop motion.',
-      'Subir material de un proyecto a un servicio ajeno no siempre es una opción.',
-      'Trabajar con cientos de fotos suele volver lenta la línea de tiempo.',
+      'Entrar en un modo era abrir apps, webs, carpetas y música una por una, siempre en el mismo orden.',
+      'Al salir había que cerrar todo a mano, y era fácil cerrar algo que ya tenías abierto de antes.',
+      'Las automatizaciones de escritorio piden rutas de archivos y nombres de ejecutables: solo las configura quien programa.',
+      'Si el comando va escrito dentro de la etiqueta, cada vez que cambias de opinión hay que reescribirla.',
     ],
     objetivo:
-      'Un estudio que se abra en una pestaña, que no pida cuenta y que no mande el material a ningún lado, sin renunciar al control fino que la técnica necesita.',
+      'Que cambiar de modo sea tocar una etiqueta, sin perder nada de lo que ya tenías abierto.',
     solucion: [
-      'Estudio de captura con la cámara del equipo, con papel cebolla, cuadrícula, cuenta regresiva e intervalómetro.',
-      'Cada foto es un fotograma editable: reordenar, duplicar, desactivar, repetir exposiciones y sustituir la imagen.',
-      'Línea de tiempo con varias pistas de vídeo y audio, recorte, división y fotogramas clave.',
-      'Control de fps que retempla el proyecto entero de forma coherente.',
-      'Pantalla verde, efectos y sonido, y exportación a MP4 o WebM.',
-      'Todo se guarda en el propio navegador; no hay servidor ni cuentas.',
+      'Un motor que registra qué abrió cada modo y al desactivarlo cierra solo eso; si una app tiene trabajo sin guardar no la mata, la marca.',
+      'Un selector visual que detecta lo que hay instalado en la PC, con sus iconos reales. Nunca escribes una ruta.',
+      'La etiqueta solo lleva un identificador: para cambiar lo que hace la re-vinculas desde la app y la etiqueta física no se reescribe nunca.',
+      'Un servidor local con emparejamiento por QR y confirmación en la propia PC; las peticiones llevan identificadores, nunca comandos.',
+      'App Android nativa que activa el modo al instante, más widget y mosaico de ajustes rápidos para hacerlo sin NFC.',
     ],
     construido: [
-      'Captura con cámara',
-      'Editor de fotogramas',
-      'Línea de tiempo multipista',
-      'Fotogramas clave',
-      'Pantalla verde',
-      'Exportación a vídeo',
+      'App de escritorio en Electron',
+      'Agente local con historial de ejecuciones',
+      'App Android que lee y escribe etiquetas',
+      'Emparejamiento por QR',
+      'Página móvil servida por la propia PC',
     ],
-    tecnologias: ['React', 'TypeScript', 'Vite', 'IndexedDB', 'Playwright'],
+    tecnologias: ['TypeScript', 'Electron', 'React', 'Fastify', 'SQLite', 'Kotlin', 'Jetpack Compose'],
   },
 
   {
-    slug: 'pos-tiendita',
-    tituloSeo: 'Punto de venta para tienditas y abarrotes',
-    nombre: 'Punto de venta para tienditas',
-    industria: 'Producto propio · comercio de barrio',
+    slug: 'morphiqpos',
+    tituloSeo: 'MorphiqPOS: un punto de venta para cinco negocios',
+    nombre: 'MorphiqPOS',
+    industria: 'Producto propio · punto de venta',
     categorias: ['sistemas', 'software'],
-    tipo: 'Punto de venta con inventario, cortes y escáner por teléfono',
+    tipo: 'Punto de venta para varios modelos de negocio',
     resumen:
-      'Vender, cobrar en efectivo, tarjeta, transferencia o mezcla, controlar existencias, registrar compras y gastos, y cerrar el turno con su corte. Con el teléfono como escáner de códigos.',
-    resultado: 'El teléfono del dueño se vuelve el escáner de la caja',
-    etiquetas: ['Next.js', 'Supabase', 'Multi-sucursal', 'Cortes de caja'],
-    acento: '#7ee0a1',
-    imagen: '/casos/tiendita.webp',
+      'Un solo sistema que opera una tiendita, una cafetería, un restaurante con mesas, una ferretería que corta por medida y una estética con agenda, cada uno con su vocabulario, sus pantallas y su tablero.',
+    resultado: 'Un punto de venta que se adapta al negocio, no al revés',
+    etiquetas: ['Punto de venta', 'Multi-negocio', 'Corre en local', 'Next.js'],
+    acento: '#3ddc97',
+    imagen: '/casos/morphiqpos.webp',
+    estado: 'en-desarrollo',
     destacado: false,
 
-    /* Sin enlace: es un punto de venta, o sea el sistema interno de un
-       negocio. No hay demo pública que enseñar sin enseñar datos de ventas. */
+    /* Sin enlace: está en desarrollo y sus demostraciones corren en local. */
     contexto:
-      'Una tiendita de barrio vende decenas de veces al día en importes pequeños. Ahí el problema no es cobrar: es saber, al final del día, qué se vendió, qué falta y si la caja cuadra.',
+      'Cada negocio que pide un punto de venta cree que el suyo es distinto, y tiene razón: una tiendita cobra por pieza, un restaurante por mesa, una ferretería por medida y una estética por cita. Hacer un sistema nuevo para cada uno es lento; meterlos a todos en el mismo molde, inservible.',
     problema: [
-      'La venta se anota en libreta, así que el inventario nunca es de fiar.',
-      'Los pagos mixtos —una parte en efectivo y otra con tarjeta— se apuntan mal.',
-      'Un lector de códigos de barras cuesta y hay que instalarlo.',
-      'Con más de un empleado, no se sabe quién hizo cada movimiento.',
-      'Con dos sucursales, cada una lleva sus propios números.',
+      'Un punto de venta genérico obliga al negocio a trabajar como el sistema, no al revés.',
+      'Construir uno a la medida para cada cliente es repetir el mismo trabajo una y otra vez.',
+      'Muchos negocios no quieren depender de internet ni de servicios ajenos para poder cobrar.',
+      'En una caja no se perdona un centavo de redondeo.',
     ],
     objetivo:
-      'Un punto de venta que un mostrador pequeño pueda usar desde el primer día, con el inventario cuadrando solo y el corte de caja saliendo sin sumar a mano.',
+      'Una sola base que cada negocio active a su medida: las funciones que necesita, con sus palabras y sus pantallas, sin reconstruir el sistema cada vez.',
     solucion: [
-      'Venta con cobro en efectivo, tarjeta, transferencia o mezcla, y ticket impreso.',
-      'El teléfono como escáner: lo que se lee cae en el carrito de la caja al momento.',
-      'Vista de cliente que enseña el carrito en vivo a quien está comprando.',
-      'Inventario que baja al vender, con registro de compras y de gastos.',
-      'Cortes de caja por turno y reportes del negocio.',
-      'Cada negocio ve solo lo suyo, con su propia gente y sus sucursales.',
+      'Cinco modelos de negocio sobre el mismo núcleo —tiendita, cafetería, restaurante, ferretería y estética—, cada uno con su menú, sus pantallas y su tablero.',
+      'Capacidades que se activan por negocio, en lugar de una aplicación distinta para cada cliente.',
+      'Pensado para correr completo en la computadora del negocio, sin depender de internet ni de cuentas de terceros.',
+      'El dinero nunca pasa por decimales sueltos: una suma escrita fuera de su módulo ni siquiera compila.',
+      'PIN por empleado y un sistema de diseño propio con estilo, modo y densidad ajustables.',
     ],
     construido: [
-      'Punto de venta',
-      'Escáner desde el teléfono',
-      'Vista de cliente',
-      'Inventario, compras y gastos',
-      'Cortes de caja y reportes',
-      'Varios usuarios y sucursales',
+      'Núcleo de punto de venta',
+      'Cinco modelos de negocio',
+      'Motor de capacidades',
+      'Sistema de diseño con estilos',
+      'Puerta de calidad automática',
     ],
-    tecnologias: ['Next.js', 'React', 'TypeScript', 'Supabase', 'Tailwind'],
+    tecnologias: ['Next.js', 'TypeScript', 'PostgreSQL', 'Supabase', 'Docker', 'Playwright'],
+  },
+
+  {
+    slug: 'morphiq-ui',
+    tituloSeo: 'Morphiq UI: componentes React y editor visual',
+    nombre: 'Morphiq UI',
+    industria: 'Producto propio · sistema de interfaz',
+    categorias: ['software', 'web'],
+    tipo: 'Librería de componentes React y editor visual',
+    resumen:
+      'Más de doscientos componentes React con cuatro acabados de material, y un editor visual encima que exporta exactamente el mismo código que ves.',
+    resultado: 'La base de interfaz de la casa',
+    etiquetas: ['Sistema de diseño', 'React', 'Editor visual', 'Código exportable'],
+    acento: '#ff3d81',
+    imagen: '/casos/morphiq-ui.webp',
+    url: 'https://morphiq-ui.vercel.app',
+    etiquetaEnlace: 'Ver sitio',
+    estado: 'en-desarrollo',
+    destacado: false,
+
+    contexto:
+      'Morphiq UI no es un encargo: es producto propio. La mayoría de las librerías de interfaz dan estructura y nada más. Aquí cada componente llega con material, peso y punto de vista, y el mismo botón se ve en cuatro acabados sin cambiar cómo se comporta.',
+    problema: [
+      'Cambiar el acabado de un componente obligaba a reconstruirlo: el comportamiento era el mismo, pero el código había que escribirlo otra vez.',
+      'Agregar un componente al catálogo significaba editar el mismo archivo compartido, así que dos frentes de trabajo chocaban siempre ahí.',
+      'Los editores visuales suelen sacar un formato propio que después nadie puede llevar a producción.',
+      'Una captura no dice qué pasa al hacer foco, en estado de carga, ni con el movimiento reducido activado.',
+    ],
+    objetivo:
+      'Tener una base de interfaz propia: componentes que se copian y se usan hoy, y un editor que produce ese mismo código.',
+    solucion: [
+      'Un registro de componentes repartidos por categorías, cada uno con su código, su vista previa funcional y su ficha.',
+      'Cuatro recetas de material que se cambian sin tocar el comportamiento del componente.',
+      'Un editor visual con capas, vectores, máscaras, auto layout, variantes, interacciones y línea de tiempo.',
+      'Exportadores que sacan componente interactivo, CSS, HTML autónomo, SVG y el proyecto completo sin pérdida.',
+      'Cada componente documentado en accesibilidad y dependencias, en español y en inglés.',
+    ],
+    construido: [
+      'Registro de componentes generado',
+      'Cuatro acabados de material',
+      'Editor visual con historial',
+      'Motor de exportación verificado',
+      'Puerta de calidad en un solo comando',
+    ],
+    tecnologias: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Motion', 'Playwright'],
   },
 
 ];

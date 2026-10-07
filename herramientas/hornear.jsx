@@ -15,20 +15,24 @@ import '../src/styles/index.css';
 import {
   AcademicoVisual,
   BerlinVisual,
+  BestMomentVisual,
   ConfettiVisual,
+  EnlacesVisual,
   FiestaVisual,
   GestechVisual,
+  GlyphosVisual,
   HipicoVisual,
   ImaginationVisual,
+  Jch3dVisual,
+  JchBaileVisual,
   JchCrmVisual,
   JchPortalVisual,
+  MorphiqPosVisual,
   MorphiqUiVisual,
-  PosTienditaVisual,
   NfcVisual,
   PhotoBoothVisual,
-  QyroVisual,
-  StopMotionVisual,
   VeroVisual,
+  XaviVisual,
 } from '../src/components/mockups/ProjectVisuals';
 
 /* El nombre es el del archivo que se escribe en public/casos/. */
@@ -44,11 +48,15 @@ const PIEZAS = [
   ['nfc', NfcVisual],
   ['academico', AcademicoVisual],
   ['morphiq-ui', MorphiqUiVisual],
-  ['qyro', QyroVisual],
   ['jch-crm', JchCrmVisual],
   ['jch-portal', JchPortalVisual],
-  ['stopmotion', StopMotionVisual],
-  ['tiendita', PosTienditaVisual],
+  ['glyphos', GlyphosVisual],
+  ['the-best-moment', BestMomentVisual],
+  ['enlaces', EnlacesVisual],
+  ['morphiqpos', MorphiqPosVisual],
+  ['jch-3d', Jch3dVisual],
+  ['jch-baile', JchBaileVisual],
+  ['thexavimtz', XaviVisual],
 ];
 
 function Horno() {

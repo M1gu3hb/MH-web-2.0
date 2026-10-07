@@ -11,7 +11,7 @@ En producción: [www.morphiq.com.mx](https://www.morphiq.com.mx/)
 - Dirección visual propia en tema oscuro, con azul eléctrico y plata sobre tinta.
 - Símbolo de marca en 3D por capas, con reacciones al clic y sin depender del ratón.
 - Consola de capacidades para web, POS, CRM, datos y automatización.
-- Casos reales enlazados a su sitio o repositorio, sin testimonios ni métricas inventadas.
+- Casos reales enlazados a su sitio en vivo cuando lo tienen, sin testimonios ni métricas inventadas.
 - Loader funcional que espera tipografías, logo y carga del documento.
 - Movimiento de interfaz con Motion y scroll suave con Lenis, con freno propio
   para que un deslizamiento fuerte no se salte las secciones animadas.

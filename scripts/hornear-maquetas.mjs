@@ -13,7 +13,7 @@
  *   npm run dev                        (en otra terminal)
  *   node scripts/hornear-maquetas.mjs  [nombre] [nombre] ...
  *
- * Sin argumentos hornea las doce. Con nombres, solo esas.
+ * Sin argumentos hornea todas. Con nombres, solo esas.
  *
  * Se fotografía a densidad 2 —o sea a 1520 px— y después se reduce a los 760
  * px del lienzo con remuestreo Lanczos. Fotografiar directamente a 760 deja

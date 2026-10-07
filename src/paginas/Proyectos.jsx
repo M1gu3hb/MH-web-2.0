@@ -91,6 +91,29 @@ function SalidaFiltrada({ children }) {
   );
 }
 
+/* El índice decía «Once piezas» cuando ya eran catorce: un número escrito a
+   mano se queda viejo en cuanto entra un proyecto. Se cuenta de la lista y
+   se escribe en letra, en femenino porque son piezas. */
+const UNIDADES = ['', 'una', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
+const ESPECIALES = {
+  10: 'diez', 11: 'once', 12: 'doce', 13: 'trece', 14: 'catorce', 15: 'quince',
+  16: 'dieciséis', 17: 'diecisiete', 18: 'dieciocho', 19: 'diecinueve', 20: 'veinte',
+  21: 'veintiuna', 22: 'veintidós', 23: 'veintitrés', 26: 'veintiséis',
+};
+const DECENAS = { 3: 'treinta', 4: 'cuarenta' };
+
+function piezasEnLetra(n) {
+  let palabra;
+  if (ESPECIALES[n]) palabra = ESPECIALES[n];
+  else if (n < 10) palabra = UNIDADES[n];
+  else if (n < 30) palabra = `veinti${UNIDADES[n - 20]}`;
+  else if (DECENAS[Math.floor(n / 10)]) {
+    const resto = n % 10;
+    palabra = `${DECENAS[Math.floor(n / 10)]}${resto ? ` y ${UNIDADES[resto]}` : ''}`;
+  } else return `${n} piezas`;
+  return `${palabra.charAt(0).toUpperCase()}${palabra.slice(1)} ${n === 1 ? 'pieza' : 'piezas'}`;
+}
+
 const TITLE = 'Proyectos: sitios y sistemas construidos | Morphiq';
 const DESC =
   'Páginas web, puntos de venta, CRM y software que he construido para negocios reales. Cada caso con su problema, su solución y su enlace.';
@@ -138,7 +161,7 @@ export default function Proyectos() {
         eyebrow="Trabajo real"
         titulo="Negocios que ya están funcionando con esto."
         resalte="ya están funcionando"
-        entrada="Once piezas. Unas son encargos de negocios que hoy trabajan con ellas; otras son producto propio, construido para resolverme algo a mí primero. Ninguna es una maqueta de portafolio, y la que está en línea lleva su enlace para que la abras."
+        entrada={`${piezasEnLetra(PROYECTOS.length)}. Unas son encargos de negocios que hoy trabajan con ellas; otras son producto propio, construido para resolverme algo a mí primero. Ninguna es una maqueta de portafolio, y la que está en línea lleva su enlace para que la abras.`}
         aparte={
           <ul className="tira-industrias">
             {PROYECTOS.map((p) => (

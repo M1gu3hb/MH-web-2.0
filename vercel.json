@@ -5,6 +5,11 @@
   "outputDirectory": "dist",
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    { "source": "/proyectos/pos-tiendita", "destination": "/proyectos/morphiqpos", "permanent": true },
+    { "source": "/proyectos/qyro", "destination": "/proyectos", "permanent": true },
+    { "source": "/proyectos/stopmotion-studio", "destination": "/proyectos", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/(.*)",

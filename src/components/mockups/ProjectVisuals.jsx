@@ -1,4 +1,9 @@
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, CalendarDays, Dice5, Facebook, Globe, Instagram, Mail, MapPin, MessageCircle, Music, Phone, Play, Sparkles } from 'lucide-react';
+
+/* Las maquetas que se añadieron después traen su hoja propia. Solo la carga
+   quien importa este archivo —el banco de horneado—, así que no viaja en el
+   CSS del sitio: al sitio llegan ya horneadas como .webp. */
+import './maquetas-caso.css';
 
 /**
  * Ilustraciones de cada caso. Decorativas: el consumidor las marca aria-hidden.
@@ -455,77 +460,10 @@ export function MorphiqUiVisual() {
   );
 }
 
-/* A Qyro lo define por dónde NO pasa el archivo. La nube va tachada arriba y
-   el único camino dibujado es la línea recta de un aparato al otro, con el
-   código de emparejamiento y la misma huella a los dos lados: la prueba de que
-   entre ellos no hay nadie. */
-export function QyroVisual() {
-  return (
-    <div className="project-ui project-ui--qyro">
-      <div className="qyro-sky">
-        <svg className="qyro-sky__arcs" viewBox="0 0 100 40" preserveAspectRatio="none" role="presentation" focusable="false">
-          <path d="M4 40 C4 26 18 22 36 22" />
-          <path d="M96 40 C96 26 82 22 64 22" />
-        </svg>
-
-        <svg className="qyro-cloud" viewBox="0 0 100 56" role="presentation" focusable="false">
-          <path
-            className="qyro-cloud__shape"
-            d="M24 50 C10 50 10 30 24 29 C24 12 48 8 54 22 C62 12 80 16 80 29 C93 29 93 50 80 50 Z"
-          />
-          <line className="qyro-cloud__slash" x1="8" y1="52" x2="94" y2="6" />
-        </svg>
-
-        <span className="qyro-sky__label"><b>SIN NUBE</b> · SIN CUENTA · SIN SERVIDOR</span>
-      </div>
-
-      <div className="qyro-link">
-        <div className="qyro-dev">
-          <span className="qyro-dev__bar"><i /></span>
-          <small className="qyro-dev__tag">APARATO QUE ENVÍA</small>
-
-          <div className="qyro-file">
-            <i className="qyro-file__page" />
-            <b>contrato.pdf</b>
-            <em>4.2 MB</em>
-          </div>
-
-          <div className="qyro-key">
-            <small>CÓDIGO DEL QUE RECIBE</small>
-            <b>K7 4M 92<i /></b>
-          </div>
-
-          <small className="qyro-fp"><i />huella 4F·A9·D1</small>
-        </div>
-
-        <div className="qyro-wire">
-          <small>RED LOCAL</small>
-          <span className="qyro-wire__line">
-            <b className="qyro-packet">PDF</b>
-          </span>
-          <small>cifrado · verificado</small>
-        </div>
-
-        <div className="qyro-dev qyro-dev--to">
-          <span className="qyro-dev__bar"><i /></span>
-          <small className="qyro-dev__tag">APARATO QUE RECIBE</small>
-
-          <strong className="qyro-code"><b>K7</b><b>4M</b><b>92</b></strong>
-          <em className="qyro-hint">Este código se teclea allá</em>
-
-          <small className="qyro-fp"><i />huella 4F·A9·D1</small>
-        </div>
-      </div>
-
-      <p className="qyro-note">De aquí a allá.<br />Sin pasar por <b>nadie</b>.</p>
-    </div>
-  );
-}
-
 /* ------------------------------------------------------------
-   LOS CUATRO NUEVOS
+   LOS DOS SISTEMAS DEL SALÓN
    ------------------------------------------------------------
-   Dos son sistemas internos con login —el CRM del salón y el portal de su
+   Son sistemas internos con login —el CRM del salón y el portal de su
    cliente— y no tienen ninguna pantalla pública que se pueda enseñar. Así
    que estas ilustraciones no son capturas ni pretenden serlo: son el dibujo
    de lo que resuelven, con datos inventados. Ninguna lleva un nombre, un
@@ -627,59 +565,536 @@ export function JchPortalVisual() {
   );
 }
 
-export function StopMotionVisual() {
+/* ------------------------------------------------------------
+   LOS QUE SE SUMARON EN OCTUBRE
+   ------------------------------------------------------------
+   Mismas reglas que los demás: no son capturas, son el dibujo de lo que
+   cada proyecto resuelve, con su paleta y su tono. Los datos son de
+   ejemplo salvo los que el propio cliente publica en su sitio —precios de
+   las membresías, nombre de un lanzamiento—. Ninguna lleva fotos de
+   personas reales.
+   ------------------------------------------------------------ */
+
+/* El campo de caracteres de GLYPHOS se calcula aquí mismo, como lo haría el
+   estudio: un planeta con su anillo sombreado por una luz que llega de
+   arriba a la izquierda, sobre un polvo de glifos que se espesa cerca del
+   planeta. Es determinista —misma semilla, mismo dibujo—, así que cada
+   horneado sale idéntico. */
+const RAMPA_GLYPHOS = ' .,:;-=+*#%@';
+
+function campoGlyphos() {
+  const COLS = 118;
+  const FILAS = 60;
+  const ASPECTO = 1.9; // alto de una celda entre su ancho
+  let semilla = 417;
+  const azar = () => {
+    semilla = (semilla * 1664525 + 1013904223) % 4294967296;
+    return semilla / 4294967296;
+  };
+
+  const cx = 72;
+  const cy = 18.5 * ASPECTO;
+  const R = 23;
+  const giro = -0.3;
+  const [cosG, sinG] = [Math.cos(giro), Math.sin(giro)];
+  const [ejeA, ejeB] = [43, 10.5];
+  const largo = Math.hypot(-0.45, -0.5, 0.74);
+  const [lx, ly, lz] = [-0.45 / largo, -0.5 / largo, 0.74 / largo];
+
+  /* Cuatro capas, de la más tenue a la más encendida: cada carácter cae en
+     la capa que le toca por su brillo, y cada capa tiene su color. Así el
+     planeta se sombrea de verdad, igual que en el estudio. */
+  const capas = [[], [], [], []];
+  for (let f = 0; f < FILAS; f += 1) {
+    const lineas = ['', '', '', ''];
+    for (let c = 0; c < COLS; c += 1) {
+      const x = c - cx;
+      const y = f * ASPECTO - cy;
+      const d = Math.hypot(x, y) / R;
+      const rx = (x * cosG + y * sinG) / ejeA;
+      const ry = (-x * sinG + y * cosG) / ejeB;
+      const rr = Math.hypot(rx, ry);
+      const enAnillo = rr > 0.7 && rr < 1 && !(rr > 0.84 && rr < 0.88);
+      const delante = ry > 0;
+
+      let brillo = -1;
+      if (d < 1) {
+        const nx = x / R;
+        const ny = y / R;
+        const nz = Math.sqrt(Math.max(0, 1 - nx * nx - ny * ny));
+        const lambert = Math.max(0, nx * lx + ny * ly + nz * lz);
+        /* Luz ambiente generosa y un filo de luz en el contorno: sin eso la
+           mitad en sombra se pierde en el fondo y el planeta se lee como
+           una media luna. */
+        const filo = Math.pow(1 - nz, 3) * 0.35;
+        brillo = 0.26 + 0.7 * lambert * (0.84 + 0.16 * Math.sin(ny * 11 + 1.2)) + filo;
+        /* La sombra que el anillo proyecta sobre el planeta, justo debajo
+           de su paso por delante. */
+        if (ry > 1.05 && ry < 1.7 && Math.abs(rx) < 0.5) brillo *= 0.45;
+      }
+      if (enAnillo && (delante || d >= 1)) {
+        const t = (rr - 0.7) / 0.3;
+        brillo = (0.36 + 0.4 * Math.sin(t * Math.PI)) * (delante ? 1.12 : 0.78);
+      }
+
+      let caracter = ' ';
+      let capa = -1;
+      if (brillo >= 0) {
+        const b = Math.min(1, brillo);
+        caracter = RAMPA_GLYPHOS[Math.min(RAMPA_GLYPHOS.length - 1, Math.max(1, Math.round(b * (RAMPA_GLYPHOS.length - 1))))];
+        capa = b < 0.22 ? 0 : b < 0.45 ? 1 : b < 0.72 ? 2 : 3;
+      } else {
+        const halo = d > 1 ? 0.26 * Math.exp(-(d - 1) * 2.4) : 0;
+        if (azar() < 0.06 + halo) {
+          caracter = RAMPA_GLYPHOS[1 + Math.floor(azar() * 4)];
+          capa = 0;
+        }
+      }
+      for (let k = 0; k < 4; k += 1) lineas[k] += k === capa ? caracter : ' ';
+    }
+    lineas.forEach((linea, k) => capas[k].push(linea));
+  }
+  return capas.map((filas) => filas.join('\n'));
+}
+
+const CAMPO_GLYPHOS = campoGlyphos();
+
+export function GlyphosVisual() {
   return (
-    <div className="project-ui project-ui--stopmotion">
-      <div className="stm-cab">
-        <span>STOPMOTION STUDIO</span>
-        <b>12 fps</b>
+    <div className="project-ui project-ui--glyphos">
+      {CAMPO_GLYPHOS.map((capa, k) => (
+        <pre key={k} className={`glyphos-campo glyphos-campo--${k}`}>{capa}</pre>
+      ))}
+      <span className="glyphos-velo" />
+
+      <div className="glyphos-barra">
+        <span className="glyphos-marca">
+          <i className="glyphos-puntos">
+            {Array.from({ length: 9 }, (_, i) => (
+              <b key={i} />
+            ))}
+          </i>
+          GLYPHOS
+        </span>
+        <span className="glyphos-dado">
+          <Dice5 size={15} strokeWidth={2.2} />
+          Tirar el dado
+        </span>
       </div>
-      <div className="stm-tira" aria-hidden="true">
-        {Array.from({ length: 6 }, (_, i) => (
-          <i key={i} style={{ '--f': i }} />
-        ))}
+
+      <div className="glyphos-receta">
+        <small><span>EN EL FONDO</span><span>N.º 1</span></small>
+        <b>Saturno</b>
+        <span>semilla: faro-lunar-417</span>
       </div>
-      <div className="stm-pistas">
-        <span className="stm-pista stm-pista--video"><small>VÍDEO</small><i /></span>
-        <span className="stm-pista stm-pista--audio"><small>AUDIO</small><i /></span>
+
+      <div className="glyphos-texto">
+        <small><i />GLYPHOS <em>Teje luz con caracteres</em></small>
+        <strong>Haz arte<br />ASCII.</strong>
       </div>
-      <div className="stm-pie">
-        <span className="stm-chip">Cámara</span>
-        <span className="stm-chip">Croma</span>
-        <span className="stm-chip stm-chip--ok">Exportar MP4</span>
+
+      <div className="glyphos-salidas">
+        <b>SALE</b>
+        <span>PNG</span><span>SVG</span><span>MP4</span><span>GIF</span><span>ANSI</span><span>REACT</span>
       </div>
     </div>
   );
 }
 
-export function PosTienditaVisual() {
+export function BestMomentVisual() {
+  const paquetes = ['01', '02', '03', '04', '05', '06'];
   return (
-    <div className="project-ui project-ui--tiendita">
-      <div className="tiendita-cab">
-        <span>CAJA · TIENDITA</span>
-        <b>Turno abierto</b>
-      </div>
-      <div className="tiendita-cuerpo">
-        <div className="tiendita-ticket">
-          <span><em>Refresco 600 ml</em><i>$22</i></span>
-          <span><em>Pan de caja</em><i>$48</i></span>
-          <span><em>Detergente</em><i>$36</i></span>
-          <strong><em>TOTAL</em><i>$106</i></strong>
-        </div>
-        <div className="tiendita-escaner">
-          <small>ESCÁNER</small>
-          <span className="tiendita-codigo" aria-hidden="true">
-            {Array.from({ length: 11 }, (_, i) => (
-              <i key={i} style={{ '--b': i % 3 }} />
-            ))}
+    <div className="project-ui project-ui--bestmoment">
+      <div className="tbm-nav">
+        <span className="tbm-logo">
+          <i className="tbm-visor"><b>✦</b></i>
+          <span>
+            <small>THE BEST</small>
+            <em>Moment</em>
           </span>
-          <b>Desde el teléfono</b>
+        </span>
+        <span className="tbm-menu">
+          <i>Portafolio</i>
+          <i>Paquetes</i>
+          <i>Fotolibros</i>
+        </span>
+      </div>
+
+      <div className="tbm-cuerpo">
+        <div className="tbm-texto">
+          <small>BODAS · XV AÑOS · RETRATOS</small>
+          <strong>
+            El mejor
+            <br />
+            momento,
+            <br />
+            <em>para siempre.</em>
+          </strong>
+          <span className="tbm-cta">Consultar fecha <ArrowUpRight size={15} /></span>
+        </div>
+        <div className="tbm-fotos">
+          <span className="tbm-foto tbm-foto--boda"><small>Bodas</small></span>
+          <span className="tbm-foto tbm-foto--xv"><small>XV años</small></span>
+          <span className="tbm-foto tbm-foto--retrato"><small>Retratos</small></span>
         </div>
       </div>
-      <div className="tiendita-pie">
-        <span className="tiendita-chip">Inventario</span>
-        <span className="tiendita-chip">Corte de caja</span>
-        <span className="tiendita-chip">Varias sucursales</span>
+
+      <div className="tbm-paquetes">
+        <small>PAQUETES</small>
+        <span className="tbm-pildoras">
+          {paquetes.map((n) => (
+            <i key={n} className={n === '03' ? 'es-activo' : ''}>{n}</i>
+          ))}
+        </span>
+        <span className="tbm-whats">
+          <MessageCircle size={14} />
+          Fecha por WhatsApp
+        </span>
+      </div>
+    </div>
+  );
+}
+
+export function EnlacesVisual() {
+  return (
+    <div className="project-ui project-ui--enlaces">
+      <div className="enl-cab">
+        <small>QR · NFC · BIO DE REDES</small>
+        <b>Una dirección por negocio. <em>WhatsApp primero.</em></b>
+      </div>
+
+      <div className="enl-telefonos">
+        {/* ---- Morphiq ---- */}
+        <span className="enl-tel enl-tel--morphiq">
+          <span className="enl-pantalla">
+            <span className="enl-m-logo">Morphiq</span>
+            <small className="enl-m-sub">ASTRAL MORPHIQ SYSTEMS</small>
+            <small className="enl-m-hola">HOLA, SOY</small>
+            <b className="enl-m-nombre">Miguel Huerta Bautista<i>.</i></b>
+            <small className="enl-m-rol">Fundador · Desarrollador y diseñador</small>
+            <span className="enl-m-boton enl-m-boton--wa"><MessageCircle size={11} />WhatsApp</span>
+            <span className="enl-m-boton"><Phone size={11} />Llamada directa</span>
+            <span className="enl-m-boton"><Mail size={11} />Correo electrónico</span>
+            <span className="enl-m-boton"><Globe size={11} />Sitio web</span>
+          </span>
+        </span>
+
+        {/* ---- Jardín La Palapa ---- */}
+        <span className="enl-tel enl-tel--palapa">
+          <span className="enl-pantalla">
+            <span className="enl-p-logo">
+              <small>Jardín</small>
+              <b>La Palapa</b>
+            </span>
+            <small className="enl-p-sub">BODAS • XV AÑOS • EVENTOS</small>
+            <span className="enl-p-cotiza">
+              <i><MessageCircle size={13} /></i>
+              <span><b>Cotiza tu evento</b><small>Escríbenos por WhatsApp</small></span>
+            </span>
+            <span className="enl-p-par">
+              <span><CalendarDays size={12} />Agenda una visita</span>
+              <span><MapPin size={12} />Cómo llegar</span>
+            </span>
+            <small className="enl-p-rotulo">CONTACTO</small>
+            <span className="enl-p-fila"><Phone size={12} />Llamar a la oficina</span>
+            <small className="enl-p-rotulo">TAMBIÉN HACEMOS</small>
+            <span className="enl-p-par">
+              <span><Sparkles size={12} />Rituales</span>
+              <span><Music size={12} />Coreografías</span>
+            </span>
+          </span>
+        </span>
+
+        {/* ---- Fiesta Total DJ's ---- */}
+        <span className="enl-tel enl-tel--fiesta">
+          <span className="enl-pantalla">
+            <span className="enl-f-disco" />
+            <b className="enl-f-logo">FIESTA<br />TOTAL<small>DJ&apos;S</small></b>
+            <b className="enl-f-lema">MÚSICA QUE ENCIENDE<em>TU MEJOR FIESTA</em></b>
+            <span className="enl-f-boton enl-f-boton--wa"><i><MessageCircle size={12} /></i>WHATSAPP</span>
+            <span className="enl-f-boton"><i><Globe size={12} /></i>PÁGINA WEB</span>
+            <span className="enl-f-boton enl-f-boton--ig"><i><Instagram size={12} /></i>INSTAGRAM</span>
+            <span className="enl-f-boton enl-f-boton--fb"><i><Facebook size={12} /></i>FACEBOOK</span>
+          </span>
+        </span>
+      </div>
+    </div>
+  );
+}
+
+export function MorphiqPosVisual() {
+  const modos = ['Tiendita', 'Cafetería', 'Restaurante', 'Ferretería', 'Estética'];
+  const mesas = [
+    ['1', 'libre', 'Libre'],
+    ['2', 'ocupada', '2 pers.'],
+    ['3', 'ocupada', '4 pers.'],
+    ['4', 'activa', 'Cuenta'],
+    ['5', 'libre', 'Libre'],
+    ['6', 'reservada', '19:30'],
+    ['7', 'ocupada', '3 pers.'],
+    ['8', 'libre', 'Libre'],
+  ];
+  const ticket = [
+    ['1', 'Café americano', '$35'],
+    ['2', 'Chilaquiles verdes', '$190'],
+    ['1', 'Jugo de naranja', '$45'],
+    ['2', 'Agua de horchata', '$70'],
+    ['1', 'Pan dulce', '$28'],
+  ];
+  return (
+    <div className="project-ui project-ui--mpos">
+      <div className="mpos-cab">
+        <span className="mpos-marca"><i>M</i>MorphiqPOS</span>
+        <span className="mpos-modos">
+          {modos.map((m) => (
+            <i key={m} className={m === 'Restaurante' ? 'es-activo' : ''}>{m}</i>
+          ))}
+        </span>
+      </div>
+
+      <div className="mpos-cuerpo">
+        <div className="mpos-salon">
+          <small>SALÓN · TURNO DE LA TARDE</small>
+          <div className="mpos-mesas">
+            {mesas.map(([n, estado, nota]) => (
+              <span key={n} className={`mpos-mesa mpos-mesa--${estado}`}>
+                <b>{n}</b>
+                <i>{nota}</i>
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="mpos-ticket">
+          <span className="mpos-ticket__cab">
+            <b>Mesa 4</b>
+            <i>Mesero 02</i>
+          </span>
+          {ticket.map(([cant, que, cuanto]) => (
+            <span key={que} className="mpos-linea">
+              <em>{cant}×</em>
+              <span>{que}</span>
+              <i>{cuanto}</i>
+            </span>
+          ))}
+          <span className="mpos-nota">Sin cebolla en los chilaquiles</span>
+          <strong><em>TOTAL</em><i>$368</i></strong>
+          <span className="mpos-cobrar">Cobrar $368</span>
+        </div>
+      </div>
+
+      <div className="mpos-pie">
+        <span>PIN por empleado</span>
+        <span>Corre en local</span>
+        <span className="es-acento">Cinco negocios, un sistema</span>
+      </div>
+    </div>
+  );
+}
+
+/* El salón en isométrica. Se dibuja en planta —metros sobre el piso— y se
+   proyecta aquí, así que mover una mesa es cambiar un número. */
+const ISO = { s: 7.6, ox: 304, oy: 82 };
+function iso(x, y, z = 0) {
+  return [(x - y) * 0.866 * ISO.s + ISO.ox, (x + y) * 0.5 * ISO.s - z * ISO.s + ISO.oy];
+}
+function puntos(lista) {
+  return lista.map((p) => p.map((v) => v.toFixed(1)).join(',')).join(' ');
+}
+
+const SALON = { ancho: 56, fondo: 40, alto: 9 };
+const MESAS_3D = (() => {
+  const lista = [];
+  const filas = [7, 15, 31, 38];
+  const columnas = [7, 15, 41, 49];
+  filas.forEach((y) => columnas.forEach((x) => lista.push({ x, y })));
+  lista.push({ x: 28, y: 35 }, { x: 22, y: 36 }, { x: 34, y: 36 });
+  return lista.sort((a, b) => a.x + a.y - (b.x + b.y));
+})();
+
+export function Jch3dVisual() {
+  const piso = [iso(0, 0), iso(SALON.ancho, 0), iso(SALON.ancho, SALON.fondo), iso(0, SALON.fondo)];
+  const muroFondo = [iso(0, 0), iso(SALON.ancho, 0), iso(SALON.ancho, 0, SALON.alto), iso(0, 0, SALON.alto)];
+  const muroLado = [iso(0, 0), iso(0, SALON.fondo), iso(0, SALON.fondo, SALON.alto), iso(0, 0, SALON.alto)];
+  const canto = [iso(SALON.ancho, 0), iso(SALON.ancho, SALON.fondo), iso(SALON.ancho, SALON.fondo, -1.4), iso(SALON.ancho, 0, -1.4)];
+  const cantoFrente = [iso(0, SALON.fondo), iso(SALON.ancho, SALON.fondo), iso(SALON.ancho, SALON.fondo, -1.4), iso(0, SALON.fondo, -1.4)];
+  const pista = [iso(20, 14), iso(36, 14), iso(36, 27), iso(20, 27)];
+  const escenario = [iso(14, 0.3, 1.2), iso(42, 0.3, 1.2), iso(42, 4.5, 1.2), iso(14, 4.5, 1.2)];
+  const escenarioFrente = [iso(14, 4.5, 1.2), iso(42, 4.5, 1.2), iso(42, 4.5), iso(14, 4.5)];
+
+  return (
+    <div className="project-ui project-ui--jch3d">
+      <div className="j3d-barra">
+        <span className="j3d-marca"><i>JCH</i><span><b>3D STUDIO</b><small>JARDINES CLUB HÍPICO</small></span></span>
+        <span className="j3d-vistas">
+          <i className="es-activo">Vista 3D</i>
+          <i>Planta</i>
+          <i>Desde la entrada</i>
+        </span>
+        <span className="j3d-compartir">Compartir <ArrowUpRight size={13} /></span>
+      </div>
+
+      <div className="j3d-cuerpo">
+        <svg className="j3d-salon" viewBox="0 0 712 470" role="presentation" focusable="false">
+          <polygon points={puntos(muroFondo)} className="j3d-muro" />
+          <polygon points={puntos(muroLado)} className="j3d-muro j3d-muro--lado" />
+          {Array.from({ length: 6 }, (_, i) => {
+            const x = 6 + i * 9;
+            return <polygon key={i} points={puntos([iso(x, 0, 2.2), iso(x + 5, 0, 2.2), iso(x + 5, 0, 7.2), iso(x, 0, 7.2)])} className="j3d-espejo" />;
+          })}
+          <polygon points={puntos(cantoFrente)} className="j3d-canto" />
+          <polygon points={puntos(canto)} className="j3d-canto j3d-canto--lado" />
+          <polygon points={puntos(piso)} className="j3d-piso" />
+          <polygon points={puntos(pista)} className="j3d-pista" />
+          <polygon points={puntos(escenarioFrente)} className="j3d-escenario-frente" />
+          <polygon points={puntos(escenario)} className="j3d-escenario" />
+          <text x={iso(28, 20.5)[0]} y={iso(28, 20.5)[1] + 4} className="j3d-rotulo">PISTA</text>
+
+          {MESAS_3D.map(({ x, y }, k) => {
+            const [tx, ty] = iso(x, y, 1.6);
+            const [sx, sy] = iso(x, y);
+            const elegida = x === 15 && y === 31;
+            const sillas = Array.from({ length: 8 }, (_, i) => {
+              const a = (i / 8) * Math.PI * 2;
+              return iso(x + Math.cos(a) * 3.3, y + Math.sin(a) * 3.3, 0.9);
+            });
+            return (
+              <g key={k} className={elegida ? 'j3d-mesa es-elegida' : 'j3d-mesa'}>
+                <ellipse cx={sx + 3} cy={sy + 2} rx={2.6 * 1.2247 * ISO.s} ry={2.6 * 0.7071 * ISO.s} className="j3d-sombra" />
+                {sillas
+                  .filter(([, py]) => py < ty)
+                  .map(([px, py], i) => (
+                    <ellipse key={`a${i}`} cx={px} cy={py} rx={4.4} ry={2.7} className="j3d-silla" />
+                  ))}
+                <ellipse cx={tx} cy={ty} rx={1.9 * 1.2247 * ISO.s} ry={1.9 * 0.7071 * ISO.s} className="j3d-mantel" />
+                {sillas
+                  .filter(([, py]) => py >= ty)
+                  .map(([px, py], i) => (
+                    <ellipse key={`b${i}`} cx={px} cy={py} rx={4.4} ry={2.7} className="j3d-silla" />
+                  ))}
+              </g>
+            );
+          })}
+        </svg>
+
+      </div>
+
+      <div className="j3d-panel">
+        <span className="j3d-titulo">
+          <small>DISEÑA TU EVENTO</small>
+          <b>Salón de los Espejos</b>
+        </span>
+        <span className="j3d-dato"><i>Mesas</i><em>19</em></span>
+        <span className="j3d-dato"><i>Sillas</i><em>152</em></span>
+        <span className="j3d-dato j3d-dato--barra">
+          <i>Confirmados</i>
+          <em>128 / 152</em>
+          <span><b /></span>
+        </span>
+        <span className="j3d-elegida">
+          <small>MESA M7</small>
+          Redonda · 8 sillas
+        </span>
+      </div>
+
+      <div className="j3d-pie">
+        <span>19 mesas · 152 sillas</span>
+        <span className="es-ok">Sin cruces de huellas</span>
+        <span>Visor sin internet</span>
+      </div>
+    </div>
+  );
+}
+
+export function JchBaileVisual() {
+  const ritmos = ['Salsa', 'Bachata', 'Cumbia', 'Merengue', 'Danzón', 'Cha-cha-chá'];
+  const planes = [
+    ['Esencial', '4 clases al mes', '$300'],
+    ['Constante', '8 clases al mes', '$600'],
+    ['Intensivo', '12 clases al mes', '$800'],
+  ];
+  return (
+    <div className="project-ui project-ui--jchbaile">
+      <span className="baile-luz" />
+      <div className="baile-cab">
+        <span className="baile-logo"><i>JCH</i><em>Baile</em></span>
+        <span className="baile-cta">Quiero bailar <ArrowUpRight size={14} /></span>
+      </div>
+
+      <div className="baile-texto">
+        <small className="baile-pildora">PRÓXIMAMENTE · XOCHIMILCO</small>
+        <strong>Tu cuerpo<br />ya sabe.</strong>
+        <em>Solo hay que escucharlo.</em>
+      </div>
+
+      <div className="baile-ritmos">
+        {ritmos.map((r) => (
+          <i key={r}>{r}</i>
+        ))}
+      </div>
+
+      <div className="baile-ritmo">
+        <span className="baile-ritmo__boton"><Play size={14} fill="currentColor" /></span>
+        <span className="baile-ritmo__onda">
+          {[30, 62, 44, 88, 52, 70, 36, 96, 58, 74, 40, 82, 50, 66, 34, 90, 56, 72, 42, 86, 48, 64, 38, 78].map((h, i) => (
+            <i key={i} style={{ height: `${h}%` }} />
+          ))}
+        </span>
+        <small>ACTIVAR RITMO</small>
+      </div>
+
+      <div className="baile-planes">
+        {planes.map(([nombre, clases, precio]) => (
+          <span key={nombre} className={nombre === 'Constante' ? 'es-destacado' : ''}>
+            <small>{nombre}</small>
+            <b>{precio}<i>/mes</i></b>
+            <em>{clases}</em>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function XaviVisual() {
+  const barras = [38, 72, 54, 90, 62, 100, 70, 46, 84, 58, 96, 66];
+  return (
+    <div className="project-ui project-ui--xavi">
+      <span className="xavi-luz" />
+      <div className="xavi-cab">
+        <b>XV<sup>MTZ</sup></b>
+        <span>LANZAMIENTOS · SPOTIFY · BOOKING</span>
+      </div>
+
+      <div className="xavi-intro">
+        <b>✦</b>
+        <p>DJ &amp; producer building a catalog between house, dance and electronic music.</p>
+        <small>INDEPENDENT ARTIST · CDMX</small>
+      </div>
+
+      <div className="xavi-disco">
+        <span className="xavi-portada"><i /></span>
+        <span className="xavi-disco__texto">
+          <small>/ 01 · ÚLTIMO LANZAMIENTO</small>
+          <b>Childhood</b>
+          <em>EP</em>
+        </span>
+      </div>
+
+      <div className="xavi-texto">
+        <small><i>||||</i>HOUSE FROM MEXICO CITY</small>
+        <strong>THE XAVI</strong>
+        <strong className="xavi-mtz">MTZ</strong>
+      </div>
+
+      <div className="xavi-pie">
+        <span className="xavi-spotify">LISTEN ON SPOTIFY <ArrowUpRight size={14} /></span>
+        <span className="xavi-eq">
+          {barras.map((h, i) => (
+            <i key={i} style={{ height: `${h}%` }} />
+          ))}
+        </span>
+        <b>MAKE THE ROOM <em>MOVE.</em></b>
       </div>
     </div>
   );

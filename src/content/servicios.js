@@ -383,7 +383,7 @@ export const PAGINAS_SERVICIO = {
       },
     ],
 
-    proyectos: ['pasteleria-confetti', 'pos-tiendita', 'electrotecnica-berlin'],
+    proyectos: ['pasteleria-confetti', 'morphiqpos', 'electrotecnica-berlin'],
 
     cierre: {
       titulo: 'Cuéntame cómo opera tu negocio hoy',
@@ -597,7 +597,7 @@ export const PAGINAS_SERVICIO = {
       },
     ],
 
-    proyectos: ['gestech', 'stopmotion-studio', 'mh-photo-booth'],
+    proyectos: ['glyphos', 'gestech', 'mh-photo-booth'],
 
     cierre: {
       titulo: 'Cuéntame qué necesitas que exista',
