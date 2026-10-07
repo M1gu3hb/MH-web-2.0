@@ -5,7 +5,7 @@
  *
  * Esta es la sección de producción (`AboutSection`) traída tal cual: la
  * placa con el efecto de agua, la firma MH97, el titular a dos voces, el
- * enlace a GitHub, el nombre, el rol y el correo personal.
+ * nombre, el rol y el correo personal.
  *
  * En la iteración anterior este bloque se había quedado en un párrafo
  * centrado dentro de una columna estrecha. Es decir: puro texto. Y era
@@ -17,7 +17,7 @@
  *   mismos parámetros: al pasar el cursor el logo se deforma como agua y al
  *   hacer clic da un golpe. Es el componente que le da vida a este bloque.
  * · La firma MH97 en relieve y su leyenda.
- * · «Revisa mis proyectos en GitHub», el nombre, el rol y el correo.
+ * · El nombre, el rol y el correo.
  * · El titular a dos líneas con la segunda en la voz suave.
  *
  * QUÉ SE ADAPTA
@@ -29,7 +29,7 @@
  *   página está rota. El efecto se queda en el titular, que es su sitio.
  */
 
-import { ArrowUpRight, Github, Mail } from 'lucide-react';
+import { Mail } from 'lucide-react';
 import { RippleDistortion, ScrambleText } from '../reactbits';
 import { Cortina, Escala } from '../motion';
 import { ABOUT, CONTACT } from '../../content';
@@ -106,12 +106,6 @@ export function Presentacion({ resumen = true, children }) {
             {p}
           </p>
         ))}
-
-        <a className="presentacion__github" href={ABOUT.github} target="_blank" rel="noreferrer">
-          <Github size={16} aria-hidden="true" />
-          Revisa mis proyectos en GitHub
-          <ArrowUpRight size={15} aria-hidden="true" />
-        </a>
 
         {/* La rúbrica va apilada y con filo azul a la izquierda, exactamente
             como en el sitio anterior: nombre grande, rol debajo en versalitas

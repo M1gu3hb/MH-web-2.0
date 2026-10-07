@@ -1,4 +1,4 @@
-import { ArrowUpRight, Github, Mail } from 'lucide-react';
+import { Mail } from 'lucide-react';
 import { Reveal, RippleDistortion, ScrambleText } from '../reactbits';
 import { ABOUT, CONTACT } from '../../content';
 import { gmailUrl } from '../../lib/correo';
@@ -83,14 +83,6 @@ export function AboutSection() {
               />
             </p>
           ))}
-
-          <Reveal className="about__enlaces" delay={0.1}>
-            <a className="about__github" href={ABOUT.github} target="_blank" rel="noreferrer">
-              <Github size={16} aria-hidden="true" />
-              Revisa mis proyectos en GitHub
-              <ArrowUpRight size={15} aria-hidden="true" />
-            </a>
-          </Reveal>
 
           <Reveal className="about__signature" delay={0.14}>
             <strong>{CONTACT.owner}</strong>

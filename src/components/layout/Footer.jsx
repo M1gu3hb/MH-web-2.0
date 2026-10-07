@@ -13,7 +13,7 @@
  */
 
 import { Link } from 'react-router-dom';
-import { ArrowUp, Github, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
+import { ArrowUp, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { BrandLockup } from './BrandLockup';
 import { CONTACT } from '../../content';
 import { MENU, RUTAS } from '../../config/rutas';
@@ -84,10 +84,6 @@ export function Footer() {
           <a className="footer__dato" href={gmailUrl(CONTACT.email)} target="_blank" rel="noreferrer">
             <Mail size={15} aria-hidden="true" />
             <span>{CONTACT.email}</span>
-          </a>
-          <a className="footer__dato" href="https://github.com/M1gu3hb" target="_blank" rel="noreferrer">
-            <Github size={15} aria-hidden="true" />
-            <span>github.com/M1gu3hb</span>
           </a>
           <p className="footer__dato footer__dato--plano">
             <MapPin size={15} aria-hidden="true" />

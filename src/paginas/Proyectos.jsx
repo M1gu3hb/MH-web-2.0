@@ -24,7 +24,6 @@ import { useReducedMotion } from '../hooks/useReducedMotion';
 import { Seo, nodoMigas, nodoPagina } from '../lib/seo';
 import { CATEGORIAS, PROYECTOS, rutaProyecto } from '../content/proyectos';
 import { DOMINIO, RUTAS } from '../config/rutas';
-import { ABOUT } from '../content';
 
 const MIGAS = [
   { nombre: 'Inicio', path: RUTAS.inicio },
@@ -232,7 +231,6 @@ export default function Proyectos() {
               </p>
               <div className="indice-cierre__acciones">
                 <BotonPrincipal to={RUTAS.contacto}>Cuéntame qué necesitas</BotonPrincipal>
-                <BotonSecundario href={ABOUT.github}>Ver el código en GitHub</BotonSecundario>
               </div>
             </aside>
           </Reveal>

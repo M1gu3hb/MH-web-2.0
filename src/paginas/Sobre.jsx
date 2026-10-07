@@ -7,7 +7,7 @@
  * agencia donde nunca habla con quien construye.
  */
 
-import { Github, Mail, MapPin, MessageCircle } from 'lucide-react';
+import { Mail, MapPin } from 'lucide-react';
 import {
   BotonPrincipal,
   BotonSecundario,
@@ -142,18 +142,13 @@ export default function Sobre() {
             </Reveal>
             <Reveal>
               <p className="bio__parrafo">
-                Lo que hago está publicado. Los proyectos de este sitio tienen enlace directo y buena parte del
-                código está abierto en GitHub. Es la forma más honesta que se me ocurre de que no tengas que
-                creerme nada.
+                Lo que hago está publicado: los proyectos de este sitio que están en línea llevan su enlace
+                directo. Es la forma más honesta que se me ocurre de que no tengas que creerme nada.
               </p>
             </Reveal>
 
             <Reveal>
               <div className="bio__enlaces">
-                <a href="https://github.com/M1gu3hb" target="_blank" rel="noreferrer">
-                  <Github size={17} aria-hidden="true" />
-                  github.com/M1gu3hb
-                </a>
                 <a href={gmailUrl(CONTACT.emailPersonal)} target="_blank" rel="noreferrer">
                   <Mail size={17} aria-hidden="true" />
                   {CONTACT.emailPersonal}

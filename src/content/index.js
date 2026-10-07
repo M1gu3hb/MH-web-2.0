@@ -369,11 +369,10 @@ export const ABOUT = {
   title: ['Hola, soy Miguel.', 'Yo construyo todo esto.'],
   paragraphs: [
     'Me llamo Miguel Huerta. Creo y desarrollo software: páginas web, puntos de venta, CRM y automatizaciones a la medida. Full stack, con especialidad en front end y back end.',
-    'Tengo varios negocios operando con mis sistemas y varios proyectos ya construidos y publicados. Si quieres revisarlos a fondo, están en mi GitHub.',
+    'Tengo varios negocios operando con mis sistemas y varios proyectos ya construidos y publicados.',
     'La mayoría de los estudios te diseñan bonito y te dejan solo con la operación. La mayoría de los programadores te resuelven la operación con un sistema que da pena enseñar. Yo hago las dos cosas bien: el diseño que se ve y el sistema que trabaja detrás.',
     'Trabajo directo contigo. No hay cuenta, ni junior, ni cadena de correos. Si me escribes un martes a las nueve de la noche, te contesto yo.',
   ],
-  github: 'https://github.com/M1gu3hb',
   signature: 'MH97 · DESIGN × SYSTEMS · CDMX',
 };
 

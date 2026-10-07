@@ -247,8 +247,6 @@ export const PROYECTOS = [
     etiquetas: ['Next.js', 'Administrador propio', 'Supabase', 'WhatsApp'],
     acento: '#0a66ff',
     imagen: '/casos/vero.webp',
-    url: 'https://github.com/M1gu3hb/Vero-seguros-',
-    etiquetaEnlace: 'Ver repositorio',
     destacado: false,
 
     contexto:
@@ -361,8 +359,6 @@ export const PROYECTOS = [
     etiquetas: ['NFC', 'Electron', 'Android', 'Automatización'],
     acento: '#b06cff',
     imagen: '/casos/nfc.webp',
-    url: 'https://github.com/M1gu3hb/nfc-manager',
-    etiquetaEnlace: 'Ver repositorio',
     destacado: false,
 
     contexto:
@@ -405,8 +401,6 @@ export const PROYECTOS = [
     etiquetas: ['Python', 'OpenCV', 'MediaPipe', 'Windows'],
     acento: '#f5a524',
     imagen: '/casos/gestech.webp',
-    url: 'https://github.com/M1gu3hb/GESTCH',
-    etiquetaEnlace: 'Ver repositorio',
     destacado: false,
 
     contexto:
@@ -527,8 +521,6 @@ export const PROYECTOS = [
     etiquetas: ['Rust', 'Flutter', 'Criptografía', 'Sin nube'],
     acento: '#51c8ff',
     imagen: '/casos/qyro.webp',
-    url: 'https://github.com/M1gu3hb/-Qyro',
-    etiquetaEnlace: 'Ver repositorio',
     destacado: false,
 
     contexto:
@@ -575,8 +567,6 @@ export const PROYECTOS = [
     etiquetas: ['Electron', 'Offline-first', 'Next.js', 'SQLite'],
     acento: '#5e63ff',
     imagen: '/casos/photobooth.webp',
-    url: 'https://github.com/M1gu3hb/mh-photo-booth-studio',
-    etiquetaEnlace: 'Ver repositorio',
     destacado: false,
 
     contexto:
@@ -608,8 +598,6 @@ export const PROYECTOS = [
     etiquetas: ['React', 'TypeScript', 'Local-first', 'Exportación de vídeo'],
     acento: '#51c8ff',
     imagen: '/casos/stopmotion.webp',
-    url: 'https://github.com/M1gu3hb/STMPR',
-    etiquetaEnlace: 'Ver repositorio',
     destacado: false,
 
     contexto:

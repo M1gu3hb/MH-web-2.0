@@ -4179,27 +4179,6 @@ iframe {
   line-height: 1.66;
 }
 
-.presentacion__github {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-2);
-  margin-top: var(--sp-3);
-  padding: var(--sp-3) var(--sp-4);
-  border: 1px solid var(--line);
-  border-radius: var(--r-full);
-  color: var(--ink-strong);
-  font-size: max(0.88rem, 12.5px);
-  text-decoration: none;
-  transition: border-color 0.22s var(--ease), color 0.22s var(--ease), transform 0.22s var(--ease);
-}
-
-.presentacion__github:hover,
-.presentacion__github:focus-visible {
-  border-color: var(--accent-brand);
-  color: var(--accent-pos);
-  transform: translateY(-2px);
-}
-
 /* La rúbrica va apilada y con filo azul a la izquierda, exactamente como en
    el sitio anterior: nombre grande, rol debajo en versalitas espaciadas y el
    correo abajo con su icono. En una sola fila, el rol y el correo competían
@@ -4263,13 +4242,6 @@ iframe {
   }
   .presentacion__marca {
     max-width: 380px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .presentacion__github:hover,
-  .presentacion__github:focus-visible {
-    transform: none;
   }
 }
 
