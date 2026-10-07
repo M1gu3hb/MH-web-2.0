@@ -34,6 +34,11 @@ export default function ProyectoDetalle() {
   const ruta = rutaProyecto(proyecto.slug);
   const title = `${proyecto.tituloSeo ?? `${proyecto.nombre}: ${proyecto.tipo}`} | Morphiq`;
   const description = proyecto.resumen;
+  const enDesarrollo = proyecto.estado === 'en-desarrollo';
+  /* Un caso puede reunir varios sitios en vivo —las páginas de enlaces son
+     tres—; el resto lleva uno o ninguno. */
+  const enlaces =
+    proyecto.enlaces ?? (proyecto.url ? [{ etiqueta: proyecto.etiquetaEnlace ?? 'Ver proyecto', url: proyecto.url }] : []);
 
   const migas = [
     { nombre: 'Inicio', path: RUTAS.inicio },
@@ -70,6 +75,15 @@ export default function ProyectoDetalle() {
           <Migas ruta={migas} />
           <div className="caso-cabecera__reparto">
             <div>
+              {/* Lo que todavía se está construyendo lo dice aquí, dentro de
+                  su ficha, y en ningún otro sitio: en el índice la tarjeta es
+                  igual a las demás. */}
+              {enDesarrollo && (
+                <p className="caso-estado">
+                  <span className="caso-estado__punto" aria-hidden="true" />
+                  En desarrollo
+                </p>
+              )}
               <p className="caso-cabecera__industria">{proyecto.industria}</p>
               <h1 className="caso-cabecera__titulo">{proyecto.nombre}</h1>
               <p className="caso-cabecera__tipo">{proyecto.tipo}</p>
@@ -88,11 +102,24 @@ export default function ProyectoDetalle() {
                 ))}
               </ul>
 
-              {proyecto.url && (
-                <a className="tactile-button tactile-button--glow" href={proyecto.url} target="_blank" rel="noreferrer">
+              {enlaces.length === 1 && (
+                <a className="tactile-button tactile-button--glow" href={enlaces[0].url} target="_blank" rel="noreferrer">
                   <ExternalLink size={16} aria-hidden="true" />
-                  {proyecto.etiquetaEnlace ?? 'Ver proyecto'}
+                  {enlaces[0].etiqueta}
                 </a>
+              )}
+
+              {enlaces.length > 1 && (
+                <ul className="caso-cabecera__enlaces" aria-label="Verlos en línea">
+                  {enlaces.map((e) => (
+                    <li key={e.url}>
+                      <a className="tactile-button tactile-button--paper" href={e.url} target="_blank" rel="noreferrer">
+                        <ExternalLink size={16} aria-hidden="true" />
+                        {e.etiqueta}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               )}
             </div>
 

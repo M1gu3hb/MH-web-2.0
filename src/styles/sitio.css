@@ -2199,6 +2199,61 @@
   }
 }
 
+/* Varios sitios en vivo para un mismo caso: un botón por cada uno, todos
+   del mismo peso, porque ninguno es más importante que los otros. */
+.caso-cabecera__enlaces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---- «En desarrollo» ----
+   Una etiqueta pequeña encima de la industria, solo dentro de la ficha. Va
+   en el color del caso para que se lea como parte de él y no como un aviso
+   del sitio, y el punto respira despacio: algo que se está construyendo,
+   no una alarma. */
+.caso-estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: var(--sp-4);
+  padding: 5px 12px 5px 10px;
+  border: 1px solid color-mix(in srgb, var(--acento) 42%, transparent);
+  border-radius: var(--r-full);
+  background: color-mix(in srgb, var(--acento) 10%, transparent);
+  color: color-mix(in srgb, var(--acento) 58%, #eef1f6);
+  font-family: var(--font-display);
+  font-size: max(0.72rem, 12.5px);
+  font-weight: var(--w-label);
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.caso-estado__punto {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--acento);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--acento) 22%, transparent);
+  animation: caso-estado-pulso 1.8s ease-in-out infinite;
+}
+
+@keyframes caso-estado-pulso {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caso-estado__punto {
+    animation: none;
+  }
+}
+
 .caso-cabecera__imagen {
   margin: 0;
 }
