@@ -4462,11 +4462,21 @@ main#contenido > * {
     align-items: stretch;
   }
 
+  /* La proporción 16:10 de las tarjetas normales aquí sobra: con `height:
+     100%` el ancho salía del alto, y en cuanto el texto de al lado crecía un
+     renglón la maqueta se ensanchaba más que su columna y se montaba encima
+     del texto. Sin proporción, la caja mide lo que su columna y lo que su
+     fila; la imagen va absoluta para no empujar la fila con su alto natural
+     —la maqueta es casi cuadrada— y la llena con `cover`. */
   .tarjeta-proyecto--destacado .tarjeta-proyecto__imagen {
     height: 100%;
+    min-height: 380px;
+    aspect-ratio: auto;
   }
 
   .tarjeta-proyecto--destacado .tarjeta-proyecto__imagen img {
+    position: absolute;
+    inset: 0;
     height: 100%;
     object-fit: cover;
   }
