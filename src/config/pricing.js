@@ -38,7 +38,7 @@ export const MONEDA = 'MXN';
  * diferencia entre un precio y una sorpresa. Se declara una vez aquí y la
  * página de precios lo pinta donde el visitante lo va a leer.
  */
-export const AVISO_IVA = 'Todos los precios están en pesos mexicanos y no incluyen IVA. Si necesitas factura, dímelo al cotizar y lo contemplo desde el principio.';
+export const AVISO_IVA = 'Todos los precios están en pesos mexicanos y no incluyen IVA. Si necesitas factura, dínoslo al cotizar y lo contemplamos desde el principio.';
 
 /* ============================================================
    PLANES
@@ -72,7 +72,7 @@ export const PLANES = {
       'Quieres poder editar el contenido tú mismo',
       'Necesitas catálogo, carrito o cobros en línea',
     ],
-    nota: 'El dominio y el mantenimiento se pueden añadir aparte. Te digo cuánto antes de empezar.',
+    nota: 'El dominio y el mantenimiento se pueden añadir aparte. Te decimos cuánto antes de empezar.',
     salida: 'El sitio y el dominio quedan a tu nombre. No hay permanencia: si mañana te lo llevas con otra persona, te lo llevas.',
     cta: 'Cotizar Web Esencial',
     destacado: false,
@@ -110,7 +110,7 @@ export const PLANES = {
       'Hace falta sesión de fotos o redacción completa',
     ],
     nota: 'La propuesta final define exactamente qué lleva tu proyecto. No pagas por una lista de botones: pagas por resolver lo que tu negocio necesita.',
-    salida: 'Dominio, código y contenido quedan a tu nombre. A partir del año 2 el dominio se renueva a precio de registro; te digo cuánto es antes de empezar.',
+    salida: 'Dominio, código y contenido quedan a tu nombre. A partir del año 2 el dominio se renueva a precio de registro; te decimos cuánto es antes de empezar.',
     cta: 'Cotizar Web Profesional',
     destacado: true,
   },
@@ -172,7 +172,7 @@ export const PLANES = {
       'Se conecta con tu web o tu punto de venta',
     ],
     nota: 'La puesta en marcha se cotiza aparte, una sola vez, y cubre carga de datos, alta de usuarios, migración y capacitación. Depende del tamaño de tu operación.',
-    salida: 'Sin permanencia: se cancela cuando quieras. Tus datos son tuyos y te los entrego exportados si te vas.',
+    salida: 'Sin permanencia: se cancela cuando quieras. Tus datos son tuyos y te los entregamos exportados si te vas.',
     cta: 'Cotizar CRM',
     destacado: false,
   },
@@ -208,7 +208,7 @@ export const PLANES = {
       'Hace falta hardware (lector, impresora, cajón)',
     ],
     nota: 'La puesta en marcha se cotiza aparte, una sola vez, y cubre carga de catálogo, alta de sucursales y usuarios, y capacitación. Depende del tamaño de tu operación.',
-    salida: 'Sin permanencia: se cancela cuando quieras. Tus datos son tuyos y te los entrego exportados si te vas.',
+    salida: 'Sin permanencia: se cancela cuando quieras. Tus datos son tuyos y te los entregamos exportados si te vas.',
     cta: 'Cotizar Punto de Venta',
     destacado: false,
   },

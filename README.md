@@ -16,7 +16,7 @@ En producción: [www.morphiq.com.mx](https://www.morphiq.com.mx/)
 - Movimiento de interfaz con Motion y scroll suave con Lenis, con freno propio
   para que un deslizamiento fuerte no se salte las secciones animadas.
 - Navegación accesible y alternativa completa para `prefers-reduced-motion`.
-- CTA directo a WhatsApp de Miguel Huerta Bautista.
+- CTA directo a WhatsApp.
 
 ## Stack
 
@@ -81,7 +81,7 @@ El mapeo completo del repositorio, la auditoría y el plan de rediseño están e
 
 ## Contacto
 
-Miguel Huerta Bautista  
+Astral Morphiq Systems  
 contacto@morphiq.com.mx  
 WhatsApp: 55 2311 8153  
-Xochimilco · CDMX
+Ciudad de México

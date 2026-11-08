@@ -14,24 +14,23 @@
  */
 
 export const CONTACT = {
-  owner: 'Miguel Huerta Bautista',
-  role: 'Director · Diseñador · Desarrollador',
+  studio: 'Astral Morphiq Systems',
+  role: 'Diseño · Desarrollo · Sistemas',
   phone: '55 2311 8153',
   whatsapp: '525523118153',
   email: 'contacto@morphiq.com.mx',
-  emailPersonal: 'miguel@morphiq.com.mx',
-  location: 'Xochimilco · CDMX',
+  location: 'Ciudad de México',
   site: 'https://www.morphiq.com.mx',
 };
 
 /** Mensaje de WhatsApp por origen del clic — permite saber qué CTA convierte. */
 export const WHATSAPP_MESSAGES = {
-  nav: 'Hola Miguel 👋 Quiero platicar sobre un proyecto para mi negocio.',
-  hero: 'Hola Miguel 👋 Vi tu página y quiero contarte sobre mi proyecto.',
-  work: 'Hola Miguel 👋 Vi tus casos de trabajo y quiero algo parecido para mi negocio.',
-  pricing: 'Hola Miguel 👋 Vi los paquetes y quiero cotizar mi proyecto.',
-  contact: 'Hola Miguel 👋 Quiero contarte qué necesita mi negocio.',
-  floating: 'Hola Miguel 👋 Tengo una duda rápida sobre lo que haces.',
+  nav: 'Hola 👋 Quiero platicar sobre un proyecto para mi negocio.',
+  hero: 'Hola 👋 Vi su página y quiero contarles sobre mi proyecto.',
+  work: 'Hola 👋 Vi sus casos de trabajo y quiero algo parecido para mi negocio.',
+  pricing: 'Hola 👋 Vi los paquetes y quiero cotizar mi proyecto.',
+  contact: 'Hola 👋 Quiero contarles qué necesita mi negocio.',
+  floating: 'Hola 👋 Tengo una duda rápida sobre lo que hacen.',
 };
 
 export const NAV_LINKS = [
@@ -43,7 +42,7 @@ export const NAV_LINKS = [
 ];
 
 export const HERO = {
-  eyebrow: 'Estudio digital independiente · CDMX',
+  eyebrow: 'Estudio digital · CDMX',
   /* El titular se compone de tres renglones con voz distinta: los de fuera
      gritan la promesa en la tipografía de display, y el de en medio la matiza
      en la de texto, más ligera y en minúscula. El contraste es lo que hace que
@@ -54,14 +53,14 @@ export const HERO = {
     { text: 'DE TU NEGOCIO', voice: 'mark' },
   ],
   /* Lo que era el titular pasa a ser la primera frase de apoyo. */
-  claim: ['Diseño lo que tus clientes ', 'ven', '. Construyo lo que tu negocio ', 'necesita.'],
+  claim: ['Diseñamos lo que tus clientes ', 'ven', '. Construimos lo que tu negocio ', 'necesita.'],
   lead: 'Páginas que convencen. Sistemas que ordenan. Una sola visión para convertir la operación de tu negocio en una ventaja.',
-  primaryCta: 'Cuéntame tu proyecto',
+  primaryCta: 'Cuéntanos tu proyecto',
   secondaryCta: 'Ver trabajo real',
   credentials: [
-    { label: 'Atención directa', note: 'Tratas conmigo, no con una cuenta' },
-    { label: 'Diseño + desarrollo', note: 'Del diseño al código, todo lo hago yo' },
-    { label: 'CDMX', note: 'Voy a verte si hace falta' },
+    { label: 'Atención directa', note: 'Un asesor te acompaña de principio a fin' },
+    { label: 'Diseño + desarrollo', note: 'Del diseño al código, todo en un mismo equipo' },
+    { label: 'CDMX', note: 'Vamos a verte si hace falta' },
   ],
   chrome: { id: 'MORPHIQ / SYSTEM CORE', status: 'EN LÍNEA', hint: 'Mueve el cursor', tech: 'WEBGL / REALTIME' },
 };
@@ -365,15 +364,15 @@ export const PRICING = {
 };
 
 export const ABOUT = {
-  eyebrow: '05 / QUIÉN LO HACE',
-  title: ['Hola, soy Miguel.', 'Yo construyo todo esto.'],
+  eyebrow: '05 / QUIÉNES SOMOS',
+  title: ['Somos un equipo.', 'Construimos todo esto.'],
   paragraphs: [
-    'Me llamo Miguel Huerta. Creo y desarrollo software: páginas web, puntos de venta, CRM y automatizaciones a la medida. Full stack, con especialidad en front end y back end.',
-    'Tengo varios negocios operando con mis sistemas y varios proyectos ya construidos y publicados.',
-    'La mayoría de los estudios te diseñan bonito y te dejan solo con la operación. La mayoría de los programadores te resuelven la operación con un sistema que da pena enseñar. Yo hago las dos cosas bien: el diseño que se ve y el sistema que trabaja detrás.',
-    'Trabajo directo contigo. No hay cuenta, ni junior, ni cadena de correos. Si me escribes un martes a las nueve de la noche, te contesto yo.',
+    'Somos Morphiq, un equipo que diseña y desarrolla software: páginas web, puntos de venta, CRM y automatizaciones a la medida. Full stack, con especialidad en front end y back end.',
+    'Tenemos varios negocios operando con nuestros sistemas y varios proyectos ya construidos y publicados.',
+    'La mayoría de los estudios te diseñan bonito y te dejan solo con la operación. La mayoría de los programadores te resuelven la operación con un sistema que da pena enseñar. Nosotros hacemos las dos cosas bien: el diseño que se ve y el sistema que trabaja detrás.',
+    'Trabajamos directo contigo. No hay cuenta, ni junior, ni cadena de correos. Si nos escribes un martes a las nueve de la noche, un asesor te contesta en cuanto lo ve.',
   ],
-  signature: 'MH97 · DESIGN × SYSTEMS · CDMX',
+  signature: 'ASTRAL MORPHIQ SYSTEMS · CDMX',
 };
 
 export const FAQ = {
@@ -401,16 +400,16 @@ export const FAQ = {
       a: 'Los ajustes que salen justo después de entregar van incluidos; lo acordamos por escrito al cerrar. Más adelante trabajamos por bloque o por proyecto nuevo, lo que te salga mejor. No hay contrato de permanencia.',
     },
     {
-      q: '¿Trabajas con negocios fuera de CDMX?',
-      a: 'Sí. La mayoría de mis clientes son de la ciudad porque me gusta ir a verlos, pero el proceso funciona igual a distancia: videollamadas, avances en línea y entrega remota.',
+      q: '¿Trabajan con negocios fuera de CDMX?',
+      a: 'Sí. La mayoría de nuestros clientes son de la ciudad porque nos gusta ir a verlos, pero el proceso funciona igual a distancia: videollamadas, avances en línea y entrega remota.',
     },
     {
       q: '¿Puedo empezar solo con la página y agregar el sistema después?',
       a: 'Es lo que recomiendo si estás empezando. Construyo la página pensando en que el sistema llegará, así que después se conecta en lugar de rehacerse.',
     },
     {
-      q: '¿Cómo sé que no vas a desaparecer a medio proyecto?',
-      a: 'Porque el trabajo está en línea y lo puedes ver: los cuatro casos de esta página tienen enlace directo, ábrelos. Y porque parte del pago va contra entrega: si no entrego, no lo cobro.',
+      q: '¿Cómo sé que no van a desaparecer a medio proyecto?',
+      a: 'Porque el trabajo está en línea y lo puedes ver: los cuatro casos de esta página tienen enlace directo, ábrelos. Y porque parte del pago va contra entrega: si no entregamos, no lo cobramos.',
     },
   ],
 };
@@ -475,34 +474,34 @@ export const SECTIONS = {
 export const PREGUNTAS_INICIO = [
   {
     q: '¿Cuánto cuesta una página web?',
-    a: 'Desde $2,000 MXN una página sencilla y bien hecha, y desde $8,000 MXN un sitio completo con varias páginas, formularios y dominio incluido el primer año. El precio final depende del alcance y te lo doy cerrado antes de empezar.',
+    a: 'Desde $2,000 MXN una página sencilla y bien hecha, y desde $8,000 MXN un sitio completo con varias páginas, formularios y dominio incluido el primer año. El precio final depende del alcance y te lo damos cerrado antes de empezar.',
   },
   {
     q: '¿Cuánto tiempo tarda?',
-    a: 'Depende del alcance, y te doy una fecha antes de arrancar. Lo que no cambia es el ritmo: vas viendo producto funcionando durante el proceso, no reportes de avance.',
+    a: 'Depende del alcance, y te damos una fecha antes de arrancar. Lo que no cambia es el ritmo: vas viendo producto funcionando durante el proceso, no reportes de avance.',
   },
   {
     q: '¿Puedo editar el contenido después?',
-    a: 'Depende del proyecto. Cuando incluye panel de administración, sí: cambias precios, fotos, servicios y promociones tú mismo, y te capacito antes de entregar. No todas las páginas lo necesitan y te digo con honestidad si la tuya sí.',
+    a: 'Depende del proyecto. Cuando incluye panel de administración, sí: cambias precios, fotos, servicios y promociones tú mismo, y te capacitamos antes de entregar. No todas las páginas lo necesitan y te decimos con honestidad si la tuya sí.',
   },
   {
-    q: '¿Trabajas con negocios fuera de CDMX?',
-    a: 'Sí. La mayoría de mis clientes son de la ciudad porque me gusta ir a verlos, pero el proceso funciona igual a distancia: videollamadas, avances en línea y entrega remota.',
+    q: '¿Trabajan con negocios fuera de CDMX?',
+    a: 'Sí. La mayoría de nuestros clientes son de la ciudad porque nos gusta ir a verlos, pero el proceso funciona igual a distancia: videollamadas, avances en línea y entrega remota.',
   },
   {
-    q: '¿Cómo sé que no vas a desaparecer a medio proyecto?',
-    a: 'Porque el trabajo está en línea y lo puedes abrir: los proyectos de este sitio tienen enlace directo. Y porque parte del pago va contra entrega: si no entrego, no lo cobro.',
+    q: '¿Cómo sé que no van a desaparecer a medio proyecto?',
+    a: 'Porque el trabajo está en línea y lo puedes abrir: los proyectos de este sitio tienen enlace directo. Y porque parte del pago va contra entrega: si no entregamos, no lo cobramos.',
   },
 ];
 
 export const PREGUNTAS_PRECIOS = [
   {
     q: '¿Por qué todo dice «desde»?',
-    a: 'Porque cobrar lo mismo por una página de tres secciones que por un catálogo con panel de administración sería mentirle a alguien. El «desde» es el punto de partida real: es lo que cuesta el alcance más sencillo de ese plan. Cuando me cuentes qué necesitas, te doy un número cerrado, y ese número ya no se mueve.',
+    a: 'Porque cobrar lo mismo por una página de tres secciones que por un catálogo con panel de administración sería mentirle a alguien. El «desde» es el punto de partida real: es lo que cuesta el alcance más sencillo de ese plan. Cuando nos cuentes qué necesitas, te damos un número cerrado, y ese número ya no se mueve.',
   },
   {
     q: '¿El precio final puede acabar siendo mucho más alto?',
-    a: 'Puede ser más alto si tu proyecto es más grande, pero lo sabes antes de empezar, no a mitad. Yo cotizo cerrado: si me equivoqué calculando, es mi problema, no una factura sorpresa para ti. Y si con el plan más barato te alcanza, te lo digo.',
+    a: 'Puede ser más alto si tu proyecto es más grande, pero lo sabes antes de empezar, no a mitad. Cotizamos cerrado: si nos equivocamos calculando, es problema nuestro, no una factura sorpresa para ti. Y si con el plan más barato te alcanza, te lo decimos.',
   },
   {
     q: '¿Cómo se paga?',
@@ -518,6 +517,6 @@ export const PREGUNTAS_PRECIOS = [
   },
   {
     q: '¿Hay factura?',
-    a: 'Sí, se puede facturar. Coméntamelo al cotizar para contemplarlo desde el principio.',
+    a: 'Sí, se puede facturar. Coméntalo al cotizar para contemplarlo desde el principio.',
   },
 ];

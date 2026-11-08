@@ -187,7 +187,7 @@ export function ImaginationVisual() {
       <div className="imagination-core">
         <span>?</span>
       </div>
-      <p className="imagination-copy">Tú lo describes.<br />Yo lo construyo.</p>
+      <p className="imagination-copy">Tú lo describes.<br />Lo construimos.</p>
     </div>
   );
 }
@@ -769,9 +769,9 @@ export function EnlacesVisual() {
           <span className="enl-pantalla">
             <span className="enl-m-logo">Morphiq</span>
             <small className="enl-m-sub">ASTRAL MORPHIQ SYSTEMS</small>
-            <small className="enl-m-hola">HOLA, SOY</small>
-            <b className="enl-m-nombre">Miguel Huerta Bautista<i>.</i></b>
-            <small className="enl-m-rol">Fundador · Desarrollador y diseñador</small>
+            <small className="enl-m-hola">ESTUDIO DIGITAL</small>
+            <b className="enl-m-nombre">Diseño y sistemas<i>.</i></b>
+            <small className="enl-m-rol">Páginas web · Punto de venta · CRM</small>
             <span className="enl-m-boton enl-m-boton--wa"><MessageCircle size={11} />WhatsApp</span>
             <span className="enl-m-boton"><Phone size={11} />Llamada directa</span>
             <span className="enl-m-boton"><Mail size={11} />Correo electrónico</span>

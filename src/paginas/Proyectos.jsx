@@ -116,7 +116,7 @@ function piezasEnLetra(n) {
 
 const TITLE = 'Proyectos: sitios y sistemas construidos | Morphiq';
 const DESC =
-  'Páginas web, puntos de venta, CRM y software que he construido para negocios reales. Cada caso con su problema, su solución y su enlace.';
+  'Páginas web, puntos de venta, CRM y software que hemos construido para negocios reales. Cada caso con su problema, su solución y su enlace.';
 
 export default function Proyectos() {
   const [filtro, setFiltro] = useState('todos');
@@ -247,13 +247,13 @@ export default function Proyectos() {
           <Reveal>
             <aside className="indice-cierre">
               <p className="indice-cierre__texto">
-                No todo lo que he construido está aquí. Los sistemas internos de un negocio
+                No todo lo que hemos construido está aquí. Los sistemas internos de un negocio
                 —cajas, inventarios, paneles de dueño— no se pueden enseñar en público, y son
-                buena parte del trabajo. Detrás de cada caso hay alguien que decidió confiarme
+                buena parte del trabajo. Detrás de cada caso hay alguien que decidió confiarnos
                 el suyo.
               </p>
               <div className="indice-cierre__acciones">
-                <BotonPrincipal to={RUTAS.contacto}>Cuéntame qué necesitas</BotonPrincipal>
+                <BotonPrincipal to={RUTAS.contacto}>Cuéntanos qué necesitas</BotonPrincipal>
               </div>
             </aside>
           </Reveal>
@@ -262,7 +262,7 @@ export default function Proyectos() {
 
       <CierreCTA
         titulo="¿Viste alguno que se parezca a lo que necesitas?"
-        cuerpo="Dime cuál y qué tiene tu negocio de distinto. Con eso te digo qué costaría algo así para ti."
+        cuerpo="Dinos cuál y qué tiene tu negocio de distinto. Con eso te decimos qué costaría algo así para ti."
         servicio="otro"
       />
     </>

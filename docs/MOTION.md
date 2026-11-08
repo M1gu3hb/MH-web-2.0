@@ -151,7 +151,7 @@ ola, que es la más barata de las cinco.
   por encima de 90 px, que son los únicos que aguantan relieve.
 - **Maqueta de la cabecera de servicio**: `rotateY(-7deg) rotateX(3deg)` fija.
   Por debajo de 900 px se aplana.
-- **Firma MH97**: relieve por sombras, quieta.
+- **Firma de marca**: relieve por sombras, quieta.
 - La escena WebGL de la laptop (`LaptopStage`) **sigue apagada**, igual que en
   producción. No se reactiva: existe como código histórico y su coste no se
   justifica dentro de esta arquitectura.

@@ -259,8 +259,8 @@ export function PortadaHero() {
                 </div>
               ))}
             </dl>
-            <span className="firma3d hero__firma3d" translate="no" aria-label="MH97">
-              MH97
+            <span className="firma3d hero__firma3d" translate="no" aria-label="Morphiq">
+              MORPHIQ
             </span>
           </div>
 

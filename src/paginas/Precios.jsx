@@ -189,7 +189,7 @@ export default function Precios() {
         <Contenedor>
           <TituloSeccion
             titulo="¿Qué estás buscando?"
-            entrada="Elige por dónde va tu necesidad y te enseño solo lo que aplica."
+            entrada="Elige por dónde va tu necesidad y te enseñamos solo lo que aplica."
             centrado
           />
           <div className="selector-familia" role="group" aria-label="Elige qué tipo de solución buscas">
@@ -227,7 +227,7 @@ export default function Precios() {
               <p>
                 <strong>Lo que «desde» significa aquí:</strong> es el precio real del alcance más sencillo de ese
                 plan, no un gancho. Si tu proyecto cabe ahí, ese es tu precio. Cada tarjeta te dice además qué
-                encarece el proyecto, para que lo sepas antes de escribirme y no en la llamada.
+                encarece el proyecto, para que lo sepas antes de escribirnos y no en la llamada.
                 <br />
                 <br />
                 {AVISO_IVA}
@@ -277,13 +277,13 @@ export default function Precios() {
           <Reveal>
             <ul className="incluido-siempre">
               <li style={{ '--i': 0 }}>
-                <strong>Precio cerrado antes de empezar.</strong> Si me equivoqué al calcular, es mi problema.
+                <strong>Precio cerrado antes de empezar.</strong> Si nos equivocamos al calcular, es problema nuestro.
               </li>
               <li style={{ '--i': 1 }}>
-                <strong>Tratas conmigo.</strong> No hay cuenta, ni ejecutivo, ni cadena de correos.
+                <strong>Un asesor desde el primer día.</strong> No hay cadena de correos ni pases de un área a otra.
               </li>
               <li style={{ '--i': 2 }}>
-                <strong>Ves avances durante el proceso.</strong> No desaparezco tres semanas.
+                <strong>Ves avances durante el proceso.</strong> No desaparecemos tres semanas.
               </li>
               <li style={{ '--i': 3 }}>
                 <strong>Lo que se construye es tuyo.</strong> Dominio y proyecto quedan a tu nombre.
@@ -306,7 +306,7 @@ export default function Precios() {
 
       <CierreCTA
         titulo="¿Cuál te queda?"
-        cuerpo="Cuéntame qué hace tu negocio y qué necesitas resolver. Te digo cuál de estos te toca y cuánto costaría el tuyo en concreto."
+        cuerpo="Cuéntanos qué hace tu negocio y qué necesitas resolver. Te decimos cuál de estos te toca y cuánto costaría el tuyo en concreto."
         servicio="otro"
         etiqueta="Pedir mi cotización"
       />

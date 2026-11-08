@@ -30,7 +30,7 @@ export const SERVICIOS = [
     nombre: 'Páginas web',
     promesa: 'Que te encuentren, entiendan qué haces y te escriban.',
     resumen:
-      'Desde una página sencilla y bien hecha hasta una tienda en línea que tú mismo administras. También remodelo el sitio que ya tienes.',
+      'Desde una página sencilla y bien hecha hasta una tienda en línea que tú mismo administras. También remodelamos el sitio que ya tienes.',
     acento: '#ff684f',
     imagen: '/servicios/web.webp',
     imagenSq: '/servicios/web-sq.webp',
@@ -187,7 +187,7 @@ export const PAGINAS_SERVICIO = {
           ],
         },
         {
-          nombre: 'Para que crezcas sin llamarme',
+          nombre: 'Para que crezcas sin depender de nadie',
           items: [
             'Panel para editar servicios y productos',
             'Alta y baja de artículos y fotos',
@@ -220,13 +220,13 @@ export const PAGINAS_SERVICIO = {
       cuerpo:
         'No hace falta tirarla. Se puede remodelar: mismo dominio, mismo contenido que sirve, y encima un diseño de ahora, que cargue rápido y se vea bien en el teléfono. Lo que ya funciona se queda; lo que estorba se va.',
       remate:
-        'Primero la reviso y te digo la verdad: hay sitios donde remodelar sale más caro que rehacer, y en esos te lo digo antes de cobrarte nada.',
+        'Primero la revisamos y te decimos la verdad: hay sitios donde remodelar sale más caro que rehacer, y en esos te lo decimos antes de cobrarte nada.',
     },
 
     editable: {
       titulo: 'Tu página puede crecer contigo',
       cuerpo:
-        'Hay páginas que se quedan congeladas el día que se entregan. Cuando el proyecto lo justifica, te construyo un panel para que tú cambies precios, subas fotos, publiques promociones y des de alta servicios nuevos. Sin depender de mí para cada cosa pequeña.',
+        'Hay páginas que se quedan congeladas el día que se entregan. Cuando el proyecto lo justifica, te construimos un panel para que tú cambies precios, subas fotos, publiques promociones y des de alta servicios nuevos. Sin depender de nadie para cada cosa pequeña.',
       remate: 'No todas las páginas lo necesitan. Si la tuya no cambia casi nunca, es dinero que te ahorras.',
     },
 
@@ -237,27 +237,27 @@ export const PAGINAS_SERVICIO = {
       },
       {
         q: '¿El dominio va incluido?',
-        a: 'En la Web Profesional sí, el primer año. En la Web Esencial no viene incluido, pero te lo puedo conseguir y configurar aparte, y te digo cuánto cuesta antes de empezar. En ecosistemas completos puede llegar a dos años según la propuesta.',
+        a: 'En la Web Profesional sí, el primer año. En la Web Esencial no viene incluido, pero te lo conseguimos y configuramos aparte, y te decimos cuánto cuesta antes de empezar. En ecosistemas completos puede llegar a dos años según la propuesta.',
       },
       {
         q: '¿Puedo editar el contenido yo mismo?',
-        a: 'Depende del proyecto. Cuando el sitio incluye panel, sí: cambias precios, fotos, servicios y promociones tú mismo, y te capacito antes de entregar. La Web Esencial no incluye panel; los cambios los hago yo.',
+        a: 'Depende del proyecto. Cuando el sitio incluye panel, sí: cambias precios, fotos, servicios y promociones tú mismo, y te capacitamos antes de entregar. La Web Esencial no incluye panel; los cambios los hacemos nosotros.',
       },
       {
         q: '¿Cuánto tarda?',
-        a: 'Depende del alcance y te doy una fecha antes de arrancar. Lo que no cambia es que ves avances reales durante el proceso, no un silencio de tres semanas.',
+        a: 'Depende del alcance y te damos una fecha antes de arrancar. Lo que no cambia es que ves avances reales durante el proceso, no un silencio de tres semanas.',
       },
       {
         q: '¿Qué pasa si necesito cambios después de entregar?',
-        a: 'Los ajustes que salen justo después de entregar van incluidos, y lo dejamos por escrito al cerrar. Después puedes contratar mantenimiento desde $200 MXN al mes o pedirme cambios por bloque. No hay contrato de permanencia.',
+        a: 'Los ajustes que salen justo después de entregar van incluidos, y lo dejamos por escrito al cerrar. Después puedes contratar mantenimiento desde $200 MXN al mes o pedirnos cambios por bloque. No hay contrato de permanencia.',
       },
       {
         q: 'Ya tengo una página vieja. ¿La rehaces o la remodelas?',
-        a: 'Las dos cosas son posibles y depende de con qué esté hecha. Si se puede aprovechar, se remodela y conservas dominio, textos y posicionamiento. Si por dentro está armada de una forma que va a dar problemas cada vez que la toques, sale más barato rehacerla, y te lo digo antes de empezar en vez de cobrarte por parchear.',
+        a: 'Las dos cosas son posibles y depende de con qué esté hecha. Si se puede aprovechar, se remodela y conservas dominio, textos y posicionamiento. Si por dentro está armada de una forma que va a dar problemas cada vez que la toques, sale más barato rehacerla, y te lo decimos antes de empezar en vez de cobrarte por parchear.',
       },
       {
         q: '¿Puedo vender en línea desde mi página?',
-        a: 'Sí: catálogo con carrito, cobro en línea, pedidos y envíos. Y como lo construyo yo, se puede conectar con tu punto de venta para que las existencias bajen solas al vender, y con la facturación para que el ticket se vuelva factura. Ese es el sentido de tener una tienda hecha a la medida y no una plantilla alquilada.',
+        a: 'Sí: catálogo con carrito, cobro en línea, pedidos y envíos. Y como lo construimos nosotros, se puede conectar con tu punto de venta para que las existencias bajen solas al vender, y con la facturación para que el ticket se vuelva factura. Ese es el sentido de tener una tienda hecha a la medida y no una plantilla alquilada.',
       },
       {
         q: '¿La página es mía?',
@@ -269,7 +269,7 @@ export const PAGINAS_SERVICIO = {
 
     cierre: {
       titulo: '¿Empezamos por tu página?',
-      cuerpo: 'Cuéntame qué hace tu negocio y te digo cuál de las dos te conviene. Si con la de $2,000 te alcanza, te lo voy a decir.',
+      cuerpo: 'Cuéntanos qué hace tu negocio y te decimos cuál de las dos te conviene. Si con la de $2,000 te alcanza, te lo vamos a decir.',
       servicio: 'pagina-web',
     },
   },
@@ -371,23 +371,23 @@ export const PAGINAS_SERVICIO = {
       },
       {
         q: '¿Qué incluye la implementación inicial?',
-        a: 'Cargar tu catálogo, configurar sucursales y usuarios, dejar el sistema andando en tu equipo y capacitar a quien lo va a usar. Lo cotizo cuando sé cuántos productos y cuántas personas hay.',
+        a: 'Cargar tu catálogo, configurar sucursales y usuarios, dejar el sistema andando en tu equipo y capacitar a quien lo va a usar. Lo cotizamos cuando sabemos cuántos productos y cuántas personas hay.',
       },
       {
         q: '¿Funciona si se me va el internet?',
-        a: 'Depende de la solución. Hay operaciones donde tiene sentido construirlo para que aguante sin red y sincronice después, como hice con MH Photo Booth. Lo hablamos según tu caso: no te voy a prometer que funciona sin internet si tu solución no lo lleva.',
+        a: 'Depende de la solución. Hay operaciones donde tiene sentido construirlo para que aguante sin red y sincronice después, como hicimos con MH Photo Booth. Lo hablamos según tu caso: no te vamos a prometer que funciona sin internet si tu solución no lo lleva.',
       },
       {
         q: '¿Y si ya tengo un sistema?',
-        a: 'Se puede migrar. Lo primero que reviso es si de verdad te conviene cambiar: si lo que tienes funciona y solo le falta una pieza, te sale más barato que le construya esa pieza.',
+        a: 'Se puede migrar. Lo primero que revisamos es si de verdad te conviene cambiar: si lo que tienes funciona y solo le falta una pieza, te sale más barato que le construyamos esa pieza.',
       },
     ],
 
     proyectos: ['pasteleria-confetti', 'morphiqpos', 'electrotecnica-berlin'],
 
     cierre: {
-      titulo: 'Cuéntame cómo opera tu negocio hoy',
-      cuerpo: 'Con saber qué vendes, cuántas sucursales tienes y cómo cobras, te digo qué sistema necesitas y cuánto costaría dejarlo andando.',
+      titulo: 'Cuéntanos cómo opera tu negocio hoy',
+      cuerpo: 'Con saber qué vendes, cuántas sucursales tienes y cómo cobras, te decimos qué sistema necesitas y cuánto costaría dejarlo andando.',
       servicio: 'sistema',
     },
   },
@@ -473,15 +473,15 @@ export const PAGINAS_SERVICIO = {
     faq: [
       {
         q: 'Mi negocio es chico, ¿de verdad necesito un CRM?',
-        a: 'Si vendes por cotización o por seguimiento y ya se te ha caído alguna venta por olvido, sí. Si vendes de mostrador y cobras al momento, probablemente te sirve más un punto de venta. Te lo digo con honestidad cuando me cuentes cómo vendes.',
+        a: 'Si vendes por cotización o por seguimiento y ya se te ha caído alguna venta por olvido, sí. Si vendes de mostrador y cobras al momento, probablemente te sirve más un punto de venta. Te lo decimos con honestidad cuando nos cuentes cómo vendes.',
       },
       {
         q: '¿Tengo que capturar todo a mano al principio?',
-        a: 'No necesariamente. Parte de la implementación es migrar lo que ya tengas, aunque esté en Excel o en una libreta. Lo que no se pueda migrar se captura, y eso lo contemplo en la cotización.',
+        a: 'No necesariamente. Parte de la implementación es migrar lo que ya tengas, aunque esté en Excel o en una libreta. Lo que no se pueda migrar se captura, y eso lo contemplamos en la cotización.',
       },
       {
         q: '¿Se conecta con lo que ya uso?',
-        a: 'Según el caso. Correo, hojas de cálculo, WhatsApp y tu página web son las conexiones más comunes. Antes de prometerte una integración reviso que la herramienta lo permita.',
+        a: 'Según el caso. Correo, hojas de cálculo, WhatsApp y tu página web son las conexiones más comunes. Antes de prometerte una integración revisamos que la herramienta lo permita.',
       },
       {
         q: '¿Y si solo quiero automatizar una cosa, sin CRM?',
@@ -492,8 +492,8 @@ export const PAGINAS_SERVICIO = {
     proyectos: ['jch-crm', 'jch-portal-cliente', 'pasteleria-confetti'],
 
     cierre: {
-      titulo: 'Cuéntame cómo vendes hoy',
-      cuerpo: 'Con saber cómo llegan tus clientes y qué pasa después, te digo si necesitas un CRM completo o solo automatizar dos cosas.',
+      titulo: 'Cuéntanos cómo vendes hoy',
+      cuerpo: 'Con saber cómo llegan tus clientes y qué pasa después, te decimos si necesitas un CRM completo o solo automatizar dos cosas.',
       servicio: 'crm',
     },
   },
@@ -537,7 +537,7 @@ export const PAGINAS_SERVICIO = {
         'Necesitas que funcione sin internet, o en una máquina concreta.',
         'Lo que quieres simplemente no existe.',
       ],
-      nota: 'Y cuándo NO: si un producto del mercado te resuelve el 90%, te conviene ese producto. Te lo voy a decir aunque signifique no venderte un proyecto.',
+      nota: 'Y cuándo NO: si un producto del mercado te resuelve el 90%, te conviene ese producto. Te lo vamos a decir aunque signifique no venderte un proyecto.',
     },
 
     proceso: {
@@ -581,27 +581,27 @@ export const PAGINAS_SERVICIO = {
     faq: [
       {
         q: '¿Cuánto cuesta un software a medida?',
-        a: 'Depende completamente del alcance, así que no publico un precio de partida: sería inventarlo. Lo que sí hago es cotizarlo cerrado antes de empezar, después de entender el problema. Si es un proyecto grande, se puede partir en fases para que no pagues todo de golpe.',
+        a: 'Depende completamente del alcance, así que no publicamos un precio de partida: sería inventarlo. Lo que sí hacemos es cotizarlo cerrado antes de empezar, después de entender el problema. Si es un proyecto grande, se puede partir en fases para que no pagues todo de golpe.',
       },
       {
         q: '¿El código es mío?',
-        a: 'Sí. Es tu herramienta. Te entrego el código y queda a tu nombre.',
+        a: 'Sí. Es tu herramienta. Te entregamos el código y queda a tu nombre.',
       },
       {
         q: '¿Qué pasa si a medio camino cambia lo que necesito?',
-        a: 'Pasa siempre, y por eso construyo por partes y te enseño avances. Los cambios dentro del alcance acordado entran; los que amplían el alcance se cotizan aparte y lo hablamos antes, no en la factura.',
+        a: 'Pasa siempre, y por eso construimos por partes y te enseñamos avances. Los cambios dentro del alcance acordado entran; los que amplían el alcance se cotizan aparte y lo hablamos antes, no en la factura.',
       },
       {
         q: '¿Quién le da mantenimiento después?',
-        a: 'Puedo yo, con un acuerdo de soporte, o puedes llevártelo con tu equipo. El código queda documentado para que eso sea posible de verdad, no en teoría.',
+        a: 'Podemos nosotros, con un acuerdo de soporte, o puedes llevártelo con tu equipo. El código queda documentado para que eso sea posible de verdad, no en teoría.',
       },
     ],
 
     proyectos: ['glyphos', 'gestech', 'mh-photo-booth'],
 
     cierre: {
-      titulo: 'Cuéntame qué necesitas que exista',
-      cuerpo: 'Explícamelo como se lo explicarías a un amigo. Si lo puedes explicar, lo puedo construir, y si no te conviene construirlo, te lo digo.',
+      titulo: 'Cuéntanos qué necesitas que exista',
+      cuerpo: 'Explícanoslo como se lo explicarías a un amigo. Si lo puedes explicar, lo podemos construir, y si no te conviene construirlo, te lo decimos.',
       servicio: 'software',
     },
   },
@@ -663,7 +663,7 @@ export const PAGINAS_SERVICIO = {
         'Cierras el mes y no cuadra lo facturado con lo vendido.',
         'La persona que sabe facturar se va de vacaciones y el negocio se detiene.',
       ],
-      nota: 'Y si tu negocio factura tres veces al mes, no necesitas esto: necesitas diez minutos. Te lo voy a decir aunque signifique no venderte un proyecto.',
+      nota: 'Y si tu negocio factura tres veces al mes, no necesitas esto: necesitas diez minutos. Te lo vamos a decir aunque signifique no venderte un proyecto.',
     },
 
     capacidades: {
@@ -697,15 +697,15 @@ export const PAGINAS_SERVICIO = {
     faq: [
       {
         q: '¿Cuánto cuesta?',
-        a: 'Se cotiza, y no es por no querer decirlo: depende del negocio. No cuesta lo mismo conectarlo a una sucursal que a ocho, ni a un sistema que ya existe que a uno que hay que hacer. Publicar un «desde» aquí sería inventarlo. Cuéntame cómo vendes hoy y te doy un número cerrado.',
+        a: 'Se cotiza, y no es por no querer decirlo: depende del negocio. No cuesta lo mismo conectarlo a una sucursal que a ocho, ni a un sistema que ya existe que a uno que hay que hacer. Publicar un «desde» aquí sería inventarlo. Cuéntanos cómo vendes hoy y te damos un número cerrado.',
       },
       {
-        q: '¿Tengo que contratar también un sistema contigo?',
-        a: 'No. Si ya tienes punto de venta o tienda en línea, se conecta a lo que tienes, siempre que permita conectarse; eso lo reviso antes de cotizar. Y si no tienes nada todavía, sale más barato hacerlo junto con el sistema que después por separado.',
+        q: '¿Tengo que contratar también un sistema con Morphiq?',
+        a: 'No. Si ya tienes punto de venta o tienda en línea, se conecta a lo que tienes, siempre que permita conectarse; eso lo revisamos antes de cotizar. Y si no tienes nada todavía, sale más barato hacerlo junto con el sistema que después por separado.',
       },
       {
         q: '¿Y el timbrado ante el SAT?',
-        a: 'El timbrado lo hace un proveedor autorizado por el SAT, que es como funciona la facturación electrónica en México para todo el mundo. Lo que yo construyo es lo que lleva tu venta hasta ahí y trae de vuelta el comprobante, sin que nadie capture nada.',
+        a: 'El timbrado lo hace un proveedor autorizado por el SAT, que es como funciona la facturación electrónica en México para todo el mundo. Lo que construimos es lo que lleva tu venta hasta ahí y trae de vuelta el comprobante, sin que nadie capture nada.',
       },
       {
         q: '¿Qué pasa si el cliente pide factura días después?',
@@ -714,8 +714,8 @@ export const PAGINAS_SERVICIO = {
     ],
 
     cierre: {
-      titulo: 'Cuéntame cómo facturas hoy',
-      cuerpo: 'Con saber cómo vendes y cuántas facturas emites al mes me alcanza para decirte si te conviene automatizarlo o todavía no.',
+      titulo: 'Cuéntanos cómo facturas hoy',
+      cuerpo: 'Con saber cómo vendes y cuántas facturas emites al mes nos alcanza para decirte si te conviene automatizarlo o todavía no.',
       servicio: 'facturacion',
     },
   },
@@ -799,7 +799,7 @@ export const PAGINAS_SERVICIO = {
     aviso: {
       titulo: 'Sobre la facturación automática',
       cuerpo:
-        'Se puede integrar, pero depende del alcance del proyecto y del proveedor fiscal que se use. No te voy a prometer cumplimiento fiscal antes de revisar tu caso concreto: es de esas cosas donde prometer de más sale caro para los dos.',
+        'Se puede integrar, pero depende del alcance del proyecto y del proveedor fiscal que se use. No te vamos a prometer cumplimiento fiscal antes de revisar tu caso concreto: es de esas cosas donde prometer de más sale caro para los dos.',
     },
 
     niveles: {
@@ -819,19 +819,19 @@ export const PAGINAS_SERVICIO = {
       },
       {
         q: '¿Sirve si tengo dos sucursales?',
-        a: 'Sí. El punto de venta puede manejar varias sucursales en un solo tablero, con su menú y sus precios propios si hace falta. Ya lo hice así con una pastelería de tres sucursales.',
+        a: 'Sí. El punto de venta puede manejar varias sucursales en un solo tablero, con su menú y sus precios propios si hace falta. Ya lo hicimos así con una pastelería de tres sucursales.',
       },
       {
         q: '¿Y la facturación?',
-        a: 'Se puede integrar según el alcance y el proveedor fiscal. Lo reviso contigo antes de incluirlo en la propuesta, para no prometerte algo que dependa de una integración que todavía no verifiqué.',
+        a: 'Se puede integrar según el alcance y el proveedor fiscal. Lo revisamos contigo antes de incluirlo en la propuesta, para no prometerte algo que dependa de una integración que todavía no verificamos.',
       },
     ],
 
     proyectos: ['pasteleria-confetti'],
 
     cierre: {
-      titulo: 'Cuéntame de tu restaurante',
-      cuerpo: 'Cuántas mesas, cuántas sucursales y qué te está costando más trabajo hoy. Con eso te digo por dónde empezar.',
+      titulo: 'Cuéntanos de tu restaurante',
+      cuerpo: 'Cuántas mesas, cuántas sucursales y qué te está costando más trabajo hoy. Con eso te decimos por dónde empezar.',
       servicio: 'restaurante',
     },
   },

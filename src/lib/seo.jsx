@@ -4,7 +4,7 @@
  * ============================================================
  *
  * En index.html se quedan solo las entidades que son del SITIO entero y no
- * cambian nunca: Organization, Person y WebSite. Todo lo que es de UNA
+ * cambian nunca: Organization y WebSite. Todo lo que es de UNA
  * página —su WebPage, sus migas, su Service, sus preguntas— lo pone este
  * componente al montar la ruta y lo retira al salir.
  *

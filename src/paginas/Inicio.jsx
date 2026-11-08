@@ -37,18 +37,17 @@ import { ANCLAS_HOME } from '../config/pricing';
 import { RUTAS } from '../config/rutas';
 import { CONTACT, PREGUNTAS_INICIO } from '../content';
 
-/* El title y la description de la home son los que Miguel eligió para
-   producción; se respetan tal cual para no cambiarle una decisión suya de
-   posicionamiento dentro de un rediseño que es solo una propuesta. Si
-   después del Preview quiere alinearlo con el nuevo H1, se cambia aquí y en
-   index.html, que son los dos únicos sitios donde vive. */
+/* El title y la description de la home son los de producción; se respetan
+   para no cambiar una decisión de posicionamiento dentro de un rediseño. Si
+   se quiere alinearlos con el nuevo H1, se cambia aquí y en index.html, que
+   son los dos únicos sitios donde viven. */
 const TITLE = 'Morphiq | Digitalizamos la operación de tu negocio en CDMX';
 const DESC =
-  'Diseño y construyo páginas web, puntos de venta, CRM y automatizaciones para negocios de la Ciudad de México, con precio cerrado antes de empezar.';
+  'Diseñamos y construimos páginas web, puntos de venta, CRM y automatizaciones para negocios de la Ciudad de México, con precio cerrado antes de empezar.';
 
 const PROCESO_CORTO = [
-  { titulo: 'Me cuentas', cuerpo: 'Qué hace tu negocio y qué te está costando trabajo.' },
-  { titulo: 'Te propongo', cuerpo: 'Alcance y precio cerrado, por escrito, antes de empezar.' },
+  { titulo: 'Nos cuentas', cuerpo: 'Qué hace tu negocio y qué te está costando trabajo.' },
+  { titulo: 'Te proponemos', cuerpo: 'Alcance y precio cerrado, por escrito, antes de empezar.' },
   { titulo: 'Construimos', cuerpo: 'Ves avances y opinas mientras todavía es barato cambiar.' },
   { titulo: 'Sale en línea', cuerpo: 'Publicación, capacitación y acompañamiento los primeros días.' },
 ];
@@ -89,7 +88,7 @@ export default function Inicio() {
           </Cascada>
           <Reveal>
             <p className="rejilla-servicios__pie">
-              ¿No sabes cuál? <Link to={RUTAS.contacto}>Cuéntame qué te está costando trabajo</Link> y yo te digo.
+              ¿No sabes cuál? <Link to={RUTAS.contacto}>Cuéntanos qué te está costando trabajo</Link> y te decimos.
             </p>
           </Reveal>
         </div>
@@ -161,7 +160,7 @@ export default function Inicio() {
         </div>
       </Seccion>
 
-      {/* ============ CÓMO TRABAJO ============
+      {/* ============ CÓMO TRABAJAMOS ============
           El caso más claro de lo que había que arreglar: un lienzo enorme
           con un bloque pequeño dentro. Ahora la frase es un statement de
           nivel A que ocupa su propia pantalla, y los cuatro pasos se
@@ -171,7 +170,7 @@ export default function Inicio() {
         <div className="contenedor contenedor--amplio">
           <Statement
             lineas={['Aquí no se trabaja', 'a puerta cerrada.']}
-            eyebrow="Cómo trabajo"
+            eyebrow="Cómo trabajamos"
             kicker="Cuatro pasos"
             resalte="a puerta cerrada"
             className="proceso-statement"
@@ -193,16 +192,16 @@ export default function Inicio() {
         </div>
       </Seccion>
 
-      {/* ============ QUIÉN ESTÁ DETRÁS ============
+      {/* ============ QUIÉNES SOMOS ============
           Vuelve la sección de producción: la placa del logo con su efecto de
-          agua al pasar el cursor, la firma MH97 y la rúbrica con el correo
-          personal. Antes era un párrafo centrado en una columna estrecha, o
+          agua al pasar el cursor, la firma de la marca y la rúbrica con el
+          correo. Antes era un párrafo centrado en una columna estrecha, o
           sea puro texto, justo en la sección que tiene que demostrar oficio. */}
       <Seccion tono="acento" className="seccion--presentacion rampa rampa--5">
         <div className="contenedor contenedor--amplio">
           <Presentacion>
             <div className="presentacion__acciones">
-              <BotonSecundario to={RUTAS.sobre}>Cómo trabajo, en detalle</BotonSecundario>
+              <BotonSecundario to={RUTAS.sobre}>Cómo trabajamos, en detalle</BotonSecundario>
             </div>
           </Presentacion>
         </div>
@@ -232,7 +231,7 @@ export default function Inicio() {
         <div className="contenedor contenedor--amplio">
           <Statement
             lineas={['¿Empezamos?']}
-            eyebrow="Contacto directo"
+            eyebrow="Hablemos"
             kicker="¿Tienes una idea?"
             className="cierre__statement"
           >
@@ -242,12 +241,12 @@ export default function Inicio() {
                 con el «¿Empezamos?». */}
             <Reveal className="cierre__reparto" delay={0.42}>
               <p className="cierre__cuerpo">
-                Cuéntame qué hace tu negocio y qué te está costando trabajo. Con eso ya puedo decirte por dónde
+                Cuéntanos qué hace tu negocio y qué te está costando trabajo. Con eso ya podemos decirte por dónde
                 empezar y cuánto costaría, aunque acabemos en la opción más barata.
               </p>
               <div className="cierre__acciones">
                 <BotonPrincipal to={RUTAS.contacto} grande>
-                  Cuéntame tu proyecto
+                  Cuéntanos tu proyecto
                 </BotonPrincipal>
                 <BotonSecundario to={RUTAS.precios} grande>
                   Ver precios primero

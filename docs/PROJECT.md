@@ -2,8 +2,8 @@
 
 ## 1. Qué es
 
-Sitio insignia de **MH Astral Systems**, el estudio de Miguel Huerta Bautista
-(Xochimilco, CDMX). No es un blog ni un e-commerce: es una **landing de una sola
+Sitio insignia de **MH Astral Systems**, un estudio de diseño y software
+(CDMX). No es un blog ni un e-commerce: es una **landing de una sola
 página** cuyo único trabajo es convertir a un dueño de negocio en una
 conversación por WhatsApp.
 
@@ -105,10 +105,10 @@ Peso total de una primera visita en escritorio: **≈ 1.9 MB sin comprimir**.
 
 ## 7. Identidad de marca (estado actual)
 
-- **Nombre:** MH Astral Systems · monograma "MH" · firma "MH97"
+- **Nombre:** MH Astral Systems · monograma "MH"
 - **Tesis:** «Diseño que vende. Sistemas que ordenan.»
-- **Tono:** directo, sin humo, anti-corporativo. Frases cortas, verbo en primera
-  persona («Diseño lo que tus clientes ven»). Rechaza explícitamente testimonios
+- **Tono:** directo, sin humo, anti-corporativo. Frases cortas, verbo en
+  plural («Diseñamos lo que tus clientes ven»). Rechaza explícitamente testimonios
   y métricas inventadas (ver `.work__truth`).
 - **Metáfora visual:** papel cálido + tinta mineral + acentos eléctricos, con
   cromo de máquina (tornillos, perillas, interruptores, lecturas de consola).

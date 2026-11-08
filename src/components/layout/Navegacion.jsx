@@ -332,7 +332,7 @@ export function Navegacion() {
                 style={{ '--i': principales.length + servicios.length + 1 }}
               >
                 <MessageCircle size={17} aria-hidden="true" />
-                Escríbeme por WhatsApp
+                Escríbenos por WhatsApp
               </a>
             </div>
           </Motion.div>

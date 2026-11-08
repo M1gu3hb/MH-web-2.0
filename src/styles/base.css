@@ -189,7 +189,7 @@ ul {
 }
 
 /* ---- La firma en tres dimensiones -------------------------- */
-/* MH97 extruido con puras letras: el frente en el azul claro legible y el
+/* La firma extruida con puras letras: el frente en el azul claro legible y el
    canto apilado en la escala de azules de la marca. Sin tarjeta ni fondo. */
 .firma3d {
   display: inline-block;

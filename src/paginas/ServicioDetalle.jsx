@@ -4,9 +4,9 @@
  * Cada bloque se pinta solo si el contenido lo trae, así que una página
  * puede tener «¿qué es un CRM?» y otra no sin que haya cinco componentes
  * casi iguales. El orden de los bloques está pensado como una conversación
- * de venta: primero te reconozco el problema, luego te enseño qué cambia,
+ * de venta: primero se reconoce el problema, luego se enseña qué cambia,
  * luego qué se puede construir, luego cuánto cuesta, luego pruebas de que
- * lo he hecho antes, y al final resuelvo tus dudas.
+ * ya se hizo antes, y al final se resuelven las dudas.
  */
 
 import { useLocation } from 'react-router-dom';
@@ -357,8 +357,8 @@ export default function ServicioDetalle() {
           <Contenedor>
             <TituloSeccion
               eyebrow="Trabajo real"
-              titulo="Esto ya lo he construido."
-              resalte="ya lo he construido"
+              titulo="Esto ya lo construimos."
+              resalte="ya lo construimos"
               entrada="Cada proyecto tiene su caso completo y, cuando está en línea, su enlace para que lo abras."
             />
             <div className="rejilla-proyectos">
@@ -381,7 +381,7 @@ export default function ServicioDetalle() {
       {pagina.faq && (
         <Seccion tono="elevado">
           <Contenedor ancho="medio">
-            <TituloSeccion titulo="Lo que suelen preguntarme" resalte="suelen preguntarme" variante="simple" />
+            <TituloSeccion titulo="Lo que suelen preguntarnos" resalte="suelen preguntarnos" variante="simple" />
             <Acordeon items={pagina.faq} />
           </Contenedor>
         </Seccion>

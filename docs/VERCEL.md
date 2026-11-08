@@ -83,9 +83,8 @@ Implicaciones:
 - No hay forma de saber, desde Vercel, qué commit está en producción
 - Un rollback no se corresponde con un commit concreto
 
-Todos los deploys los creó `huertabautistamiguel62@gmail.com`. La cuenta de
-sesión actual es `enchuer2797@gmail.com` — conviene confirmar que ambas tienen
-acceso al equipo.
+Todos los deploys los creó una cuenta distinta de la de la sesión actual —
+conviene confirmar que ambas tienen acceso al equipo.
 
 ## 5. 🟠 Hallazgo: sin cabeceras de seguridad
 

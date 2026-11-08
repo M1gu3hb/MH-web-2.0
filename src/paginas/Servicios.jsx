@@ -89,7 +89,7 @@ export default function Servicios() {
       <CabeceraPagina
         migas={MIGAS}
         eyebrow="Servicios"
-        titulo="Todo lo que puedo construir para tu negocio."
+        titulo="Todo lo que podemos construir para tu negocio."
         resalte="para tu negocio"
         entrada="Cinco frentes. Se pueden contratar por separado o funcionar juntos, que es cuando de verdad se nota."
         acciones={
@@ -193,7 +193,7 @@ export default function Servicios() {
 
       <CierreCTA
         titulo="¿No sabes cuál te toca?"
-        cuerpo="Cuéntame qué hace tu negocio y qué te está costando más trabajo. Con eso te digo por dónde empezar, aunque sea por lo más barato."
+        cuerpo="Cuéntanos qué hace tu negocio y qué te está costando más trabajo. Con eso te decimos por dónde empezar, aunque sea por lo más barato."
         servicio="otro"
       />
     </>

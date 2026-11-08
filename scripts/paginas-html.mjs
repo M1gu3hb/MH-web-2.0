@@ -148,7 +148,7 @@ function bloqueNoscript(titulo, entrada, enlaces, extra = '') {
       <ul>
         ${enlaces.map((e) => `<li><a href="${e.href}">${escapar(e.texto)}</a></li>`).join('\n        ')}
       </ul>
-      <p>Morphiq (Astral Morphiq Systems) · Xochimilco, CDMX · <a href="mailto:contacto@morphiq.com.mx">contacto@morphiq.com.mx</a> · <a href="https://wa.me/525523118153">WhatsApp +52 55 2311 8153</a></p>
+      <p>Morphiq (Astral Morphiq Systems) · Ciudad de México · <a href="mailto:contacto@morphiq.com.mx">contacto@morphiq.com.mx</a> · <a href="https://wa.me/525523118153">WhatsApp +52 55 2311 8153</a></p>
     </noscript>`;
 }
 
@@ -284,7 +284,7 @@ async function main() {
   const paginas = [];
 
   /* La home.
-     Su HTML lo escribe Vite y lleva a mano Organization, Person y WebSite,
+     Su HTML lo escribe Vite y lleva a mano Organization y WebSite,
      pero no llevaba ni WebPage ni FAQPage: los dos aparecían solo DESPUÉS de
      que el navegador ejecutara React. Justo los dos nodos que pueden hacer
      que la home salga con sus preguntas desplegadas en el resultado. Ahora
@@ -297,12 +297,12 @@ async function main() {
     modulo: 'Inicio',
     title: 'Morphiq | Digitalizamos la operación de tu negocio en CDMX',
     description:
-      'Diseño y construyo páginas web, puntos de venta, CRM y automatizaciones para negocios de la Ciudad de México, con precio cerrado antes de empezar.',
+      'Diseñamos y construimos páginas web, puntos de venta, CRM y automatizaciones para negocios de la Ciudad de México, con precio cerrado antes de empezar.',
     migas: [{ nombre: 'Inicio', path: RUTAS.inicio }],
     extra: [nodoPreguntas(RUTAS.inicio, PREGUNTAS_INICIO)],
     noscript: bloqueNoscript(
       'Morphiq — Digitalizamos la operación de tu negocio',
-      'Diseño y construyo páginas web, puntos de venta, CRM y automatizaciones para negocios de la Ciudad de México.',
+      'Diseñamos y construimos páginas web, puntos de venta, CRM y automatizaciones para negocios de la Ciudad de México.',
       enlacesPrincipales,
       `<h2>Preguntas frecuentes</h2><dl>${PREGUNTAS_INICIO.map(
         (f) => `<dt>${escapar(f.q)}</dt><dd>${escapar(f.a)}</dd>`
@@ -385,7 +385,7 @@ async function main() {
     modulo: 'Proyectos',
     title: 'Proyectos: sitios y sistemas construidos | Morphiq',
     description:
-      'Páginas web, puntos de venta, CRM y software que he construido para negocios reales. Cada caso con su problema, su solución y su enlace.',
+      'Páginas web, puntos de venta, CRM y software que hemos construido para negocios reales. Cada caso con su problema, su solución y su enlace.',
     migas: [
       { nombre: 'Inicio', path: RUTAS.inicio },
       { nombre: 'Proyectos', path: RUTAS.proyectos },
@@ -405,7 +405,7 @@ async function main() {
     ],
     noscript: bloqueNoscript(
       'Proyectos de Morphiq',
-      'Negocios que ya funcionan con lo que construí. Están en línea y los puedes abrir.',
+      'Negocios que ya funcionan con lo que construimos. Están en línea y los puedes abrir.',
       PROYECTOS.map((p) => ({ href: `${RUTAS.proyectos}/${p.slug}`, texto: `${p.nombre} — ${p.tipo}` }))
     ),
   });
@@ -487,16 +487,16 @@ async function main() {
   paginas.push({
     path: RUTAS.sobre,
     modulo: 'Sobre',
-    title: 'Sobre Morphiq: quién está detrás | Morphiq',
+    title: 'Sobre Morphiq: el equipo detrás | Morphiq',
     description:
-      'Morphiq es el estudio de Miguel Huerta Bautista en CDMX. Diseño y construyo páginas web, sistemas y automatizaciones para negocios. Tratas conmigo, no con una cuenta.',
+      'Somos un equipo de diseño y desarrollo en CDMX. Construimos páginas web, sistemas y automatizaciones para negocios, con precio cerrado y un asesor en cada proyecto.',
     migas: [
       { nombre: 'Inicio', path: RUTAS.inicio },
       { nombre: 'Sobre Morphiq', path: RUTAS.sobre },
     ],
     noscript: bloqueNoscript(
       'Sobre Morphiq',
-      'Morphiq es el estudio de Miguel Huerta Bautista en la Ciudad de México. Diseño, programo y contesto yo.',
+      'Somos un equipo de diseño y desarrollo en la Ciudad de México. Diseñamos, programamos y te atiende un asesor.',
       enlacesPrincipales
     ),
   });
@@ -504,16 +504,16 @@ async function main() {
   paginas.push({
     path: RUTAS.contacto,
     modulo: 'Contacto',
-    title: 'Contacto: cuéntame tu proyecto | Morphiq',
+    title: 'Contacto: cuéntanos tu proyecto | Morphiq',
     description:
-      'Cuéntame qué necesita tu negocio y te respondo con una propuesta y un precio cerrado. Por WhatsApp o por correo, como prefieras.',
+      'Cuéntanos qué necesita tu negocio y te respondemos con una propuesta y un precio cerrado. Por WhatsApp o por correo, como prefieras.',
     migas: [
       { nombre: 'Inicio', path: RUTAS.inicio },
       { nombre: 'Contacto', path: RUTAS.contacto },
     ],
     noscript: bloqueNoscript(
       'Contacto',
-      'Cuéntame qué necesita tu negocio y te respondo con una propuesta y un precio cerrado.',
+      'Cuéntanos qué necesita tu negocio y te respondemos con una propuesta y un precio cerrado.',
       enlacesPrincipales
     ),
   });

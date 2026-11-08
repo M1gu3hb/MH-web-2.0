@@ -3,8 +3,8 @@
  *
  * Decisión importante: no se añade un servicio de formularios ni un backend
  * solo para esto. El formulario COMPONE el mensaje y el visitante lo manda
- * por el canal que ya usa —WhatsApp o correo—, que además es donde Miguel
- * de verdad contesta. Un formulario que cae en una bandeja que nadie mira
+ * por el canal que ya usa —WhatsApp o correo—, que además es donde el
+ * equipo de verdad contesta. Un formulario que cae en una bandeja que nadie mira
  * es peor que no tener formulario.
  *
  * El campo `servicio` se puede preseleccionar desde cualquier página con
@@ -12,7 +12,7 @@
  * enlace manipulado no puede inyectar texto en el mensaje.
  *
  * Solo el nombre y el mensaje son obligatorios. Cada campo extra que se
- * exige cuesta conversión, y el resto lo puedo preguntar yo contestando.
+ * exige cuesta conversión, y el resto se pregunta al contestar.
  */
 
 import { useEffect, useMemo, useState } from 'react';
@@ -24,6 +24,7 @@ import { Reveal } from '../components/reactbits';
 import { Cortina, Lateral } from '../components/motion';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { whatsappUrl } from '../lib/whatsapp';
+import { pedirAvisoContacto } from '../lib/avisoContacto';
 import { Seo, nodoMigas, nodoPagina } from '../lib/seo';
 import { RUTAS, SERVICIOS_CONTACTO, servicioValido } from '../config/rutas';
 import { CONTACT } from '../content';
@@ -36,9 +37,9 @@ const MIGAS = [
   { nombre: 'Contacto', path: RUTAS.contacto },
 ];
 
-const TITLE = 'Contacto: cuéntame tu proyecto | Morphiq';
+const TITLE = 'Contacto: cuéntanos tu proyecto | Morphiq';
 const DESC =
-  'Cuéntame qué necesita tu negocio y te respondo con una propuesta y un precio cerrado. Por WhatsApp o por correo, como prefieras.';
+  'Cuéntanos qué necesita tu negocio y te respondemos con una propuesta y un precio cerrado. Por WhatsApp o por correo, como prefieras.';
 
 const PRESUPUESTOS = [
   { valor: '', etiqueta: 'Prefiero no decirlo todavía' },
@@ -76,7 +77,7 @@ function AcuseEnvio({ acuse }) {
   const texto = acuse && (
     <>
       Abriendo {acuse.canal === 'whatsapp' ? 'WhatsApp' : 'tu correo'} con el mensaje ya escrito.{' '}
-      <a href={acuse.url} target="_blank" rel="noreferrer">
+      <a href={acuse.url} target="_blank" rel="noreferrer" data-sin-aviso="">
         Si no se abrió solo, ábrelo desde aquí.
       </a>
     </>
@@ -129,12 +130,12 @@ export default function Contacto() {
 
   const completo = datos.nombre.trim().length > 1 && datos.mensaje.trim().length > 4;
 
-  /** El mensaje que se manda, en el mismo orden por el que yo lo leería. */
+  /** El mensaje que se manda, en el orden en que mejor se lee. */
   const mensaje = useMemo(() => {
     const etiquetaServicio = SERVICIOS_CONTACTO.find((s) => s.valor === datos.servicio)?.etiqueta;
     const etiquetaPresupuesto = PRESUPUESTOS.find((p) => p.valor === datos.presupuesto && p.valor)?.etiqueta;
     return [
-      `Hola Miguel, soy ${datos.nombre.trim()}.`,
+      `Hola, soy ${datos.nombre.trim()}.`,
       datos.negocio.trim() && `Mi negocio: ${datos.negocio.trim()}`,
       etiquetaServicio && `Lo que busco: ${etiquetaServicio}`,
       '',
@@ -167,8 +168,13 @@ export default function Contacto() {
         ? `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(mensaje)}`
         : gmailUrl(CONTACT.email, `Proyecto: ${datos.negocio.trim() || datos.nombre.trim()}`, mensaje);
     if (canal === 'whatsapp') trackWhatsApp('formulario');
-    window.open(url, '_blank', 'noopener');
-    setEnviado({ canal, url });
+    /* La ventana de confirmación va antes de salir hacia WhatsApp o el
+       correo. Si por lo que sea no se pudo mostrar, se abre directo. */
+    const mostrado = pedirAvisoContacto({ href: url, alContinuar: () => setEnviado({ canal, url }) });
+    if (!mostrado) {
+      window.open(url, '_blank', 'noopener');
+      setEnviado({ canal, url });
+    }
   };
 
   const grafo = [
@@ -188,12 +194,12 @@ export default function Contacto() {
       <CabeceraPagina
         migas={MIGAS}
         eyebrow="Contacto"
-        titulo="Cuéntame qué necesita tu negocio."
+        titulo="Cuéntanos qué necesita tu negocio."
         resalte="tu negocio"
-        entrada="Contesto yo. Con lo que me escribas aquí ya puedo decirte por dónde empezar y qué costaría."
+        entrada="Te contesta un asesor. Con lo que nos escribas aquí ya podemos decirte por dónde empezar y qué costaría."
         aparte={
           <div className="contacto-linea">
-            <span className="contacto-linea__etiqueta">O escríbeme ahora mismo</span>
+            <span className="contacto-linea__etiqueta">O escríbenos ahora mismo</span>
             <a
               className="contacto-linea__wa"
               href={whatsappUrl('contacto')}
@@ -206,7 +212,7 @@ export default function Contacto() {
               <span>WhatsApp directo</span>
             </a>
             <p className="contacto-linea__nota">
-              Contesto yo, no un bot. Normalmente el mismo día.
+              Te contesta un asesor, no un bot. Normalmente el mismo día.
             </p>
           </div>
         }
@@ -229,7 +235,7 @@ export default function Contacto() {
               noValidate
             >
               <p className="formulario__ayuda">
-                Solo el nombre y el mensaje son obligatorios. Lo demás me ayuda a contestarte mejor, pero si
+                Solo el nombre y el mensaje son obligatorios. Lo demás nos ayuda a contestarte mejor, pero si
                 prefieres no ponerlo, adelante.
               </p>
 
@@ -255,7 +261,7 @@ export default function Contacto() {
                     termines la frase, no a media palabra. */}
                 {tocado && datos.nombre.trim().length < 2 && (
                   <p className="campo__error" id="error-nombre" aria-live="polite">
-                    Escribe tu nombre para saber cómo dirigirme a ti.
+                    Escribe tu nombre para saber cómo dirigirnos a ti.
                   </p>
                 )}
               </div>
@@ -314,7 +320,7 @@ export default function Contacto() {
 
               <div className="campo">
                 <label htmlFor="mensaje">
-                  Cuéntame un poco más <span aria-hidden="true">*</span>
+                  Cuéntanos un poco más <span aria-hidden="true">*</span>
                 </label>
                 <textarea
                   id="mensaje"
@@ -329,7 +335,7 @@ export default function Contacto() {
                 />
                 {tocado && datos.mensaje.trim().length < 5 && (
                   <p className="campo__error" id="error-mensaje" aria-live="polite">
-                    Con dos líneas me basta para saber por dónde empezar.
+                    Con dos líneas nos basta para saber por dónde empezar.
                   </p>
                 )}
               </div>
@@ -377,7 +383,7 @@ export default function Contacto() {
             <aside className="contacto-lateral">
               <Reveal>
                 <div className="contacto-directo">
-                  <h2>O escríbeme directo</h2>
+                  <h2>O escríbenos directo</h2>
                   <ul>
                     <li>
                       <MessageCircle size={17} aria-hidden="true" />
@@ -408,12 +414,12 @@ export default function Contacto() {
                       cada escalón se dibuje uno detrás de otro por CSS:
                       otra propiedad, otra animación, no se pisan. */}
                   <ol>
-                    <li style={{ '--i': 0 }}>Te contesto yo, no un correo automático.</li>
+                    <li style={{ '--i': 0 }}>Te contesta un asesor, no un correo automático.</li>
                     <li style={{ '--i': 1 }}>Si hace falta, hacemos una llamada corta para entender el proyecto.</li>
-                    <li style={{ '--i': 2 }}>Te mando una propuesta con alcance y precio cerrado.</li>
+                    <li style={{ '--i': 2 }}>Te enviamos una propuesta con alcance y precio cerrado.</li>
                     <li style={{ '--i': 3 }}>Si te sirve, arrancamos. Si no, no pasa nada.</li>
                   </ol>
-                  <p>No hay insistencia ni seguimiento incómodo. Si no contestas, lo entiendo.</p>
+                  <p>No hay insistencia ni seguimiento incómodo. Si no contestas, lo entendemos.</p>
                 </div>
               </Reveal>
             </aside>

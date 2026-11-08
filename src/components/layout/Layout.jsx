@@ -25,6 +25,7 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Navegacion } from './Navegacion';
 import { Footer } from './Footer';
 import { FloatingCTA } from './FloatingCTA';
+import { AvisoContacto } from './AvisoContacto';
 import { BootLoader } from './BootLoader';
 import { ClickSpark } from '../reactbits';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
@@ -144,6 +145,9 @@ export function Layout() {
         <FloatingCTA />
       </div>
 
+      {/* Fuera del `app-shell`: ese envoltorio es `inert` durante el arranque
+          y un diálogo dentro de un árbol inerte no se puede pulsar. */}
+      <AvisoContacto />
       <ClickSpark color="#0a66ff" />
       <ScrollRestoration />
       <Analytics />

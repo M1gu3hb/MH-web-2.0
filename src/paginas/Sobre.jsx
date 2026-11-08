@@ -1,10 +1,9 @@
 /**
  * /sobre-morphiq
  *
- * Morphiq es una persona con una marca, no una agencia con veinte empleados,
- * y el sitio no finge lo contrario. Para el cliente pequeño eso no es una
- * debilidad: es exactamente la razón por la que contrata aquí y no en una
- * agencia donde nunca habla con quien construye.
+ * Presenta a Morphiq como lo que es para el cliente: un equipo que diseña y
+ * construye, con precio cerrado y un asesor que lo acompaña de principio a
+ * fin. Sin cifras de plantilla ni promesas que no se puedan sostener.
  */
 
 import { Mail, MapPin } from 'lucide-react';
@@ -20,7 +19,7 @@ import {
 import { Reveal } from '../components/reactbits';
 import { Cascada, Cortina, Secuencia } from '../components/motion';
 import { Seo, nodoMigas, nodoPagina } from '../lib/seo';
-import { DOMINIO, RUTAS } from '../config/rutas';
+import { RUTAS } from '../config/rutas';
 import { CONTACT } from '../content';
 import { gmailUrl } from '../lib/correo';
 
@@ -29,20 +28,20 @@ const MIGAS = [
   { nombre: 'Sobre Morphiq', path: RUTAS.sobre },
 ];
 
-const TITLE = 'Sobre Morphiq: quién está detrás | Morphiq';
+const TITLE = 'Sobre Morphiq: el equipo detrás | Morphiq';
 const DESC =
-  'Morphiq es el estudio de Miguel Huerta Bautista en CDMX. Diseño y construyo páginas web, sistemas y automatizaciones para negocios. Tratas conmigo, no con una cuenta.';
+  'Somos un equipo de diseño y desarrollo en CDMX. Construimos páginas web, sistemas y automatizaciones para negocios, con precio cerrado y un asesor en cada proyecto.';
 
 const PRINCIPIOS = [
   {
     titulo: 'Precio cerrado antes de empezar',
     cuerpo:
-      'Te digo cuánto cuesta y ese número no se mueve. Si calculé mal, es mi problema. Prefiero perder margen a que descubras un cargo nuevo a mitad del proyecto.',
+      'Te decimos cuánto cuesta y ese número no se mueve. Si calculamos mal, es problema nuestro. Preferimos perder margen a que descubras un cargo nuevo a mitad del proyecto.',
   },
   {
-    titulo: 'Tratas conmigo',
+    titulo: 'Un asesor desde el primer día',
     cuerpo:
-      'No hay ejecutivo de cuenta que te traduzca. Quien te contesta es quien diseña y quien programa, así que la respuesta llega completa a la primera.',
+      'Tu proyecto tiene un asesor que te contesta, coordina al equipo que diseña y programa, y te mantiene al tanto. Nadie te manda de un área a otra.',
   },
   {
     titulo: 'Ves avances, no reportes',
@@ -50,37 +49,36 @@ const PRINCIPIOS = [
       'Cada semana hay algo funcionando que puedes abrir. No presentaciones bonitas: producto. Y si algo no te late, se cambia cuando todavía es barato cambiarlo.',
   },
   {
-    titulo: 'Te digo cuando no me necesitas',
+    titulo: 'Te decimos cuando no nos necesitas',
     cuerpo:
-      'Si con el plan más barato te alcanza, te lo digo. Si lo que necesitas ya lo resuelve una herramienta que puedes contratar por trescientos pesos al mes, también.',
+      'Si con el plan más barato te alcanza, te lo decimos. Si lo que necesitas ya lo resuelve una herramienta que puedes contratar por trescientos pesos al mes, también.',
   },
   {
-    titulo: 'Lo que construyo es tuyo',
+    titulo: 'Lo que construimos es tuyo',
     cuerpo:
-      'El dominio queda a tu nombre y el proyecto es tuyo. Si mañana quieres llevártelo con otra persona, te lo llevas. No secuestro proyectos.',
+      'El dominio queda a tu nombre y el proyecto es tuyo. Si mañana quieres llevártelo con otra persona, te lo llevas. No secuestramos proyectos.',
   },
   {
     titulo: 'Sin permanencia',
     cuerpo:
-      'Los servicios mensuales se cancelan cuando quieras. Si me quedo con tu proyecto es porque te sirvo, no porque firmaste algo hace dos años.',
+      'Los servicios mensuales se cancelan cuando quieras. Si seguimos con tu proyecto es porque te servimos, no porque firmaste algo hace dos años.',
   },
 ];
 
 const PROCESO = [
-  { titulo: 'Entender', cuerpo: 'Me cuentas cómo funciona tu negocio hoy. Sin tecnicismos, como se lo contarías a alguien de tu familia.' },
-  { titulo: 'Definir el alcance', cuerpo: 'Te digo qué se puede hacer, qué conviene dejar para después y cuánto cuesta. Por escrito.' },
-  { titulo: 'Primera dirección', cuerpo: 'Te enseño una propuesta visual antes de programar nada. Es el momento más barato para cambiar de idea.' },
+  { titulo: 'Entender', cuerpo: 'Nos cuentas cómo funciona tu negocio hoy. Sin tecnicismos, como se lo contarías a alguien de tu familia.' },
+  { titulo: 'Definir el alcance', cuerpo: 'Te decimos qué se puede hacer, qué conviene dejar para después y cuánto cuesta. Por escrito.' },
+  { titulo: 'Primera dirección', cuerpo: 'Te enseñamos una propuesta visual antes de programar nada. Es el momento más barato para cambiar de idea.' },
   { titulo: 'Avances', cuerpo: 'Vas viendo el proyecto funcionando. Opinas sobre distribución, contenido, estilo, fotos y qué va primero.' },
   { titulo: 'Ajustes', cuerpo: 'Se corrige lo que haga falta dentro del alcance. No son revisiones infinitas, pero tampoco es «tómalo o déjalo».' },
   { titulo: 'Desarrollo y pruebas', cuerpo: 'Se construye lo que falta y se prueba en teléfono, tablet y computadora antes de que lo vea nadie.' },
-  { titulo: 'Publicación', cuerpo: 'Sale en línea, te capacito si lleva panel y te acompaño los primeros días.' },
+  { titulo: 'Publicación', cuerpo: 'Sale en línea, te capacitamos si lleva panel y te acompañamos los primeros días.' },
 ];
 
 export default function Sobre() {
   const grafo = [
     nodoPagina({ path: RUTAS.sobre, title: TITLE, description: DESC }),
     nodoMigas(MIGAS),
-    { '@id': `${DOMINIO}/#miguel` },
   ];
 
   return (
@@ -90,14 +88,14 @@ export default function Sobre() {
       <CabeceraPagina
         migas={MIGAS}
         eyebrow="Sobre Morphiq"
-        titulo="Hola, soy Miguel. Yo construyo todo esto."
-        resalte="Yo construyo todo esto."
-        entrada="Morphiq no es una agencia con veinte personas. Es un estudio, y el estudio soy yo: diseño, programo, publico y contesto el WhatsApp."
+        titulo="Somos un equipo. Construimos todo esto."
+        resalte="Construimos todo esto."
+        entrada="Morphiq es un estudio de diseño y desarrollo: un equipo que diseña, programa, publica y te acompaña de principio a fin."
         aparte={
           <div className="tarjeta-firma">
-            <span className="firma3d" translate="no" aria-label="MH97">MH97</span>
-            <p>Miguel Huerta Bautista</p>
-            <small>Director · Diseñador · Desarrollador</small>
+            <span className="firma3d" translate="no" aria-label="Morphiq">MORPHIQ</span>
+            <p>Astral Morphiq Systems</p>
+            <small>Diseño · Desarrollo · Sistemas</small>
           </div>
         }
         acciones={
@@ -106,7 +104,7 @@ export default function Sobre() {
               Hablemos
             </BotonPrincipal>
             <BotonSecundario to={RUTAS.proyectos} grande>
-              Ver lo que he construido
+              Ver lo que hemos construido
             </BotonSecundario>
           </>
         }
@@ -120,14 +118,14 @@ export default function Sobre() {
                 historia y conviene que se descubra, no que se deslice. */}
             <Cortina>
               <p className="bio__parrafo bio__parrafo--destacado">
-                Empecé haciendo páginas para negocios de mi zona y acabé construyendo los sistemas con los que
+                Empezamos haciendo páginas para negocios locales y acabamos construyendo los sistemas con los que
                 operan por dentro. Hoy hay varios negocios cobrando, cotizando y organizando su día en cosas que
-                escribí yo.
+                construimos nosotros.
               </p>
             </Cortina>
             <Reveal>
               <p className="bio__parrafo">
-                Me pasa seguido que alguien llega pidiendo «una página» y a los diez minutos de plática resulta
+                Nos pasa seguido que alguien llega pidiendo «una página» y a los diez minutos de plática resulta
                 que lo que le duele es otra cosa: que se le caen los pedidos, que no sabe qué tiene en bodega, que
                 cotiza tres veces lo mismo. Por eso Morphiq no vende solo páginas. Vende que tu negocio funcione
                 mejor por dentro, y la página es la parte que se ve.
@@ -135,23 +133,23 @@ export default function Sobre() {
             </Reveal>
             <Reveal>
               <p className="bio__parrafo">
-                Trabajo desde Xochimilco, en la Ciudad de México. Si tu negocio está en la ciudad y hace falta,
-                voy a verte: entender una operación en persona ahorra semanas de malentendidos. Y si estás fuera,
-                el proceso funciona igual por videollamada.
+                Trabajamos desde la Ciudad de México. Si tu negocio está en la ciudad y hace falta, vamos a verte:
+                entender una operación en persona ahorra semanas de malentendidos. Y si estás fuera, el proceso
+                funciona igual por videollamada.
               </p>
             </Reveal>
             <Reveal>
               <p className="bio__parrafo">
-                Lo que hago está publicado: los proyectos de este sitio que están en línea llevan su enlace
-                directo. Es la forma más honesta que se me ocurre de que no tengas que creerme nada.
+                Lo que hacemos está publicado: los proyectos de este sitio que están en línea llevan su enlace
+                directo. Es la forma más honesta que se nos ocurre de que no tengas que creernos nada.
               </p>
             </Reveal>
 
             <Reveal>
               <div className="bio__enlaces">
-                <a href={gmailUrl(CONTACT.emailPersonal)} target="_blank" rel="noreferrer">
+                <a href={gmailUrl(CONTACT.email)} target="_blank" rel="noreferrer">
                   <Mail size={17} aria-hidden="true" />
-                  {CONTACT.emailPersonal}
+                  {CONTACT.email}
                 </a>
                 <span>
                   <MapPin size={17} aria-hidden="true" />
@@ -163,13 +161,13 @@ export default function Sobre() {
         </Contenedor>
       </Seccion>
 
-      {/* ---- Cómo trabajo ---- */}
+      {/* ---- Cómo trabajamos ---- */}
       <Seccion tono="elevado">
         <Contenedor>
           <TituloSeccion
-            eyebrow="Cómo trabajo"
-            titulo="Seis cosas que no negocio."
-            entrada="No son valores de folleto. Son las reglas por las que puedes reclamarme si no las cumplo."
+            eyebrow="Cómo trabajamos"
+            titulo="Seis cosas que no negociamos."
+            entrada="No son valores de folleto. Son las reglas por las que puedes reclamarnos si no las cumplimos."
           />
           <Cascada className="principios" paso={0.05}>
             {PRINCIPIOS.map((p) => (
@@ -187,7 +185,7 @@ export default function Sobre() {
         <Contenedor>
           <TituloSeccion
             eyebrow="El proceso"
-            titulo="Qué pasa desde que me escribes hasta que sale en línea."
+            titulo="Qué pasa desde que nos escribes hasta que sale en línea."
             entrada="Lo importante: no desapareces del proceso. Vas viendo y vas opinando."
           />
           {/* SECUENCIA. Siete pasos que se encienden uno a uno al bajar:
@@ -210,7 +208,7 @@ export default function Sobre() {
             <p className="proceso-largo__nota">
               Sobre los cambios, para que no haya sorpresas: los ajustes dentro del alcance acordado van
               incluidos. Los que amplían el alcance se cotizan aparte, y lo hablamos antes de hacerlos, nunca en
-              la factura final. No prometo revisiones infinitas porque nadie que las promete las cumple.
+              la factura final. No prometemos revisiones infinitas porque nadie que las promete las cumple.
             </p>
           </Reveal>
         </Contenedor>
@@ -218,9 +216,9 @@ export default function Sobre() {
 
       <CierreCTA
         titulo="¿Nos conocemos?"
-        cuerpo="Cuéntame qué hace tu negocio. Aunque todavía no sepas qué necesitas, con una plática corta salimos de dudas los dos."
+        cuerpo="Cuéntanos qué hace tu negocio. Aunque todavía no sepas qué necesitas, con una plática corta salimos de dudas todos."
         servicio="otro"
-        etiqueta="Escribirle a Miguel"
+        etiqueta="Hablar con un asesor"
       />
     </>
   );

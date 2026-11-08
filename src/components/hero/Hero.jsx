@@ -112,7 +112,7 @@ export function Hero() {
                 </div>
               ))}
             </dl>
-            <span className="firma3d hero__firma3d" translate="no" aria-label="MH97">MH97</span>
+            <span className="firma3d hero__firma3d" translate="no" aria-label="Morphiq">MORPHIQ</span>
           </div>
         </Motion.div>
 

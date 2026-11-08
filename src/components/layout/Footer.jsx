@@ -111,7 +111,7 @@ export function Footer() {
 
       <div className="footer__base">
         <p className="footer__legal">
-          © {new Date().getFullYear()} Astral Morphiq Systems · Morphiq · {CONTACT.owner}
+          © {new Date().getFullYear()} {CONTACT.studio} · Morphiq
         </p>
         <button type="button" className="footer__arriba" onClick={alInicio}>
           Volver arriba

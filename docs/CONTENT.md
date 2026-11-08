@@ -57,8 +57,8 @@ Ticker: WEB EXPERIENCE · POINT OF SALE · CRM & DATA · AUTOMATION (×2)
 ### 3 · Manifiesto
 ```
 01  Dos disciplinas. Una sola visión.
-    Diseño la cara visible y construyo la máquina detrás.
-    MH97 · DESIGN × SYSTEMS · CDMX
+    Diseñamos la cara visible y construimos la máquina detrás.
+    DESIGN × SYSTEMS · CDMX
 ```
 
 ### 4 · Capacidades (`#servicios`)
@@ -114,13 +114,12 @@ de todo cliente, después del precio.
 
 Hagamos algo difícil de ignorar.
 
-DIRECTOR / DISEÑADOR / DESARROLLADOR
-Miguel Huerta Bautista
-mhastralsystems@gmail.com
-Xochimilco · CDMX
+ASTRAL MORPHIQ SYSTEMS
+contacto@morphiq.com.mx
+Ciudad de México
 
-Cuéntame qué vendes, qué se está atorando y qué quieres mejorar.
-Yo te digo con honestidad qué conviene construir.
+Cuéntanos qué vendes, qué se está atorando y qué quieres mejorar.
+Te decimos con honestidad qué conviene construir.
 
 [WhatsApp · 55 2311 8153 →]
 ```
@@ -132,11 +131,11 @@ Proceso / Volver arriba · `© 2026 MH ASTRAL SYSTEMS · CDMX`
 ## Datos de contacto (única fuente: `data.js`)
 
 ```js
-owner:    'Miguel Huerta Bautista'
+studio:   'Astral Morphiq Systems'
 phone:    '55 2311 8153'
 whatsapp: '525523118153'          // usado en wa.me
-email:    'mhastralsystems@gmail.com'
-location: 'Xochimilco · CDMX'
+email:    'contacto@morphiq.com.mx'
+location: 'Ciudad de México'
 ```
 
 Duplicados en `index.html` dentro del JSON-LD (`telephone: "+52 55 2311 8153"`,
@@ -146,7 +145,7 @@ archivos.
 ## Mensaje pre-cargado de WhatsApp
 
 ```
-Hola Miguel 👋 Vi la nueva página de MH Astral Systems y quiero platicar
+Hola 👋 Vi su página y quiero platicar
 sobre un proyecto para mi negocio.
 ```
 

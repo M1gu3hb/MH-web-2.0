@@ -260,7 +260,7 @@ export default function ProyectoDetalle() {
 
       <CierreCTA
         titulo={`¿Quieres algo como ${proyecto.nombre}?`}
-        cuerpo="Cuéntame qué tiene tu negocio de parecido y de distinto. Con eso te digo qué costaría."
+        cuerpo="Cuéntanos qué tiene tu negocio de parecido y de distinto. Con eso te decimos qué costaría."
         servicio="otro"
       />
     </>

@@ -233,7 +233,7 @@ reparten la autoridad.
 Le faltan: `image`, `logo`, `priceRange`, `geo`, `openingHoursSpecification`,
 `serviceType`, `areaServed` estructurado y `sameAs` más allá de GitHub.
 
-Para búsquedas del tipo *"diseño web Xochimilco"*, esos campos alimentan el panel
+Para búsquedas del tipo *"diseño web CDMX"*, esos campos alimentan el panel
 de conocimiento. **Es la palanca de SEO local más barata que existe.**
 
 También conviene añadir un bloque `FAQPage` cuando exista la sección de FAQ, y
@@ -313,9 +313,9 @@ puntos de contacto.
 antes de redirigir. Sin esto no se puede optimizar la página.
 
 ### 🟠 U7 — Sin sección «sobre mí»
-En un estudio de una persona, la persona es el diferenciador frente a una
-agencia. Hoy Miguel solo aparece en el bloque de contacto, al final, como una
-ficha de datos. No hay foto, ni historia, ni por qué hace esto.
+En un estudio pequeño, el diferenciador frente a una agencia es el trato
+directo con un asesor. Hoy eso solo aparece en el bloque de contacto, al final,
+como una ficha de datos. No hay historia ni explicación de por qué se hace esto.
 
 ### 🟡 U8 — El botón flotante puede tapar contenido en móvil
 `.floating-contact` es fijo. Verificar que no cubra el CTA de la sección de

@@ -15,7 +15,7 @@ const EMPTY = { nombre: '', negocio: '', necesidad: '' };
  */
 function composeMessage({ nombre, negocio, necesidad }) {
   return [
-    `Hola Miguel 👋 Soy ${nombre || '—'}.`,
+    `Hola 👋 Soy ${nombre || '—'}.`,
     negocio ? `Mi negocio: ${negocio}.` : '',
     necesidad ? `Lo que necesito: ${necesidad}` : '',
   ]

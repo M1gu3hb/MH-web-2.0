@@ -266,7 +266,7 @@ export function BotonSecundario({ to, href, children, grande = false, className 
   );
 }
 
-export function BotonWhatsApp({ origen = 'contact', children = 'Escríbeme por WhatsApp', grande = false }) {
+export function BotonWhatsApp({ origen = 'contact', children = 'Escríbenos por WhatsApp', grande = false }) {
   return (
     <a
       className={`tactile-button tactile-button--paper ${grande ? 'tactile-button--large' : ''}`}
@@ -465,14 +465,14 @@ export function CierreCTA({
   titulo,
   cuerpo,
   servicio,
-  etiqueta = 'Cuéntame tu proyecto',
+  etiqueta = 'Cuéntanos tu proyecto',
   /* El cierre acepta el titular como dos líneas para poder pintar la segunda
      en azul, que es el gesto del cierre de producción. Si llega una cadena
      suelta se parte por el último signo de puntuación, y si no hay por
      dónde partir se queda en una línea: nunca se corta una frase a mitad. */
   lineas,
   kicker = '¿Tienes una idea?',
-  eyebrow = 'Contacto directo',
+  eyebrow = 'Hablemos',
 }) {
   const partes = lineas ?? partirCierre(titulo);
 
@@ -506,7 +506,7 @@ export function CierreCTA({
             </div>
           </div>
           <p className="cierre__nota">
-            Respondo yo, no un formulario automático. Si prefieres verme la cara, también hago videollamada.
+            Te responde un asesor, no un formulario automático. Si prefieres verle la cara a alguien del equipo, también hacemos videollamada.
           </p>
         </Statement>
       </div>

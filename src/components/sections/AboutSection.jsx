@@ -40,7 +40,7 @@ export function AboutSection() {
             <span className="about__plate-scan" aria-hidden="true" />
           </div>
           <div className="about__stamp">
-            <span className="firma3d" translate="no">MH97</span>
+            <span className="firma3d" translate="no">MORPHIQ</span>
             <small><ScrambleText text={ABOUT.signature} trigger="view" /></small>
           </div>
         </Reveal>

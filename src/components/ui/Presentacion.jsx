@@ -4,8 +4,8 @@
  * ============================================================
  *
  * Esta es la sección de producción (`AboutSection`) traída tal cual: la
- * placa con el efecto de agua, la firma MH97, el titular a dos voces, el
- * nombre, el rol y el correo personal.
+ * placa con el efecto de agua, la firma en relieve, el titular a dos voces, la
+ * marca, el rol y el correo.
  *
  * En la iteración anterior este bloque se había quedado en un párrafo
  * centrado dentro de una columna estrecha. Es decir: puro texto. Y era
@@ -16,8 +16,8 @@
  * · La placa `placa-lockup.webp` dentro de `RippleDistortion`, con los
  *   mismos parámetros: al pasar el cursor el logo se deforma como agua y al
  *   hacer clic da un golpe. Es el componente que le da vida a este bloque.
- * · La firma MH97 en relieve y su leyenda.
- * · El nombre, el rol y el correo.
+ * · La firma en relieve y su leyenda.
+ * · La marca, el rol y el correo.
  * · El titular a dos líneas con la segunda en la voz suave.
  *
  * QUÉ SE ADAPTA
@@ -73,8 +73,8 @@ export function Presentacion({ resumen = true, children }) {
           <span className="about__plate-scan" aria-hidden="true" />
         </div>
         <div className="about__stamp presentacion__firma">
-          <span className="firma3d" translate="no" aria-label="MH97">
-            MH97
+          <span className="firma3d" translate="no" aria-label="Morphiq">
+            MORPHIQ
           </span>
           <small>{ABOUT.signature}</small>
         </div>
@@ -82,7 +82,7 @@ export function Presentacion({ resumen = true, children }) {
 
       <div className="presentacion__cuerpo">
         <p className="presentacion__eyebrow">
-          <ScrambleText text="Quién lo hace" trigger="view" />
+          <ScrambleText text="Quiénes somos" trigger="view" />
         </p>
 
         <Cortina>
@@ -98,7 +98,7 @@ export function Presentacion({ resumen = true, children }) {
         {/* La declaración con sus dos palabras en color: es el gesto de
             producción y lo que impide que el bloque sea una mancha de gris. */}
         <p className="presentacion__declaracion">
-          Hago páginas que <em>venden</em> y sistemas que <strong>ordenan.</strong>
+          Hacemos páginas que <em>venden</em> y sistemas que <strong>ordenan.</strong>
         </p>
 
         {parrafos.map((p) => (
@@ -114,11 +114,11 @@ export function Presentacion({ resumen = true, children }) {
             línea de metadatos; apilados, el nombre manda y lo demás lo
             acompaña. */}
         <div className="presentacion__rubrica">
-          <strong>{CONTACT.owner}</strong>
+          <strong>Morphiq</strong>
           <span className="presentacion__rol">{CONTACT.role}</span>
-          <a className="presentacion__correo" href={gmailUrl(CONTACT.emailPersonal)} target="_blank" rel="noreferrer">
+          <a className="presentacion__correo" href={gmailUrl(CONTACT.email)} target="_blank" rel="noreferrer">
             <Mail size={15} aria-hidden="true" />
-            {CONTACT.emailPersonal}
+            {CONTACT.email}
           </a>
         </div>
 
