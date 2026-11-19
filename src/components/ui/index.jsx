@@ -17,6 +17,7 @@ import { useId, useState } from 'react';
 import { CampoPuntos, GlareHover, Reveal, ScrambleText, SpotlightCard, StarBorder } from '../reactbits';
 import { Cortina, Titular } from '../motion';
 import { PortadaProyecto } from './PortadaProyecto';
+import { DemoProyecto } from '../proyectos';
 
 export { PortadaProyecto };
 import { RUTAS, contactoCon } from '../../config/rutas';
@@ -556,6 +557,10 @@ export function TarjetaProyecto({ proyecto, ruta, formato = 'normal' }) {
           ) : (
             <PortadaProyecto proyecto={proyecto} />
           )}
+          {/* Encima de la maqueta, el proyecto usándose. La imagen sigue
+              debajo: es lo que se ve mientras llega la escena y lo que ve
+              quien pidió menos movimiento. */}
+          <DemoProyecto slug={proyecto.slug} />
         </GlareHover>
         <div className="tarjeta-proyecto__cuerpo">
           <p className="tarjeta-proyecto__industria">{proyecto.industria}</p>

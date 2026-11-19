@@ -5080,3 +5080,45 @@ main#contenido > * {
     gap: clamp(10px, 1.7svh, 16px);
   }
 }
+
+/* ============================================================
+   LA DEMOSTRACIÓN DE CADA PROYECTO
+   ============================================================
+   La escena se monta encima de la maqueta horneada, dentro del mismo marco.
+   Va por debajo del borde de acento y de la lámina de luz de la tarjeta,
+   que siguen siendo de la tarjeta y no de la escena. */
+
+.demo-proyecto {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+}
+
+/* En la cabecera del caso el marco es 16:10, la proporción de todas las
+   escenas. La maqueta de debajo se recorta igual que en las tarjetas. */
+.caso-demo {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-lg);
+  background: var(--surface-sunken);
+  overflow: hidden;
+}
+
+.caso-demo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  object-fit: cover;
+}
+
+/* La lámina de luz pasa por encima de la escena, como pasaba por encima de
+   la imagen. */
+.tarjeta-proyecto__imagen .rb-glare__sheen,
+.caso-demo .rb-glare__sheen {
+  z-index: 3;
+}

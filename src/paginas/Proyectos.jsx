@@ -161,7 +161,7 @@ export default function Proyectos() {
         eyebrow="Trabajo real"
         titulo="Negocios que ya están funcionando con esto."
         resalte="ya están funcionando"
-        entrada={`${piezasEnLetra(PROYECTOS.length)}. Unas son encargos de negocios que hoy trabajan con ellas; otras son producto propio, construido para resolverme algo a mí primero. Ninguna es una maqueta de portafolio, y la que está en línea lleva su enlace para que la abras.`}
+        entrada={`${piezasEnLetra(PROYECTOS.length)}. Unas son encargos de negocios que hoy trabajan con ellas; otras son producto propio, que construimos para resolvernos algo a nosotros primero. Ninguna es una maqueta de portafolio: cada una se enseña funcionando, y la que está en línea lleva su enlace para que la abras.`}
         aparte={
           <ul className="tira-industrias">
             {PROYECTOS.map((p) => (

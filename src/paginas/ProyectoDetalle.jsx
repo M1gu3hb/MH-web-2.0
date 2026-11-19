@@ -20,6 +20,7 @@ import {
   TituloSeccion,
 } from '../components/ui';
 import { GlareHover, Reveal, ScrambleText } from '../components/reactbits';
+import { DemoProyecto } from '../components/proyectos';
 import { Seo, nodoCaso, nodoMigas, nodoPagina } from '../lib/seo';
 import { PROYECTOS, proyectoPorSlug, rutaProyecto } from '../content/proyectos';
 import { RUTAS } from '../config/rutas';
@@ -131,7 +132,10 @@ export default function ProyectoDetalle() {
                 pequeño y lo pierde al ampliarse, que es al revés de lo que
                 uno espera. Va con `as="figure"` para no meter un div de más
                 entre la rejilla del reparto y su hijo. */}
-            <GlareHover as="figure" className="caso-cabecera__imagen">
+            {/* Y encima, la demostración: el proyecto usándose, con un rótulo
+                que dice qué pasa en cada momento. El marco pasa a 16:10, que
+                es la proporción de todas las escenas. */}
+            <GlareHover as="figure" className="caso-cabecera__imagen caso-demo">
               {proyecto.imagen ? (
                 <img
                   src={proyecto.imagen}
@@ -143,6 +147,7 @@ export default function ProyectoDetalle() {
               ) : (
                 <PortadaProyecto proyecto={proyecto} />
               )}
+              <DemoProyecto slug={proyecto.slug} pronto />
             </GlareHover>
           </div>
         </Contenedor>
