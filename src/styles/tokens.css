@@ -84,6 +84,8 @@
   --font-body: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
   /* La tipografía del manual de marca: el wordmark, el hero y el arranque. */
   --font-brand: 'Exo 2 Variable', ui-sans-serif, system-ui, sans-serif;
+  /* La monoespaciada: arte ASCII, tickets y etiquetas técnicas de MorphiqPOS. */
+  --font-mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
 
   --w-regular: 400;
   --w-medium: 500;
