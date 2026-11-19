@@ -1,0 +1,338 @@
+/* ============================================================
+   MORPHIQPOS — lo que carga todo el sitio
+   ============================================================
+
+   Solo lo que aparece FUERA de la página del producto: la marca, el punto
+   del menú, el campo de caracteres y la sección de la home. El resto —las
+   pantallas del sistema y la página entera— viaja con sus trozos de
+   JavaScript (`pos-kit.css` lo importa el kit; `pos.css`, la página), para
+   que la hoja de estilos que bloquea el primer pintado no engorde por un
+   producto que la mayoría de las rutas no enseña.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   La marca del producto
+   ------------------------------------------------------------ */
+
+.marca-pos {
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  column-gap: 0.5em;
+  margin: 0;
+  font-size: clamp(1.25rem, 1.7vw, 1.7rem);
+  line-height: 1;
+}
+
+.marca-pos__simbolo {
+  grid-row: span 2;
+  width: 2.1em;
+  height: 2.1em;
+  object-fit: contain;
+}
+
+.marca-pos__nombre {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28em;
+  font-family: var(--font-brand);
+  font-weight: 760;
+  letter-spacing: -0.02em;
+  /* La plata de la casa: el mismo degradado del wordmark. */
+  background: linear-gradient(180deg, #f4f6fa 0%, #c0c5cc 46%, #8d94a1 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.marca-pos__nombre b {
+  padding: 0.16em 0.36em 0.12em;
+  border-radius: 0.28em;
+  background: var(--accent-brand);
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  font-size: 0.78em;
+  box-shadow: inset 0 -0.14em 0 rgba(0, 0, 0, 0.22), 0 0.3em 1.1em -0.3em var(--accent-brand);
+}
+
+.marca-pos__firma {
+  grid-column: 2;
+  margin-top: 0.5em;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: max(0.36em, 10.5px);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.marca-pos--grande {
+  font-size: clamp(1.5rem, 2.3vw, 2.3rem);
+}
+
+.campo-ascii {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+
+/* ------------------------------------------------------------
+   Navegación: el punto del producto
+   ------------------------------------------------------------ */
+
+.nav-enlace--producto {
+  color: var(--ink-strong);
+  font-family: var(--font-brand);
+  font-weight: 620;
+  letter-spacing: 0.01em;
+}
+
+.nav-enlace .nav-enlace__punto {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--accent-brand);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-brand) 22%, transparent);
+}
+
+/* ============================================================
+   MORPHIQPOS EN LA HOME
+   ============================================================ */
+
+.pos-inicio {
+  position: relative;
+  padding-block: var(--sp-section);
+  background: var(--negro-hero);
+  overflow: clip;
+  isolation: isolate;
+}
+
+.pos-inicio__fondo {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  /* El campo se desvanece por arriba y por abajo: entra desde el hero y
+     entrega a la sección siguiente sin un borde. */
+  mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 74%, transparent 100%);
+}
+
+.pos-inicio__fondo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(70% 60% at 22% 45%, var(--negro-hero) 0%, color-mix(in srgb, var(--negro-hero) 70%, transparent) 55%, transparent 100%);
+}
+
+.pos-inicio__reparto {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: clamp(var(--sp-6), 4vw, var(--sp-9));
+  align-items: center;
+}
+
+.pos-inicio__texto {
+  display: grid;
+  justify-items: start;
+  gap: var(--sp-5);
+  min-width: 0;
+}
+
+.pos-inicio__titulo {
+  margin: 0;
+  color: var(--ink-strong);
+  font-family: var(--font-display);
+  font-size: clamp(2.3rem, 5.2vw, 5.4rem);
+  font-weight: var(--w-display);
+  letter-spacing: -0.05em;
+  line-height: 0.94;
+}
+
+.pos-inicio__titulo .titular__ventana {
+  display: block;
+  overflow: hidden;
+  padding-block: 0.06em;
+}
+
+.pos-inicio__titulo .titular__linea {
+  display: block;
+}
+
+.pos-inicio__entrada {
+  max-width: 44ch;
+  margin: 0;
+  color: var(--ink-body);
+  font-size: var(--t-lead);
+  line-height: 1.6;
+}
+
+.pos-inicio__puntos {
+  display: grid;
+  gap: 8px;
+  margin: var(--sp-5) 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--ink-strong);
+  font-size: max(0.95rem, 14px);
+}
+
+.pos-inicio__puntos li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pos-inicio__puntos svg {
+  flex: none;
+  padding: 3px;
+  box-sizing: content-box;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent-brand) 24%, transparent);
+  color: var(--accent-pos);
+}
+
+.pos-inicio__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin-top: var(--sp-6);
+}
+
+.pos-inicio__escenario {
+  min-width: 0;
+  perspective: 1400px;
+}
+
+.pos-inicio__aparato {
+  transform-origin: 50% 100%;
+  will-change: transform;
+}
+
+/* ---- El carrete ---- */
+
+.pos-inicio__eyebrow {
+  margin: 0;
+  color: var(--accent-pos);
+  font-family: var(--font-mono);
+  font-size: max(0.76rem, 12px);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.pos-inicio__eyebrow span {
+  color: var(--ink-muted);
+}
+
+.carrete {
+  display: grid;
+  gap: var(--sp-4);
+}
+
+.carrete__pestanas {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.carrete__pestanas--hueco {
+  height: 46px;
+}
+
+.carrete__pestana {
+  position: relative;
+  /* 46 px de alto: que el dedo acierte sin apuntar. */
+  padding: 15px 6px 13px;
+  border: 0;
+  border-top: 2px solid var(--line-soft);
+  background: transparent;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: max(0.74rem, 12px);
+  letter-spacing: 0.08em;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.25s;
+}
+
+.carrete__pestana:hover,
+.carrete__pestana.is-activa {
+  color: var(--ink-strong);
+}
+
+.carrete__pestana:focus-visible {
+  outline: 2px solid var(--accent-pos);
+  outline-offset: 3px;
+}
+
+.carrete__pestana i {
+  position: absolute;
+  left: 0;
+  top: -2px;
+  width: 100%;
+  height: 2px;
+  background: var(--accent-brand);
+  transform-origin: left;
+  animation: pestana-tiempo var(--dura) linear both;
+}
+
+.carrete__pestana.is-activa:not(:has(i)) {
+  border-top-color: var(--accent-brand);
+}
+
+@media (max-width: 999px) {
+  .pos-inicio__reparto {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pos-inicio__fondo::after {
+    background: linear-gradient(180deg, color-mix(in srgb, var(--negro-hero) 78%, transparent), transparent 60%);
+  }
+  .pos-inicio__acciones {
+    width: 100%;
+  }
+  .pos-inicio__acciones > * {
+    flex: 1 1 220px;
+    justify-content: center;
+  }
+}
+
+
+.carrete__pantalla {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--line);
+  border-radius: clamp(14px, 2vw, 26px);
+  background: #0c0f15;
+  box-shadow:
+    0 0 0 6px rgba(233, 236, 241, 0.03),
+    0 40px 90px -30px rgba(10, 102, 255, 0.35),
+    var(--e-3);
+}
+
+.carrete__capa {
+  position: absolute;
+  inset: 0;
+}
+
+@keyframes pestana-tiempo {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carrete__pestana i {
+    animation: none !important;
+  }
+}
+
+/* En teléfono la pantalla del sistema se pinta casi cuadrada (ver la
+   cabecera de `pos-kit.css`); el hueco que la contiene tiene que medir lo
+   mismo o la pantalla se sale por abajo. */
+@media (max-width: 700px) {
+  .carrete__pantalla {
+    aspect-ratio: 100 / 103;
+  }
+}

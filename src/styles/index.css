@@ -24,3 +24,7 @@
 @import './navegacion.css';
 @import './sitio.css';
 @import './aviso.css';
+
+/* MorphiqPOS: solo la parte que sale fuera de su página. El kit de
+   pantallas y la hoja de la página los importan sus propios módulos. */
+@import './pos-base.css';

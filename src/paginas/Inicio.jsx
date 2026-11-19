@@ -26,10 +26,11 @@ import {
   TituloSeccion,
 } from '../components/ui';
 import { CampoPuntos, MarcoExpansivo, Reveal } from '../components/reactbits';
-import { Cascada, Escala, Lateral, Secuencia } from '../components/motion';
+import { Escala, Lateral, Secuencia } from '../components/motion';
 import { TarjetaSolucion } from '../components/ui/TarjetaSolucion';
 import { Presentacion } from '../components/ui/Presentacion';
 import { PortadaHero } from '../components/hero/PortadaHero';
+import { SeccionPosInicio } from '../components/pos/SeccionPosInicio';
 import { Seo, nodoPagina, nodoPreguntas } from '../lib/seo';
 import { SERVICIOS } from '../content/servicios';
 import { PROYECTOS_DESTACADOS, rutaProyecto } from '../content/proyectos';
@@ -65,6 +66,12 @@ export default function Inicio() {
 
       <PortadaHero />
 
+      {/* ============ MORPHIQPOS ============
+          El producto de la casa, lo primero debajo del hero. Va antes de la
+          rejilla de servicios a propósito: los servicios son lo que se
+          hace a pedido; esto es lo que ya existe y se puede ver funcionando. */}
+      <SeccionPosInicio />
+
       {/* ============ ¿QUÉ NECESITAS? ============ */}
       <Seccion tono="elevado" id="que-necesitas" className="rampa rampa--1">
         <div className="contenedor contenedor--amplio">
@@ -81,11 +88,14 @@ export default function Inicio() {
               piden— ocupan más ancho que las tres siguientes. Cinco tarjetas
               iguales en una rejilla automática dejaban un hueco impar y se
               leían como una lista; así se leen como una portada. */}
-          <Cascada className="rejilla-soluciones" paso={0.07} y={30}>
+          {/* La entrada la lleva cada tarjeta (ver TarjetaSolucion): llegan
+              echadas hacia atrás y se enderezan una tras otra. Por eso aquí
+              ya no va una `Cascada` envolviéndolas. */}
+          <div className="rejilla-soluciones">
             {SERVICIOS.map((s, i) => (
               <TarjetaSolucion key={s.id} servicio={s} indice={i} />
             ))}
-          </Cascada>
+          </div>
           <Reveal>
             <p className="rejilla-servicios__pie">
               ¿No sabes cuál? <Link to={RUTAS.contacto}>Cuéntanos qué te está costando trabajo</Link> y te decimos.
