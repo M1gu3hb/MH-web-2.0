@@ -1,0 +1,397 @@
+/* ============================================================
+   DEMOSTRACIONES DE PROYECTO — la base
+   ============================================================
+
+   Todo se mide en `em` sobre un cuerpo que sale del tamaño del marco. El
+   lienzo es 16:10 y cabe entero en el marco que le toque: 3 % de su ancho
+   de cuerpo, igual que las escenas de servicio, para que en la tarjeta más
+   estrecha (unos 330 px) el texto siga siendo texto.
+
+   Cada escena trae la paleta de su proyecto en `--pe-*`. El acento llega de
+   la tarjeta en `--acento`, que es el que ya declara el contenido.
+   ============================================================ */
+
+.pe {
+  --pe-fondo: #0b0d12;
+  --pe-sup: #151921;
+  --pe-sup2: #1d222c;
+  --pe-linea: rgba(233, 236, 241, 0.12);
+  --pe-texto: #e9ecf1;
+  --pe-sutil: #8b919d;
+  --pe-ac: var(--acento, #0a66ff);
+  --pe-sobre: #06080c;
+  --pe-ok: #2fbf71;
+
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  container-type: size;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--pe-fondo);
+  color: var(--pe-texto);
+  font-family: var(--font-body);
+  text-align: left;
+  animation: pe-aparece 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pe-aparece {
+  from {
+    opacity: 0;
+  }
+}
+
+.pe__lienzo {
+  position: relative;
+  width: min(100cqw, 160cqh);
+  aspect-ratio: 16 / 10;
+  font-size: clamp(8px, calc(min(100cqw, 160cqh) * 0.03), 26px);
+  line-height: 1.2;
+}
+
+/* La escena vive encima del rótulo: 31.5 × 16.9 em útiles. */
+.pe__capa {
+  position: absolute;
+  inset: 0.9em 0.9em 3.05em;
+  animation: pe-entra 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pe-entra {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+    filter: blur(6px);
+  }
+}
+
+.pe i,
+.pe em {
+  font-style: normal;
+}
+
+.pe p {
+  margin: 0;
+}
+
+/* ---- El rótulo ---- */
+
+.pe-rotulo {
+  position: absolute;
+  left: 0.9em;
+  right: 0.9em;
+  bottom: 0.75em;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  height: 1.75em;
+}
+
+.pe-rotulo__n {
+  flex: none;
+  display: grid;
+  place-items: center;
+  grid-auto-flow: column;
+  min-width: 2.7em;
+  height: 100%;
+  padding-inline: 0.55em;
+  border-radius: 99px;
+  background: var(--pe-ac);
+  color: var(--pe-sobre);
+  font-family: var(--font-mono);
+  font-size: 0.72em;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.pe-rotulo__n i {
+  opacity: 0.6;
+}
+
+.pe-rotulo__caja {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.pe-rotulo__t {
+  display: block;
+  overflow: hidden;
+  color: var(--pe-texto);
+  font-size: 0.86em;
+  font-weight: 650;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ---- Ventana ---- */
+
+.pe-ventana {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid var(--pe-linea);
+  border-radius: 0.9em;
+  overflow: hidden;
+  background: var(--pe-sup);
+}
+
+.pe-ventana__barra {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  height: 1.9em;
+  padding-inline: 0.75em;
+  border-bottom: 1px solid var(--pe-linea);
+}
+
+.pe-ventana__barra > i {
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--pe-texto) 26%, transparent);
+}
+
+.pe-ventana__barra > span {
+  margin-left: 0.5em;
+  color: var(--pe-sutil);
+  font-family: var(--font-mono);
+  font-size: 0.66em;
+  white-space: nowrap;
+}
+
+.pe-ventana__cuerpo {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ---- Teléfono ---- */
+
+.pe-tel {
+  position: relative;
+  width: 9.4em;
+  height: 100%;
+  padding: 0.32em;
+  border-radius: 1.5em;
+  background: #05060a;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 1.2em 2.4em rgba(0, 0, 0, 0.45);
+}
+
+.pe-tel__isla {
+  position: absolute;
+  top: 0.62em;
+  left: 50%;
+  z-index: 2;
+  width: 2.2em;
+  height: 0.5em;
+  border-radius: 99px;
+  background: #05060a;
+  translate: -50% 0;
+}
+
+.pe-tel__pantalla {
+  position: relative;
+  height: 100%;
+  border-radius: 1.22em;
+  overflow: hidden;
+  background: var(--pe-sup);
+}
+
+/* ---- Mensaje de WhatsApp ---- */
+
+.pe-wa {
+  position: absolute;
+  z-index: 6;
+  display: grid;
+  gap: 0.3em;
+  width: 13.5em;
+  padding: 0.65em 0.75em 0.55em;
+  border-radius: 0.95em 0.95em 0.2em 0.95em;
+  background: #d9fdd3;
+  color: #0b1f14;
+  box-shadow: 0 0.9em 2em rgba(0, 0, 0, 0.4);
+  transform-origin: 100% 100%;
+}
+
+.pe-wa__quien {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  color: #128c4b;
+  font-size: 0.64em;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pe-wa__quien i {
+  width: 0.75em;
+  height: 0.75em;
+  border-radius: 50%;
+  background: #25d366;
+}
+
+.pe-wa p {
+  min-height: 2.3em;
+  font-size: 0.8em;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.pe-wa__visto {
+  justify-self: end;
+  display: flex;
+  margin-top: -0.5em;
+  color: #9aa9a0;
+  font-size: 0.8em;
+  transition: color 0.3s;
+}
+
+.pe-wa__visto.is-listo {
+  color: #34b7f1;
+}
+
+.pe-cursor-texto {
+  display: inline-block;
+  width: 0.12em;
+  height: 1em;
+  margin-left: 0.08em;
+  background: currentColor;
+  vertical-align: -0.15em;
+  animation: pe-parpadea 0.8s steps(2) infinite;
+}
+
+@keyframes pe-parpadea {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ---- Barras ---- */
+
+.pe-barras {
+  display: flex;
+  align-items: center;
+  gap: 0.16em;
+  height: 1.5em;
+}
+
+/* Cada barra tiene su altura y lo que late es su escala: lo mueve el
+   compositor y no se recalcula maquetación dieciséis veces por fotograma. */
+.pe-barras i {
+  width: 0.2em;
+  height: var(--h);
+  border-radius: 99px;
+  background: currentColor;
+  scale: 1 0.28;
+  transition: scale 0.4s;
+}
+
+.pe-barras.is-vivo i {
+  animation: pe-late 0.62s ease-in-out calc(var(--i) * -0.11s) infinite alternate;
+}
+
+@keyframes pe-late {
+  from {
+    scale: 1 1;
+  }
+  to {
+    scale: 1 0.3;
+  }
+}
+
+/* ---- Hecho ---- */
+
+.pe-hecho {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.38em 0.7em;
+  border-radius: 99px;
+  background: var(--pe-ok);
+  color: #04130a;
+  font-size: 0.74em;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* ---- Botón y ficha genéricos ---- */
+
+.pe-boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  padding: 0.6em 0.95em;
+  border-radius: 0.7em;
+  background: var(--pe-ac);
+  color: var(--pe-sobre);
+  font-size: 0.8em;
+  font-weight: 800;
+  white-space: nowrap;
+  transition:
+    scale 0.25s cubic-bezier(0.3, 1.6, 0.5, 1),
+    background 0.3s,
+    color 0.3s;
+}
+
+.pe-boton.is-pulsado,
+.pe .is-pulsado {
+  scale: 0.94;
+}
+
+.pe-boton.is-hecho {
+  background: var(--pe-ok);
+  color: #04130a;
+}
+
+.pe-ficha {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.35em 0.75em;
+  border: 1px solid var(--pe-linea);
+  border-radius: 99px;
+  color: var(--pe-sutil);
+  font-size: 0.72em;
+  font-weight: 650;
+  white-space: nowrap;
+  transition:
+    background 0.3s,
+    color 0.3s,
+    border-color 0.3s,
+    scale 0.25s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.pe-ficha.is-activa {
+  border-color: var(--pe-ac);
+  background: var(--pe-ac);
+  color: var(--pe-sobre);
+}
+
+.pe-mini {
+  color: var(--pe-sutil);
+  font-family: var(--font-mono);
+  font-size: 0.6em;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pe,
+  .pe__capa {
+    animation: none;
+  }
+}
