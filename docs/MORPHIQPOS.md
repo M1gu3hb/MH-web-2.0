@@ -100,3 +100,18 @@ actualizar la constante `MODELO` en `TerminalAscii.jsx`.
   la rejilla de módulos de «Bento Mini UI».
 - **Geist Mono** (`@fontsource-variable/geist-mono`): la monoespaciada del arte
   ASCII, solo el subset latino. El arte se escribe con ASCII puro a propósito.
+
+## El personalizador vende
+
+`Personaliza.jsx` ya no enseña una pantalla quieta. Monta `CajaViva.jsx`: la
+pantalla de órdenes del kit con botones de verdad. El visitante toca
+productos, elige efectivo o tarjeta, cobra, y sale un ticket con el nombre
+que escribió y su color.
+
+- La piel le llega por las mismas variables `--pv-*` que a las demostraciones.
+- En teléfono no usa la cámara que sigue al cursor: se reordena en vertical y
+  cabe entera. Con el ticket abierto crece lo justo para que quepa
+  (`--lineas`).
+- Mientras el ticket está en pantalla lo de debajo queda `inert` y el foco
+  pasa a «Nueva venta».
+- Los productos son `PLATILLOS`, exportado desde `pantallas.jsx`.

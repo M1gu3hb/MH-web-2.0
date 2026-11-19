@@ -18,6 +18,7 @@ inventariado aquí.
 | [ROADMAP.md](./ROADMAP.md) | Ejecución por fases, con criterios de aceptación y orden de trabajo | Para trabajar día a día |
 | [CHANGELOG-REDESIGN.md](./CHANGELOG-REDESIGN.md) | **Qué cambió en el rediseño v3 y cómo volver atrás** | Estado actual del código |
 | [MORPHIQPOS.md](./MORPHIQPOS.md) | La página del producto, su sección en la home, el kit de demostraciones y el modelo 3D | Antes de tocar `/morphiqpos` o las tarjetas de servicio |
+| [DEMOS-PROYECTOS.md](./DEMOS-PROYECTOS.md) | La escena animada de cada proyecto: dónde vive, sus reglas y cómo añadir una | Antes de tocar `/proyectos` o de sumar un proyecto al portafolio |
 
 > **Nota:** `FILEMAP`, `MODULES`, `DESIGN-SYSTEM` y `CONTENT` describen la
 > versión **anterior** (guardada en `backup/v2.0-original`), que es la que se
