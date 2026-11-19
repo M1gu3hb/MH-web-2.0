@@ -1711,6 +1711,341 @@
   text-align: right;
 }
 
+.personaliza__vende {
+  margin: 0;
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--line-soft);
+  color: var(--ink-muted);
+  font-size: var(--fs-sm, 0.92rem);
+  line-height: 1.5;
+}
+
+/* ------------------------------------------------------------
+   LA CAJA VIVA
+   ------------------------------------------------------------
+   La pantalla de órdenes del kit, con botones de verdad. Hereda la piel
+   por las mismas variables `--pv-*`; aquí va solo lo que es de tocar: los
+   contadores, la forma de pago, el ticket.
+   ------------------------------------------------------------ */
+
+/* El kit ya pone a toda pantalla del sistema en `absolute` dentro de su
+   cuerpo; se repite aquí con más peso porque el velo del ticket se ancla a
+   esta caja y no puede depender del orden en que carguen las dos hojas. */
+.pv--viva .pv__cuerpo > .pv-viva {
+  position: absolute;
+  inset: 0;
+}
+
+.pv-viva__pista {
+  margin: 0;
+  color: var(--pv-sutil);
+  font-size: 0.9em;
+}
+
+.pv-viva .pv-platillo {
+  position: relative;
+  padding: 0;
+}
+
+.pv-viva .pv-platillo.is-en-cuenta {
+  border-color: var(--pv-acento);
+}
+
+.pv-viva__agregar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+  width: 100%;
+  height: 100%;
+  padding: 0.7em;
+  border: 0;
+  border-radius: inherit;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: scale 0.2s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.pv-viva__agregar:active {
+  scale: 0.95;
+}
+
+.pv-viva__agregar:focus-visible,
+.pv-viva__quitar:focus-visible,
+.pv-viva__pago:focus-visible,
+.pv-viva button.pv-boton:focus-visible {
+  outline: 2px solid var(--pv-acento);
+  outline-offset: 2px;
+}
+
+.pv-viva__agregar:disabled {
+  cursor: default;
+}
+
+.pv-viva__cuantos {
+  position: absolute;
+  top: 0.45em;
+  right: 0.45em;
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+}
+
+.pv-viva__cuantos em {
+  min-width: 1.9em;
+  padding: 0.2em 0.5em;
+  border-radius: 99px;
+  background: var(--pv-acento);
+  color: var(--pv-sobre-acento);
+  font-size: 0.9em;
+  font-style: normal;
+  font-weight: 800;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.pv-viva__quitar {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 1.9em;
+  height: 1.9em;
+  padding: 0;
+  border: 1px solid var(--pv-linea);
+  border-radius: 50%;
+  background: var(--pv-sup2);
+  color: var(--pv-texto);
+  font: inherit;
+  cursor: pointer;
+}
+
+/* El botón es pequeño a la vista; lo que se toca es bastante más grande. */
+.pv-viva__quitar::before {
+  content: '';
+  position: absolute;
+  inset: -0.75em;
+}
+
+.pv-viva__pagos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5em;
+}
+
+.pv-viva__pago {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  padding: 0.6em;
+  border: 1px solid var(--pv-linea);
+  border-radius: calc(var(--pv-radio) * 0.8);
+  background: transparent;
+  color: var(--pv-sutil);
+  font: inherit;
+  font-size: 0.9em;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    color 0.2s;
+}
+
+.pv-viva__pago[aria-pressed='true'] {
+  border-color: var(--pv-acento);
+  background: color-mix(in srgb, var(--pv-acento) 16%, transparent);
+  color: var(--pv-texto);
+}
+
+.pv-viva button.pv-boton {
+  border: 0;
+  cursor: pointer;
+}
+
+.pv-viva__cobrar:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.pv-viva__velo {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  background: color-mix(in srgb, var(--pv-fondo) 78%, transparent);
+  backdrop-filter: blur(3px);
+  overflow: hidden;
+}
+
+.pv-viva__ticket {
+  width: 22em;
+  padding: 1.3em 1.3em 2em;
+  background: #f4f2ea;
+  color: #14161a;
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  line-height: 1.35;
+  box-shadow: 0 1.6em 3em rgba(0, 0, 0, 0.55);
+  --diente: 0.55em;
+  mask:
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / var(--diente) 51% repeat-x,
+    linear-gradient(#000 0 0) top / 100% calc(100% - var(--diente) * 0.5) no-repeat;
+}
+
+.pv-viva__ticket header {
+  display: grid;
+  justify-items: center;
+  gap: 0.45em;
+  padding-bottom: 0.8em;
+  border-bottom: 1px dashed rgba(20, 22, 26, 0.35);
+  text-align: center;
+}
+
+/* La inicial con el color elegido: el ticket también es de la marca. */
+.pv-viva__ticket header i {
+  display: grid;
+  place-items: center;
+  width: 2.3em;
+  height: 2.3em;
+  border-radius: calc(var(--pv-radio) * 0.7);
+  background: var(--pv-acento);
+  color: var(--pv-sobre-acento);
+  font-family: var(--pv-titulo);
+  font-style: normal;
+  font-weight: 800;
+}
+
+.pv-viva__ticket header strong {
+  font-size: 1.1em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.pv-viva__ticket p {
+  margin: 0;
+}
+
+.pv-viva__ticket ul {
+  display: grid;
+  gap: 0.25em;
+  margin: 0.6em 0;
+  padding: 0.6em 0;
+  border-block: 1px dashed rgba(20, 22, 26, 0.35);
+  list-style: none;
+}
+
+.pv-viva__dato,
+.pv-viva__total,
+.pv-viva__ticket li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1em;
+}
+
+.pv-viva__dato {
+  padding-top: 0.6em;
+  color: #4d5158;
+  font-size: 0.9em;
+}
+
+.pv-viva__ticket li b {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.pv-viva__total {
+  font-size: 1.25em;
+  font-weight: 700;
+}
+
+.pv-viva__gracias {
+  padding-top: 0.9em;
+  text-align: center;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pv-viva__gracias::before,
+.pv-viva__gracias::after {
+  content: ' * ';
+}
+
+.pv-viva__nueva {
+  margin-top: 1.1em;
+  box-shadow: 0 0.8em 1.8em rgba(0, 0, 0, 0.4);
+}
+
+@media (max-width: 700px) {
+  /* Sin cámara: la pantalla se reordena en vertical y cabe entera. */
+  .pv.pv--viva {
+    aspect-ratio: auto;
+  }
+
+  .pv--viva .pv__lienzo {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    font-size: clamp(8.5px, 2.8cqw, 14px);
+    translate: none;
+    transition: none;
+  }
+
+  .pv--viva .pv__secciones,
+  .pv-viva__pista,
+  .pv-viva .pv-orden__cuenta header,
+  .pv-viva .pv-orden__cuenta ul,
+  .pv-viva__pagos {
+    display: none;
+  }
+
+  .pv--viva .pv__cuerpo > .pv-viva {
+    position: relative;
+    inset: auto;
+  }
+
+  .pv-viva.pv-orden {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.8em;
+  }
+
+  .pv-viva[data-ticket] {
+    min-height: calc(20.5em + var(--lineas, 3) * 1.4em);
+  }
+
+  .pv-viva .pv-orden__rejilla {
+    grid-template-rows: none;
+    grid-auto-rows: 6.6em;
+  }
+
+  .pv-viva .pv-orden__cuenta {
+    flex-direction: row;
+    align-items: center;
+    gap: 1em;
+    padding: 0.7em 0.7em 0.7em 1em;
+  }
+
+  .pv-viva .pv-orden__cuenta footer {
+    flex: 1;
+    padding: 0;
+    border: 0;
+  }
+
+  .pv-viva .pv-orden__cuenta .pv-boton--ancho {
+    width: auto;
+  }
+
+  .pv-viva__ticket {
+    width: 20em;
+    font-size: 0.86em;
+  }
+}
+
 @media (max-width: 999px) {
   .personaliza {
     grid-template-columns: minmax(0, 1fr);

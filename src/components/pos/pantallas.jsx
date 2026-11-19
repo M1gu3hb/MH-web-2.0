@@ -135,7 +135,7 @@ export function PantallaMesas({ activo = true, fijo, negocio, estilo }) {
    02 · LA ORDEN
    ============================================================ */
 
-const PLATILLOS = [
+export const PLATILLOS = [
   { id: 'tacos', nombre: 'Tacos de sirloin', precio: 145, tono: '#c96a3a' },
   { id: 'enchiladas', nombre: 'Enchiladas', precio: 132, tono: '#5f9d4c' },
   { id: 'sopa', nombre: 'Sopa de tortilla', precio: 78, tono: '#d08a2e' },

@@ -7,6 +7,10 @@
  * visitante escribe el nombre de su negocio, elige un color, un estilo y un
  * modo, y la pantalla del sistema cambia en el acto.
  *
+ * Y la pantalla se usa (`CajaViva`): se tocan los productos, se cobra y sale
+ * un ticket con ese nombre y ese color. Ver tu marca en una caja está bien;
+ * venderle algo a alguien con ella es otra cosa.
+ *
  * Los ocho estilos son los que el sistema trae de verdad, con sus nombres.
  * Aquí cada uno se resuelve a un puñado de variables —radio, tipografía,
  * tratamiento de las superficies— porque es lo que se alcanza a enseñar en
@@ -15,12 +19,13 @@
  * ACCESIBILIDAD
  * Son controles nativos: un campo de texto, tres grupos de `radio` y un
  * selector de color. Se recorren con teclado sin una línea de código extra,
- * y el nombre que se escribe nunca sale de esta página.
+ * y el nombre que se escribe nunca sale de esta página. La caja es un grupo
+ * con nombre y todo lo que hay dentro son botones.
  */
 
 import { useId, useMemo, useState } from 'react';
 
-import { PASO_ORDEN_LLENA, PantallaOrden } from './pantallas';
+import { CajaViva } from './CajaViva';
 import { POS_COLORES, POS_ESTILOS } from '../../content/morphiqpos';
 
 /* Luminancia relativa, para decidir si sobre el acento va texto claro u
@@ -156,14 +161,18 @@ export function Personaliza() {
             </label>
           </div>
         </fieldset>
+
+        <p className="personaliza__vende">
+          <span className="personaliza__paso">05</span> Ahora véndele algo: toca los productos, cobra y mira salir el ticket con tu marca.
+        </p>
       </form>
 
       <div
         className={`personaliza__vista personaliza__vista--${estilo.superficie}`}
-        role="img"
-        aria-label={`Vista previa del sistema para ${visible}, en estilo ${estilo.nombre} y modo ${claro ? 'claro' : 'oscuro'}`}
+        role="group"
+        aria-label={`La caja de ${visible}, en estilo ${estilo.nombre} y modo ${claro ? 'claro' : 'oscuro'}. Agrega productos y cobra.`}
       >
-        <PantallaOrden negocio={visible} fijo={PASO_ORDEN_LLENA} estilo={variables} />
+        <CajaViva negocio={visible} estilo={variables} />
         <p className="personaliza__pie" aria-hidden="true">
           estilo: {estilo.id} · color: {color} · modo: {claro ? 'claro' : 'oscuro'}
         </p>
