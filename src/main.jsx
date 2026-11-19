@@ -19,6 +19,7 @@ import './styles/index.css';
  */
 import Inicio from './paginas/Inicio';
 
+const MorphiqPos = lazy(() => import('./paginas/MorphiqPos'));
 const Servicios = lazy(() => import('./paginas/Servicios'));
 const ServicioDetalle = lazy(() => import('./paginas/ServicioDetalle'));
 const Precios = lazy(() => import('./paginas/Precios'));
@@ -52,6 +53,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { path: RUTAS.inicio, element: <Inicio /> },
+      { path: RUTAS.morphiqpos, element: conSuspense(MorphiqPos) },
       { path: RUTAS.servicios, element: conSuspense(Servicios) },
       { path: RUTAS.paginasWeb, element: conSuspense(ServicioDetalle) },
       { path: RUTAS.sistemas, element: conSuspense(ServicioDetalle) },

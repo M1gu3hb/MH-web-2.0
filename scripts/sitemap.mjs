@@ -54,6 +54,7 @@ function fechaDeCommit(archivos = []) {
    esto viene a resolver. */
 const FUENTES = {
   '/': ['src/paginas/Inicio.jsx', 'src/content/index.js'],
+  '/morphiqpos': ['src/paginas/MorphiqPos.jsx', 'src/content/morphiqpos.js'],
   '/servicios': ['src/paginas/Servicios.jsx', 'src/content/servicios.js'],
   '/servicios/paginas-web': ['src/paginas/ServicioDetalle.jsx', 'src/content/servicios.js'],
   '/servicios/sistemas': ['src/paginas/ServicioDetalle.jsx', 'src/content/servicios.js'],

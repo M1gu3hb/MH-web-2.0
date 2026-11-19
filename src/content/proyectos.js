@@ -789,7 +789,10 @@ export const PROYECTOS = [
     estado: 'en-desarrollo',
     destacado: false,
 
-    /* Sin enlace: está en desarrollo y sus demostraciones corren en local. */
+    /* No hay demostración pública —corre en local—, así que el botón lleva a
+       la página del producto, que es donde se enseña funcionando. */
+    url: 'https://www.morphiq.com.mx/morphiqpos',
+    etiquetaEnlace: 'Conocer MorphiqPOS',
     contexto:
       'Cada negocio que pide un punto de venta cree que el suyo es distinto, y tiene razón: una tiendita cobra por pieza, un restaurante por mesa, una ferretería por medida y una estética por cita. Hacer un sistema nuevo para cada uno es lento; meterlos a todos en el mismo molde, inservible.',
     problema: [

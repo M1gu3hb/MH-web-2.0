@@ -211,6 +211,7 @@ async function main() {
   const { PROYECTOS } = await importar('src/content/proyectos.js');
   const { PLANES, precioEnLinea, rutaDelPlan } = await importar('src/config/pricing.js');
   const { PREGUNTAS_INICIO, PREGUNTAS_PRECIOS } = await importar('src/content/index.js');
+  const { POS_SEO, POS_MIGAS, POS_HERO, POS_GIROS, POS_MODULOS, POS_PREGUNTAS } = await importar('src/content/morphiqpos.js');
 
   const org = { '@id': `${DOMINIO}/#organizacion` };
   const sitio = { '@id': `${DOMINIO}/#sitio` };
@@ -307,6 +308,51 @@ async function main() {
       `<h2>Preguntas frecuentes</h2><dl>${PREGUNTAS_INICIO.map(
         (f) => `<dt>${escapar(f.q)}</dt><dd>${escapar(f.a)}</dd>`
       ).join('')}</dl>`
+    ),
+  });
+
+  /* MorphiqPOS — el producto.
+     Lleva `SoftwareApplication` además de sus preguntas: es el tipo que le
+     corresponde a un programa, y el que permite que un buscador lo enseñe
+     como producto y no como una página de servicio más. El precio va como
+     «desde», igual que en /precios. El mismo nodo lo monta la página al
+     hidratar (MorphiqPos.jsx), así que servido y renderizado dicen lo mismo. */
+  paginas.push({
+    path: RUTAS.morphiqpos,
+    modulo: 'MorphiqPos',
+    title: POS_SEO.title,
+    description: POS_SEO.description,
+    migas: POS_MIGAS,
+    extra: [
+      {
+        '@type': 'SoftwareApplication',
+        '@id': `${DOMINIO}${RUTAS.morphiqpos}#producto`,
+        name: 'MorphiqPOS',
+        applicationCategory: 'BusinessApplication',
+        applicationSubCategory: 'Punto de venta',
+        operatingSystem: 'Web, Windows, Android',
+        description: POS_SEO.description,
+        url: `${DOMINIO}${RUTAS.morphiqpos}`,
+        inLanguage: 'es-MX',
+        publisher: org,
+        offers: {
+          '@type': 'Offer',
+          priceCurrency: 'MXN',
+          availability: 'https://schema.org/InStock',
+          priceSpecification: { '@type': 'PriceSpecification', minPrice: PLANES.pos.desde, priceCurrency: 'MXN' },
+        },
+      },
+      nodoPreguntas(RUTAS.morphiqpos, POS_PREGUNTAS),
+    ],
+    noscript: bloqueNoscript(
+      `MorphiqPOS — ${POS_HERO.lineas.join(' ')}`,
+      POS_HERO.entrada,
+      enlacesPrincipales,
+      `<h2>Tipos de negocio</h2><ul>${POS_GIROS.map(
+        (g) => `<li><strong>${escapar(g.nombre)}</strong>: ${escapar(g.cuerpo)}</li>`
+      ).join('')}</ul><h2>Qué controla</h2><ul>${POS_MODULOS.map(
+        (m) => `<li><strong>${escapar(m.nombre)}</strong>: ${escapar(m.cuerpo)}</li>`
+      ).join('')}</ul>` + bloquePreguntas(POS_PREGUNTAS)
     ),
   });
 

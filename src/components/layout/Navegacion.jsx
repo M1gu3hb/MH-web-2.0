@@ -219,11 +219,16 @@ export function Navegacion() {
                 key={entrada.href}
                 to={entrada.href}
                 end={entrada.href === RUTAS.inicio}
-                className={({ isActive }) => `nav-enlace ${isActive ? 'is-activo' : ''}`}
+                className={({ isActive }) =>
+                  `nav-enlace ${entrada.producto ? 'nav-enlace--producto' : ''} ${isActive ? 'is-activo' : ''}`
+                }
               >
                 {({ isActive }) => (
                   <>
                     {isActive && <PastillaActiva />}
+                    {/* El punto que marca el producto propio. Es decoración:
+                        el nombre ya lo dice todo a quien no lo ve. */}
+                    {entrada.producto && <span className="nav-enlace__punto" aria-hidden="true" />}
                     {entrada.etiqueta}
                   </>
                 )}

@@ -24,6 +24,10 @@ export const DOMINIO = 'https://www.morphiq.com.mx';
 
 export const RUTAS = {
   inicio: '/',
+  /* El producto propio. Vive en la raíz y no bajo /servicios a propósito: es
+     una marca dentro de la marca, con su página, y una dirección corta es la
+     que cabe en una tarjeta, en un anuncio o dicha en voz alta. */
+  morphiqpos: '/morphiqpos',
   servicios: '/servicios',
   paginasWeb: '/servicios/paginas-web',
   sistemas: '/servicios/sistemas',
@@ -44,6 +48,9 @@ export const RUTAS = {
  */
 export const MENU = [
   { etiqueta: 'Inicio', href: RUTAS.inicio },
+  /* `producto` le pone al enlace la marca de «esto es nuestro»: un punto
+     azul delante. Sin ella MorphiqPOS se leería como una sección más. */
+  { etiqueta: 'MorphiqPOS', href: RUTAS.morphiqpos, producto: true },
   {
     etiqueta: 'Servicios',
     href: RUTAS.servicios,
@@ -96,6 +103,7 @@ export function contactoCon(servicio) {
 
 export const PRIORIDAD = {
   [RUTAS.inicio]: '1.0',
+  [RUTAS.morphiqpos]: '0.9',
   [RUTAS.servicios]: '0.9',
   [RUTAS.paginasWeb]: '0.9',
   [RUTAS.sistemas]: '0.8',
