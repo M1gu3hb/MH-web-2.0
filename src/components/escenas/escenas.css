@@ -1,0 +1,917 @@
+/* ============================================================
+   LAS ESCENAS DE LAS TARJETAS DE SERVICIO
+   ============================================================
+
+   Igual que las pantallas de MorphiqPOS, todo se mide en `em` sobre un
+   cuerpo que sale del ancho del marco (`cqw`). La escena no se encoge: se
+   maqueta a su tamaño, así que en una tarjeta de 320 px los textos siguen
+   siendo textos y no manchas.
+
+   El color de cada escena es el acento de su servicio, que la tarjeta ya
+   trae en `--acento`. Aquí no se escribe ningún color de servicio a mano.
+   ============================================================ */
+
+.esc {
+  --pv-acento: var(--acento, #0a66ff);
+  --e-fondo: #0b0d12;
+  --e-sup: #151921;
+  --e-sup2: #1d222c;
+  --e-linea: rgba(233, 236, 241, 0.11);
+  --e-texto: #e9ecf1;
+  --e-sutil: #8b919d;
+  --e-ok: #2fbf71;
+  --e-acento: var(--acento, #0a66ff);
+
+  position: absolute;
+  inset: 0;
+  container-type: inline-size;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 85% 0%, color-mix(in srgb, var(--e-acento) 22%, transparent), transparent 60%),
+    var(--e-fondo);
+  color: var(--e-texto);
+  font-family: var(--font-body);
+}
+
+.esc__lienzo {
+  position: absolute;
+  inset: 0;
+  padding: 0.9em;
+  /* 3 % del ancho del marco: en la tarjeta más estrecha (unos 330 px en un
+     teléfono) el cuerpo queda en 10 px y el texto más pequeño en 7. Por
+     debajo de eso ya no es texto, que fue justo el problema de las
+     maquetas anteriores. */
+  font-size: clamp(9px, 3cqw, 20px);
+  line-height: 1.2;
+}
+
+.esc-etiqueta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  color: var(--e-sutil);
+  font-size: 0.72em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.esc-boton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  padding: 0.65em 0.9em;
+  border-radius: 0.7em;
+  background: var(--e-acento);
+  color: #06080c;
+  font-family: var(--font-display);
+  font-size: 0.92em;
+  font-weight: 800;
+  white-space: nowrap;
+  transition: background 0.3s;
+}
+
+.esc-boton.is-hecho {
+  background: var(--e-ok);
+}
+
+.esc-boton.is-espera {
+  background: color-mix(in srgb, var(--e-acento) 24%, var(--e-sup2));
+  color: var(--e-texto);
+}
+
+/* ---- 01 · Web ---- */
+
+.esc--web .esc__lienzo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8em;
+}
+
+.esc-barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+}
+
+.esc-url {
+  padding: 0.4em 0.9em;
+  border: 1px solid var(--e-linea);
+  border-radius: 99px;
+  color: var(--e-sutil);
+  font-family: var(--font-mono);
+  font-size: 0.74em;
+}
+
+.esc-interruptor {
+  display: flex;
+  padding: 0.2em;
+  border-radius: 99px;
+  background: var(--e-sup2);
+  font-size: 0.74em;
+}
+
+.esc-interruptor em {
+  padding: 0.35em 0.8em;
+  border-radius: 99px;
+  color: var(--e-sutil);
+  font-style: normal;
+  font-weight: 600;
+  transition: background 0.3s, color 0.3s;
+}
+
+.esc-interruptor .is-activo {
+  background: var(--e-acento);
+  color: #06080c;
+}
+
+.esc-web__pagina {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6em;
+  width: 100%;
+  min-height: 0;
+  margin-inline: auto;
+  padding: 0.7em;
+  border-radius: 0.9em;
+  background: #f4f1e8;
+  color: #17181a;
+  overflow: hidden;
+}
+
+.esc-web__pagina.is-movil {
+  width: 38%;
+  border-radius: 1.3em;
+}
+
+.esc-web__cabeza {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.esc-web__cabeza b {
+  font-family: var(--font-display);
+  font-size: 0.95em;
+  font-weight: 800;
+}
+
+.esc-web__carrito {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.25em 0.6em;
+  border-radius: 99px;
+  background: #17181a;
+  color: #f4f1e8;
+  font-size: 0.74em;
+  font-weight: 700;
+}
+
+.esc-web__hero {
+  display: grid;
+  gap: 0.15em;
+  padding: 0.75em 0.85em;
+  border-radius: 0.6em;
+  background: linear-gradient(120deg, color-mix(in srgb, var(--e-acento) 78%, #2a0c06), color-mix(in srgb, var(--e-acento) 45%, #2a0c06));
+  color: #fff;
+  transform-origin: top;
+}
+
+.esc-web__hero strong {
+  font-family: var(--font-display);
+  font-size: 1.05em;
+}
+
+.esc-web__hero span {
+  font-size: 0.74em;
+  opacity: 0.85;
+}
+
+.esc-web__rejilla {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5em;
+  min-height: 0;
+}
+
+.is-movil .esc-web__rejilla {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.is-movil .esc-web__hero span {
+  display: none;
+}
+
+.esc-web__producto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+  padding: 0.5em;
+  border-radius: 0.6em;
+  background: #fffdf8;
+  box-shadow: 0 0.2em 0.6em rgba(23, 24, 26, 0.12);
+  min-height: 0;
+}
+
+.esc-web__producto i {
+  flex: 1;
+  min-height: 0.8em;
+  border-radius: 0.4em;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--e-acento) 40%, #fff), color-mix(in srgb, var(--e-acento) 75%, #fff));
+}
+
+.is-movil .esc-web__producto i {
+  display: none;
+}
+
+.esc-web__producto b {
+  font-size: 0.7em;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.esc-web__producto span {
+  font-family: var(--font-display);
+  font-size: 0.86em;
+  font-weight: 800;
+}
+
+.esc-web__producto em {
+  padding: 0.35em;
+  border-radius: 0.4em;
+  background: var(--e-acento);
+  color: #fff;
+  font-size: 0.68em;
+  font-style: normal;
+  font-weight: 800;
+  text-align: center;
+  transition: background 0.3s;
+}
+
+.esc-web__producto em.is-hecho {
+  background: #17181a;
+}
+
+/* ---- 02 · Caja ---- */
+
+.esc--caja .esc__lienzo {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 0.9em;
+}
+
+.esc-caja__teclas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 0.6em;
+}
+
+.esc-tecla {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.15em;
+  padding: 0.7em;
+  border: 1px solid var(--e-linea);
+  border-radius: 0.8em;
+  background: var(--e-sup);
+  transition: scale 0.28s cubic-bezier(0.3, 1.7, 0.5, 1), border-color 0.2s, background 0.2s;
+}
+
+.esc-tecla.is-tocada {
+  scale: 0.92;
+  border-color: var(--e-acento);
+  background: color-mix(in srgb, var(--e-acento) 20%, var(--e-sup));
+}
+
+.esc-tecla b {
+  font-family: var(--font-display);
+  font-size: 1.05em;
+}
+
+.esc-tecla span {
+  color: var(--e-acento);
+  font-size: 0.86em;
+  font-weight: 700;
+}
+
+/* La existencia del producto, que baja con cada venta. */
+.esc-tecla i {
+  position: absolute;
+  top: 0.7em;
+  left: 0.7em;
+  right: 0.7em;
+  height: 0.3em;
+  border-radius: 99px;
+  background: var(--e-sup2);
+  overflow: hidden;
+}
+
+.esc-tecla u {
+  display: block;
+  width: var(--lleno);
+  height: 100%;
+  border-radius: inherit;
+  background: var(--e-acento);
+  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.esc-caja__ticket {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 0.8em;
+  border: 1px solid var(--e-linea);
+  border-radius: 0.9em;
+  background: var(--e-sup);
+  min-width: 0;
+}
+
+.esc-caja__ticket ul {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-height: 0;
+}
+
+.esc-caja__ticket li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5em;
+  font-size: 0.86em;
+}
+
+.esc-caja__total {
+  display: grid;
+  gap: 0.1em;
+  padding-top: 0.5em;
+  border-top: 1px dashed var(--e-linea);
+  color: var(--e-sutil);
+  font-size: 0.74em;
+}
+
+.esc-caja__total .cifra {
+  color: var(--e-texto);
+  font-family: var(--font-display);
+  font-size: 2.6em;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+/* El ticket sale sobre la columna del ticket, donde al cobrar las líneas ya
+   se fueron: tapa un hueco, no los productos. */
+.esc-caja__papel {
+  position: absolute;
+  top: 0;
+  right: 7%;
+  z-index: 3;
+  margin: 0;
+  padding: 0.9em 0.7em 1.3em;
+  background: #f4f2ea;
+  color: #15171b;
+  font-family: var(--font-mono);
+  font-size: 0.62em;
+  font-weight: 500;
+  line-height: 1.45;
+  box-shadow: 0 1.2em 2.4em rgba(0, 0, 0, 0.55);
+  --diente: 0.5em;
+  mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / var(--diente) 51% repeat-x,
+    linear-gradient(#000 0 0) top / 100% calc(100% - var(--diente) * 0.5) no-repeat;
+}
+
+/* ---- 03 · CRM ---- */
+
+.esc--crm .esc__lienzo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8em;
+}
+
+.esc-crm__tablero {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6em;
+  min-height: 0;
+}
+
+.esc-crm__col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 0.6em;
+  border: 1px dashed var(--e-linea);
+  border-radius: 0.8em;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.esc-crm__col.is-activa {
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--e-acento) 60%, transparent);
+  background: color-mix(in srgb, var(--e-acento) 9%, transparent);
+}
+
+.esc-crm__col .esc-etiqueta {
+  justify-content: space-between;
+}
+
+.esc-crm__col .esc-etiqueta em {
+  padding: 0.05em 0.5em;
+  border-radius: 99px;
+  background: var(--e-sup2);
+  font-style: normal;
+}
+
+.esc-crm__ficha {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.5em;
+  row-gap: 0.1em;
+  padding: 0.6em;
+  border: 1px solid var(--e-linea);
+  border-radius: 0.7em;
+  background: var(--e-sup2);
+  box-shadow: 0 0.4em 1em rgba(0, 0, 0, 0.35);
+  transition: box-shadow 0.25s, rotate 0.25s, border-color 0.3s;
+}
+
+.esc-crm__ficha.is-en-mano {
+  rotate: -3deg;
+  border-color: var(--e-acento);
+  box-shadow: 0 1em 2em rgba(0, 0, 0, 0.6);
+}
+
+.esc-crm__ficha.is-cerrada {
+  border-color: var(--e-ok);
+}
+
+.esc-crm__ficha i {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 2.1em;
+  height: 2.1em;
+  border-radius: 0.5em;
+  background: var(--e-acento);
+  color: #fff;
+  font-size: 0.72em;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.esc-crm__ficha b {
+  font-size: 0.82em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.esc-crm__ficha span {
+  color: var(--e-sutil);
+  font-size: 0.66em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.esc-crm__ficha strong {
+  grid-column: 1 / -1;
+  margin-top: 0.3em;
+  font-family: var(--font-display);
+  font-size: 1.05em;
+}
+
+.esc-crm__automatico {
+  display: grid;
+  gap: 0.35em;
+  min-height: 3.9em;
+  padding: 0.6em 0.75em;
+  border: 1px solid var(--e-linea);
+  border-radius: 0.8em;
+  background: var(--e-sup);
+}
+
+.esc-crm__automatico .esc-etiqueta {
+  color: var(--e-acento);
+}
+
+.esc-crm__automatico p {
+  display: flex;
+  align-items: center;
+  gap: 0.45em;
+  margin: 0;
+  font-size: 0.82em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transform-origin: left center;
+}
+
+.esc-crm__automatico .is-espera {
+  color: var(--e-sutil);
+}
+
+.esc-crm__automatico .is-ok {
+  color: var(--e-ok);
+}
+
+/* ---- 04 · Software a medida ---- */
+
+.esc-suelta {
+  position: absolute;
+  display: grid;
+  gap: 0.35em;
+  width: 9.2em;
+  padding: 0.7em;
+  border: 1px solid var(--e-linea);
+  border-radius: 0.8em;
+  background: var(--e-sup);
+  color: var(--e-acento);
+  translate: -50% -50%;
+  box-shadow: 0 0.6em 1.4em rgba(0, 0, 0, 0.4);
+}
+
+.esc-suelta--0 { left: 22%; top: 34%; rotate: -6deg; }
+.esc-suelta--1 { left: 52%; top: 62%; rotate: 4deg; }
+.esc-suelta--2 { left: 79%; top: 32%; rotate: 7deg; }
+
+.esc-suelta b {
+  color: var(--e-texto);
+  font-size: 0.74em;
+}
+
+.esc-suelta i {
+  height: 0.35em;
+  border-radius: 99px;
+  background: var(--e-sup2);
+}
+
+.esc-suelta i:last-child {
+  width: 60%;
+}
+
+.esc-medida__pista {
+  position: absolute;
+  left: 50%;
+  bottom: 1.1em;
+  translate: -50% 0;
+  color: var(--e-sutil);
+  font-size: 0.74em;
+  white-space: nowrap;
+}
+
+.esc-medida__app {
+  position: absolute;
+  inset: 0.9em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 0.9em;
+  border: 1px solid color-mix(in srgb, var(--e-acento) 60%, transparent);
+  border-radius: 1em;
+  background: var(--e-sup);
+  box-shadow: 0 0 0 0.3em color-mix(in srgb, var(--e-acento) 14%, transparent);
+}
+
+.esc-medida__app header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid var(--e-linea);
+}
+
+.esc-medida__app header b {
+  font-family: var(--font-display);
+  font-size: 1.1em;
+}
+
+.esc-medida__app header span {
+  color: var(--e-acento);
+  font-size: 0.7em;
+  font-weight: 700;
+}
+
+.esc-medida__fila {
+  display: grid;
+  grid-template-columns: 5em 1fr auto;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.35em 0;
+  font-size: 0.86em;
+}
+
+.esc-medida__fila span {
+  color: var(--e-sutil);
+}
+
+.esc-medida__fila em {
+  padding: 0.3em 0.75em;
+  border: 1px solid var(--e-acento);
+  border-radius: 99px;
+  color: var(--e-acento);
+  font-size: 0.82em;
+  font-style: normal;
+  font-weight: 700;
+  transition: background 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.esc-medida__fila em.is-hecho {
+  border-color: var(--e-ok);
+  background: var(--e-ok);
+  color: #06080c;
+}
+
+.esc-medida__app p {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  margin: auto 0 0;
+  color: var(--e-ok);
+  font-size: 0.78em;
+}
+
+/* ---- 05 · Restaurantes ---- */
+
+.esc--resto .esc__lienzo {
+  display: grid;
+  grid-template-columns: 0.82fr 1fr;
+  gap: 0.9em;
+}
+
+.esc-resto__telefono {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 0.8em 0.7em;
+  border: 0.14em solid var(--e-linea);
+  border-radius: 1.4em;
+  background: var(--e-sup);
+  min-width: 0;
+}
+
+.esc-resto__platillo {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 0.5em;
+  padding: 0.5em;
+  border: 1px solid var(--e-linea);
+  border-radius: 0.7em;
+  transition: border-color 0.25s, background 0.25s, scale 0.28s cubic-bezier(0.3, 1.7, 0.5, 1);
+}
+
+.esc-resto__platillo.is-elegido {
+  border-color: var(--e-acento);
+  background: color-mix(in srgb, var(--e-acento) 16%, transparent);
+}
+
+.esc-resto__platillo i {
+  grid-row: span 2;
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--e-acento) 0 42%, #efece2 44% 100%);
+}
+
+.esc-resto__platillo b {
+  font-size: 0.74em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.esc-resto__platillo span {
+  color: var(--e-sutil);
+  font-size: 0.7em;
+}
+
+.esc-resto__telefono .esc-boton {
+  margin-top: auto;
+}
+
+.esc-resto__cocina {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6em;
+  padding: 0.8em;
+  border: 1px solid var(--e-linea);
+  border-radius: 0.9em;
+  background: var(--e-sup);
+  min-width: 0;
+}
+
+.esc-resto__vacio {
+  margin: auto;
+  color: var(--e-sutil);
+  font-size: 0.78em;
+}
+
+.esc-resto__comanda {
+  display: grid;
+  gap: 0.5em;
+  padding: 0.7em;
+  border-left: 0.3em solid var(--tono);
+  border-radius: 0.7em;
+  background: var(--e-sup2);
+  transition: border-color 0.3s;
+}
+
+.esc-resto__comanda.es-nueva { --tono: var(--e-acento); }
+.esc-resto__comanda.es-preparando { --tono: #f0a92b; }
+.esc-resto__comanda.es-lista { --tono: var(--e-ok); }
+
+.esc-resto__comanda header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.esc-resto__comanda header b {
+  font-family: var(--font-display);
+  font-size: 1.05em;
+}
+
+.esc-resto__comanda header em {
+  padding: 0.15em 0.6em;
+  border-radius: 99px;
+  background: color-mix(in srgb, var(--tono) 24%, transparent);
+  color: var(--tono);
+  font-size: 0.7em;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.esc-resto__comanda p {
+  margin: 0;
+  font-size: 0.82em;
+}
+
+.esc-resto__comanda .esc-boton {
+  background: var(--tono);
+}
+
+/* ---- 06 · Facturación ---- */
+
+.esc--factura .esc__lienzo {
+  display: grid;
+  grid-template-columns: 0.72fr auto 1fr;
+  align-items: stretch;
+  gap: 0.6em;
+}
+
+.esc-factura__ticket,
+.esc-factura__hoja {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+  padding: 0.8em;
+  border: 1px solid var(--e-linea);
+  border-radius: 0.9em;
+  background: var(--e-sup);
+  min-width: 0;
+}
+
+.esc-factura__ticket b {
+  font-family: var(--font-display);
+  font-size: 1.5em;
+  letter-spacing: -0.03em;
+}
+
+.esc-factura__ticket strong {
+  color: var(--e-acento);
+  font-size: 1.15em;
+}
+
+.esc-factura__ticket .esc-boton {
+  margin-top: auto;
+}
+
+.esc-factura__cable {
+  align-self: center;
+  width: 2.2em;
+  height: 0.22em;
+  border-radius: 99px;
+  background: var(--e-sup2);
+  overflow: hidden;
+}
+
+.esc-factura__cable i {
+  display: block;
+  width: 45%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--e-acento);
+  translate: -110% 0;
+}
+
+.esc-factura__cable.is-vivo i {
+  animation: factura-viaja 0.9s linear infinite;
+}
+
+@keyframes factura-viaja {
+  to { translate: 240% 0; }
+}
+
+.esc-factura__hoja {
+  position: relative;
+  transition: border-color 0.3s;
+}
+
+.esc-factura__hoja.is-activa {
+  border-color: color-mix(in srgb, var(--e-acento) 55%, transparent);
+}
+
+.esc-factura__campo {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6em;
+  padding-bottom: 0.35em;
+  border-bottom: 1px solid var(--e-linea);
+  color: var(--e-sutil);
+  font-size: 0.8em;
+}
+
+.esc-factura__campo b {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.3em;
+  color: var(--e-texto);
+  font-family: var(--font-mono);
+}
+
+.esc-factura__campo u {
+  width: 0.5em;
+  height: 1.05em;
+  margin-left: 0.1em;
+  background: var(--e-acento);
+  animation: factura-cursor 0.7s steps(2, start) infinite;
+}
+
+@keyframes factura-cursor {
+  to { visibility: hidden; }
+}
+
+.esc-factura__archivos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35em;
+  margin-top: auto;
+}
+
+.esc-factura__archivos em {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.3em 0.65em;
+  border: 1px solid var(--e-linea);
+  border-radius: 0.5em;
+  background: var(--e-sup2);
+  font-size: 0.74em;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.esc-factura__archivos .is-correo {
+  border-color: transparent;
+  background: var(--e-acento);
+  color: #06080c;
+}
+
+.esc-factura__sello {
+  position: absolute;
+  right: 0.8em;
+  top: 34%;
+  padding: 0.25em 0.7em;
+  border: 0.16em solid var(--e-acento);
+  border-radius: 0.4em;
+  color: var(--e-acento);
+  font-family: var(--font-display);
+  font-size: 1.15em;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .esc *,
+  .esc *::before {
+    transition: none !important;
+    animation: none !important;
+  }
+}

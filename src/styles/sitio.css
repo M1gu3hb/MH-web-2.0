@@ -3325,6 +3325,9 @@ iframe {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
   gap: clamp(var(--sp-5), 1.6vw, var(--sp-6));
+  /* La entrada de cada tarjeta gira un poco sobre su eje horizontal; sin
+     perspectiva en el padre ese giro se aplana y solo se ve un encogido. */
+  perspective: 1600px;
 }
 
 /* Los envoltorios de las familias de entrada (Cascada, Escala, Lateral)
@@ -3422,21 +3425,38 @@ iframe {
   border-radius: var(--r-xl);
   background: linear-gradient(180deg, var(--surface-raised), var(--surface-sunken));
   overflow: hidden;
-  transform-style: preserve-3d;
-  transition: border-color 0.3s, box-shadow 0.3s, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  isolation: isolate;
+  /* `translate` y no `transform`: el `transform` es de Motion, que lleva la
+     entrada de la tarjeta. Con dos dueños para la misma propiedad, el que
+     escribe el último pisa al otro y la tarjeta salta. */
+  transition: border-color 0.3s, box-shadow 0.3s, translate 0.4s cubic-bezier(0.3, 1.5, 0.5, 1);
 }
 
 .solucion.is-viva {
-  border-color: color-mix(in srgb, var(--acento) 55%, transparent);
   box-shadow:
-    0 18px 50px -20px color-mix(in srgb, var(--acento) 45%, transparent),
+    0 22px 56px -22px color-mix(in srgb, var(--acento) 55%, transparent),
     var(--e-2);
-  /* Inclinación mínima y hacia el cursor: lo justo para que la tarjeta
-     acuse el gesto sin convertirse en un juguete. */
-  transform: perspective(1100px)
-    rotateX(calc(var(--gy, 0) * -2.4deg))
-    rotateY(calc(var(--gx, 0) * 3deg))
-    translateY(-4px);
+  translate: 0 -6px;
+}
+
+/* El filo que se enciende donde está el cursor. La máscara deja ver el
+   degradado solo en el píxel del borde; el resto de la tarjeta no lo nota. */
+.solucion::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 1px;
+  border-radius: inherit;
+  background: radial-gradient(340px circle at var(--luz-x, 50%) var(--luz-y, -40%), var(--acento), transparent 62%);
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s;
+}
+
+.solucion.is-viva::after {
+  opacity: 1;
 }
 
 .solucion__enlace {
@@ -3456,7 +3476,7 @@ iframe {
   pointer-events: none;
   background: radial-gradient(
     460px circle at var(--luz-x, 50%) var(--luz-y, 0%),
-    color-mix(in srgb, var(--acento) 26%, transparent),
+    color-mix(in srgb, var(--acento) 22%, transparent),
     transparent 62%
   );
   transition: opacity 0.35s;
@@ -3466,7 +3486,7 @@ iframe {
   opacity: 1;
 }
 
-/* ---- El marco de la maqueta ---- */
+/* ---- El marco de la escena ---- */
 .solucion__marco {
   position: relative;
   z-index: 1;
@@ -3477,35 +3497,9 @@ iframe {
   border-radius: var(--r-lg);
   overflow: hidden;
   background: var(--surface-sunken);
-  /* Aísla el repintado de la maqueta del resto de la página: dentro hay
-     bastante DOM y no debe costar nada mientras no cambie. */
+  /* Aísla el repintado de la escena del resto de la página: dentro hay
+     movimiento continuo y no debe costarle nada a lo de fuera. */
   contain: paint;
-}
-
-/* La maqueta se pinta a su tamaño natural y se ESCALA. Encogerla con
-   width reflowaría todo su contenido y sus textos de 0.6rem se romperían;
-   escalada, el navegador la trata como una textura. */
-.solucion__lienzo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  width: calc(100% / var(--escala));
-  height: calc(100% / var(--escala));
-  transform: scale(var(--escala));
-  transform-origin: top left;
-  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.solucion.is-viva .solucion__lienzo {
-  transform: scale(calc(var(--escala) * 1.035));
-}
-
-.solucion__lienzo .demo {
-  width: 100%;
-  height: 100%;
-  min-height: 0;
-  border-radius: 0;
 }
 
 /* Un barrido de luz que cruza el marco al acercarse: el mismo gesto de
@@ -3513,12 +3507,13 @@ iframe {
 .solucion__brillo {
   position: absolute;
   inset: 0;
+  z-index: 3;
   opacity: 0;
   pointer-events: none;
   background: linear-gradient(
     115deg,
     transparent 38%,
-    rgba(255, 255, 255, 0.16) 48%,
+    rgba(255, 255, 255, 0.14) 48%,
     transparent 58%
   );
   translate: -35% 0;
@@ -3622,44 +3617,16 @@ iframe {
 
 @media (prefers-reduced-motion: reduce) {
   .solucion,
-  .solucion__lienzo,
   .solucion__ver svg {
     transition: none;
   }
   .solucion.is-viva {
-    transform: none;
+    translate: none;
   }
   .solucion.is-viva .solucion__brillo {
     animation: none;
     opacity: 0;
   }
-}
-
-/* Dentro de la tarjeta las maquetas tienen que llenar su marco: si no,
-   queda un vacío que parece un error de carga. */
-.solucion__lienzo .demo--website .website-canvas,
-.solucion__lienzo .demo--pos .pos-body,
-.solucion__lienzo .demo--n8n,
-.solucion__lienzo .demo--resto {
-  height: 100%;
-}
-
-.solucion__lienzo .demo--website .website-canvas {
-  display: grid;
-  align-content: center;
-  /* `align-content: center` centra el bloque, pero sin esto los hijos se
-     estiran a lo ancho y el botón «Explorar» se convertía en una barra. */
-  justify-items: start;
-}
-
-/* El cuerpo del punto de venta reparte su alto entre ticket y teclado en vez
-   de dejar medio marco en negro. */
-.solucion__lienzo .demo--pos .pos-body {
-  align-content: stretch;
-}
-
-.solucion__lienzo .demo--pos .pos-ticket {
-  align-content: start;
 }
 
 /* ============================================================
